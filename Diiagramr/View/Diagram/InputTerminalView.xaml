@@ -1,0 +1,79 @@
+﻿<UserControl x:Class="Diiagramr.View.Diagram.InputTerminalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
+             xmlns:view="clr-namespace:Diiagramr.View"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance diagram1:InputTerminalViewModel}"
+             Width="{x:Static view:DiagramConstants.TerminalDiameter}" 
+             Height="{x:Static view:DiagramConstants.TerminalDiameter}">
+
+    <Grid RenderTransformOrigin="0.5, 0.5">
+        <Grid.RenderTransform>
+            <RotateTransform Angle="{Binding TerminalRotation}"></RotateTransform>
+        </Grid.RenderTransform>
+        <Label Content="{Binding Name}" 
+               Foreground="LightSlateGray" 
+               FontFamily="Verdana" 
+               FontSize="2" 
+               HorizontalContentAlignment="Center" 
+               IsHitTestVisible="False"
+               RenderTransformOrigin="0.5, 0">
+            <Label.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="5" ScaleY="5"></ScaleTransform>
+                    <TranslateTransform X="0" Y="-40"/>
+                </TransformGroup>
+
+            </Label.RenderTransform>
+            <Label.Style>
+                <Style TargetType="{x:Type Label}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding TitleVisible}" Value="True">
+                            <DataTrigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.05"
+                                                        Storyboard.TargetProperty="Foreground.Color"
+                                                        To="#F667" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.EnterActions>
+                            <DataTrigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation Duration="0:0:0.25"
+                                                        Storyboard.TargetProperty="Foreground.Color"
+                                                        To="Transparent" />
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </DataTrigger.ExitActions>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Label.Style>
+        </Label>
+        <Border AllowDrop="True"
+                Drop="{s:Action DropEventHandler}"
+                MouseMove="{s:Action MouseMove}"
+                MouseDown="{s:Action TerminalMouseDown}"
+                MouseEnter="{s:Action MouseEntered}"
+                MouseLeave="{s:Action MouseLeft}"
+                CornerRadius="{x:Static view:DiagramConstants.TerminalCornerRadius}">
+            <Border.Style>
+                <Style>
+                    <Setter Property="Border.Background" Value="#aaa"/>
+                    <Style.Triggers>
+                        <Trigger Property="Border.IsMouseOver" Value="True">
+                            <Setter Property="Border.Background" Value="RoyalBlue" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <Line HorizontalAlignment="Center" IsHitTestVisible="False" StrokeStartLineCap="Flat" StrokeEndLineCap="Triangle" StrokeThickness="6" Stroke="#f555" Y1="2" Y2="4" Margin="10,0,0,0" Width="10"></Line>
+        </Border>
+    </Grid>
+</UserControl>
