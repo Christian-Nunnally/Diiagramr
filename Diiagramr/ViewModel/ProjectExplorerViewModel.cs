@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using DiagramEditor.Service;
 using Diiagramr.Model;
 using Diiagramr.Service;
 using Diiagramr.View.CustomControls;
@@ -11,16 +12,24 @@ namespace Diiagramr.ViewModel
 {
     public class ProjectExplorerViewModel : Screen
     {
-        private readonly DiagramWellViewModel _diagramWell;
+        private IProjectManager ProjectManager { get; }
 
-        private readonly IProjectFileService _projectFileService;
+        public BindableCollection<Project> Projects { get; } = new BindableCollection<Project>();
 
-        public ProjectExplorerViewModel(IProjectFileService projectFileService, DiagramWellViewModel diagramWell)
+        public ProjectExplorerViewModel(Func<IProjectManager> projectManagerFactory)
         {
-            _diagramWell = diagramWell;
-            Projects = new BindableCollection<Project>();
-            _projectFileService = projectFileService;
+            ProjectManager = projectManagerFactory.Invoke();
+            ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
             RenameRequestedHandler = RenameRequested;
+        }
+
+        private void ProjectManagerOnCurrentProjectChanged()
+        {
+            Projects.Clear();
+            if (ProjectManager.CurrentProject != null)
+            {
+                Projects.Add(ProjectManager.CurrentProject);
+            }
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -35,11 +44,7 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        public BindableCollection<Project> Projects { get; set; }
-
         public Project CurrentProject { get; private set; }
-
-        public Project SelectedProject { get; set; }
 
         public EDiagram SelectedDiagram { get; set; }
 
@@ -63,6 +68,12 @@ namespace Diiagramr.ViewModel
 
         public bool RenameRequested(string newName)
         {
+            if (ProjectManager.RenameProject(newName))
+            {
+                ProjectChanged?.Invoke();
+                return true;
+            }
+
             if (SelectedProject != null)
             {
                 if (!_projectFileService.IsProjectNameValid(newName) || !RenameProject(newName)) return false;
