@@ -6,8 +6,6 @@
              mc:Ignorable="d"
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
-             xmlns:customControls="clr-namespace:Diiagramr.View.CustomControls"
-             xmlns:local="clr-namespace:Diiagramr.View"
              d:DataContext="{d:DesignInstance viewModel1:ProjectExplorerViewModel}"
              d:DesignHeight="300" d:DesignWidth="150">
     <TreeView ItemsSource="{Binding Projects}" 
@@ -22,15 +20,14 @@
         
         <TreeView.ItemTemplate>
             <HierarchicalDataTemplate ItemsSource="{Binding Diagrams}">
-                <customControls:EditableTextBlock Text="{Binding Name}" 
-                                                  RenameRequested="{Binding Path=DataContext.RenameRequestedHandler, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type local:ProjectExplorerView}}}">
-                    <customControls:EditableTextBlock.ContextMenu>
+                <Label Content="{Binding Name}">
+                    <Label.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="Add Diagram" Command="{s:Action CreateDiagram}"></MenuItem>
                             <MenuItem Header="Delete Diagram" Command="{s:Action DeleteRequested}"></MenuItem>
                         </ContextMenu>
-                    </customControls:EditableTextBlock.ContextMenu>
-                </customControls:EditableTextBlock>
+                    </Label.ContextMenu>
+                </Label>
             </HierarchicalDataTemplate>
         </TreeView.ItemTemplate>
     </TreeView>

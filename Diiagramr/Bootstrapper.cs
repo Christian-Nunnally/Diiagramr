@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DiagramEditor.Service;
 using Diiagramr.Executor;
 using Diiagramr.Service;
 using Diiagramr.ViewModel;
@@ -20,6 +21,7 @@ namespace Diiagramr
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>();
             builder.Bind<IDiagramExecutor>().To<DiagramExecutor>();
+            builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

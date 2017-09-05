@@ -1,7 +1,9 @@
 ﻿using Stylet;
 using System;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using DiagramEditor.Service;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 
@@ -9,15 +11,66 @@ namespace Diiagramr.ViewModel
 {
     public class DiagramWellViewModel : Conductor<DiagramViewModel>.Collection.OneActive
     {
+        private readonly IProjectManager _projectManager;
 
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
 
         public bool NodeSelectorVisible { get; set; }
 
-        public DiagramWellViewModel(Func<NodeSelectorViewModel> nodeSelectorViewModelFactory)
+        public DiagramWellViewModel(Func<IProjectManager> projectManagerFactory, Func<NodeSelectorViewModel> nodeSelectorViewModelFactory)
         {
+            _projectManager = projectManagerFactory.Invoke();
+            _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
+
             NodeSelectorViewModel = nodeSelectorViewModelFactory.Invoke();
             NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+        }
+
+        private void ProjectManagerOnCurrentProjectChanged()
+        {
+            if (_projectManager.CurrentProject != null)
+            {
+                _projectManager.CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
+            }
+        }
+
+        private void CurrentDiagramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            foreach (var oldDiagram in e.OldItems.OfType<EDiagram>())
+            {
+                oldDiagram.IsOpen = false;
+                oldDiagram.PropertyChanged -= DiagramOnPropertyChanged;
+            }
+
+            foreach (var newDiagram in e.NewItems.OfType<EDiagram>())
+            {
+                newDiagram.PropertyChanged += DiagramOnPropertyChanged;
+            }
+        }
+
+        private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var diagram = (EDiagram)sender;
+            if (e.PropertyName.Equals(nameof(diagram.IsOpen)))
+            {
+                if (diagram.IsOpen)
+                {
+                    OpenDiagram(diagram);
+                }
+                else
+                {
+                    CloseDiagram(diagram);
+                }
+            }
+        }
+
+        private void CloseDiagram(EDiagram diagram)
+        {
+            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Diagram == diagram);
+            if (diagramViewModel != null)
+            {
+                CloseItem(diagramViewModel);
+            }
         }
 
         private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -27,7 +80,7 @@ namespace Diiagramr.ViewModel
             if (NodeSelectorViewModel.SelectedNode != null) NodeSelectorVisible = false;
         }
 
-        public virtual void OpenDiagram(EDiagram diagram)
+        public void OpenDiagram(EDiagram diagram)
         {
             if (diagram == null) return;
             if (Items.Any(x => x.Name == diagram.Name))
@@ -97,6 +150,7 @@ namespace Diiagramr.ViewModel
             NodeSelectorVisible = false;
         }
 
+        // TODO: Call this
         /// <summary>
         /// Called right before the project is saved.
         /// </summary>
@@ -105,14 +159,6 @@ namespace Diiagramr.ViewModel
             foreach (var diagramViewModel in Items)
             {
                 diagramViewModel.SavingProject();
-            }
-        }
-
-        public void CloseAllOpenDiagrams()
-        {
-            for (var i = Items.Count - 1; i >= 0; i--)
-            {
-                Items[i].RequestClose();
             }
         }
     }

@@ -1,6 +1,6 @@
-using System;
 using DiagramEditor.Service;
 using Stylet;
+using System;
 
 namespace Diiagramr.ViewModel
 {
@@ -28,7 +28,7 @@ namespace Diiagramr.ViewModel
 
         public void CreateProject()
         {
-            _projectManager.CreateNewProject();
+            _projectManager.CreateProject();
         }
 
         public void LoadProject(string projectPath)

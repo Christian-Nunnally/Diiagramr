@@ -8,13 +8,12 @@
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
-        MouseDown="{s:Action ShellMouseDown}"
         d:DataContext="{d:DesignInstance viewModel1:ShellViewModel}">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
             <MenuItem Header="File">
                 <MenuItem Header="New" Command="{s:Action CreateProject}"></MenuItem>
-                <MenuItem Header="Open" Command="{s:Action UpdateProjectNamesInProjectDirectory}" ItemsSource="{Binding ProjectNamesInProjectDirectory}">
+                <MenuItem Header="Open">
                     <MenuItem.ItemTemplate>
                         <DataTemplate DataType="{x:Type system:String}">
                             <MenuItem Command="{s:Action LoadProject}" CommandParameter="{Binding}" Header="{Binding}"></MenuItem>

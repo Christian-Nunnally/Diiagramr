@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using Diiagramr.Model;
+﻿using Diiagramr.Model;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Windows;
 using TechTalk.SpecFlow;
 
 // ReSharper disable UnusedMember.Global
@@ -143,7 +143,7 @@ namespace ColorOrgan5UnitTests.Features.Steps
         {
             foreach (var diagram in _projectExplorer.CurrentProject.Diagrams)
                 if (diagram.Name.Equals(diagramName))
-                    _projectExplorer.SelectItem(diagram);
+                    _projectExplorer.SelectDiagram(diagram);
         }
 
         [Then(@"the _eDiagram well should open the selected _eDiagram")]

@@ -11,9 +11,12 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btvconverter" />
     </UserControl.Resources>
-    <Grid MouseLeftButtonDown="{s:Action LeftMouseDown}" MouseRightButtonDown="{s:Action RightMouseDown}">
+    <Grid MouseLeftButtonDown="{s:Action LeftMouseDown}" 
+          MouseRightButtonDown="{s:Action RightMouseDown}">
 
-        <TabControl ItemsSource="{Binding Items}" SelectedItem="{Binding ActiveItem}" DisplayMemberPath="Name">
+        <TabControl ItemsSource="{Binding Items}" 
+                    SelectedItem="{Binding ActiveItem}" 
+                    DisplayMemberPath="Name">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">
@@ -25,17 +28,23 @@
                                         <ColumnDefinition Width="*" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-                                    <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center"
-                                                  HorizontalAlignment="Center" ContentSource="Header" Margin="5, 5" />
-                                    <Button Grid.Column="1" Content="×" FontSize="8" FontWeight="ExtraBold" Width="18"
-                                        BorderBrush="Transparent" Background="Transparent" Margin="2"
-                                        Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}"
-                                        Command="{s:Action CloseActiveDiagram}"
-                                        Visibility="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btvconverter}}" />
+                                    <ContentPresenter x:Name="ContentSite" 
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Center" 
+                                                      ContentSource="Header" 
+                                                      Margin="5, 5" />
+                                    <Button Grid.Column="1" 
+                                            Content="×" 
+                                            FontSize="8" 
+                                            FontWeight="ExtraBold" 
+                                            Width="18"
+                                            BorderBrush="Transparent" Background="Transparent" Margin="2"
+                                            Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}"
+                                            Command="{s:Action CloseActiveDiagram}"
+                                            Visibility="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btvconverter}}" />
                                 </Grid>
 
                                 <ControlTemplate.Triggers>
-
                                     <Trigger Property="IsSelected" Value="True">
                                         <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue" />
                                     </Trigger>
@@ -43,7 +52,6 @@
                                     <Trigger Property="IsSelected" Value="False">
                                         <Setter TargetName="Panel" Property="Background" Value="White" />
                                     </Trigger>
-
                                 </ControlTemplate.Triggers>
 
                             </ControlTemplate>
@@ -54,9 +62,11 @@
                             <DataTemplate>
                                 <Grid>
 
-                                    <ContentControl s:View.Model="{Binding}" ClipToBounds="True"
-                                                VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch"
-                                                IsTabStop="False" />
+                                    <ContentControl s:View.Model="{Binding}" 
+                                                    ClipToBounds="True"
+                                                    VerticalContentAlignment="Stretch" 
+                                                    HorizontalContentAlignment="Stretch"
+                                                    IsTabStop="False" />
 
                                 </Grid>
                             </DataTemplate>
@@ -65,7 +75,7 @@
                 </Style>
             </TabControl.Resources>
         </TabControl>
-        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorVisible, Converter={StaticResource Btvconverter}}"/>
-        
+        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" 
+                        Visibility="{Binding NodeSelectorVisible, Converter={StaticResource Btvconverter}}"/>
     </Grid>
 </UserControl>

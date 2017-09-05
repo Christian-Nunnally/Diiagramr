@@ -1,7 +1,7 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using PropertyChanged;
 
 namespace Diiagramr.Model
 {
@@ -15,6 +15,9 @@ namespace Diiagramr.Model
             Nodes = new List<DiagramNode>();
             Name = "";
         }
+
+        [DataMember]
+        public bool IsOpen { get; set; }
 
         public bool IsExpanded => false;
 

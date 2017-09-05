@@ -94,6 +94,7 @@
     <Compile Include="Service\IDirectoryService.cs" />
     <Compile Include="Service\IEnumerableExtensionMethods.cs" />
     <Compile Include="Service\IProjectManager.cs" />
+    <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="Service\SerializableType.cs" />
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />

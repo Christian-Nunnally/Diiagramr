@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Diiagramr.Model;
+using System;
 using System.Collections.ObjectModel;
-using Diiagramr.Model;
 
 namespace DiagramEditor.Service
 {
@@ -15,7 +14,7 @@ namespace DiagramEditor.Service
 
         ObservableCollection<EDiagram> CurrentDiagrams { get; }
 
-        void CreateNewProject();
+        void CreateProject();
 
         void SaveProject();
 
@@ -24,5 +23,9 @@ namespace DiagramEditor.Service
         void CloseProject();
 
         bool RenameProject(string newName);
+
+        void CreateDiagram();
+
+        void DeleteDiagram(EDiagram diagram);
     }
 }
