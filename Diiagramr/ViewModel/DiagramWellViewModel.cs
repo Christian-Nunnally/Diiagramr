@@ -1,11 +1,14 @@
-﻿using Stylet;
+﻿using DiagramEditor.Service;
+using Diiagramr.Model;
+using Diiagramr.ViewModel.Diagram;
+using Stylet;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using DiagramEditor.Service;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
-using Diiagramr.Service;
 
 namespace Diiagramr.ViewModel
 {
