@@ -84,6 +84,7 @@ namespace Diiagramr.Service
         {
             var dToDelete = CurrentDiagrams.First(x => x == diagram);
             CurrentProject.Diagrams.Remove(dToDelete);
+            CurrentProjectChanged.Invoke();
         }
     }
 }
