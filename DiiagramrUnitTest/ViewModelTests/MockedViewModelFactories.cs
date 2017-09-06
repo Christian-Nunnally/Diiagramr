@@ -1,4 +1,4 @@
-﻿using DiagramEditor.Service;
+﻿using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 using Moq;

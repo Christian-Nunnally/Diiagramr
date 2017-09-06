@@ -1,4 +1,4 @@
-﻿using DiagramEditor.Service;
+﻿using Diiagramr.Service;
 using Diiagramr.Model;
 using Diiagramr.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

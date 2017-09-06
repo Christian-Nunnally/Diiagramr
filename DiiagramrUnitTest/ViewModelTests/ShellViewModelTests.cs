@@ -1,4 +1,4 @@
-﻿using DiagramEditor.Service;
+﻿using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -45,9 +45,8 @@ namespace ColorOrgan5UnitTests.ViewModelTests
         [TestMethod]
         public void TestLoadProject_CallsLoadProject()
         {
-            const string projectPath = "path";
-            _shellViewModel.LoadProject(projectPath);
-            _projectManagerMoq.Verify(m => m.LoadProject(It.Is<string>(s => s == projectPath)), Times.Once);
+            _shellViewModel.LoadProject();
+            _projectManagerMoq.Verify(m => m.LoadProject(), Times.Once);
         }
 
         [TestMethod]
