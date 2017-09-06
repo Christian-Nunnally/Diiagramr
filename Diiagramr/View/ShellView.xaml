@@ -13,15 +13,10 @@
         <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
             <MenuItem Header="File">
                 <MenuItem Header="New" Command="{s:Action CreateProject}"></MenuItem>
-                <MenuItem Header="Open">
-                    <MenuItem.ItemTemplate>
-                        <DataTemplate DataType="{x:Type system:String}">
-                            <MenuItem Command="{s:Action LoadProject}" CommandParameter="{Binding}" Header="{Binding}"></MenuItem>
-                        </DataTemplate>
-                    </MenuItem.ItemTemplate>
-                </MenuItem>
+                <MenuItem Header="Open" Command="{s:Action LoadProject}"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Save" Command="{s:Action SaveProject}"></MenuItem>
+                <MenuItem Header="Save As" Command="{s:Action SaveAsProject}"></MenuItem>
                 <Separator></Separator>
                 <MenuItem Header="Close" Command="{s:Action Close}"></MenuItem>
             </MenuItem>

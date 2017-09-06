@@ -1,4 +1,4 @@
-using DiagramEditor.Service;
+using Diiagramr.Service;
 using Stylet;
 using System;
 
@@ -12,11 +12,23 @@ namespace Diiagramr.ViewModel
 
         public DiagramWellViewModel DiagramWellViewModel { get; set; }
 
+        public bool CanSaveProject { get; set; }
+
+        public bool CanSaveAsProject { get; set; }
+
         public ShellViewModel(Func<ProjectExplorerViewModel> projectExplorerViewModelFactory, Func<DiagramWellViewModel> diagramWellViewModelFactory, Func<IProjectManager> projectManagerFactory)
         {
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
+
+            _projectManager.CurrentProjectChanged += () => {
+                if (_projectManager.CurrentProject != null)
+                {
+                    CanSaveProject = true;
+                    CanSaveAsProject = true;
+                }
+            };
 
         }
 
@@ -31,14 +43,19 @@ namespace Diiagramr.ViewModel
             _projectManager.CreateProject();
         }
 
-        public void LoadProject(string projectPath)
+        public void LoadProject()
         {
-            _projectManager.LoadProject(projectPath);
+            _projectManager.LoadProject();
         }
 
         public void SaveProject()
         {
             _projectManager.SaveProject();
+        }
+
+        public void SaveAsProject()
+        {
+            _projectManager.SaveAsProject();
         }
 
         public void Close()

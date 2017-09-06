@@ -2,7 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 
-namespace DiagramEditor.Service
+namespace Diiagramr.Service
 {
     public interface IProjectManager
     {
@@ -18,7 +18,9 @@ namespace DiagramEditor.Service
 
         void SaveProject();
 
-        void LoadProject(string path);
+        void SaveAsProject();
+
+        void LoadProject();
 
         void CloseProject();
 

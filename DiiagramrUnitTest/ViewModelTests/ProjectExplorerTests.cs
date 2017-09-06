@@ -1,18 +1,17 @@
-﻿using Castle.Core.Internal;
+﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Collections.Generic;
 using Diiagramr.Service;
+using Diiagramr.ViewModel;
+using Moq;
 
-namespace ColorOrgan5UnitTests.ServiceTests
+namespace ColorOrgan5UnitTests.ViewModelTests
 {
     [TestClass]
-    public class ProjectFileServiceTests
+    public class ProjectExplorerTests
     {
-        private const string InvalidProjectName = "+";
-        private const string ValidProjectName = "a";
         private Mock<IDirectoryService> _directoryServiceMoq;
         private ProjectFileService _projectFileService;
+        private DiagramWellViewModel diagramWell;
         private const string Directory = "test";
         private const string OldDirectory = "test\\oldproject";
         private const string NewDirectory = "test\\newproject";
@@ -27,19 +26,13 @@ namespace ColorOrgan5UnitTests.ServiceTests
             _directoryServiceMoq.Setup(m => m.GetCurrentDirectory()).Returns("testDirectory");
             _projectFileService = new ProjectFileService(_directoryServiceMoq.Object);
             _projectFileService.ProjectDirectory = Directory;
+
         }
 
         [TestMethod]
-        public void ConstructorTest_CreatesProjectDirectory()
+        public void TestChangeProjectName()
         {
-            Assert.IsFalse(_projectFileService.ProjectDirectory.IsNullOrEmpty());
-            _directoryServiceMoq.Verify(m => m.CreateDirectory(It.IsAny<string>()));
-        }
-
-        [TestMethod]
-        public void ConstructorTest_ProjectNameNull()
-        {
-            Assert.IsNull(_projectFileService.ProjectName);
+            Assert.IsTrue(RenameProject(NewName));
         }
     }
 }
