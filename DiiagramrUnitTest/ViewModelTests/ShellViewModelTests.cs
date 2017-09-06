@@ -1,4 +1,5 @@
-﻿using Diiagramr.Service;
+﻿using Diiagramr.Model;
+using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -75,6 +76,44 @@ namespace ColorOrgan5UnitTests.ViewModelTests
         {
             _shellViewModel.Close();
             _projectManagerMoq.Verify(m => m.CloseProject(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestCanSaveProject_ProjectChangedToNull_CanSaveProjectIsFalse()
+        {
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.IsFalse(_shellViewModel.CanSaveProject);
+        }
+
+        [TestMethod]
+        public void TestCanSaveProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
+        {
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Object.CurrentProject = new Project("");
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.IsTrue(_shellViewModel.CanSaveProject);
+        }
+
+        [TestMethod]
+        public void TestCanSaveAsProject_ProjectChangedToNull_CanSaveProjectIsFalse()
+        {
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.IsFalse(_shellViewModel.CanSaveAsProject);
+        }
+
+        [TestMethod]
+        public void TestCanSaveAsProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
+        {
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Object.CurrentProject = new Project("");
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.IsTrue(_shellViewModel.CanSaveAsProject);
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using Diiagramr.Service;
-using Diiagramr.Model;
+﻿using Diiagramr.Model;
+using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -73,6 +73,17 @@ namespace ColorOrgan5UnitTests.ViewModelTests
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_projectExplorerViewModel.IsAddDiagramButtonVisible);
+        }
+
+        [TestMethod]
+        public void TestProjectChanged_ProjectNotNull_ProjectSet()
+        {
+            var project = new Project("");
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Object.CurrentProject = project;
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.AreEqual(project, _projectExplorerViewModel.Project);
         }
     }
 }

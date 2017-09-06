@@ -18,12 +18,12 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="30"/>
             </Grid.RowDefinitions>
-            <Label Content="{Binding ProjectManager.CurrentProject.Name}"
+            <Label Content="{Binding Project.Name}"
                    HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center"
                    FontSize="13"
                    FontWeight="SemiBold"/>
-            <ListView ItemsSource="{Binding ProjectManager.CurrentProject.Diagrams}" 
+            <ListView ItemsSource="{Binding Diagrams}" 
                       Grid.Row="1" 
                       BorderThickness="0"
                       SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"

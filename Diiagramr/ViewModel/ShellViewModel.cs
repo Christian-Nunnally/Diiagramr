@@ -22,14 +22,14 @@ namespace Diiagramr.ViewModel
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
 
-            _projectManager.CurrentProjectChanged += () => {
-                if (_projectManager.CurrentProject != null)
-                {
-                    CanSaveProject = true;
-                    CanSaveAsProject = true;
-                }
-            };
+            _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
+        }
+
+        private void ProjectManagerOnCurrentProjectChanged()
+        {
+            CanSaveProject = _projectManager.CurrentProject != null;
+            CanSaveAsProject = _projectManager.CurrentProject != null;
         }
 
         public override void RequestClose(bool? dialogResult = null)
