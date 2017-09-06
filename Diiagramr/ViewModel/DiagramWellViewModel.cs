@@ -36,15 +36,22 @@ namespace Diiagramr.ViewModel
 
         private void CurrentDiagramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            foreach (var oldDiagram in e.OldItems.OfType<EDiagram>())
+            if (e.OldItems != null)
             {
-                oldDiagram.IsOpen = false;
-                oldDiagram.PropertyChanged -= DiagramOnPropertyChanged;
+                foreach (var oldDiagram in e.OldItems.OfType<EDiagram>())
+                {
+                    oldDiagram.IsOpen = false;
+                    oldDiagram.PropertyChanged -= DiagramOnPropertyChanged;
+                }
             }
 
-            foreach (var newDiagram in e.NewItems.OfType<EDiagram>())
+            if (e.NewItems != null)
             {
-                newDiagram.PropertyChanged += DiagramOnPropertyChanged;
+                foreach (var newDiagram in e.NewItems.OfType<EDiagram>())
+                {
+                    newDiagram.IsOpen = true;
+                    newDiagram.PropertyChanged += DiagramOnPropertyChanged;
+                }
             }
         }
 

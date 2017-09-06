@@ -1,5 +1,5 @@
-﻿using Diiagramr.Service;
-using Diiagramr.Model;
+﻿using Diiagramr.Model;
+using Diiagramr.Service;
 using Stylet;
 using System;
 using System.Collections.ObjectModel;
