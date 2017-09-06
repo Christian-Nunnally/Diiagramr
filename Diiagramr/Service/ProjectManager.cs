@@ -66,12 +66,24 @@ namespace Diiagramr.Service
 
         public void CreateDiagram()
         {
-            //throw new NotImplementedException();
+            if (CurrentProject == null)
+            {
+                throw new NullReferenceException("Project does not exist");
+            }
+            const string dName = "diagram";
+            var dNum = 1;
+            var diagram = new EDiagram();
+            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(dName + dNum)))
+                dNum++;
+            diagram.Name = dName + dNum;
+            CurrentProject.Diagrams.Add(diagram);
+            CurrentProjectChanged.Invoke();
         }
 
         public void DeleteDiagram(EDiagram diagram)
         {
-            //throw new NotImplementedException();
+            var dToDelete = CurrentDiagrams.First(x => x == diagram);
+            CurrentProject.Diagrams.Remove(dToDelete);
         }
     }
 }

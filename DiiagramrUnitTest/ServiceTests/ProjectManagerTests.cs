@@ -84,5 +84,38 @@ namespace ColorOrgan5UnitTests.ServiceTests
             _projectManager.LoadProject();
             Assert.IsTrue(_currentProjectChanged);
         }
+
+        [TestMethod]
+        [ExpectedException(typeof(NullReferenceException), "Project does not exist")]
+        public void CreateDiagramTest_NoProjectException()
+        {
+            _projectManager.CreateDiagram();
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_DiagramAdded()
+        {
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram();
+            Assert.IsNotNull(_projectManager.CurrentDiagrams[0]);
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_UniqueNames()
+        {
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram();
+            _projectManager.CreateDiagram();
+            Assert.AreNotEqual(_projectManager.CurrentDiagrams[0].Name, _projectManager.CurrentDiagrams[1].Name);
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_ProjectChanged()
+        {
+            _projectManager.CreateProject();
+            _currentProjectChanged = false;
+            _projectManager.CreateDiagram();
+            Assert.IsTrue(_currentProjectChanged);
+        }
     }
 }
