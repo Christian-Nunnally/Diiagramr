@@ -8,29 +8,60 @@
              xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
              d:DataContext="{d:DesignInstance viewModel1:ProjectExplorerViewModel}"
              d:DesignHeight="300" d:DesignWidth="150">
-    <TreeView ItemsSource="{Binding Projects}" 
-              SelectedItemChanged="{s:Action SelectedItemChanged}"
-              MouseMove="{s:Action MouseMoveHandler}">
-        <TreeView.ItemContainerStyle>
-            <Style TargetType="{x:Type TreeViewItem}">
-                <Setter Property="HorizontalAlignment" Value="Left"/>
-                <Setter Property="IsExpanded" Value="{Binding IsExpanded}"></Setter>
-            </Style>
-        </TreeView.ItemContainerStyle>
-        
-        <TreeView.ItemTemplate>
-            <HierarchicalDataTemplate ItemsSource="{Binding Diagrams}">
-                <Label Content="{Binding Name}">
-                    <Label.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Add Diagram" Command="{s:Action CreateDiagram}"></MenuItem>
-                            <MenuItem Header="Delete Diagram" Command="{s:Action DeleteRequested}"></MenuItem>
-                        </ContextMenu>
-                    </Label.ContextMenu>
-                </Label>
-            </HierarchicalDataTemplate>
-        </TreeView.ItemTemplate>
-    </TreeView>
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="btv"/>
+    </UserControl.Resources>
+    <Border BorderBrush="Gray" BorderThickness="1" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Label Content="{Binding ProjectManager.CurrentProject.Name}"
+                   HorizontalContentAlignment="Center"
+                   VerticalContentAlignment="Center"
+                   FontSize="13"
+                   FontWeight="SemiBold"/>
+            <ListView ItemsSource="{Binding ProjectManager.CurrentProject.Diagrams}" 
+                      Grid.Row="1" 
+                      BorderThickness="0"
+                      SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
+                      MouseMove="{s:Action MouseMoveHandler}"
+                      SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Name}">
+                            <Label.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="Delete Diagram" Command="{s:Action DeleteDiagram}"/>
+                                </ContextMenu>
+                            </Label.ContextMenu>
+                        </Label>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Grid.Row="2"
+                    Click="{s:Action CreateDiagram}"
+                    BorderThickness="0"
+                    Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Content" Value="+"/>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="FontWeight" Value="Bold"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Content" Value="Add Diagram"/>
+                                <Setter Property="FontSize" Value="12"/>
+                                <Setter Property="FontWeight" Value="Normal"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+    </Border>
 </UserControl>
 
 

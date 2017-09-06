@@ -81,117 +81,15 @@
   </Choose>
   <ItemGroup>
     <Compile Include="ExecutorTests\DiagramExecutorTests.cs" />
-    <Compile Include="Features\Diagram\DiagramAddNode.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DiagramAddNode.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\CloseApplication.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CloseApplication.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\CreateDiagram.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CreateDiagram.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\DeleteDiagram.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DeleteDiagram.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\OpenDiagram.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>OpenDiagram.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\RenameDiagram.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RenameDiagram.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\RenameProject.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>RenameProject.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\SaveProject.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SaveProject.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\CreateProject.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>CreateProject.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Shell\LoadProject.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LoadProject.feature</DependentUpon>
-    </Compile>
-    <Compile Include="Features\Steps\DiagramSteps.cs" />
-    <Compile Include="Features\Steps\ShellSteps.cs" />
-    <Compile Include="Features\Steps\ProjectSteps.cs" />
-    <Compile Include="Features\Steps\TerminalSteps.cs" />
-    <Compile Include="Features\Steps\WireSteps.cs" />
-    <Compile Include="Features\Terminal\AddWireFeature.feature.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AddWireFeature.feature</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceTests\ProjectFileServiceTests.cs" />
+    <Compile Include="ViewModelTests\MockedViewModelFactories.cs" />
+    <Compile Include="ViewModelTests\ProjectExplorerViewModelTests.cs" />
+    <Compile Include="ViewModelTests\ShellViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Features\Diagram\DiagramAddNode.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>DiagramAddNode.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\CloseApplication.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CloseApplication.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\CreateDiagram.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CreateDiagram.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\DeleteDiagram.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>DeleteDiagram.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\OpenDiagram.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>OpenDiagram.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\RenameDiagram.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>RenameDiagram.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\RenameProject.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>RenameProject.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\SaveProject.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>SaveProject.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\CreateProject.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>CreateProject.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Shell\LoadProject.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>LoadProject.feature.cs</LastGenOutput>
-    </None>
-    <None Include="Features\Terminal\AddWireFeature.feature">
-      <Generator>SpecFlowSingleFileGenerator</Generator>
-      <LastGenOutput>AddWireFeature.feature.cs</LastGenOutput>
-    </None>
     <None Include="packages.config" />
-    <None Include="Requirements.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Diiagramr\Diiagramr.csproj">
@@ -199,9 +97,7 @@
       <Name>Diiagramr</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewModelTests\" />
-  </ItemGroup>
+  <ItemGroup />
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

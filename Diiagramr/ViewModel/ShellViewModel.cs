@@ -17,7 +17,6 @@ namespace Diiagramr.ViewModel
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
-
         }
 
         public override void RequestClose(bool? dialogResult = null)
