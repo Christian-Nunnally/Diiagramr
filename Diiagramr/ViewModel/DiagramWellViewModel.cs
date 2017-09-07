@@ -12,18 +12,21 @@ namespace Diiagramr.ViewModel
     public class DiagramWellViewModel : Conductor<DiagramViewModel>.Collection.OneActive
     {
         private readonly IProjectManager _projectManager;
+        private readonly IProvideNodes _nodeProvider;
 
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
 
         public bool NodeSelectorVisible { get; set; }
 
-        public DiagramWellViewModel(Func<IProjectManager> projectManagerFactory, Func<NodeSelectorViewModel> nodeSelectorViewModelFactory)
+        public DiagramWellViewModel(Func<IProjectManager> projectManagerFactory, Func<IProvideNodes> nodeProviderFactory, Func<NodeSelectorViewModel> nodeSelectorViewModelFactory)
         {
             _projectManager = projectManagerFactory.Invoke();
             _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
             NodeSelectorViewModel = nodeSelectorViewModelFactory.Invoke();
             NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+
+            _nodeProvider = nodeProviderFactory.Invoke();
         }
 
         private void ProjectManagerOnCurrentProjectChanged()
@@ -83,7 +86,8 @@ namespace Diiagramr.ViewModel
         private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName != "SelectedNode") return;
-            ActiveItem.InsertingNodeViewModel = NodeSelectorViewModel.CreateNewInstanceOfSelectedNode();
+            var selectedNode = NodeSelectorViewModel.SelectedNode;
+            ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.Name);
             if (NodeSelectorViewModel.SelectedNode != null) NodeSelectorVisible = false;
         }
 
@@ -95,7 +99,7 @@ namespace Diiagramr.ViewModel
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = new DiagramViewModel(diagram, NodeSelectorViewModel);
+            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider, NodeSelectorViewModel);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Add(diagramViewModel);
             ActiveItem = diagramViewModel;

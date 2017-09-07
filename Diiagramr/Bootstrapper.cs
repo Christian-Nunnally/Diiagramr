@@ -22,6 +22,7 @@ namespace Diiagramr
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IDiagramExecutor>().To<DiagramExecutor>();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
+            builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

@@ -28,7 +28,8 @@
                       BorderThickness="0"
                       SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
                       MouseMove="{s:Action MouseMoveHandler}"
-                      SelectionMode="Single">
+                      SelectionMode="Single"
+                      SelectionChanged="{s:Action SelectedDiagramChanged}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Name}">

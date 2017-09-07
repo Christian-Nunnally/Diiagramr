@@ -6,15 +6,19 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Diiagramr.Model;
+using Diiagramr.Service;
 
 namespace Diiagramr.ViewModel.Diagram
 {
     public class DiagramViewModel : Screen
     {
         private AbstractNodeViewModel _selectedNodeViewModel;
+        private readonly IProvideNodes _nodeProvider;
 
-        public DiagramViewModel(EDiagram diagram, NodeSelectorViewModel nodeSelectorViewModel)
+        public DiagramViewModel(EDiagram diagram, IProvideNodes nodeProvider, NodeSelectorViewModel nodeSelectorViewModel)
         {
+            _nodeProvider = nodeProvider;
+
             NodeViewModels = new BindableCollection<AbstractNodeViewModel>();
             WireViewModels = new BindableCollection<WireViewModel>();
 
@@ -23,7 +27,7 @@ namespace Diiagramr.ViewModel.Diagram
 
             foreach (var abstractNode in diagram.Nodes)
             {
-                var viewModel = nodeSelectorViewModel.ConstructAbstractNodeViewModel(abstractNode);
+                var viewModel = _nodeProvider.LoadNodeViewModelFromNode(abstractNode);
                 abstractNode.SetTerminalsPropertyChanged();
                 AddNodeViewModel(viewModel);
 

@@ -44,6 +44,14 @@ namespace Diiagramr.ViewModel
             }
         }
 
+        public void SelectedDiagramChanged()
+        {
+            if (SelectedDiagram != null)
+            {
+                SelectedDiagram.IsOpen = true;
+            }
+        }
+
         public EDiagram SelectedDiagram { get; set; }
 
         public void CreateDiagram()
