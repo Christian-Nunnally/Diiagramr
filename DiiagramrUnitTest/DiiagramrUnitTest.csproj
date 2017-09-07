@@ -82,6 +82,7 @@
   <ItemGroup>
     <Compile Include="ExecutorTests\DiagramExecutorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceTests\NodeProviderTests.cs" />
     <Compile Include="ServiceTests\ProjectFileServiceTests.cs" />
     <Compile Include="ViewModelTests\MockedViewModelFactories.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTests.cs" />

@@ -121,7 +121,7 @@ namespace ColorOrgan5UnitTests.ExecutorTests
 
         public object DataReceived;
 
-        public DiagramExecutorTestDiagramNode(InputTerminal inputTerminal, OutputTerminal outputTerminal) : base("TestNode")
+        public DiagramExecutorTestDiagramNode(InputTerminal inputTerminal, OutputTerminal outputTerminal) : base("TestNodeViewModel")
         {
             InputTerminals.Add(inputTerminal);
             OutputTerminals.Add(outputTerminal);

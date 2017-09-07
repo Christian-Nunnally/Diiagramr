@@ -6,7 +6,7 @@ namespace Diiagramr.Service
 {
     public interface IProvideNodes
     {
-        void RegisterNode(AbstractNodeViewModel abstractNodeViewModel);
+        void RegisterNode(AbstractNodeViewModel node);
 
         AbstractNodeViewModel LoadNodeViewModelFromNode(DiagramNode node);
 

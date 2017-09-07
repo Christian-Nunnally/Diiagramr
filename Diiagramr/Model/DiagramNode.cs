@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Diiagramr.ViewModel.Diagram;
+using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using Diiagramr.ViewModel.Diagram;
-using PropertyChanged;
 
 namespace Diiagramr.Model
 {
