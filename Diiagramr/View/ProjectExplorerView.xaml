@@ -32,15 +32,22 @@
                       SelectionChanged="{s:Action SelectedDiagramChanged}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Content="{Binding Name}">
-                            <Label.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="Delete Diagram" Command="{s:Action DeleteDiagram}"/>
-                                </ContextMenu>
-                            </Label.ContextMenu>
-                        </Label>
+                        <Border Width="Auto">
+                            <Label Content="{Binding Name}">
+                                <Label.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Delete Diagram" Command="{s:Action DeleteDiagram}"/>
+                                    </ContextMenu>
+                                </Label.ContextMenu>
+                            </Label>
+                        </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
             </ListView>
             <Button Grid.Row="2"
                     Click="{s:Action CreateDiagram}"
