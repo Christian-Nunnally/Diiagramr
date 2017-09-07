@@ -1,17 +1,31 @@
 ﻿using Diiagramr.Service;
 using Diiagramr.ViewModel;
-using Diiagramr.ViewModel.Diagram;
 using Moq;
 using System;
-using System.Collections.Generic;
 
-namespace ColorOrgan5UnitTests.ViewModelTests
+namespace DiiagramrUnitTests.ViewModelTests
 {
     internal static class MockedViewModelFactories
     {
+        private static Mock<IProjectManager> _staticProjectManagerMoq;
+        private static Mock<IProvideNodes> _staticNodeProviderMoq;
+
+        public static void CreateSingletonMoqs()
+        {
+            _staticProjectManagerMoq = new Mock<IProjectManager>();
+            _staticNodeProviderMoq = new Mock<IProvideNodes>();
+        }
+
         public static Mock<IProjectManager> CreateMoqProjectManager()
         {
-            return new Mock<IProjectManager>();
+            if (_staticProjectManagerMoq == null) throw new InvalidOperationException("Must call CreateSingletonMoqs before getting singleton moqs");
+            return _staticProjectManagerMoq;
+        }
+
+        public static Mock<IProvideNodes> CreateMoqNodeProvider()
+        {
+            if (_staticNodeProviderMoq == null) throw new InvalidOperationException("Must call CreateSingletonMoqs before getting singleton moqs");
+            return _staticNodeProviderMoq;
         }
 
         private static Func<IProjectManager> CreateProjectManagerFactory()
@@ -19,10 +33,14 @@ namespace ColorOrgan5UnitTests.ViewModelTests
             return () => CreateMoqProjectManager().Object;
         }
 
+        private static Func<IProvideNodes> CreateNodeProviderFactory()
+        {
+            return () => CreateMoqNodeProvider().Object;
+        }
+
         public static Mock<NodeSelectorViewModel> CreateMoqNodeSelectorViewModel()
         {
-            Func<IEnumerable<AbstractNodeViewModel>> emptyNodeListFactory = () => new List<AbstractNodeViewModel>();
-            return new Mock<NodeSelectorViewModel>(emptyNodeListFactory);
+            return new Mock<NodeSelectorViewModel>(CreateNodeProviderFactory());
         }
 
         private static Func<NodeSelectorViewModel> CreateNodeSelectorFactory()
@@ -37,7 +55,7 @@ namespace ColorOrgan5UnitTests.ViewModelTests
 
         public static Mock<DiagramWellViewModel> CreateMoqDiagramWell()
         {
-            return new Mock<DiagramWellViewModel>(CreateProjectManagerFactory(), CreateNodeSelectorFactory());
+            return new Mock<DiagramWellViewModel>(CreateProjectManagerFactory(), CreateNodeProviderFactory(), CreateNodeSelectorFactory());
         }
     }
 }

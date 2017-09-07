@@ -6,7 +6,7 @@ using Moq;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ColorOrgan5UnitTests.ServiceTests
+namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
     public class NodeProviderTests

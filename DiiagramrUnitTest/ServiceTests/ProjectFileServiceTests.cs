@@ -1,10 +1,9 @@
 ﻿using Castle.Core.Internal;
+using Diiagramr.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Collections.Generic;
-using Diiagramr.Service;
 
-namespace ColorOrgan5UnitTests.ServiceTests
+namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
     public class ProjectFileServiceTests

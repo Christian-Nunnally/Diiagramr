@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Diiagramr.Model;
 using Diiagramr.Service;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Diiagramr.Model;
+using System;
 
-namespace ColorOrgan5UnitTests.ServiceTests
+namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
     public class ProjectManagerTests

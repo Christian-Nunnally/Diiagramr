@@ -1,11 +1,11 @@
 ﻿using Diiagramr.Model;
+using Diiagramr.Service;
 using Diiagramr.ViewModel.Diagram;
 using Stylet;
 using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
-using Diiagramr.Service;
 
 namespace Diiagramr.ViewModel
 {
@@ -31,7 +31,7 @@ namespace Diiagramr.ViewModel
 
         private void ProjectManagerOnCurrentProjectChanged()
         {
-            if (_projectManager.CurrentProject != null)
+            if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
                 _projectManager.CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
             }
@@ -52,7 +52,6 @@ namespace Diiagramr.ViewModel
             {
                 foreach (var newDiagram in e.NewItems.OfType<EDiagram>())
                 {
-                    newDiagram.IsOpen = true;
                     newDiagram.PropertyChanged += DiagramOnPropertyChanged;
                 }
             }
@@ -91,7 +90,7 @@ namespace Diiagramr.ViewModel
             if (NodeSelectorViewModel.SelectedNode != null) NodeSelectorVisible = false;
         }
 
-        public void OpenDiagram(EDiagram diagram)
+        private void OpenDiagram(EDiagram diagram)
         {
             if (diagram == null) return;
             if (Items.Any(x => x.Name == diagram.Name))
@@ -142,7 +141,10 @@ namespace Diiagramr.ViewModel
 
         public void CloseActiveDiagram()
         {
-            ActiveItem.RequestClose();
+            if (ActiveItem != null)
+            {
+                ActiveItem.Diagram.IsOpen = false;
+            }
         }
 
         public void RightMouseDown()

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
 
-namespace ColorOrgan5UnitTests.ViewModelTests
+namespace DiiagramrUnitTests.ViewModelTests
 {
     [TestClass]
     public class ShellViewModelTests
@@ -18,6 +18,7 @@ namespace ColorOrgan5UnitTests.ViewModelTests
         [TestInitialize]
         public void TestInitialize()
         {
+            MockedViewModelFactories.CreateSingletonMoqs();
             _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
             _diagramWellViewModelMoq = MockedViewModelFactories.CreateMoqDiagramWell();
             _projectExplorerViewModelMoq = MockedViewModelFactories.CreateMoqProjectExplorer();

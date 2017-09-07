@@ -7,7 +7,7 @@ using Stylet;
 using System;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
-namespace ColorOrgan5UnitTests.ViewModelTests
+namespace DiiagramrUnitTests.ViewModelTests
 {
     [TestClass]
     public class ProjectExplorerViewModelTests
@@ -18,6 +18,7 @@ namespace ColorOrgan5UnitTests.ViewModelTests
         [TestInitialize]
         public void TestInitialize()
         {
+            MockedViewModelFactories.CreateSingletonMoqs();
             _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
 
             Func<IProjectManager> projectManagerFactory = () => _projectManagerMoq.Object;

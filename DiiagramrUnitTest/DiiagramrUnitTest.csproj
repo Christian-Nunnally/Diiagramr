@@ -6,8 +6,8 @@
     <ProjectGuid>{4684600E-834A-43C6-A421-22F0EF0DBB09}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ColorOrgan5UnitTests</RootNamespace>
-    <AssemblyName>ColorOrgan5UnitTests</AssemblyName>
+    <RootNamespace>DiiagramrUnitTests</RootNamespace>
+    <AssemblyName>DiiagramrUnitTests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -84,6 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceTests\NodeProviderTests.cs" />
     <Compile Include="ServiceTests\ProjectFileServiceTests.cs" />
+    <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\MockedViewModelFactories.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTests.cs" />
     <Compile Include="ViewModelTests\ShellViewModelTests.cs" />

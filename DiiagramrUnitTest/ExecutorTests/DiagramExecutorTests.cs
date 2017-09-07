@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace ColorOrgan5UnitTests.ExecutorTests
+namespace DiiagramrUnitTests.ExecutorTests
 {
     [TestClass]
     public class DiagramExecutorTests

@@ -75,7 +75,7 @@
                 </Style>
             </TabControl.Resources>
         </TabControl>
-        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" 
+        <ContentControl s:View.Model="{Binding _nodeSelectorViewModel}" 
                         Visibility="{Binding NodeSelectorVisible, Converter={StaticResource Btvconverter}}"/>
     </Grid>
 </UserControl>
