@@ -23,6 +23,8 @@ namespace Diiagramr
             builder.Bind<IDiagramExecutor>().To<DiagramExecutor>();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
+
+            builder.Bind<AbstractNodeViewModel>().To<DemoNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

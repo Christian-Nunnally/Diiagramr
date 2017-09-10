@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
-using Diiagramr.Service;
+﻿using Diiagramr.Service;
 using Diiagramr.ViewModel.Diagram;
 using Stylet;
+using System;
+using System.Linq;
 
 namespace Diiagramr.ViewModel
 {
@@ -17,20 +17,13 @@ namespace Diiagramr.ViewModel
             _nodeProvidor.GetRegisteredNodes().ForEach(AvailibleNodeViewModels.Add);
         }
 
-        public AbstractNodeViewModel SelectedNode { get; set; }
+        public virtual AbstractNodeViewModel SelectedNode { get; set; }
 
         public BindableCollection<AbstractNodeViewModel> AvailibleNodeViewModels { get; set; }
 
         public void SelectNode(object arg)
         {
             var selectedNode = AvailibleNodeViewModels.First(x => x == arg);
-            if (selectedNode == null) return;
-            SelectedNode = selectedNode;
-        }
-
-        public void SelectNode(Type type)
-        {
-            var selectedNode = AvailibleNodeViewModels.First(x => x.GetType() == type);
             if (selectedNode == null) return;
             SelectedNode = selectedNode;
         }
