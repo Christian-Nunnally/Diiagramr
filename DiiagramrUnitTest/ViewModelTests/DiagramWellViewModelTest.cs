@@ -5,7 +5,6 @@ using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using System.ComponentModel;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -44,7 +43,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagramMoq = new Mock<EDiagram>();
             diagramMoq.SetupAllProperties();
             diagramMoq.Object.IsOpen = true;
-            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorMoq.Object).Object;
+            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object).Object;
 
             _diagramWellViewModel.CloseActiveDiagram();
 
@@ -72,24 +71,6 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
             project.Diagrams.Add(diagram);
             return diagram;
-        }
-
-        [TestMethod]
-        public void TestOpenDiagram_NodeSelectedWithDiagramOpen_CreatesNewNodeAndSetsDiagramInsertingNode()
-        {
-            var abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
-            _nodeProviderMoq.Setup(n => n.CreateNodeViewModelFromName(It.IsAny<string>())).Returns(abstractNodeViewModelMoq.Object);
-            _nodeSelectorMoq.SetupAllProperties();
-
-            var diagram = SetupProjectWithSingleDiagram();
-            diagram.IsOpen = true;
-
-            Assert.IsNull(_diagramWellViewModel.ActiveItem.InsertingNodeViewModel);
-
-            _nodeSelectorMoq.Object.SelectedNode = abstractNodeViewModelMoq.Object;
-            _nodeSelectorMoq.Raise(m => m.PropertyChanged += null, null, new PropertyChangedEventArgs(nameof(NodeSelectorViewModel.SelectedNode)));
-
-            Assert.AreEqual(abstractNodeViewModelMoq.Object, _diagramWellViewModel.ActiveItem.InsertingNodeViewModel);
         }
 
         [TestMethod]

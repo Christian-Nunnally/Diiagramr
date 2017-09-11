@@ -1,4 +1,5 @@
-﻿using Diiagramr.Service;
+﻿using Diiagramr.Model;
+using Diiagramr.Service;
 using PropertyChanged;
 using Stylet;
 using Stylet.Xaml;
@@ -10,7 +11,6 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Diiagramr.Model;
 
 namespace Diiagramr.ViewModel.Diagram
 {
@@ -35,15 +35,15 @@ namespace Diiagramr.ViewModel.Diagram
 
         private readonly List<Action> _dropAndArrangeWhenViewIsLoadedCallbacks = new List<Action>();
 
+        public readonly List<OutputTerminalViewModel> OutputTerminals = new List<OutputTerminalViewModel>();
+
         protected AbstractNodeViewModel()
         {
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
             DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
         }
 
-        public virtual void ConstructTerminals()
-        {
-        }
+        #region Virtual Methods
 
         /// <summary>
         /// Called when a node is placed on a diagram.
@@ -53,8 +53,31 @@ namespace Diiagramr.ViewModel.Diagram
             DelegateMapper = new DelegateMapper();
             DiagramNode = diagramNode;
             DiagramNode.NodeViewModel = this;
+
             LoadTerminalViewModels();
         }
+
+        /// <summary>
+        /// Called when a node is removed from a diagram.
+        /// </summary>
+        public virtual void Uninitialize()
+        {
+        }
+
+        public virtual void OnNodeSaving()
+        {
+        }
+
+        /// <summary>
+        /// Called whenever the size of the node has changed.
+        /// </summary>
+        public void NodeSizeChanged()
+        {
+            DiagramNode.Width = Width;
+            DiagramNode.Height = Height;
+        }
+
+        #endregion
 
         /// <summary>
         /// Called when a node is placed on a diagram.
@@ -77,14 +100,6 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        /// <summary>
-        /// Called when a node is removed from a diagram.
-        /// </summary>
-        public virtual void Uninitialize()
-        {
-
-        }
-
         public IList<TerminalViewModel> TerminalViewModels { get; }
 
         public ICommand DropHandlerCommand { get; set; }
@@ -92,13 +107,13 @@ namespace Diiagramr.ViewModel.Diagram
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
 
-        public double X { get; set; }
-        public double Y { get; set; }
+        public virtual double X { get; set; }
+        public virtual double Y { get; set; }
 
-        public double Width { get; private set; }
-        public double Height { get; private set; }
+        public virtual double Width { get; set; }
+        public virtual double Height { get; set; }
 
-        public DiagramNode DiagramNode { get; set; }
+        public virtual DiagramNode DiagramNode { get; set; }
 
         public bool MouseOverBorder { get; set; }
 
@@ -110,10 +125,9 @@ namespace Diiagramr.ViewModel.Diagram
 
         public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
 
-        protected InputTerminalViewModel ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, string delegateKey)
+        public InputTerminalViewModel ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
         {
-            var inputTerminal = new InputTerminal(name, type, DiagramNode);
-            inputTerminal.SetInputTerminalDelegate(delegateKey);
+            var inputTerminal = new InputTerminal(name, type, DiagramNode, terminalIndex);
             AddTerminal(inputTerminal);
             return ConstructInputTerminalViewModel(inputTerminal, defaultDirection);
         }
@@ -126,13 +140,12 @@ namespace Diiagramr.ViewModel.Diagram
             return inputTerminalViewModel;
         }
 
-        protected OutputTerminalViewModel ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection)
+        public OutputTerminalViewModel ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection)
         {
             var outputTerminal = new OutputTerminal(name, type);
             AddTerminal(outputTerminal);
             return ConstructOutputTerminalViewModel(outputTerminal, defaultDirection);
         }
-
 
         private OutputTerminalViewModel ConstructOutputTerminalViewModel(OutputTerminal outputTerminal, Direction defaultDirection)
         {
@@ -318,8 +331,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void OnNodeSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            Width = e.NewSize.Width;
-            Height = e.NewSize.Height;
+            NodeSizeChanged();
             UpdateAllTerminalPositions();
         }
 
@@ -333,6 +345,11 @@ namespace Diiagramr.ViewModel.Diagram
         public void MouseLeft(object sender, MouseEventArgs mouseEventArgs)
         {
             MouseOverBorder = false;
+        }
+
+        public IDictionary<OutputTerminal, object> InvokeInput(int terminalIndex, object arg)
+        {
+            return DelegateMapper.Invoke(terminalIndex, arg);
         }
     }
 }

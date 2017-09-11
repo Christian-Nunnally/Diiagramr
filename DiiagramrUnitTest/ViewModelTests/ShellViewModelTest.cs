@@ -8,7 +8,7 @@ using System;
 namespace DiiagramrUnitTests.ViewModelTests
 {
     [TestClass]
-    public class ShellViewModelTests
+    public class ShellViewModelTest
     {
         private Mock<IProjectManager> _projectManagerMoq;
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;

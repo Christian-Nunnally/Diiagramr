@@ -6,7 +6,7 @@ using Moq;
 namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
-    public class ProjectFileServiceTests
+    public class ProjectFileServiceTest
     {
         private const string InvalidProjectName = "+";
         private const string ValidProjectName = "a";

@@ -101,8 +101,8 @@
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
+    <Compile Include="ViewModel\Diagram\NodeSetup.cs" />
     <Compile Include="ViewModel\Diagram\PluginNodeViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="View\Diagram\PointsToPathConverter.cs" />
     <Compile Include="ViewModel\Diagram\TerminalViewModel.cs" />
     <Compile Include="ViewModel\NodeSelectorViewModel.cs" />

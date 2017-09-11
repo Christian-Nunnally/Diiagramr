@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using Diiagramr.Service;
 using Diiagramr.Executor;
-using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 

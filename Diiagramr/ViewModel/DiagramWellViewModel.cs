@@ -34,6 +34,11 @@ namespace Diiagramr.ViewModel
             if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
                 _projectManager.CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
+
+                foreach (var diagram in _projectManager.CurrentDiagrams)
+                {
+                    diagram.PropertyChanged += DiagramOnPropertyChanged;
+                }
             }
         }
 
@@ -102,7 +107,7 @@ namespace Diiagramr.ViewModel
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider, NodeSelectorViewModel);
+            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Add(diagramViewModel);
             ActiveItem = diagramViewModel;

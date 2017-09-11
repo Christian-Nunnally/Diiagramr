@@ -8,9 +8,9 @@
              xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
              d:DataContext="{d:DesignInstance diagram1:DemoNodeViewModel}"
              SizeChanged="{s:Action OnNodeSizeChanged}"
-             Width="40"
-             Height="40">
-    <Border BorderBrush="Gray" Background="White" BorderThickness="1">
+             Width="{Binding Width}"
+             Height="{Binding Height}">
+    <Border BorderBrush="Gray" Background="White" BorderThickness="1" IsHitTestVisible="False">
 
     </Border>
 </UserControl>

@@ -10,26 +10,22 @@ namespace Diiagramr.Model
     public class InputTerminal : Terminal
     {
         [DataMember]
-        public string DelegateKey { get; set; }
+        public int TerminalIndex { get; set; }
 
         [DataMember]
         public DiagramNode OwningNode { get; set; }
 
         private InputTerminal() { }
 
-        public InputTerminal(string name, Type type, DiagramNode owningNode) : base(name, type)
+        public InputTerminal(string name, Type type, DiagramNode owningNode, int terminalIndex) : base(name, type)
         {
             OwningNode = owningNode;
-        }
-
-        public void SetInputTerminalDelegate(string delegateKey)
-        {
-            DelegateKey = delegateKey;
+            TerminalIndex = terminalIndex;
         }
 
         public IDictionary<OutputTerminal, object> Execute(object arg)
         {
-            return OwningNode.NodeViewModel?.DelegateMapper.Invoke(DelegateKey, arg);
+            return OwningNode.NodeViewModel.InvokeInput(TerminalIndex, arg);
         }
     }
 }

@@ -87,12 +87,12 @@
                                                    HorizontalContentAlignment="Center" 
                                                    IsHitTestVisible="False"
                                                    RenderTransformOrigin="0.5, 0">
-                                            <Label.RenderTransform>
+                                                <Label.RenderTransform>
                                                     <TransformGroup>
                                                         <ScaleTransform ScaleX="7" ScaleY="7"></ScaleTransform>
                                                         <TranslateTransform X="0" Y="-54"/>
                                                     </TransformGroup>
-                                                    
+
                                                 </Label.RenderTransform>
                                                 <Label.Style>
                                                     <Style TargetType="{x:Type Label}">
@@ -121,9 +121,6 @@
                                                     </Style>
                                                 </Label.Style>
                                             </Label>
-
-<!--                                            <Rectangle Grid.ColumnSpan="2"-->
-<!--                                                       Grid.RowSpan="2" Fill="Transparent"></Rectangle>-->
 
                                             <customControls:NodeMoveThumb Grid.ColumnSpan="2" Grid.Column="0"
                                                               Grid.Row="0" Grid.RowSpan="2"
@@ -170,7 +167,8 @@
                                                        Grid.Column="0"
                                                        Margin="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"
                                                        Fill="DodgerBlue"
-                                                       Visibility="{Binding Content.IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btv}}" />
+                                                       Visibility="{Binding Content.IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btv}}" 
+                                                       IsHitTestVisible="False"/>
                                             <ContentControl Grid.ColumnSpan="2"
                                                             Grid.Column="0"
                                                             Grid.Row="0"

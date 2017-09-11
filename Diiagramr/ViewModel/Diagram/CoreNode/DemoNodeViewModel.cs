@@ -1,15 +1,16 @@
-﻿using Diiagramr.Model;
-
-namespace Diiagramr.ViewModel.Diagram
+﻿namespace Diiagramr.ViewModel.Diagram
 {
-    public class DemoNodeViewModel : AbstractNodeViewModel
+    public class DemoNodeViewModel : PluginNodeViewModel
     {
         public override string Name => "Demo Node";
 
-        public override void ConstructTerminals()
+        public override void SetupNode(NodeSetup setup)
         {
-            ConstructNewInputTerminal("Input", typeof(int), Direction.None, "");
-            ConstructNewOutputTerminal("Output", typeof(int), Direction.None);
+            setup.NodeSize(40, 40);
+            setup.InputTerminal("Input", typeof(int), Direction.None, o => null);
+            setup.OutputTerminal("Output", typeof(int), Direction.None);
+            setup.InputTerminal("Input", typeof(int), Direction.None, o => null);
+            setup.OutputTerminal("Output", typeof(int), Direction.None);
         }
     }
 }

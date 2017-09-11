@@ -36,6 +36,12 @@ namespace Diiagramr.Model
         public double Y { get; set; }
 
         [DataMember]
+        public double Width { get; set; }
+
+        [DataMember]
+        public double Height { get; set; }
+
+        [DataMember]
         public bool Initialized { get; set; }
 
         [DataMember]
@@ -47,7 +53,7 @@ namespace Diiagramr.Model
             PropertyChanged += terminal.NodePropertyChanged;
         }
 
-        public void SetTerminalsPropertyChanged()
+        public virtual void SetTerminalsPropertyChanged()
         {
             foreach (var terminal in Terminals)
             {

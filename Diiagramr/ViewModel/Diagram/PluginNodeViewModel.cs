@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Diiagramr.Executor;
+﻿using Diiagramr.Executor;
 using Diiagramr.Model;
+using System;
+using System.Linq;
 
 namespace Diiagramr.ViewModel.Diagram
 {
@@ -47,14 +47,45 @@ namespace Diiagramr.ViewModel.Diagram
             return DiagramNode?.GetVariable(key);
         }
 
+        protected float LoadFloatValue(string key)
+        {
+            var value = DiagramNode?.GetVariable(key);
+            return (float)(value ?? 0.0f);
+        }
+
         public sealed override void InitializeWithNode(DiagramNode diagramNode)
         {
             base.InitializeWithNode(diagramNode);
-            SetupDelegates(DelegateMapper);
+            var nodeSetterUpper = new NodeSetup(this, diagramNode.Initialized);
+            diagramNode.Initialized = true;
+            SetupNode(nodeSetterUpper);
+
             NodeLoaded();
+            LoadSizeIfNotZero();
+        }
+
+        private void LoadSizeIfNotZero()
+        {
+            Width = Math.Abs(LoadFloatValue("Width")) < 1 ? Width : LoadFloatValue("Width");
+            Height = Math.Abs(LoadFloatValue("Height")) < 1 ? Height : LoadFloatValue("Height");
+        }
+
+        public override void OnNodeSaving()
+        {
+            base.OnNodeSaving();
+
+            NodeSaved();
+
+            SaveValue("Width", Width);
+            SaveValue("Height", Height);
         }
 
         #region Virtual Methods
+
+        /// <summary>
+        /// All node customization such as turning on/off features and setting node geometry happens here.
+        /// </summary>
+        public abstract void SetupNode(NodeSetup setup);
 
         /// <summary>
         /// Called when the node is loaded.  Any view model properties that you want to presist on disk should be saved here via calls to <see cref="LoadValue"/>.
@@ -67,18 +98,6 @@ namespace Diiagramr.ViewModel.Diagram
         /// Called when the node is saved.  Any view model properties that you want to presist on disk should be saved here via calls to <see cref="SaveValue"/>.
         /// </summary>
         public virtual void NodeSaved()
-        {
-        }
-
-        /// <summary>
-        /// Called once when the node is first constructed.  The initial terminals that should exist on the node should be constructed here via calls to 
-        /// <see cref="AbstractNodeViewModel.ConstructNewInputTerminal"/> and <see cref="AbstractNodeViewModel.ConstructNewOutputTerminal"/>.
-        /// </summary>
-        public override void ConstructTerminals()
-        {
-        }
-
-        public virtual void SetupDelegates(DelegateMapper delegateMapper)
         {
         }
 

@@ -59,6 +59,8 @@ namespace Diiagramr.ViewModel.Diagram
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             Name = Terminal.Name;
+            TitleVisible = true;
+            TitleVisible = false;
         }
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -122,7 +124,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void TerminalMouseDown(object sender, MouseEventArgs e)
         {
-            //DisconnectTerminal();
+            DisconnectTerminal();
             e.Handled = true;
         }
 

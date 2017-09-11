@@ -9,7 +9,7 @@ using System.Linq;
 namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
-    public class NodeProviderTests
+    public class NodeProviderTest
     {
         private NodeProvider _nodeProvider;
         private Mock<AbstractNodeViewModel> _nodeViewModelMoq;
@@ -89,13 +89,26 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ViewModelPositionSet()
         {
             _testNode.X = 10;
-            _testNode.Y = 10;
+            _testNode.Y = 11;
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
             Assert.AreEqual(_testNode.X, nodeViewModel.X);
             Assert.AreEqual(_testNode.Y, nodeViewModel.Y);
+        }
+
+        [TestMethod]
+        public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ViewModelSizeSet()
+        {
+            _testNode.Width = 10;
+            _testNode.Height = 11;
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+
+            var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
+
+            Assert.AreEqual(_testNode.Width, nodeViewModel.Width);
+            Assert.AreEqual(_testNode.Height, nodeViewModel.Height);
         }
 
         [TestMethod]

@@ -32,6 +32,8 @@ namespace Diiagramr.Service
             viewModel.InitializeWithNode(node);
             viewModel.X = node.X;
             viewModel.Y = node.Y;
+            viewModel.Width = node.Width != 0 ? node.Width : viewModel.Width;
+            viewModel.Height = node.Height != 0 ? node.Height : viewModel.Height;
             return viewModel;
         }
 
