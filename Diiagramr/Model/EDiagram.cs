@@ -12,22 +12,18 @@ namespace Diiagramr.Model
 
         public EDiagram()
         {
-            Nodes = new List<DiagramNode>();
             Name = "";
         }
 
-        [DataMember]
-        public bool IsOpen { get; set; }
-
-        public bool IsExpanded => false;
+        public virtual bool IsOpen { get; set; }
 
         [DataMember]
         public string Name { get; set; }
 
         [DataMember]
-        public List<DiagramNode> Nodes { get; set; }
+        public virtual List<DiagramNode> Nodes { get; set; } = new List<DiagramNode>();
 
-        public void AddNode(DiagramNode diagramNode)
+        public virtual void AddNode(DiagramNode diagramNode)
         {
             if (Nodes.Contains(diagramNode)) throw new InvalidOperationException("Can not add a diagramNode twice");
             Nodes.Add(diagramNode);

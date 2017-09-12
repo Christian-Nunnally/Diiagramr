@@ -10,7 +10,7 @@ using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 namespace DiiagramrUnitTests.ViewModelTests
 {
     [TestClass]
-    public class ProjectExplorerViewModelTests
+    public class ProjectExplorerViewModelTest
     {
         private Mock<IProjectManager> _projectManagerMoq;
         private ProjectExplorerViewModel _projectExplorerViewModel;
@@ -85,6 +85,28 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.AreEqual(project, _projectExplorerViewModel.Project);
+        }
+
+        [TestMethod]
+        public void TestDiagramProjectItemMouseDown_SingleClick_SelectedDiagramNotOpen()
+        {
+            var diagramMoq = new Mock<EDiagram>();
+            _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
+
+            _projectExplorerViewModel.DiagramProjectItemMouseDown(1);
+
+            diagramMoq.VerifySet(d => d.IsOpen = true, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestDiagramProjectItemMouseDown_DoubleClick_SelectedDiagramOpen()
+        {
+            var diagramMoq = new Mock<EDiagram>();
+            _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
+
+            _projectExplorerViewModel.DiagramProjectItemMouseDown(2);
+
+            diagramMoq.VerifySet(d => d.IsOpen = true);
         }
     }
 }

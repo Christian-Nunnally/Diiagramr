@@ -44,11 +44,19 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        public void SelectedDiagramChanged()
+        public void DiagramProjectItemMouseDownHandler(object sender, MouseButtonEventArgs e)
         {
-            if (SelectedDiagram != null)
+            DiagramProjectItemMouseDown(e.ClickCount);
+        }
+
+        public void DiagramProjectItemMouseDown(int clickCount)
+        {
+            if (clickCount == 2)
             {
-                SelectedDiagram.IsOpen = true;
+                if (SelectedDiagram != null)
+                {
+                    SelectedDiagram.IsOpen = true;
+                }
             }
         }
 

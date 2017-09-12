@@ -1,40 +1,44 @@
-﻿using Stylet;
+﻿using Diiagramr.Model;
+using Diiagramr.Service;
+using Diiagramr.View;
+using Stylet;
 using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Diiagramr.Model;
-using Diiagramr.Service;
+using Point = System.Windows.Point;
 
 namespace Diiagramr.ViewModel.Diagram
 {
     public class DiagramViewModel : Screen
     {
-        private AbstractNodeViewModel _selectedNodeViewModel;
-        private readonly IProvideNodes _nodeProvider;
+        private AbstractNodeViewModel _insertingNodeViewModel;
 
-        public DiagramViewModel(EDiagram diagram, IProvideNodes nodeProvider, NodeSelectorViewModel nodeSelectorViewModel)
+        public DiagramViewModel(EDiagram diagram, IProvideNodes nodeProvider)
         {
-            _nodeProvider = nodeProvider;
+            if (diagram == null) throw new ArgumentNullException(nameof(diagram));
+            if (nodeProvider == null) throw new ArgumentNullException(nameof(nodeProvider));
 
             NodeViewModels = new BindableCollection<AbstractNodeViewModel>();
             WireViewModels = new BindableCollection<WireViewModel>();
 
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
-
-            foreach (var abstractNode in diagram.Nodes)
+            if (diagram.Nodes != null)
             {
-                var viewModel = _nodeProvider.LoadNodeViewModelFromNode(abstractNode);
-                abstractNode.SetTerminalsPropertyChanged();
-                AddNodeViewModel(viewModel);
-
-                foreach (var terminal in abstractNode.Terminals)
+                foreach (var abstractNode in diagram.Nodes)
                 {
-                    if (terminal.ConnectedWire == null) continue;
-                    AddWireViewModel(terminal.ConnectedWire);
+                    var viewModel = nodeProvider.LoadNodeViewModelFromNode(abstractNode);
+                    abstractNode.SetTerminalsPropertyChanged();
+                    AddNodeViewModel(viewModel);
+
+                    foreach (var terminal in abstractNode.Terminals)
+                    {
+                        if (terminal.ConnectedWire == null) continue;
+                        AddWireViewModel(terminal.ConnectedWire);
+                    }
                 }
             }
         }
@@ -43,20 +47,18 @@ namespace Diiagramr.ViewModel.Diagram
 
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
 
-        private AbstractNodeViewModel SelectedNodeViewModel
+        public AbstractNodeViewModel InsertingNodeViewModel
         {
-            get { return _selectedNodeViewModel; }
+            get { return _insertingNodeViewModel; }
             set
             {
-                if (value == _selectedNodeViewModel) return;
-                if (_selectedNodeViewModel != null) _selectedNodeViewModel.IsSelected = false;
-                _selectedNodeViewModel = value;
-                if (_selectedNodeViewModel != null) _selectedNodeViewModel.IsSelected = true;
+                _insertingNodeViewModel = value;
+                if (_insertingNodeViewModel != null)
+                {
+                    AddNode(_insertingNodeViewModel);
+                }
             }
-
         }
-
-        public AbstractNodeViewModel InsertingNodeViewModel { get; set; }
 
         public EDiagram Diagram { get; }
 
@@ -95,33 +97,17 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        private void ShowTitlesOnSameTypeTerminals(Terminal terminal)
+        private void ShowTitlesOnTerminalsOfSameType(Terminal terminal)
         {
-            HideAllTerminalLabels();
-            if (terminal is OutputTerminal)
+            foreach (var nodeViewModel in NodeViewModels)
             {
-                foreach (var abstractNodeViewModel in NodeViewModels)
+                if (terminal is OutputTerminal)
                 {
-                    foreach (var inputTerminalViewModel in abstractNodeViewModel.InputTerminalViewModels)
-                    {
-                        if (inputTerminalViewModel.Terminal.Type.IsAssignableFrom(terminal.Type))
-                        {
-                            inputTerminalViewModel.TitleVisible = true;
-                        }
-                    }
+                    nodeViewModel.ShowInputTerminalLabelsOfType(terminal.Type);
                 }
-            }
-            else if (terminal is InputTerminal)
-            {
-                foreach (var abstractNodeViewModel in NodeViewModels)
+                else
                 {
-                    foreach (var inputTerminalViewModel in abstractNodeViewModel.OutputTerminalViewModels)
-                    {
-                        if (inputTerminalViewModel.Terminal.Type.IsAssignableFrom(terminal.Type))
-                        {
-                            inputTerminalViewModel.TitleVisible = true;
-                        }
-                    }
+                    nodeViewModel.ShowOutputTerminalLabelsOfType(terminal.Type);
                 }
             }
         }
@@ -130,18 +116,8 @@ namespace Diiagramr.ViewModel.Diagram
         {
             foreach (var abstractNodeViewModel in NodeViewModels)
             {
-                foreach (var inputTerminalViewModel in abstractNodeViewModel.TerminalViewModels)
-                {
-                    inputTerminalViewModel.TitleVisible = false;
-                }
+                abstractNodeViewModel.HideAllTerminalLabels();
             }
-        }
-
-        private void AddNodeWithRespectToPanAndZoom(AbstractNodeViewModel nodeViewModel)
-        {
-            nodeViewModel.X = (nodeViewModel.X - PanX) / Zoom;
-            nodeViewModel.Y = (nodeViewModel.Y - PanY) / Zoom;
-            AddNode(nodeViewModel);
         }
 
         private void RemoveNode(AbstractNodeViewModel viewModel)
@@ -174,18 +150,7 @@ namespace Diiagramr.ViewModel.Diagram
             HideAllTerminalLabels();
         }
 
-        public void LeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
-        {
-            var inputElement = (IInputElement)sender;
-            try
-            {
-                LeftMouseButtonDown(e.GetPosition(inputElement));
-            }
-            catch (Exception)
-            {
-
-            }
-        }
+        #region Drag Drop Handlers
 
         public void DragOver(object sender, DragEventArgs e)
         {
@@ -194,7 +159,8 @@ namespace Diiagramr.ViewModel.Diagram
             var terminal = o as Terminal;
             if (o is Terminal || o is TerminalViewModel)
             {
-                ShowTitlesOnSameTypeTerminals(terminal);
+                HideAllTerminalLabels();
+                ShowTitlesOnTerminalsOfSameType(terminal);
                 e.Effects = DragDropEffects.Link;
                 e.Handled = true;
                 return;
@@ -216,7 +182,8 @@ namespace Diiagramr.ViewModel.Diagram
             var terminal = o as Terminal;
             if (terminal != null)
             {
-                ShowTitlesOnSameTypeTerminals(terminal);
+                HideAllTerminalLabels();
+                ShowTitlesOnTerminalsOfSameType(terminal);
             }
 
             var diagram = o as EDiagram;
@@ -242,41 +209,6 @@ namespace Diiagramr.ViewModel.Diagram
             e.Handled = true;
         }
 
-        public void LeftMouseButtonDown(Point p)
-        {
-            SelectedNodeViewModel = null;
-            if (InsertingNodeViewModel == null) return;
-            AddNodeWithRespectToPanAndZoom(InsertingNodeViewModel);
-            InsertingNodeViewModel = null;
-        }
-
-        public void MouseMoveHandler(object sender, MouseEventArgs e)
-        {
-            var inputElement = (IInputElement)sender;
-            var mouseLocation = e.GetPosition(inputElement);
-            if (InsertingNodeViewModel == null) return;
-            InsertingNodeViewModel.X = mouseLocation.X;
-            InsertingNodeViewModel.Y = mouseLocation.Y;
-        }
-
-        public void NodeViewLoaded(object sender, RoutedEventArgs e)
-        {
-            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
-            abstractNodeViewModel.Wiggle();
-        }
-
-        public void PreviewLeftMouseDownOnBorder(object sender, MouseButtonEventArgs e)
-        {
-            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
-            SelectedNodeViewModel = abstractNodeViewModel;
-        }
-
-        public void RemoveNodePressed(object sender)
-        {
-            if (SelectedNodeViewModel != null)
-                RemoveNode(SelectedNodeViewModel);
-        }
-
         public void DropEventHandler(object sender, DragEventArgs e)
         {
             var nodeViewModel = UnpackNodeViewModelFromSender(sender);
@@ -288,16 +220,9 @@ namespace Diiagramr.ViewModel.Diagram
             AbstractNodeViewModel.DragOverEventHandler(sender, e);
         }
 
-        private static AbstractNodeViewModel UnpackNodeViewModelFromSender(object sender)
-        {
-            return UnpackNodeViewModelFromControl((Control)sender);
-        }
+        #endregion
 
-        private static AbstractNodeViewModel UnpackNodeViewModelFromControl(Control control)
-        {
-            var contentPresenter = control.DataContext as ContentPresenter;
-            return (AbstractNodeViewModel)(contentPresenter?.Content ?? control.DataContext);
-        }
+        #region View Event Handlers
 
         public void MouseEntered(object sender, MouseEventArgs e)
         {
@@ -311,15 +236,104 @@ namespace Diiagramr.ViewModel.Diagram
             nodeViewModel.MouseLeft(sender, e);
         }
 
-        /// <summary>
-        /// Called right before the project is saved.
-        /// </summary>
-        public void SavingProject()
+        public void NodeViewLoaded(object sender, RoutedEventArgs e)
         {
-            foreach (var pluginNode in NodeViewModels.OfType<PluginNodeViewModel>())
-            {
-                pluginNode.NodeSaved();
-            }
+            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
+            abstractNodeViewModel.Wiggle();
         }
+
+        public void PreviewLeftMouseDownOnBorder(object sender, MouseButtonEventArgs e)
+        {
+            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
+            abstractNodeViewModel.IsSelected = true;
+        }
+
+        public void RemoveNodePressed()
+        {
+            NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
+        }
+
+        public void PreviewLeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
+        {
+            var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
+            PreviewLeftMouseButtonDown(relativeMousePosition);
+        }
+
+        public void PreviewLeftMouseButtonDown(Point p)
+        {
+            if (InsertingNodeViewModel == null) return;
+            InsertingNodeViewModel = null;
+        }
+
+        public void LeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
+        {
+            var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
+            LeftMouseButtonDown(relativeMousePosition);
+        }
+
+        public void LeftMouseButtonDown(Point p)
+        {
+            NodeViewModels.Where(node => node.IsSelected).ForEach(node => node.IsSelected = false);
+        }
+
+        public void PreviewRightMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
+        {
+            Point relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
+            PreviewRightMouseButtonDown(relativeMousePosition);
+        }
+
+        public void PreviewRightMouseButtonDown(Point p)
+        {
+            if (InsertingNodeViewModel == null) return;
+            RemoveNode(InsertingNodeViewModel);
+            InsertingNodeViewModel = null;
+        }
+
+        public void MouseMoveHandler(object sender, MouseEventArgs e)
+        {
+            var inputElement = (IInputElement)sender;
+            var relativeMousePosition = e.GetPosition(inputElement);
+            MouseMoved(relativeMousePosition);
+        }
+
+        public void MouseMoved(Point mouseLocation)
+        {
+            if (InsertingNodeViewModel == null) return;
+            InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - DiagramConstants.NodeBorderWidth;
+            InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - DiagramConstants.NodeBorderWidth;
+        }
+
+        #endregion
+
+        #region Helper Methods
+
+        private double GetPointRelativeToPanAndZoomX(double x)
+        {
+            return Zoom == 0 ? x : (x - PanX) / Zoom;
+        }
+
+        private double GetPointRelativeToPanAndZoomY(double y)
+        {
+            return Zoom == 0 ? y : (y - PanY) / Zoom;
+        }
+
+        private static Point GetMousePositionRelativeToSender(object sender, MouseButtonEventArgs e)
+        {
+            var inputElement = (IInputElement)sender;
+            return e.GetPosition(inputElement);
+        }
+
+        private static AbstractNodeViewModel UnpackNodeViewModelFromSender(object sender)
+        {
+            return UnpackNodeViewModelFromControl((Control)sender);
+        }
+
+        private static AbstractNodeViewModel UnpackNodeViewModelFromControl(Control control)
+        {
+            var contentPresenter = control.DataContext as ContentPresenter;
+            return (AbstractNodeViewModel)(contentPresenter?.Content ?? control.DataContext);
+        }
+
+        #endregion
     }
 }

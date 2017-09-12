@@ -9,7 +9,7 @@ using Moq;
 namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
-    public class ProjectFileServiceTests
+    public class ProjectFileServiceTest
     {
         private Mock<IDirectoryService> _directoryServiceMoq;
         private ProjectFileService _projectFileService;

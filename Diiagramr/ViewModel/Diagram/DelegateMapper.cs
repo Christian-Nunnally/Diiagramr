@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Diiagramr.Model;
 using System.Collections.Generic;
-using Diiagramr.Model;
 
 namespace Diiagramr.ViewModel.Diagram
 {
@@ -8,22 +7,21 @@ namespace Diiagramr.ViewModel.Diagram
 
     public class DelegateMapper
     {
-        private Dictionary<string, InputTerminalDelegate> InputTerminalDelegates { get; set; }
+        private Dictionary<int, InputTerminalDelegate> InputTerminalDelegates { get; set; }
 
         public DelegateMapper()
         {
-            InputTerminalDelegates = new Dictionary<string, InputTerminalDelegate>();
+            InputTerminalDelegates = new Dictionary<int, InputTerminalDelegate>();
         }
 
-        public void AddMapping(string key, InputTerminalDelegate inputDelegate)
+        public void AddMapping(int index, InputTerminalDelegate inputDelegate)
         {
-            InputTerminalDelegates.Add(key, inputDelegate);
+            InputTerminalDelegates.Add(index, inputDelegate);
         }
 
-        public IDictionary<OutputTerminal, object> Invoke(string delegateKey, object arg)
+        public IDictionary<OutputTerminal, object> Invoke(int terminalIndex, object arg)
         {
-            if (string.IsNullOrWhiteSpace(delegateKey)) return null;
-            return InputTerminalDelegates.ContainsKey(delegateKey) ? InputTerminalDelegates[delegateKey].Invoke(arg) : null;
+            return InputTerminalDelegates.ContainsKey(terminalIndex) ? InputTerminalDelegates[terminalIndex].Invoke(arg) : null;
         }
     }
 }

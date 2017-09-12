@@ -38,12 +38,12 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestCloseActiveDiagram_OneOpenDiagram_DoesNotThrowException()
+        public void TestCloseActiveDiagram_OneOpenDiagram_SetsCurrentDiagramIsOpenToFalse()
         {
             var diagramMoq = new Mock<EDiagram>();
             diagramMoq.SetupAllProperties();
             diagramMoq.Object.IsOpen = true;
-            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorMoq.Object).Object;
+            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object).Object;
 
             _diagramWellViewModel.CloseActiveDiagram();
 
@@ -53,6 +53,15 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestOpenDiagram_DiagramIsOpenSetToTrue_DiagramBecomesActiveItem()
         {
+            var diagram = SetupProjectWithSingleDiagram();
+
+            Assert.IsNull(_diagramWellViewModel.ActiveItem);
+            diagram.IsOpen = true;
+            Assert.AreEqual(diagram, _diagramWellViewModel.ActiveItem.Diagram);
+        }
+
+        private EDiagram SetupProjectWithSingleDiagram()
+        {
             var diagram = new EDiagram();
             var project = new Project();
 
@@ -61,10 +70,46 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(project.Diagrams);
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
             project.Diagrams.Add(diagram);
+            return diagram;
+        }
 
-            Assert.IsNull(_diagramWellViewModel.ActiveItem);
+        [TestMethod]
+        public void TestRightMouseDown_NoDiagramOpen_SetsNodeSelectorsNodeToNull()
+        {
+            _diagramWellViewModel.RightMouseDown();
+            _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
+        }
+
+        [TestMethod]
+        public void TestRightMouseDown_DiagramOpenAndNodeNotSelected_SetsNodeSelectorVisibleToTrue()
+        {
+            var diagram = SetupProjectWithSingleDiagram();
             diagram.IsOpen = true;
-            Assert.AreEqual(diagram, _diagramWellViewModel.ActiveItem.Diagram);
+
+            Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
+            _diagramWellViewModel.RightMouseDown();
+            Assert.IsTrue(_diagramWellViewModel.NodeSelectorVisible);
+        }
+
+        [TestMethod]
+        public void TestRightMouseDown_DiagramOpenAndNodeSelected_SetsNodeSelectorSelectedNodeToNull()
+        {
+            var abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _nodeSelectorMoq.SetupGet(m => m.SelectedNode).Returns(abstractNodeViewModelMoq.Object);
+            _diagramWellViewModel.RightMouseDown();
+            var diagram = SetupProjectWithSingleDiagram();
+            diagram.IsOpen = true;
+
+            _diagramWellViewModel.RightMouseDown();
+            _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
+        }
+
+        [TestMethod]
+        public void TestLeftMouseDown_NodeSelectorVisibleTrue_SetsNodeSelectorVisibleToFalse()
+        {
+            _diagramWellViewModel.NodeSelectorVisible = true;
+            _diagramWellViewModel.LeftMouseDown();
+            Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
         }
     }
 }

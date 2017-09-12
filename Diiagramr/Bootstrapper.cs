@@ -26,6 +26,7 @@ namespace Diiagramr
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
+            builder.Bind<AbstractNodeViewModel>().To<DemoNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

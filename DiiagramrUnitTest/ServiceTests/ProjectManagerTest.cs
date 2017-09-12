@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
-    public class ProjectManagerTests
+    public class ProjectManagerTest
     {
         private ProjectManager _projectManager;
         private Mock<IProjectFileService> _projectFileServiceMoq;

@@ -21,18 +21,19 @@
             <Label Content="{Binding Project.Name}"
                    HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center"
-                   FontSize="13"
-                   FontWeight="SemiBold"/>
+                   FontSize="14"
+                   FontWeight="SemiBold"
+                   Background="LightGray"
+                   Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}"/>
             <ListView ItemsSource="{Binding Diagrams}" 
                       Grid.Row="1" 
                       BorderThickness="0"
                       SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
                       MouseMove="{s:Action MouseMoveHandler}"
-                      SelectionMode="Single"
-                      SelectionChanged="{s:Action SelectedDiagramChanged}">
+                      SelectionMode="Single">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Border Width="Auto">
+                        <Border Width="Auto" MouseDown="{s:Action DiagramProjectItemMouseDownHandler}">
                             <Label Content="{Binding Name}">
                                 <Label.ContextMenu>
                                     <ContextMenu>

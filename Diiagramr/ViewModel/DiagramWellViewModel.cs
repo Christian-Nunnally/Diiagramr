@@ -34,6 +34,11 @@ namespace Diiagramr.ViewModel
             if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
                 _projectManager.CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
+
+                foreach (var diagram in _projectManager.CurrentDiagrams)
+                {
+                    diagram.PropertyChanged += DiagramOnPropertyChanged;
+                }
             }
         }
 
@@ -86,8 +91,12 @@ namespace Diiagramr.ViewModel
         {
             if (e.PropertyName != "SelectedNode") return;
             var selectedNode = NodeSelectorViewModel.SelectedNode;
-            ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.Name);
-            if (NodeSelectorViewModel.SelectedNode != null) NodeSelectorVisible = false;
+
+            if (NodeSelectorViewModel.SelectedNode != null)
+            {
+                ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.Name);
+                NodeSelectorVisible = false;
+            }
         }
 
         private void OpenDiagram(EDiagram diagram)
@@ -98,17 +107,16 @@ namespace Diiagramr.ViewModel
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider, NodeSelectorViewModel);
+            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Add(diagramViewModel);
             ActiveItem = diagramViewModel;
         }
 
-        private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var diagramViewModelSender = sender as DiagramViewModel;
-            if (diagramViewModelSender == null) return;
-            if (string.Equals(propertyChangedEventArgs.PropertyName, "Name"))
+            var diagramViewModelSender = (DiagramViewModel)sender;
+            if (e.PropertyName.Equals(nameof(DiagramViewModel.Name)))
             {
                 var oldActiveItem = ActiveItem;
                 ActiveItem = diagramViewModelSender;
@@ -121,7 +129,7 @@ namespace Diiagramr.ViewModel
                 if (oldActiveItem != diagramViewModelSender)
                     ActiveItem = oldActiveItem;
             }
-            else if (propertyChangedEventArgs.PropertyName.Equals("InsertingNodeViewModel"))
+            else if (e.PropertyName.Equals(nameof(DiagramViewModel.InsertingNodeViewModel)))
             {
                 if (ActiveItem.InsertingNodeViewModel == null)
                 {
@@ -130,7 +138,7 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        public void ReopenActiveDiagram()
+        private void ReopenActiveDiagram()
         {
             var activeDiagram = ActiveItem;
             var indexOfActive = Items.IndexOf(ActiveItem);
@@ -161,18 +169,6 @@ namespace Diiagramr.ViewModel
         public void LeftMouseDown()
         {
             NodeSelectorVisible = false;
-        }
-
-        // TODO: Call this
-        /// <summary>
-        /// Called right before the project is saved.
-        /// </summary>
-        public void SavingProject()
-        {
-            foreach (var diagramViewModel in Items)
-            {
-                diagramViewModel.SavingProject();
-            }
         }
     }
 }
