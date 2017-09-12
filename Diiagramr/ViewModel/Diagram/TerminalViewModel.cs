@@ -143,5 +143,10 @@ namespace Diiagramr.ViewModel.Diagram
         {
             TitleVisible = false;
         }
+
+        public void ShowLabelIfCompatibleType(Type type)
+        {
+            TitleVisible = Terminal.Type.IsAssignableFrom(type);
+        }
     }
 }

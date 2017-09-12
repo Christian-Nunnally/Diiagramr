@@ -37,6 +37,8 @@ namespace Diiagramr.ViewModel.Diagram
 
         public readonly List<OutputTerminalViewModel> OutputTerminals = new List<OutputTerminalViewModel>();
 
+        public bool TitleVisible => IsSelected || MouseOverBorder;
+
         protected AbstractNodeViewModel()
         {
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
@@ -66,15 +68,6 @@ namespace Diiagramr.ViewModel.Diagram
 
         public virtual void OnNodeSaving()
         {
-        }
-
-        /// <summary>
-        /// Called whenever the size of the node has changed.
-        /// </summary>
-        public void NodeSizeChanged()
-        {
-            DiagramNode.Width = Width;
-            DiagramNode.Height = Height;
         }
 
         #endregion
@@ -112,6 +105,9 @@ namespace Diiagramr.ViewModel.Diagram
 
         public virtual double Width { get; set; }
         public virtual double Height { get; set; }
+
+        public virtual double WidthPlus2 => Width + 2;
+        public virtual double HeightPlus2 => Height + 2;
 
         public virtual DiagramNode DiagramNode { get; set; }
 
@@ -331,7 +327,6 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void OnNodeSizeChanged(object sender, SizeChangedEventArgs e)
         {
-            NodeSizeChanged();
             UpdateAllTerminalPositions();
         }
 
@@ -339,8 +334,6 @@ namespace Diiagramr.ViewModel.Diagram
         {
             MouseOverBorder = true;
         }
-
-        public bool TitleVisible => IsSelected || MouseOverBorder;
 
         public void MouseLeft(object sender, MouseEventArgs mouseEventArgs)
         {
@@ -350,6 +343,21 @@ namespace Diiagramr.ViewModel.Diagram
         public IDictionary<OutputTerminal, object> InvokeInput(int terminalIndex, object arg)
         {
             return DelegateMapper.Invoke(terminalIndex, arg);
+        }
+
+        public void ShowInputTerminalLabelsOfType(Type type)
+        {
+            InputTerminalViewModels.ForEach(terminal => terminal.ShowLabelIfCompatibleType(type));
+        }
+
+        public void ShowOutputTerminalLabelsOfType(Type type)
+        {
+            OutputTerminalViewModels.ForEach(terminal => terminal.ShowLabelIfCompatibleType(type));
+        }
+
+        public void HideAllTerminalLabels()
+        {
+            TerminalViewModels.ForEach(terminal => terminal.TitleVisible = false);
         }
     }
 }

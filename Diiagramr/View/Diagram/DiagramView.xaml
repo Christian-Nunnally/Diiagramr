@@ -4,71 +4,144 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
+             xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
              xmlns:view="clr-namespace:Diiagramr.View"
              xmlns:customControls="clr-namespace:Diiagramr.View.CustomControls"
-             mc:Ignorable="d"
-             MouseMove="{s:Action MouseMoveHandler}"
-             d:DataContext="{d:DesignInstance diagram1:DiagramViewModel}"
-             AllowDrop="True"
+             d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
              DragOver="{s:Action DragOver}"
              DragEnter="{s:Action DragEnter}"
-             DragLeave="{s:Action DragLeave}">
+             DragLeave="{s:Action DragLeave}"
+             MouseMove="{s:Action MouseMoveHandler}"
+             AllowDrop="True"
+             d:DesignHeight="300"
+             d:DesignWidth="600"
+             mc:Ignorable="d">
     <UserControl.Resources>
+        <Style TargetType="{x:Type Rectangle}" x:Key="NodeBorderRectangleStyle">
+            <Setter Property="Fill" Value="Transparent" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Duration="0:0:0.01" Storyboard.TargetProperty="Fill.Color" To="LightGray" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Duration="0:0:0.6" Storyboard.TargetProperty="Fill.Color" To="Transparent" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <ControlTemplate x:Key="MoveThumbTemplate" TargetType="{x:Type customControls:NodeMoveThumb}">
-            <Rectangle>
-                <Rectangle.Style>
-                    <Style TargetType="{x:Type Rectangle}">
-                        <Setter Property="Fill" Value="Transparent" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Trigger.EnterActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.01"
-                                                            Storyboard.TargetProperty="Fill.Color"
-                                                            To="LightGray" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.EnterActions>
-                                <Trigger.ExitActions>
-                                    <BeginStoryboard>
-                                        <Storyboard>
-                                            <ColorAnimation Duration="0:0:0.6"
-                                                            Storyboard.TargetProperty="Fill.Color"
-                                                            To="Transparent" />
-                                        </Storyboard>
-                                    </BeginStoryboard>
-                                </Trigger.ExitActions>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Rectangle.Style>
-            </Rectangle>
+            <Rectangle Style="{StaticResource NodeBorderRectangleStyle}"/>
         </ControlTemplate>
+
+        <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
+            <Canvas />
+        </ItemsPanelTemplate>
+
+        <Style x:Key="WireContainerStyle" TargetType="ContentPresenter">
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="NodeLabelStyle" TargetType="{x:Type Label}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding TitleVisible}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Duration="0:0:0.05"
+                                                                    Storyboard.TargetProperty="Foreground.Color"
+                                                                    To="#F667" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation Duration="0:0:0.25"
+                                                                    Storyboard.TargetProperty="Foreground.Color"
+                                                                    To="Transparent" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
+            <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode, Mode=TwoWay}" />
+            <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode, Mode=TwoWay}" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="DeleteNodeButtonStyle" TargetType="Button">
+            <Setter Property="Content" Value=""/>
+            <Setter Property="Background" Value="IndianRed"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Width" Value="{x:Static view:DiagramConstants.NodeBorderWidth}"/>
+            <Setter Property="Height" Value="{x:Static view:DiagramConstants.NodeBorderWidth}"/>
+        </Style>
+
+        <Style x:Key="SelectionStyle" TargetType="Rectangle">
+            <Setter Property="Fill" Value="DodgerBlue"/>
+            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"/>
+            <Setter Property="IsHitTestVisible" Value="False"/>
+        </Style>
+
+        <Style x:Key="NodeBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="{Binding WidthPlus2}"/>
+            <Setter Property="Height" Value="{Binding HeightPlus2}"/>
+            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"/>
+        </Style>
+
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
 
     <Grid>
-        <customControls:ZoomBorder x:Name="ZoomBorder" PanX="{Binding PanX, Mode=OneWayToSource}"
-                       PanY="{Binding PanY, Mode=OneWayToSource}" Zoom="{Binding Zoom, Mode=OneWayToSource}"
-                       Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                       MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}">
+        <customControls:ZoomBorder PanX="{Binding PanX, Mode=OneWayToSource}"
+                                   PanY="{Binding PanY, Mode=OneWayToSource}" 
+                                   Zoom="{Binding Zoom, Mode=OneWayToSource}"
+                                   Background="White" 
+                                   HorizontalAlignment="Stretch" 
+                                   VerticalAlignment="Stretch"
+                                   PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
+                                   PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
+                                   MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}">
             <Grid>
-                <ItemsControl ItemsSource="{Binding NodeViewModels}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-
+                <!-- Node Items Control-->
+                <ItemsControl ItemsSource="{Binding NodeViewModels}"
+                              ItemsPanel="{StaticResource CanvasItemsPanelTemplate}">
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
                             <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}" />
                             <Setter Property="Canvas.Top" Value="{Binding Y, Mode=TwoWay}" />
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
-                                    <DataTemplate>
+                                    <DataTemplate DataType="{x:Type diagram:AbstractNodeViewModel}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -79,7 +152,8 @@
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
 
-                                            <Label Content="{Binding Name}" 
+                                            <Label Content="{Binding Name}"
+                                                   Style="{StaticResource NodeLabelStyle}"
                                                    Foreground="LightSlateGray" 
                                                    FontFamily="Verdana" 
                                                    FontSize="2"
@@ -92,103 +166,55 @@
                                                         <ScaleTransform ScaleX="7" ScaleY="7"></ScaleTransform>
                                                         <TranslateTransform X="0" Y="-54"/>
                                                     </TransformGroup>
-
                                                 </Label.RenderTransform>
-                                                <Label.Style>
-                                                    <Style TargetType="{x:Type Label}">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding TitleVisible}" Value="True">
-                                                                <DataTrigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <ColorAnimation Duration="0:0:0.05"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="#F667" />
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.EnterActions>
-                                                                <DataTrigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <ColorAnimation Duration="0:0:0.25"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="Transparent" />
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </DataTrigger.ExitActions>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Label.Style>
                                             </Label>
 
-                                            <customControls:NodeMoveThumb Grid.ColumnSpan="2" Grid.Column="0"
-                                                              Grid.Row="0" Grid.RowSpan="2"
-                                                              Template="{StaticResource MoveThumbTemplate}"
-                                                              DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                              Cursor="SizeAll"
-                                                              PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorder}"
-                                                              Drop="{s:Action DropEventHandler}"
-                                                              DragOver="{s:Action DragOverEventHandler}"
-                                                              MouseEnter="{s:Action MouseEntered}"         
-                                                              MouseLeave="{s:Action MouseLeft}"         
-                                                              AllowDrop="True"/>
+                                            <customControls:NodeMoveThumb Grid.Row="0"
+                                                                          Grid.Column="0"
+                                                                          Grid.ColumnSpan="2"
+                                                                          Grid.RowSpan="2"
+                                                                          DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                                                          PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorder}"
+                                                                          Template="{StaticResource MoveThumbTemplate}"
+                                                                          DragOver="{s:Action DragOverEventHandler}"
+                                                                          MouseEnter="{s:Action MouseEntered}"  
+                                                                          Drop="{s:Action DropEventHandler}"
+                                                                          MouseLeave="{s:Action MouseLeft}"         
+                                                                          AllowDrop="True"
+                                                                          Cursor="SizeAll"/>
 
                                             <ItemsControl Grid.Row="0" 
                                                           Grid.Column="0"
                                                           Grid.ColumnSpan="2"
                                                           Grid.RowSpan="2"
-                                                          ItemsSource="{Binding TerminalViewModels}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <Canvas/>
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
+                                                          ItemsSource="{Binding TerminalViewModels}"
+                                                          ItemContainerStyle="{StaticResource TerminalContainerStyle}"
+                                                          ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"/>
 
-                                                <ItemsControl.ItemContainerStyle>
-                                                    <Style TargetType="ContentPresenter">
-                                                        <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode, Mode=TwoWay}" />
-                                                        <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode, Mode=TwoWay}" />
-                                                        <Setter Property="ContentTemplate">
-                                                            <Setter.Value>
-                                                                <DataTemplate>
-                                                                    <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
-                                                                </DataTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </ItemsControl.ItemContainerStyle>
-
-                                            </ItemsControl>
-
-                                            <Rectangle Grid.ColumnSpan="2"
-                                                       Grid.RowSpan="2"
-                                                       Grid.Row="0"
+                                            <Rectangle Grid.Row="0"
                                                        Grid.Column="0"
-                                                       Margin="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"
-                                                       Fill="DodgerBlue"
-                                                       Visibility="{Binding Content.IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btv}}" 
-                                                       IsHitTestVisible="False"/>
-                                            <ContentControl Grid.ColumnSpan="2"
-                                                            Grid.Column="0"
-                                                            Grid.Row="0"
-                                                            Grid.RowSpan="2"
-                                                            s:View.Model="{Binding}"
-                                                            Loaded="{s:Action NodeViewLoaded}"
-                                                            Margin="{x:Static view:DiagramConstants.NodeBorderThickness}"
-                                                            VerticalContentAlignment="Stretch"
-                                                            HorizontalContentAlignment="Stretch"
-                                                            IsTabStop="False" />
+                                                       Grid.ColumnSpan="2"
+                                                       Grid.RowSpan="2"
+                                                       Style="{StaticResource SelectionStyle}"
+                                                       Visibility="{Binding IsSelected, Converter={StaticResource Btv}}"/>
+
+                                            <Border Grid.Row="0"
+                                                    Grid.Column="0"
+                                                    Grid.RowSpan="2"
+                                                    Grid.ColumnSpan="2"
+                                                    HorizontalAlignment="Stretch"
+                                                    Style="{StaticResource NodeBorderStyle}">
+                                                <ContentControl s:View.Model="{Binding}"
+                                                                Loaded="{s:Action NodeViewLoaded}"
+                                                                VerticalContentAlignment="Stretch"
+                                                                HorizontalContentAlignment="Stretch"
+                                                                IsTabStop="False" />
+                                            </Border>
                                             <Button Grid.Row="0"
                                                     Grid.Column="1"
-                                                    Content=""
-                                                    Background="IndianRed"
-                                                    Margin="0"
-                                                    Width="{x:Static view:DiagramConstants.NodeBorderWidth}"
-                                                    Height="{x:Static view:DiagramConstants.NodeBorderWidth}"
-                                                    BorderThickness="0"
+                                                    Style="{StaticResource DeleteNodeButtonStyle}"
                                                     Command="{s:Action RemoveNodePressed}"
-                                                    Visibility="{Binding Content.IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btv}}" />
+                                                    Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -196,36 +222,11 @@
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
-
-                <ItemsControl ItemsSource="{Binding WireViewModels}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <Canvas />
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemContainerStyle>
-                        <Style TargetType="ContentPresenter">
-                            <Setter Property="ContentTemplate">
-                                <Setter.Value>
-                                    <DataTemplate>
-                                        <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
-                                    </DataTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ItemsControl.ItemContainerStyle>
-                </ItemsControl>
+                <!-- Wire Items Control -->
+                <ItemsControl ItemsSource="{Binding WireViewModels}"
+                              ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                              ItemContainerStyle="{StaticResource WireContainerStyle}"/>
             </Grid>
         </customControls:ZoomBorder>
-        <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ContentControl s:View.Model="{Binding InsertingNodeViewModel}"
-                            Canvas.Top="{Binding InsertingNodeViewModel.Y}"
-                            Canvas.Left="{Binding InsertingNodeViewModel.X}" IsHitTestVisible="False">
-                <ContentControl.LayoutTransform>
-                    <ScaleTransform ScaleX="{Binding Zoom, ElementName=ZoomBorder}"
-                                    ScaleY="{Binding Zoom, ElementName=ZoomBorder}" />
-                </ContentControl.LayoutTransform>
-            </ContentControl>
-        </Canvas>
     </Grid>
 </UserControl>

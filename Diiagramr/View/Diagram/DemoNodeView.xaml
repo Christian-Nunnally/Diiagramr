@@ -1,17 +1,13 @@
 ﻿<UserControl x:Class="Diiagramr.View.Diagram.DemoNodeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
-             d:DataContext="{d:DesignInstance diagram1:DemoNodeViewModel}"
-             SizeChanged="{s:Action OnNodeSizeChanged}"
-             Width="{Binding Width}"
-             Height="{Binding Height}">
-    <Border BorderBrush="Gray" Background="White" BorderThickness="1" IsHitTestVisible="False">
-
-    </Border>
+             xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
+             d:DataContext="{d:DesignInstance diagram:DemoNodeViewModel}"
+             d:DesignHeight="40"
+             d:DesignWidth="40"
+             mc:Ignorable="d">
+    <Button Margin="10"></Button>
 </UserControl>
-
