@@ -34,8 +34,10 @@ namespace Diiagramr.ViewModel
 
         public override void RequestClose(bool? dialogResult = null)
         {
-            _projectManager.CloseProject();
-            if (Parent != null) base.RequestClose(dialogResult);
+            if (_projectManager.CloseProject())
+            {
+                if (Parent != null) base.RequestClose(dialogResult);
+            }
         }
 
         public void CreateProject()

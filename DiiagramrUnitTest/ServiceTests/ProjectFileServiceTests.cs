@@ -1,5 +1,8 @@
 ﻿using Castle.Core.Internal;
+using Diiagramr.Model;
 using Diiagramr.Service;
+using Diiagramr.View.CustomControls;
+using DiiagramrUnitTests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -8,23 +11,21 @@ namespace DiiagramrUnitTests.ServiceTests
     [TestClass]
     public class ProjectFileServiceTests
     {
-        private const string InvalidProjectName = "+";
-        private const string ValidProjectName = "a";
         private Mock<IDirectoryService> _directoryServiceMoq;
         private ProjectFileService _projectFileService;
         private const string Directory = "test";
-        private const string OldDirectory = "test\\oldproject";
-        private const string NewDirectory = "test\\newproject";
-        private const string OldName = "oldproject";
-        private const string NewName = "newproject";
+        private IFileDialog _testDialog;
+
 
         [TestInitialize]
         public void TestInitialize()
         {
+            _testDialog = new TestFileDialog();
             _directoryServiceMoq = new Mock<IDirectoryService>();
             _directoryServiceMoq.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
             _directoryServiceMoq.Setup(m => m.GetCurrentDirectory()).Returns("testDirectory");
-            _projectFileService = new ProjectFileService(_directoryServiceMoq.Object);
+            _projectFileService =
+                new ProjectFileService(_directoryServiceMoq.Object, _testDialog, _testDialog);
             _projectFileService.ProjectDirectory = Directory;
         }
 
@@ -36,9 +37,21 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void ConstructorTest_ProjectNameNull()
+        public void SaveAsProjectTest_SetsInitialDirectory()
         {
-            Assert.IsNull(_projectFileService.ProjectName);
+            _projectFileService.SaveProject(new Project(), true);
+            Assert.AreEqual(Directory, _testDialog.InitialDirectory);
+        }
+
+        [TestMethod]
+        public void SaveAsProjectTest_SetsInitialFileName()
+        {
+            var proj = new Project
+            {
+                Name = "testProj"
+            };
+            _projectFileService.SaveProject(proj, true);
+            Assert.AreEqual(proj.Name, _testDialog.FileName);
         }
     }
 }

@@ -21,12 +21,10 @@ namespace Diiagramr.Model
         [DataMember]
         public ObservableCollection<EDiagram> Diagrams { get; set; }
 
-        private Project() { }
-
-        public Project(string name)
+        public Project()
         {
             Diagrams = new ObservableCollection<EDiagram>();
-            Name = name;
+            Name = "NewProject";
         }
     }
 }

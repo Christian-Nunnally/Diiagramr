@@ -54,7 +54,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestOpenDiagram_DiagramIsOpenSetToTrue_DiagramBecomesActiveItem()
         {
             var diagram = new EDiagram();
-            var project = new Project("TestProject");
+            var project = new Project();
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;

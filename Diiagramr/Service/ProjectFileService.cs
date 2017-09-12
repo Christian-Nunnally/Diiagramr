@@ -6,6 +6,9 @@ using System.Runtime.Serialization;
 using System.Xml;
 using Diiagramr.Model;
 using System.Windows.Forms;
+using Diiagramr.View.CustomControls;
+using StyletIoC;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Diiagramr.Service
 {
@@ -13,76 +16,71 @@ namespace Diiagramr.Service
     {
         public string ProjectDirectory { get; set; }
 
-        public string ProjectName { get; set; }
+        private readonly IFileDialog _openFileDialog;
 
-        private readonly IDirectoryService _directoryService;
+        private readonly IFileDialog _saveFileDialog;
 
-        public ProjectFileService(IDirectoryService directoryService)
+        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog)
         {
-            _directoryService = directoryService;
-            ProjectDirectory = _directoryService.GetCurrentDirectory() + "\\" + "Projects";
+            _openFileDialog = openDialog;
+            _saveFileDialog = saveDialog;
+            ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
-            if (!_directoryService.Exists(ProjectDirectory)) _directoryService.CreateDirectory(ProjectDirectory);
+            if (!directoryService.Exists(ProjectDirectory)) directoryService.CreateDirectory(ProjectDirectory);
         }
 
         public bool SaveProject(Project project, bool saveAs)
         {
-            if (saveAs || ProjectName == null)
+            if (saveAs || project.Name == "NewProject")
             {
                 return SaveAsProject(project);
             }
             else
             {
-                SerializeAndSave(project, ProjectDirectory + "\\" + ProjectName);
+                SerializeAndSave(project, ProjectDirectory + "\\" + project.Name);
                 return true;
             }
         }
 
         public Project LoadProject()
         {
-            OpenFileDialog openFile = new OpenFileDialog();
-            openFile.InitialDirectory = ProjectDirectory;
-            openFile.Filter = "Project files(*.xml)|*.xml|All files(*.*)|*.*";
+            _openFileDialog.InitialDirectory = ProjectDirectory;
+            _openFileDialog.Filter = "Project files(*.xml)|*.xml|All files(*.*)|*.*";
+            _openFileDialog.FileName = "";
 
-            if (openFile.ShowDialog() == DialogResult.OK)
+            if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
                 var serializer = new DataContractSerializer(typeof(Project));
-                Stream stream = new FileStream(openFile.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+                Stream stream = new FileStream(_openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
                 var project = (Project)serializer.ReadObject(stream);
                 stream.Close();
-                SetPathComponents(openFile.FileName);
+                SetComponentsFromPath(project, _openFileDialog.FileName);
                 return project;
             }
 
             return null;
         }
 
-        public bool MoveProject(string oldName, string newName)
+        public DialogResult ConfirmProjectClose()
         {
-            // TODO
-            return false;
+            const string message = "Do you want to save before closing?";
+            return MessageBox.Show(message, "Diiagramr", MessageBoxButtons.YesNoCancel);
         }
 
         private bool SaveAsProject(Project project)
         {
-            SaveFileDialog saveFile = new SaveFileDialog();
-
-            if (ProjectName == null)
+            if (project.Name != null)
             {
-                saveFile.FileName = project.Name;
-            }
-            else
-            {
-                saveFile.FileName = ProjectName;
+                _saveFileDialog.FileName = project.Name;
             }
 
-            saveFile.InitialDirectory = ProjectDirectory;
-            saveFile.Filter = "Project files(*.xml)|*.xml|All files(*.*)|*.*";
+            _saveFileDialog.InitialDirectory = ProjectDirectory;
+            _saveFileDialog.Filter = "Project files(*.xml)|*.xml|All files(*.*)|*.*";
 
-            if (saveFile.ShowDialog() == DialogResult.OK)
+            if (_saveFileDialog.ShowDialog() == DialogResult.OK)
             {
-                SerializeAndSave(project, saveFile.FileName);
-                SetPathComponents(saveFile.FileName);
+                SerializeAndSave(project, _saveFileDialog.FileName);
+                SetComponentsFromPath(project, _saveFileDialog.FileName);
                 return true;
             }
 
@@ -96,10 +94,10 @@ namespace Diiagramr.Service
             using (var w = XmlWriter.Create(name, settings)) serializer.WriteObject(w, project);
         }
 
-        private void SetPathComponents(string path)
+        private void SetComponentsFromPath(Project project, string path)
         {
             ProjectDirectory = path.Substring(0, path.LastIndexOf("\\"));
-            ProjectName = path.Substring(path.LastIndexOf("\\") + 1);
+            project.Name = path.Substring(path.LastIndexOf("\\") + 1);
         }
     }
 }
