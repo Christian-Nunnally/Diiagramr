@@ -59,6 +59,7 @@ namespace Diiagramr.ViewModel.Diagram
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             Name = Terminal.Name;
+            SetTerminalRotationBasedOnDirection();
             TitleVisible = true;
             TitleVisible = false;
         }
@@ -67,10 +68,26 @@ namespace Diiagramr.ViewModel.Diagram
         {
             if (e.PropertyName.Equals(nameof(Terminal.Direction)))
             {
-                if (Terminal.Direction == Direction.North) TerminalRotation = 0;
-                else if (Terminal.Direction == Direction.East) TerminalRotation = 90;
-                else if (Terminal.Direction == Direction.South) TerminalRotation = 180;
-                else TerminalRotation = 270;
+                SetTerminalRotationBasedOnDirection();
+            }
+        }
+
+        private void SetTerminalRotationBasedOnDirection()
+        {
+            switch (Terminal.Direction)
+            {
+                case Direction.North:
+                    TerminalRotation = 0;
+                    break;
+                case Direction.East:
+                    TerminalRotation = 90;
+                    break;
+                case Direction.South:
+                    TerminalRotation = 180;
+                    break;
+                default:
+                    TerminalRotation = 270;
+                    break;
             }
         }
 
