@@ -205,8 +205,10 @@ namespace Diiagramr.ViewModel.Diagram
         {
             base.OnPropertyChanged(propertyName);
             if (DiagramNode == null) return;
-            if (propertyName.Equals("X")) DiagramNode.X = X;
-            if (propertyName.Equals("Y")) DiagramNode.Y = Y;
+            if (propertyName.Equals(nameof(X))) DiagramNode.X = X;
+            if (propertyName.Equals(nameof(Y))) DiagramNode.Y = Y;
+            if (propertyName.Equals(nameof(Width))) DiagramNode.Width = Width;
+            if (propertyName.Equals(nameof(Height))) DiagramNode.Height = Height;
         }
 
         public void Wiggle()

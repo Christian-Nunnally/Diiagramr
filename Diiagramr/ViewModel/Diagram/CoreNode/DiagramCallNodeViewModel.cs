@@ -2,7 +2,7 @@
 
 namespace Diiagramr.ViewModel.Diagram.CoreNode
 {
-    public class DiagramCallNodeViewModel : PluginNodeViewModel
+    public class DiagramCallNodeViewModel : PluginNode
     {
 
         public override string Name { get; }

@@ -102,7 +102,7 @@
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
     <Compile Include="ViewModel\Diagram\NodeSetup.cs" />
-    <Compile Include="ViewModel\Diagram\PluginNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\PluginNode.cs" />
     <Compile Include="View\CustomControls\SaveFileDialog.cs" />
     <Compile Include="View\CustomControls\OpenFileDialog.cs" />
     <Compile Include="View\CustomControls\IFileDialog.cs" />

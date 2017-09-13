@@ -73,21 +73,6 @@ namespace Diiagramr.Model
             return PersistedVariables[name];
         }
 
-        public int GetIntVariable(string name)
-        {
-            return (int)GetVariable(name);
-        }
-
-        public string GetStringVariable(string name)
-        {
-            return (string)GetVariable(name);
-        }
-
-        public bool GetBoolVariable(string name)
-        {
-            return (bool)GetVariable(name);
-        }
-
         public void RemoveTerminal(Terminal terminal)
         {
             if (!Terminals.Contains(terminal)) throw new InvalidOperationException("Trying to remove a terminal from a node that does not exist.");

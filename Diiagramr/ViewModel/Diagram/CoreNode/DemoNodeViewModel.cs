@@ -1,6 +1,6 @@
 ﻿namespace Diiagramr.ViewModel.Diagram
 {
-    public class DemoNodeViewModel : PluginNodeViewModel
+    public class DemoNodeViewModel : PluginNode
     {
         public override string Name => "Demo Node";
 
