@@ -103,6 +103,9 @@
     <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
     <Compile Include="ViewModel\Diagram\NodeSetup.cs" />
     <Compile Include="ViewModel\Diagram\PluginNodeViewModel.cs" />
+    <Compile Include="View\CustomControls\SaveFileDialog.cs" />
+    <Compile Include="View\CustomControls\OpenFileDialog.cs" />
+    <Compile Include="View\CustomControls\IFileDialog.cs" />
     <Compile Include="View\Diagram\PointsToPathConverter.cs" />
     <Compile Include="ViewModel\Diagram\TerminalViewModel.cs" />
     <Compile Include="ViewModel\NodeSelectorViewModel.cs" />

@@ -3,6 +3,7 @@ using Diiagramr.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Windows.Forms;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -44,11 +45,34 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void CreateProjectTest_ProjectFileProjectNameSetNull()
+        public void CreateProjectTest_ConfirmSaveCanceled()
         {
-            _projectFileServiceMoq.SetupSet(m => m.ProjectName = "test");
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Cancel);
             _projectManager.CreateProject();
-            _projectFileServiceMoq.VerifySet(m => m.ProjectName = null);
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.CreateProject();
+            Assert.AreEqual("testProj", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void CreateProjectTest_ConfirmSaveNo()
+        {
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.No);
+            _projectManager.CreateProject();
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.CreateProject();
+            Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void CreateProjectTest_ConfirmSaveYes()
+        {
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Yes);
+            _projectFileServiceMoq.Setup(m => m.SaveProject(It.IsAny<Project>(), false)).Returns(true);
+            _projectManager.CreateProject();
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.CreateProject();
+            Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
         }
 
         [TestMethod]
@@ -72,7 +96,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_CurrentProjectSet()
         {
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project(""));
+            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project());
             _projectManager.LoadProject();
             Assert.IsNotNull(_projectManager.CurrentProject);
         }
@@ -80,9 +104,51 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_ProjectChanged()
         {
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project(""));
+            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project());
             _projectManager.LoadProject();
             Assert.IsTrue(_currentProjectChanged);
+        }
+
+        [TestMethod]
+        public void LoadProjectTest_ConfirmSaveCanceled()
+        {
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Cancel);
+
+            _projectManager.CreateProject();
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.LoadProject();
+            Assert.AreEqual("testProj", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void LoadProjectTest_ConfirmSaveNo()
+        {
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.No);
+            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project());
+
+            _projectManager.CreateProject();
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.LoadProject();
+            Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void LoadProjectTest_ConfirmSaveYes()
+        {
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Yes);
+            _projectFileServiceMoq.Setup(m => m.SaveProject(It.IsAny<Project>(), false)).Returns(true);
+            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new Project());
+
+            _projectManager.CreateProject();
+            _projectManager.CurrentProject.Name = "testProj";
+            _projectManager.LoadProject();
+            Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void CloseProjectTest_ProjectNotDirty()
+        {
+            Assert.IsTrue(_projectManager.CloseProject());
         }
 
         [TestMethod]
@@ -98,6 +164,15 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             Assert.IsNotNull(_projectManager.CurrentDiagrams[0]);
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_ProjectDirty()
+        {
+            _projectManager.CreateProject();
+            _projectManager.IsProjectDirty = false;
+            _projectManager.CreateDiagram();
+            Assert.IsTrue(_projectManager.IsProjectDirty);
         }
 
         [TestMethod]
@@ -135,6 +210,16 @@ namespace DiiagramrUnitTests.ServiceTests
             _currentProjectChanged = false;
             _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
             Assert.IsTrue(_currentProjectChanged);
+        }
+
+        [TestMethod]
+        public void DeleteDiagramTest_ProjectDirty()
+        {
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram();
+            _projectManager.IsProjectDirty = false;
+            _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
+            Assert.IsTrue(_projectManager.IsProjectDirty);
         }
     }
 }

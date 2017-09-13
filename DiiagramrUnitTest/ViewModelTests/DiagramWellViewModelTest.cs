@@ -63,7 +63,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private EDiagram SetupProjectWithSingleDiagram()
         {
             var diagram = new EDiagram();
-            var project = new Project("TestProject");
+            var project = new Project();
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;

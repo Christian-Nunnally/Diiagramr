@@ -99,7 +99,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestCanSaveProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = new Project("");
+            _projectManagerMoq.Object.CurrentProject = new Project();
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_shellViewModel.CanSaveProject);
@@ -118,7 +118,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestCanSaveAsProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = new Project("");
+            _projectManagerMoq.Object.CurrentProject = new Project();
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_shellViewModel.CanSaveAsProject);

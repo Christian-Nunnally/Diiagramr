@@ -22,9 +22,7 @@ namespace Diiagramr.Service
 
         void LoadProject();
 
-        void CloseProject();
-
-        bool RenameProject(string newName);
+        bool CloseProject();
 
         void CreateDiagram();
 

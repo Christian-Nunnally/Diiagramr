@@ -70,7 +70,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestProjectChanged_ProjectNotNull_IsAddDiagramButtonIsTrue()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = new Project("");
+            _projectManagerMoq.Object.CurrentProject = new Project();
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_projectExplorerViewModel.IsAddDiagramButtonVisible);
@@ -79,7 +79,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestProjectChanged_ProjectNotNull_ProjectSet()
         {
-            var project = new Project("");
+            var project = new Project();
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
             _projectManagerMoq.Object.CurrentProject = project;
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);

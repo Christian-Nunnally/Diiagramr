@@ -1,32 +1,31 @@
 ﻿using System.Collections.Generic;
+using System.Windows.Forms;
 using Diiagramr.Model;
 
 namespace Diiagramr.Service
 {
     public interface IProjectFileService
     {
-        
-        string ProjectName { get; set; }
+
+        string ProjectDirectory { get; set; }
 
         /// <summary>
         /// Saves the project.
         /// </summary>
         /// <param name="project">The project.</param>
+        /// <param name="saveAs">Whether this should be saved with saveAs.</param>
         bool SaveProject(Project project, bool saveAs);
 
         /// <summary>
         /// Loads the project.
         /// </summary>
-        /// <param name="projectName">Name of the project.</param>
         /// <returns>The loaded project.</returns>
         Project LoadProject();
 
         /// <summary>
-        /// Renames a project.
+        /// Confirms Project Close.
         /// </summary>
-        /// <param name="oldName">The old name.</param>
-        /// <param name="newName">The new name.</param>
-        /// <returns>True is the rename was performed</returns>
-        bool MoveProject(string oldName, string newName);
+        /// <returns>The Result from the calling Dialog.</returns>
+        DialogResult ConfirmProjectClose();
     }
 }

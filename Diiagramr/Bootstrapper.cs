@@ -7,6 +7,8 @@ using System.Linq;
 using System.Reflection;
 using Diiagramr.Service;
 using Diiagramr.Executor;
+using Diiagramr.Service;
+using Diiagramr.View.CustomControls;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 
@@ -22,7 +24,8 @@ namespace Diiagramr
             builder.Bind<IDiagramExecutor>().To<DiagramExecutor>();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-
+            builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
+            builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
             builder.Bind<AbstractNodeViewModel>().To<DemoNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }

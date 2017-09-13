@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Diiagramr.Model;
 using System.IO;
+using System.Windows.Forms;
 using Diiagramr.Service;
 
 namespace Diiagramr.Service
@@ -25,10 +26,12 @@ namespace Diiagramr.Service
 
         public void CreateProject()
         {
-            CurrentProject = new Project("Project");
-            IsProjectDirty = true;
-            CurrentProjectChanged.Invoke();
-            _projectFileService.ProjectName = null;
+            if (CloseProject())
+            {
+                CurrentProject = new Project();
+                IsProjectDirty = true;
+                CurrentProjectChanged.Invoke();
+            }
         }
 
         public void SaveProject()
@@ -49,19 +52,29 @@ namespace Diiagramr.Service
 
         public void LoadProject()
         {
-            CurrentProject = _projectFileService.LoadProject();
-            CurrentProjectChanged.Invoke();
+            if (CloseProject())
+            {
+                CurrentProject = _projectFileService.LoadProject();
+                IsProjectDirty = false;
+                CurrentProjectChanged.Invoke();
+            }
         }
 
-        public void CloseProject()
+        public bool CloseProject()
         {
-            //throw new NotImplementedException();
-        }
-
-        public bool RenameProject(string newName)
-        {
-            return false;
-            //throw new NotImplementedException();
+            if (IsProjectDirty)
+            {
+                var result = _projectFileService.ConfirmProjectClose();
+                if (result == DialogResult.Cancel)
+                {
+                    return false;
+                }
+                else if (result == DialogResult.Yes)
+                {
+                    _projectFileService.SaveProject(CurrentProject, false);
+                }
+            }
+            return true;
         }
 
         public void CreateDiagram()
@@ -76,6 +89,7 @@ namespace Diiagramr.Service
             while (CurrentProject.Diagrams.Any(x => x.Name.Equals(dName + dNum)))
                 dNum++;
             diagram.Name = dName + dNum;
+            IsProjectDirty = true;
             CurrentProject.Diagrams.Add(diagram);
             CurrentProjectChanged.Invoke();
         }
@@ -84,6 +98,8 @@ namespace Diiagramr.Service
         {
             var dToDelete = CurrentDiagrams.First(x => x == diagram);
             CurrentProject.Diagrams.Remove(dToDelete);
+
+            IsProjectDirty = true;
             CurrentProjectChanged.Invoke();
         }
     }
