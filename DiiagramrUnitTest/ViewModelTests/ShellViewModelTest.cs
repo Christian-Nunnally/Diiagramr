@@ -59,6 +59,13 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
+        public void TestSaveAsProject_CallsSaveAsProject()
+        {
+            _shellViewModel.SaveAsProject();
+            _projectManagerMoq.Verify(m => m.SaveAsProject(), Times.Once);
+        }
+
+        [TestMethod]
         public void TestSaveAndClose_CallsSaveProject()
         {
             _shellViewModel.SaveAndClose();
