@@ -48,7 +48,7 @@ namespace Diiagramr.Model
 
         private void ConnectedTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var terminal = (Terminal)sender;
+            var terminal = (TerminalModel)sender;
             if (e.PropertyName.Equals("X"))
             {
                 if (terminal == SinkTerminal) X1 = terminal.X;

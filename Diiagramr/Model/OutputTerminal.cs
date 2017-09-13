@@ -6,7 +6,7 @@ namespace Diiagramr.Model
 {
     [DataContract(IsReference = true)]
     [AddINotifyPropertyChangedInterface]
-    public class OutputTerminal : Terminal
+    public class OutputTerminal : TerminalModel
     {
         private OutputTerminal() { }
 

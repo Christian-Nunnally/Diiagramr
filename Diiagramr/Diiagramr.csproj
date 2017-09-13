@@ -37,7 +37,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bass.Net, Version=2.4.11.1, Culture=neutral, PublicKeyToken=b7566c273e6ef480, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
       <Private>True</Private>
@@ -87,8 +86,9 @@
     <Compile Include="Model\InputTerminal.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\OutputTerminal.cs" />
-    <Compile Include="Model\Terminal.cs" />
+    <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\Wire.cs" />
+    <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\IDirectoryService.cs" />
@@ -101,8 +101,8 @@
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
-    <Compile Include="ViewModel\Diagram\NodeSetup.cs" />
-    <Compile Include="ViewModel\Diagram\PluginNode.cs" />
+    <Compile Include="PluginNodeApi\NodeSetup.cs" />
+    <Compile Include="PluginNodeApi\PluginNode.cs" />
     <Compile Include="View\CustomControls\SaveFileDialog.cs" />
     <Compile Include="View\CustomControls\OpenFileDialog.cs" />
     <Compile Include="View\CustomControls\IFileDialog.cs" />

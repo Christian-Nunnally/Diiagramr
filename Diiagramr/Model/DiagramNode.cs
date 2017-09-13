@@ -20,13 +20,13 @@ namespace Diiagramr.Model
 
         private DiagramNode()
         {
-            Terminals = new List<Terminal>();
+            Terminals = new List<TerminalModel>();
         }
 
         public DiagramNode(string nodeName)
         {
             NodeType = nodeName;
-            Terminals = new List<Terminal>();
+            Terminals = new List<TerminalModel>();
         }
 
         [DataMember]
@@ -45,9 +45,9 @@ namespace Diiagramr.Model
         public bool Initialized { get; set; }
 
         [DataMember]
-        public List<Terminal> Terminals { get; set; }
+        public List<TerminalModel> Terminals { get; set; }
 
-        public void AddTerminal(Terminal terminal)
+        public void AddTerminal(TerminalModel terminal)
         {
             Terminals.Add(terminal);
             PropertyChanged += terminal.NodePropertyChanged;
@@ -73,7 +73,7 @@ namespace Diiagramr.Model
             return PersistedVariables[name];
         }
 
-        public void RemoveTerminal(Terminal terminal)
+        public void RemoveTerminal(TerminalModel terminal)
         {
             if (!Terminals.Contains(terminal)) throw new InvalidOperationException("Trying to remove a terminal from a node that does not exist.");
             PropertyChanged -= terminal.NodePropertyChanged;

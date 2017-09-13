@@ -8,9 +8,9 @@ using Diiagramr.Model;
 
 namespace Diiagramr.ViewModel.Diagram
 {
-    public abstract class TerminalViewModel : Screen, IViewAware
+    public class TerminalViewModel : Screen, IViewAware
     {
-        public Terminal Terminal { get; set; }
+        public TerminalModel Terminal { get; set; }
 
         private readonly IList<Action> _whenViewIsLoadedCallbacks = new List<Action>();
         private Direction _defaultDirection;
@@ -20,6 +20,8 @@ namespace Diiagramr.ViewModel.Diagram
         public bool TitleVisible { get; set; }
 
         public float TerminalRotation { get; set; }
+
+        public virtual object Data { get; set; }
 
         public double XRelativeToNode
         {
@@ -53,7 +55,7 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        public TerminalViewModel(Terminal terminal)
+        public TerminalViewModel(TerminalModel terminal)
         {
             Terminal = terminal;
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
@@ -115,7 +117,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public virtual void DropObject(object o)
         {
-            var terminal = o as Terminal;
+            var terminal = o as TerminalModel;
             if (terminal == null) return;
             WireToTerminal(terminal);
         }
@@ -125,14 +127,14 @@ namespace Diiagramr.ViewModel.Diagram
             Terminal.DisconnectWire();
         }
 
-        public virtual void WireToTerminal(Terminal terminal)
+        public virtual void WireToTerminal(TerminalModel terminal)
         {
             if (terminal == null) return;
             if (terminal is InputTerminal && Terminal is OutputTerminal) new Wire((OutputTerminal)Terminal, (InputTerminal)terminal);
             if (Terminal is InputTerminal && terminal is OutputTerminal) new Wire((OutputTerminal)terminal, (InputTerminal)Terminal);
         }
 
-        public virtual void WireFromTerminal(Terminal terminal)
+        public virtual void WireFromTerminal(TerminalModel terminal)
         {
             if (terminal == null) return;
             if (terminal is InputTerminal && Terminal is OutputTerminal) new Wire((OutputTerminal)Terminal, (InputTerminal)terminal);

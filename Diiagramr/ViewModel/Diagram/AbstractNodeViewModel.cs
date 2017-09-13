@@ -29,7 +29,7 @@ namespace Diiagramr.ViewModel.Diagram
     {
         public DelegateMapper DelegateMapper { get; set; }
 
-        public delegate void TerminalConnectedStatusChangedDelegate(Terminal terminal);
+        public delegate void TerminalConnectedStatusChangedDelegate(TerminalModel terminal);
 
         private static Direction _direction = Direction.North;
 
@@ -180,13 +180,13 @@ namespace Diiagramr.ViewModel.Diagram
             else _direction = Direction.North;
         }
 
-        private void AddTerminal(Terminal terminal)
+        private void AddTerminal(TerminalModel terminal)
         {
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             DiagramNode.AddTerminal(terminal);
         }
 
-        private void RemoveTerminal(Terminal terminal)
+        private void RemoveTerminal(TerminalModel terminal)
         {
             terminal.PropertyChanged -= TerminalOnPropertyChanged;
             DiagramNode.RemoveTerminal(terminal);
@@ -194,7 +194,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            var terminal = sender as Terminal;
+            var terminal = sender as TerminalModel;
             if (propertyChangedEventArgs.PropertyName.Equals("ConnectedWire"))
             {
                 TerminalConnectedStatusChanged?.Invoke(terminal);

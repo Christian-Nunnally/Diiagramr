@@ -97,7 +97,7 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        private void ShowTitlesOnTerminalsOfSameType(Terminal terminal)
+        private void ShowTitlesOnTerminalsOfSameType(TerminalModel terminal)
         {
             foreach (var nodeViewModel in NodeViewModels)
             {
@@ -128,7 +128,7 @@ namespace Diiagramr.ViewModel.Diagram
             viewModel.Uninitialize();
         }
 
-        private void OnTerminalConnectedStatusChanged(Terminal terminal)
+        private void OnTerminalConnectedStatusChanged(TerminalModel terminal)
         {
             if (terminal.ConnectedWire != null)
             {
@@ -156,8 +156,8 @@ namespace Diiagramr.ViewModel.Diagram
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
 
-            var terminal = o as Terminal;
-            if (o is Terminal || o is TerminalViewModel)
+            var terminal = o as TerminalModel;
+            if (o is TerminalModel || o is TerminalViewModel)
             {
                 HideAllTerminalLabels();
                 ShowTitlesOnTerminalsOfSameType(terminal);
@@ -179,7 +179,7 @@ namespace Diiagramr.ViewModel.Diagram
         public void DragEnter(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            var terminal = o as Terminal;
+            var terminal = o as TerminalModel;
             if (terminal != null)
             {
                 HideAllTerminalLabels();

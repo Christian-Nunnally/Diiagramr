@@ -7,7 +7,7 @@ namespace Diiagramr.Model
 {
     [DataContract(IsReference = true)]
     [AddINotifyPropertyChangedInterface]
-    public class InputTerminal : Terminal
+    public class InputTerminal : TerminalModel
     {
         [DataMember]
         public int TerminalIndex { get; set; }

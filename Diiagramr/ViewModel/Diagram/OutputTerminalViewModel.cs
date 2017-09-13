@@ -12,7 +12,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public OutputTerminal OutputTerminal => Terminal as OutputTerminal;
 
-        public sealed override void WireToTerminal(Terminal terminal)
+        public sealed override void WireToTerminal(TerminalModel terminal)
         {
             if (!(terminal is InputTerminal)) return;
             base.WireToTerminal(terminal);

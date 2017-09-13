@@ -11,7 +11,7 @@ using Diiagramr.ViewModel.Diagram;
 namespace Diiagramr.Model
 {
     [DataContract(IsReference = true)]
-    public abstract class Terminal : ModelBase
+    public class TerminalModel : ModelBase
     {
         /// <summary>
         /// The x position of the node this terminal belongs to.
@@ -70,9 +70,9 @@ namespace Diiagramr.Model
         [DataMember]
         public string Name { get; set; }
 
-        protected Terminal() { }
+        protected TerminalModel() { }
 
-        public Terminal(string name, Type type)
+        public TerminalModel(string name, Type type)
         {
             Type = type;
             Name = name;
