@@ -40,7 +40,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestCloseActiveDiagram_OneOpenDiagram_SetsCurrentDiagramIsOpenToFalse()
         {
-            var diagramMoq = new Mock<EDiagram>();
+            var diagramMoq = new Mock<DiagramModel>();
             diagramMoq.SetupAllProperties();
             diagramMoq.Object.IsOpen = true;
             _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object).Object;
@@ -60,9 +60,9 @@ namespace DiiagramrUnitTests.ViewModelTests
             Assert.AreEqual(diagram, _diagramWellViewModel.ActiveItem.Diagram);
         }
 
-        private EDiagram SetupProjectWithSingleDiagram()
+        private DiagramModel SetupProjectWithSingleDiagram()
         {
-            var diagram = new EDiagram();
+            var diagram = new DiagramModel();
             var project = new Project();
 
             _projectManagerMoq.SetupAllProperties();

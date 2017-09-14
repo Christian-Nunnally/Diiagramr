@@ -35,8 +35,6 @@ namespace Diiagramr.Model
             SinkTerminal = sinkTerminal;
             SourceTerminal = sourceTerminal;
 
-            SetupPropertyChangedNotificationsFromTerminals();
-
             SourceTerminal.DisconnectWire();
             SinkTerminal.DisconnectWire();
 

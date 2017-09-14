@@ -12,7 +12,7 @@ namespace Diiagramr.Service
 
         bool IsProjectDirty { get; set; }
 
-        ObservableCollection<EDiagram> CurrentDiagrams { get; }
+        ObservableCollection<DiagramModel> CurrentDiagrams { get; }
 
         void CreateProject();
 
@@ -26,6 +26,6 @@ namespace Diiagramr.Service
 
         void CreateDiagram();
 
-        void DeleteDiagram(EDiagram diagram);
+        void DeleteDiagram(DiagramModel diagram);
     }
 }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 
@@ -46,24 +49,40 @@ namespace Diiagramr.PluginNodeApi
             SetupNode(nodeSetterUpper);
         }
 
-        public override void OnNodeSaving()
+        public override void SaveNodeVariables()
         {
-            base.OnNodeSaving();
+            foreach (var propertyInfo in GetImplementingClassPublicGetAndSetProperties())
+            {
+                var key = propertyInfo.Name;
+                var value = propertyInfo.GetValue(this);
+                DiagramNode?.SetVariable(key, value);
+            }
+        }
 
-            SaveValue("Width", Width);
-            SaveValue("Height", Height);
+        public override void LoadNodeVariables()
+        {
+            foreach (var propertyInfo in GetImplementingClassPublicGetAndSetProperties())
+            {
+                var key = propertyInfo.Name;
+                var value = DiagramNode?.GetVariable(key);
+                propertyInfo.SetValue(this, value);
+            }
+        }
+
+        private IEnumerable<PropertyInfo> GetImplementingClassPublicGetAndSetProperties()
+        {
+            var actualType = GetType();
+            var pluginNodeType = typeof(PluginNode);
+            var properties = actualType.GetProperties();
+            var pluginNodeProperties = pluginNodeType.GetProperties();
+            var pluginNodePropertyNames = pluginNodeProperties.Select(i => i.Name).ToList();
+            var implementingClassProperties = properties.Where(i => !pluginNodePropertyNames.Contains(i.Name));
+            return implementingClassProperties.Where(i => i.GetGetMethod() != null && i.GetSetMethod() != null);
         }
 
         /// <summary>
         /// All node customization such as turning on/off features and setting node geometry happens here.
         /// </summary>
         public abstract void SetupNode(NodeSetup setup);
-    }
-
-    public class PluginNodeException : Exception
-    {
-        public PluginNodeException(string s) : base(s)
-        {
-        }
     }
 }

@@ -16,7 +16,17 @@ namespace Diiagramr.Model
         [DataMember]
         public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
-        public AbstractNodeViewModel NodeViewModel { get; set; }
+        private AbstractNodeViewModel _nodeViewModel;
+
+        public AbstractNodeViewModel NodeViewModel
+        {
+            get { return _nodeViewModel; }
+            set
+            {
+                _nodeViewModel = value;
+                _nodeViewModel.LoadNodeVariables();
+            }
+        }
 
         private DiagramNode()
         {
@@ -55,30 +65,27 @@ namespace Diiagramr.Model
 
         public virtual void SetTerminalsPropertyChanged()
         {
-            foreach (var terminal in Terminals)
-            {
-                PropertyChanged += terminal.NodePropertyChanged;
-            }
+            Terminals.ForEach(t => PropertyChanged += t.NodePropertyChanged);
         }
 
-        public void SetVariable(string name, object value)
+        public virtual void SetVariable(string name, object value)
         {
             if (!PersistedVariables.ContainsKey(name)) PersistedVariables.Add(name, value);
             else PersistedVariables[name] = value;
         }
 
-        public object GetVariable(string name)
+        public virtual object GetVariable(string name)
         {
             if (!PersistedVariables.ContainsKey(name)) return null;
             return PersistedVariables[name];
         }
 
-        public void RemoveTerminal(TerminalModel terminal)
+        /// <summary>
+        /// Must be called before the node is serialized and saved to disk.
+        /// </summary>
+        public virtual void PreSave()
         {
-            if (!Terminals.Contains(terminal)) throw new InvalidOperationException("Trying to remove a terminal from a node that does not exist.");
-            PropertyChanged -= terminal.NodePropertyChanged;
-            terminal.DisconnectWire();
-            Terminals.Remove(terminal);
+            NodeViewModel.SaveNodeVariables();
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
+using Diiagramr.Service;
 
 namespace Diiagramr.Model
 {
@@ -16,15 +17,23 @@ namespace Diiagramr.Model
         public bool IsExpanded { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [DataMember]
-        public ObservableCollection<EDiagram> Diagrams { get; set; }
+        public ObservableCollection<DiagramModel> Diagrams { get; set; }
 
         public Project()
         {
-            Diagrams = new ObservableCollection<EDiagram>();
+            Diagrams = new ObservableCollection<DiagramModel>();
             Name = "NewProject";
+        }
+
+        /// <summary>
+        /// Must be called before the project is serialized and saved to disk.
+        /// </summary>
+        public virtual void PreSave()
+        {
+            Diagrams.ForEach(d => d.PreSave());
         }
     }
 }

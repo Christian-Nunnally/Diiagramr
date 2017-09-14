@@ -10,13 +10,19 @@ namespace DiiagramrUnitTests.TestClasses
 {
     class TestFileDialog : IFileDialog
     {
+        public DialogResult Result { get; set; }
         public string InitialDirectory { get; set; }
         public string Filter { get; set; }
         public string FileName { get; set; }
 
-        public System.Windows.Forms.DialogResult ShowDialog()
+        public TestFileDialog()
         {
-            return DialogResult.Cancel;
+            Result = DialogResult.Cancel;
+        }
+
+        public DialogResult ShowDialog()
+        {
+            return Result;
         }
     }
 }

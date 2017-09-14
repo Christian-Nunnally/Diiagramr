@@ -89,15 +89,25 @@ namespace Diiagramr.Service
 
         private void SerializeAndSave(Project project, string name)
         {
-            var serializer = new DataContractSerializer(typeof(Project), new Type[] { typeof(InputTerminal), typeof(OutputTerminal) });
-            var settings = new XmlWriterSettings { Indent = true };
-            using (var w = XmlWriter.Create(name, settings)) serializer.WriteObject(w, project);
+            project.PreSave();
+            try
+            {
+                var serializer = new DataContractSerializer(typeof(Project), new Type[] { typeof(InputTerminal), typeof(OutputTerminal) });
+                var settings = new XmlWriterSettings { Indent = true };
+                using (var w = XmlWriter.Create(name, settings)) serializer.WriteObject(w, project);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
 
         private void SetComponentsFromPath(Project project, string path)
         {
-            ProjectDirectory = path.Substring(0, path.LastIndexOf("\\"));
-            project.Name = path.Substring(path.LastIndexOf("\\") + 1);
+            var lastBackslashIndex = path.LastIndexOf("\\");
+            if (lastBackslashIndex == -1) return;
+            ProjectDirectory = path.Substring(0, lastBackslashIndex);
+            project.Name = path.Substring(lastBackslashIndex + 1);
         }
     }
 }

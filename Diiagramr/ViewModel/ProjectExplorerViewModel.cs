@@ -17,7 +17,7 @@ namespace Diiagramr.ViewModel
 
         public Project Project { get; set; }
 
-        public ObservableCollection<EDiagram> Diagrams { get; set; }
+        public ObservableCollection<DiagramModel> Diagrams { get; set; }
 
         public ProjectExplorerViewModel(Func<IProjectManager> projectManagerFactory)
         {
@@ -60,7 +60,7 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        public EDiagram SelectedDiagram { get; set; }
+        public DiagramModel SelectedDiagram { get; set; }
 
         public void CreateDiagram()
         {

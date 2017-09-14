@@ -18,10 +18,5 @@ namespace Diiagramr.Model
         {
             OwningNode = owningNode;
         }
-
-        public IDictionary<OutputTerminal, object> Execute(object arg)
-        {
-            return OwningNode.NodeViewModel.InvokeInput(TerminalIndex, arg);
-        }
     }
 }

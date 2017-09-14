@@ -7,10 +7,10 @@ namespace Diiagramr.Model
 {
     [DataContract]
     [AddINotifyPropertyChangedInterface]
-    public class EDiagram : ModelBase
+    public class DiagramModel : ModelBase
     {
 
-        public EDiagram()
+        public DiagramModel()
         {
             Name = "";
         }
@@ -27,6 +27,14 @@ namespace Diiagramr.Model
         {
             if (Nodes.Contains(diagramNode)) throw new InvalidOperationException("Can not add a diagramNode twice");
             Nodes.Add(diagramNode);
+        }
+
+        /// <summary>
+        /// Must be called before the diagram is serialized and saved to disk.
+        /// </summary>
+        public virtual void PreSave()
+        {
+            Nodes.ForEach(d => d.PreSave());
         }
     }
 }

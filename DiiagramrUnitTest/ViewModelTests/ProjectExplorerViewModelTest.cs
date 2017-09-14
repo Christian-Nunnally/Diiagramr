@@ -35,7 +35,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestCanDeleteDiagram_SelectedDiagramNotNull_ReturnsTrue()
         {
-            _projectExplorerViewModel.SelectedDiagram = new EDiagram();
+            _projectExplorerViewModel.SelectedDiagram = new DiagramModel();
             Assert.IsTrue(_projectExplorerViewModel.CanDeleteDiagram);
         }
 
@@ -49,11 +49,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestDeleteDiagram_CallsDeleteDiagramWithSelectedDiagram()
         {
-            var diagram = new EDiagram();
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<EDiagram> { diagram });
+            var diagram = new DiagramModel();
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<DiagramModel> { diagram });
             _projectExplorerViewModel.SelectedDiagram = diagram;
             _projectExplorerViewModel.DeleteDiagram();
-            _projectManagerMoq.Verify(m => m.DeleteDiagram(It.Is<EDiagram>(d => d == diagram)), Times.Once);
+            _projectManagerMoq.Verify(m => m.DeleteDiagram(It.Is<DiagramModel>(d => d == diagram)), Times.Once);
         }
 
         [TestMethod]
@@ -90,7 +90,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestDiagramProjectItemMouseDown_SingleClick_SelectedDiagramNotOpen()
         {
-            var diagramMoq = new Mock<EDiagram>();
+            var diagramMoq = new Mock<DiagramModel>();
             _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
 
             _projectExplorerViewModel.DiagramProjectItemMouseDown(1);
@@ -101,7 +101,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestDiagramProjectItemMouseDown_DoubleClick_SelectedDiagramOpen()
         {
-            var diagramMoq = new Mock<EDiagram>();
+            var diagramMoq = new Mock<DiagramModel>();
             _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
 
             _projectExplorerViewModel.DiagramProjectItemMouseDown(2);

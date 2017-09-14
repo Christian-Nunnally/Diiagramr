@@ -99,7 +99,7 @@ namespace Diiagramr.Model
             }
         }
 
-        public void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
+        public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var node = (DiagramNode)sender;
             if (e.PropertyName.Equals("X"))

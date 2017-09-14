@@ -16,7 +16,7 @@ namespace Diiagramr.ViewModel.Diagram
     {
         private AbstractNodeViewModel _insertingNodeViewModel;
 
-        public DiagramViewModel(EDiagram diagram, IProvideNodes nodeProvider)
+        public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider)
         {
             if (diagram == null) throw new ArgumentNullException(nameof(diagram));
             if (nodeProvider == null) throw new ArgumentNullException(nameof(nodeProvider));
@@ -60,7 +60,7 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        public EDiagram Diagram { get; }
+        public DiagramModel Diagram { get; }
 
         public double PanX { get; set; }
 
@@ -166,7 +166,7 @@ namespace Diiagramr.ViewModel.Diagram
                 return;
             }
 
-            var diagram = o as EDiagram;
+            var diagram = o as DiagramModel;
             if (diagram != null)
             {
                 return;
@@ -186,7 +186,7 @@ namespace Diiagramr.ViewModel.Diagram
                 ShowTitlesOnTerminalsOfSameType(terminal);
             }
 
-            var diagram = o as EDiagram;
+            var diagram = o as DiagramModel;
             if (diagram != null)
             {
                 return;
@@ -199,7 +199,7 @@ namespace Diiagramr.ViewModel.Diagram
         public void DragLeave(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            var diagram = o as EDiagram;
+            var diagram = o as DiagramModel;
             if (diagram != null)
             {
                 return;

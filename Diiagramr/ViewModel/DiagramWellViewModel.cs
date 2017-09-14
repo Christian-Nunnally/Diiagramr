@@ -46,7 +46,7 @@ namespace Diiagramr.ViewModel
         {
             if (e.OldItems != null)
             {
-                foreach (var oldDiagram in e.OldItems.OfType<EDiagram>())
+                foreach (var oldDiagram in e.OldItems.OfType<DiagramModel>())
                 {
                     oldDiagram.IsOpen = false;
                     oldDiagram.PropertyChanged -= DiagramOnPropertyChanged;
@@ -55,7 +55,7 @@ namespace Diiagramr.ViewModel
 
             if (e.NewItems != null)
             {
-                foreach (var newDiagram in e.NewItems.OfType<EDiagram>())
+                foreach (var newDiagram in e.NewItems.OfType<DiagramModel>())
                 {
                     newDiagram.PropertyChanged += DiagramOnPropertyChanged;
                 }
@@ -64,7 +64,7 @@ namespace Diiagramr.ViewModel
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var diagram = (EDiagram)sender;
+            var diagram = (DiagramModel)sender;
             if (e.PropertyName.Equals(nameof(diagram.IsOpen)))
             {
                 if (diagram.IsOpen)
@@ -78,7 +78,7 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        private void CloseDiagram(EDiagram diagram)
+        private void CloseDiagram(DiagramModel diagram)
         {
             var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Diagram == diagram);
             if (diagramViewModel != null)
@@ -99,7 +99,7 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        private void OpenDiagram(EDiagram diagram)
+        private void OpenDiagram(DiagramModel diagram)
         {
             if (diagram == null) return;
             if (Items.Any(x => x.Name == diagram.Name))

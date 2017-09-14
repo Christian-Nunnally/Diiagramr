@@ -79,7 +79,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Model\EDiagram.cs" />
+    <Compile Include="Model\DiagramModel.cs" />
     <Compile Include="Model\DiagramNode.cs" />
     <Compile Include="Model\InputTerminal.cs" />
     <Compile Include="Model\ModelBase.cs" />

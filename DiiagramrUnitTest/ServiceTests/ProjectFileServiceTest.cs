@@ -1,4 +1,5 @@
-﻿using Castle.Core.Internal;
+﻿using System.Windows.Forms;
+using Castle.Core.Internal;
 using Diiagramr.Model;
 using Diiagramr.Service;
 using Diiagramr.View.CustomControls;
@@ -14,7 +15,7 @@ namespace DiiagramrUnitTests.ServiceTests
         private Mock<IDirectoryService> _directoryServiceMoq;
         private ProjectFileService _projectFileService;
         private const string Directory = "test";
-        private IFileDialog _testDialog;
+        private TestFileDialog _testDialog;
 
 
         [TestInitialize]
@@ -52,6 +53,17 @@ namespace DiiagramrUnitTests.ServiceTests
             };
             _projectFileService.SaveProject(proj, true);
             Assert.AreEqual(proj.Name, _testDialog.FileName);
+        }
+
+        [TestMethod]
+        public void TestSaveProject_SaveAsFalseAndOkPressed_CallsPreSaveOnProject()
+        {
+            var projectMoq = new Mock<Project>();
+            projectMoq.SetupGet(p => p.Name).Returns("project");
+            _testDialog.Result = DialogResult.OK;
+            _projectFileService.SaveProject(projectMoq.Object, true);
+
+            projectMoq.Verify(p => p.PreSave());
         }
     }
 }

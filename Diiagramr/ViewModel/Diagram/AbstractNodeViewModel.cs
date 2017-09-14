@@ -37,7 +37,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public bool TitleVisible => IsSelected || MouseOverBorder;
 
-        protected AbstractNodeViewModel()
+        public AbstractNodeViewModel()
         {
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
             DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
@@ -64,9 +64,9 @@ namespace Diiagramr.ViewModel.Diagram
         {
         }
 
-        public virtual void OnNodeSaving()
-        {
-        }
+        public virtual void SaveNodeVariables() { }
+
+        public virtual void LoadNodeVariables() { }
 
         #endregion
 
@@ -147,13 +147,6 @@ namespace Diiagramr.ViewModel.Diagram
             AddTerminalViewModel(outputTerminalViewModel);
         }
 
-        protected void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)
-        {
-            if (!TerminalViewModels.Contains(terminalViewModel)) return;
-            RemoveTerminal(terminalViewModel.Terminal);
-            TerminalViewModels.Remove(terminalViewModel);
-        }
-
         private void AddTerminalViewModel(TerminalViewModel terminalViewModel)
         {
             TerminalViewModels.Add(terminalViewModel);
@@ -180,12 +173,6 @@ namespace Diiagramr.ViewModel.Diagram
         {
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             DiagramNode.AddTerminal(terminal);
-        }
-
-        private void RemoveTerminal(TerminalModel terminal)
-        {
-            terminal.PropertyChanged -= TerminalOnPropertyChanged;
-            DiagramNode.RemoveTerminal(terminal);
         }
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)

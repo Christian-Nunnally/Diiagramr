@@ -16,7 +16,7 @@ namespace Diiagramr.Service
         public event Action CurrentProjectChanged;
         public Project CurrentProject { get; set; }
         public bool IsProjectDirty { get; set; }
-        public ObservableCollection<EDiagram> CurrentDiagrams => CurrentProject?.Diagrams;
+        public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
         public IProjectFileService _projectFileService;
 
         public ProjectManager(IProjectFileService projectFileService)
@@ -85,7 +85,7 @@ namespace Diiagramr.Service
             }
             const string dName = "diagram";
             var dNum = 1;
-            var diagram = new EDiagram();
+            var diagram = new DiagramModel();
             while (CurrentProject.Diagrams.Any(x => x.Name.Equals(dName + dNum)))
                 dNum++;
             diagram.Name = dName + dNum;
@@ -94,7 +94,7 @@ namespace Diiagramr.Service
             CurrentProjectChanged.Invoke();
         }
 
-        public void DeleteDiagram(EDiagram diagram)
+        public void DeleteDiagram(DiagramModel diagram)
         {
             var dToDelete = CurrentDiagrams.First(x => x == diagram);
             CurrentProject.Diagrams.Remove(dToDelete);
