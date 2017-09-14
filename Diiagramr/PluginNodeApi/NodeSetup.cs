@@ -1,8 +1,7 @@
-﻿using System;
-using System.Linq;
-using Diiagramr.PluginNodeApi;
+﻿using System.Linq;
+using Diiagramr.ViewModel.Diagram;
 
-namespace Diiagramr.ViewModel.Diagram
+namespace Diiagramr.PluginNodeApi
 {
     /// <summary>
     /// Class that provides an API that is as english as possible to make creating nodes easy.

@@ -1,4 +1,5 @@
 ﻿using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 
 namespace Diiagramr.ViewModel.Diagram.CoreNode
 {

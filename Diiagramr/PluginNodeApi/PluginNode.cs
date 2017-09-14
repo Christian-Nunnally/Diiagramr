@@ -1,9 +1,8 @@
-﻿using Diiagramr.Executor;
+﻿using System;
 using Diiagramr.Model;
-using System;
-using System.Linq;
+using Diiagramr.ViewModel.Diagram;
 
-namespace Diiagramr.ViewModel.Diagram
+namespace Diiagramr.PluginNodeApi
 {
     /// <summary>
     ///     This class should be extended to make a node that can be place on the diagram.  It contains many features that can

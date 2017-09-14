@@ -4,7 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Color Organ V5.0" Height="350" Width="525"
+        Title="Diiagramr" 
+        Height="450" 
+        Width="800"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
         d:DataContext="{d:DesignInstance viewModel1:ShellViewModel}">
@@ -26,9 +28,9 @@
                 <ColumnDefinition Width="3"/>
                 <ColumnDefinition Width="40*"/>
             </Grid.ColumnDefinitions>
-            <ContentControl s:View.Model="{Binding ProjectExplorerViewModel}"></ContentControl>
+            <ContentControl s:View.Model="{Binding ProjectExplorerViewModel}" Margin="2,2,0,1"></ContentControl>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
-            <ContentControl Grid.Column="2" s:View.Model="{Binding DiagramWellViewModel}"/>
+            <ContentControl Grid.Column="2" s:View.Model="{Binding DiagramWellViewModel}" Margin="0,0,2,1"/>
         </Grid>
     </DockPanel>
 </Window>

@@ -11,19 +11,18 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="btv"/>
     </UserControl.Resources>
-    <Border BorderBrush="Gray" BorderThickness="1" Background="White">
+    <Border BorderBrush="LightGray" BorderThickness="1" Background="White">
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="25"/>
                 <RowDefinition Height="*"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="25"/>
             </Grid.RowDefinitions>
             <Label Content="{Binding Project.Name}"
                    HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center"
-                   FontSize="14"
-                   FontWeight="SemiBold"
-                   Background="LightGray"
+                   FontSize="12"
+                   Background="#ffe9e9e9"
                    Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}"/>
             <ListView ItemsSource="{Binding Diagrams}" 
                       Grid.Row="1" 

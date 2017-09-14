@@ -16,7 +16,8 @@
 
         <TabControl ItemsSource="{Binding Items}" 
                     SelectedItem="{Binding ActiveItem}" 
-                    DisplayMemberPath="Name">
+                    DisplayMemberPath="Name"
+                    BorderBrush="LightGray">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
                     <Setter Property="Template">

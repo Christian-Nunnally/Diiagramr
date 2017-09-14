@@ -1,8 +1,6 @@
 ﻿using PropertyChanged;
-using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-// ReSharper disable MemberCanBePrivate.Global Public setters used for deserialization
 
 namespace Diiagramr.Model
 {
