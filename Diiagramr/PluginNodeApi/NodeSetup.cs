@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using Diiagramr.PluginNodeApi;
 
 namespace Diiagramr.ViewModel.Diagram
 {
@@ -9,7 +11,7 @@ namespace Diiagramr.ViewModel.Diagram
     {
         private readonly AbstractNodeViewModel _nodeViewModel;
         private readonly bool _loadMode;
-        private int _inputTerminalIndex;
+        private int _terminalIndex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeSetup"/> class.
@@ -43,6 +45,11 @@ namespace Diiagramr.ViewModel.Diagram
             _nodeViewModel.Height = height;
         }
 
+        public void NodeName(string name)
+        {
+            _nodeViewModel.Name = name;
+        }
+
         /// <summary>
         /// Sets up a input terminal on this node.
         /// </summary>
@@ -51,14 +58,10 @@ namespace Diiagramr.ViewModel.Diagram
         /// <param name="direction">The default side of the node this terminal belongs on.</param>
         /// <param name="function">The function that data comming in to this terminal gets passed in to.</param>
         /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
-        public void InputTerminal(string name, Type type, Direction direction, InputTerminalDelegate function)
+        public Terminal<T> InputTerminal<T>(string name, Direction direction)
         {
-            _nodeViewModel.DelegateMapper.AddMapping(_inputTerminalIndex++, function);
-            if (_loadMode)
-            {
-                return;
-            }
-            _nodeViewModel.ConstructNewInputTerminal(name, type, direction, _inputTerminalIndex - 1);
+            if (!_loadMode) _nodeViewModel.ConstructNewInputTerminal(name, typeof(T), direction, _terminalIndex);
+            return CreateClientTerminal<T>(_terminalIndex);
         }
 
         /// <summary>
@@ -67,10 +70,19 @@ namespace Diiagramr.ViewModel.Diagram
         /// <param name="name">The name of the terminal.</param>
         /// <param name="type">The data type of the terminal.  This is not currently enforced so returning a value out of this output that does not match this type might yeild unexpected results.</param>
         /// <param name="direction">The default side of the node this terminal belongs on.</param>
-        public void OutputTerminal(string name, Type type, Direction direction)
+        public Terminal<T> OutputTerminal<T>(string name, Direction direction)
         {
-            if (_loadMode) return;
-            _nodeViewModel.OutputTerminals.Add(_nodeViewModel.ConstructNewOutputTerminal(name, type, direction));
+            if (!_loadMode) _nodeViewModel.ConstructNewOutputTerminal(name, typeof(T), direction, _terminalIndex);
+            return CreateClientTerminal<T>(_terminalIndex);
+        }
+
+        private Terminal<T> CreateClientTerminal<T>(int terminalIndex)
+        {
+            var terminalViewModel = _nodeViewModel.TerminalViewModels.First(viewModel => viewModel.Terminal.TerminalIndex == terminalIndex);
+            var terminal = new Terminal<T>(terminalViewModel);
+            _terminalIndex++;
+
+            return terminal;
         }
     }
 }

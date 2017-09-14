@@ -10,17 +10,13 @@ namespace Diiagramr.Model
     public class InputTerminal : TerminalModel
     {
         [DataMember]
-        public int TerminalIndex { get; set; }
-
-        [DataMember]
         public DiagramNode OwningNode { get; set; }
 
         private InputTerminal() { }
 
-        public InputTerminal(string name, Type type, DiagramNode owningNode, int terminalIndex) : base(name, type)
+        public InputTerminal(string name, Type type, DiagramNode owningNode, int terminalIndex) : base(name, type, terminalIndex)
         {
             OwningNode = owningNode;
-            TerminalIndex = terminalIndex;
         }
 
         public IDictionary<OutputTerminal, object> Execute(object arg)

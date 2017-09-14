@@ -35,8 +35,6 @@ namespace Diiagramr.ViewModel.Diagram
 
         private readonly List<Action> _dropAndArrangeWhenViewIsLoadedCallbacks = new List<Action>();
 
-        public readonly List<OutputTerminalViewModel> OutputTerminals = new List<OutputTerminalViewModel>();
-
         public bool TitleVisible => IsSelected || MouseOverBorder;
 
         protected AbstractNodeViewModel()
@@ -115,40 +113,38 @@ namespace Diiagramr.ViewModel.Diagram
 
         public bool IsSelected { get; set; }
 
-        public virtual string Name { get; }
+        public virtual string Name { get; set; } = "Node";
 
         public bool DroppingTerminal { get; set; }
 
         public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
 
-        public InputTerminalViewModel ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
+        public void ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
         {
             var inputTerminal = new InputTerminal(name, type, DiagramNode, terminalIndex);
             AddTerminal(inputTerminal);
-            return ConstructInputTerminalViewModel(inputTerminal, defaultDirection);
+            ConstructInputTerminalViewModel(inputTerminal, defaultDirection);
         }
 
-        private InputTerminalViewModel ConstructInputTerminalViewModel(InputTerminal inputTerminal, Direction defaultDirection)
+        private void ConstructInputTerminalViewModel(InputTerminal inputTerminal, Direction defaultDirection)
         {
             var inputTerminalViewModel = new InputTerminalViewModel(inputTerminal);
             inputTerminalViewModel.DefaultDirection = defaultDirection;
             AddTerminalViewModel(inputTerminalViewModel);
-            return inputTerminalViewModel;
         }
 
-        public OutputTerminalViewModel ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection)
+        public void ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
         {
-            var outputTerminal = new OutputTerminal(name, type);
+            var outputTerminal = new OutputTerminal(name, type, terminalIndex);
             AddTerminal(outputTerminal);
-            return ConstructOutputTerminalViewModel(outputTerminal, defaultDirection);
+            ConstructOutputTerminalViewModel(outputTerminal, defaultDirection);
         }
 
-        private OutputTerminalViewModel ConstructOutputTerminalViewModel(OutputTerminal outputTerminal, Direction defaultDirection)
+        private void ConstructOutputTerminalViewModel(OutputTerminal outputTerminal, Direction defaultDirection)
         {
             var outputTerminalViewModel = new OutputTerminalViewModel(outputTerminal);
             outputTerminalViewModel.DefaultDirection = defaultDirection;
             AddTerminalViewModel(outputTerminalViewModel);
-            return outputTerminalViewModel;
         }
 
         protected void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)

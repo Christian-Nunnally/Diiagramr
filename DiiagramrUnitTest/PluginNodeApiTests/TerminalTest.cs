@@ -18,7 +18,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestInitialize]
         public void TestInitialize()
         {
-            _terminalModel = new TerminalModel("", typeof(int));
+            _terminalModel = new TerminalModel("", typeof(int), 0);
             _terminalViewModel = new TerminalViewModel(_terminalModel);
             _terminal = new Terminal<int>(_terminalViewModel);
         }

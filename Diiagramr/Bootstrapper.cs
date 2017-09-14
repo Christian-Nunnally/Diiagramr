@@ -10,6 +10,7 @@ using Diiagramr.Executor;
 using Diiagramr.View.CustomControls;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
+using Diiagramr.ViewModel.Diagram.CoreNode;
 
 namespace Diiagramr
 {
@@ -26,6 +27,8 @@ namespace Diiagramr
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
             builder.Bind<AbstractNodeViewModel>().To<DemoNodeViewModel>();
+            builder.Bind<AbstractNodeViewModel>().To<AddNodeViewModel>();
+            builder.Bind<AbstractNodeViewModel>().To<NumberNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

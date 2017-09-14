@@ -79,8 +79,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Executor\DiagramExecutor.cs" />
-    <Compile Include="Executor\IDiagramExecutor.cs" />
     <Compile Include="Model\EDiagram.cs" />
     <Compile Include="Model\DiagramNode.cs" />
     <Compile Include="Model\InputTerminal.cs" />
@@ -99,6 +97,8 @@
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="Service\SerializableType.cs" />
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
@@ -160,6 +160,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\Diagram\CoreNode\AddNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Diagram\CoreNode\NumberNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Diagram\DiagramCallNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,7 +176,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Diagram\DemoNodeView.xaml">
+    <Page Include="View\Diagram\CoreNode\DemoNodeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

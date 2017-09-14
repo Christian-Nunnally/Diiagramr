@@ -4,6 +4,8 @@ using Diiagramr.ViewModel.Diagram;
 
 namespace Diiagramr.PluginNodeApi
 {
+    public delegate void TerminalDataChangedDelegate<in T>(T data);
+
     /// <summary>
     ///     Generic wrapper around a <see cref="TerminalViewModel" /> for <see cref="PluginNode" /> clients to get and set
     ///     terminal data.
@@ -44,7 +46,7 @@ namespace Diiagramr.PluginNodeApi
         /// <summary>
         /// Notifies subscribers when <see cref="Data"/> is changed.
         /// </summary>
-        public event Action<T> DataChanged;
+        public event TerminalDataChangedDelegate<T> DataChanged;
 
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

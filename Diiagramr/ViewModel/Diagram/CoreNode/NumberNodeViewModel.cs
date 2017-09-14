@@ -2,18 +2,31 @@
 
 namespace Diiagramr.ViewModel.Diagram.CoreNode
 {
-    public class DemoNodeViewModel : PluginNode
+    public class NumberNodeViewModel : PluginNode
     {
         private Terminal<int> _inputTerminal;
         private Terminal<int> _outputTerminal;
 
-        public override string Name => "Demo Node";
+        public int Value { get; set; }
+
+        public override string Name => "Number";
 
         public override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
-            _inputTerminal = setup.InputTerminal<int>("Input", Direction.North);
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
+        }
+
+        public void Add1()
+        {
+            Value++;
+            _outputTerminal.Data = Value;
+        }
+
+        public void Sub1()
+        {
+            Value--;
+            _outputTerminal.Data = Value;
         }
     }
 }

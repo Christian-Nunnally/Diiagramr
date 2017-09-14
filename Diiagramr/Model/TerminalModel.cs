@@ -14,6 +14,12 @@ namespace Diiagramr.Model
     public class TerminalModel : ModelBase
     {
         /// <summary>
+        /// The index of the terminal. The first terminal added to a node gets index 0.
+        /// </summary>
+        [DataMember]
+        public int TerminalIndex { get; set; }
+
+        /// <summary>
         /// The x position of the node this terminal belongs to.
         /// </summary>
         [DataMember]
@@ -70,10 +76,13 @@ namespace Diiagramr.Model
         [DataMember]
         public string Name { get; set; }
 
+        public object Data { get; set; }
+
         protected TerminalModel() { }
 
-        public TerminalModel(string name, Type type)
+        public TerminalModel(string name, Type type, int index)
         {
+            TerminalIndex = index;
             Type = type;
             Name = name;
         }

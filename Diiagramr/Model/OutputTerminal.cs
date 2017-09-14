@@ -10,7 +10,7 @@ namespace Diiagramr.Model
     {
         private OutputTerminal() { }
 
-        public OutputTerminal(string name, Type type) : base(name, type)
+        public OutputTerminal(string name, Type type, int terminalIndex) : base(name, type, terminalIndex)
         {
         }
     }

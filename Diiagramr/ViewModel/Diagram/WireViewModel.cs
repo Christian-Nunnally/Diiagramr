@@ -18,8 +18,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             Wire = wire;
             wire.PropertyChanged += WireOnPropertyChanged;
-
-            wire.SetupPropertyChangedNotificationsFromTerminals();
+            
             wire.PretendWireMoved();
             ConfigureWirePoints();
         }

@@ -4,9 +4,6 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
 {
     public class DiagramCallNodeViewModel : PluginNode
     {
-
-        public override string Name { get; }
-
         public EDiagram EDiagram { get; set; }
 
         public override void SetupNode(NodeSetup setup)

@@ -14,6 +14,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private readonly IList<Action> _whenViewIsLoadedCallbacks = new List<Action>();
         private Direction _defaultDirection;
+        private object _data;
 
         public string Name { get; set; }
 
@@ -21,7 +22,15 @@ namespace Diiagramr.ViewModel.Diagram
 
         public float TerminalRotation { get; set; }
 
-        public virtual object Data { get; set; }
+        public virtual object Data
+        {
+            get { return _data; }
+            set
+            {
+                _data = value;
+                Terminal.Data = value;
+            }
+        }
 
         public double XRelativeToNode
         {
@@ -71,6 +80,10 @@ namespace Diiagramr.ViewModel.Diagram
             if (e.PropertyName.Equals(nameof(Terminal.Direction)))
             {
                 SetTerminalRotationBasedOnDirection();
+            }
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
+            {
+                Data = Terminal.Data;
             }
         }
 

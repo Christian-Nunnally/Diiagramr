@@ -37,7 +37,7 @@ namespace Diiagramr.Model
             SinkTerminal = sinkTerminal;
             SourceTerminal = sourceTerminal;
 
-            //SetupPropertyChangedNotificationsFromTerminals();
+            SetupPropertyChangedNotificationsFromTerminals();
 
             SourceTerminal.DisconnectWire();
             SinkTerminal.DisconnectWire();
@@ -63,12 +63,21 @@ namespace Diiagramr.Model
             {
 
             }
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
+            {
+                if (terminal == SourceTerminal)
+                {
+                    SinkTerminal.Data = SourceTerminal.Data;
+                }
+            }
         }
 
         public void SetupPropertyChangedNotificationsFromTerminals()
         {
             SourceTerminal.PropertyChanged += ConnectedTerminalOnPropertyChanged;
             SinkTerminal.PropertyChanged += ConnectedTerminalOnPropertyChanged;
+
+            SinkTerminal.Data = SourceTerminal.Data;
         }
 
         public void PretendWireMoved()
