@@ -115,7 +115,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Width" Value="{Binding WidthPlus2}"/>
             <Setter Property="Height" Value="{Binding HeightPlus2}"/>
-            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"/>
+            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeBorderThickness}"/>
         </Style>
 
         <BooleanToVisibilityConverter x:Key="Btv" />
@@ -156,15 +156,15 @@
                                                    Style="{StaticResource NodeLabelStyle}"
                                                    Foreground="LightSlateGray" 
                                                    FontFamily="Verdana" 
-                                                   FontSize="2"
+                                                   FontSize="3"
                                                    Grid.RowSpan="2" 
                                                    HorizontalContentAlignment="Center" 
                                                    IsHitTestVisible="False"
                                                    RenderTransformOrigin="0.5, 0">
                                                 <Label.RenderTransform>
                                                     <TransformGroup>
-                                                        <ScaleTransform ScaleX="7" ScaleY="7"></ScaleTransform>
-                                                        <TranslateTransform X="0" Y="-54"/>
+                                                        <ScaleTransform ScaleX="5" ScaleY="5"></ScaleTransform>
+                                                        <TranslateTransform X="5" Y="-44"/>
                                                     </TransformGroup>
                                                 </Label.RenderTransform>
                                             </Label>
