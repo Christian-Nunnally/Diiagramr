@@ -59,22 +59,22 @@
 
         <Style x:Key="NodeLabelStyle" TargetType="{x:Type Label}">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding TitleVisible}" Value="True">
+                <DataTrigger Binding="{Binding TitleVisible}" Value="False">
                     <DataTrigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <ColorAnimation Duration="0:0:0.05"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="#F667" />
+                                <ColorAnimation Duration="0:0:0.25"
+                                                Storyboard.TargetProperty="Foreground.Color"
+                                                To="Transparent" />
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.EnterActions>
                     <DataTrigger.ExitActions>
                         <BeginStoryboard>
                             <Storyboard>
-                                <ColorAnimation Duration="0:0:0.25"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="Transparent" />
+                                <ColorAnimation Duration="0:0:0.05"
+                                                Storyboard.TargetProperty="Foreground.Color"
+                                                To="#F667" />
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.ExitActions>

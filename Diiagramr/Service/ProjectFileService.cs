@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Xml;
 using Diiagramr.Model;
 using System.Windows.Forms;
 using Diiagramr.View.CustomControls;
 using StyletIoC;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Diiagramr.Service
 {
@@ -35,11 +32,8 @@ namespace Diiagramr.Service
             {
                 return SaveAsProject(project);
             }
-            else
-            {
-                SerializeAndSave(project, ProjectDirectory + "\\" + project.Name);
-                return true;
-            }
+            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name);
+            return true;
         }
 
         public Project LoadProject()
@@ -77,14 +71,11 @@ namespace Diiagramr.Service
             _saveFileDialog.InitialDirectory = ProjectDirectory;
             _saveFileDialog.Filter = "Project files(*.xml)|*.xml|All files(*.*)|*.*";
 
-            if (_saveFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                SerializeAndSave(project, _saveFileDialog.FileName);
-                SetComponentsFromPath(project, _saveFileDialog.FileName);
-                return true;
-            }
+            if (_saveFileDialog.ShowDialog() != DialogResult.OK) return false;
 
-            return false;
+            SerializeAndSave(project, _saveFileDialog.FileName);
+            SetComponentsFromPath(project, _saveFileDialog.FileName);
+            return true;
         }
 
         private void SerializeAndSave(Project project, string name)
