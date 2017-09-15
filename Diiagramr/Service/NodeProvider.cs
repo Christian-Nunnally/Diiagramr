@@ -19,15 +19,15 @@ namespace Diiagramr.Service
         public void RegisterNode(AbstractNodeViewModel node)
         {
             if (_availableNodeViewModels.Contains(node)) return;
-            _nodeNameToViewModelMap.Add(node.Name, node.GetType());
+            _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
         }
 
         public AbstractNodeViewModel LoadNodeViewModelFromNode(DiagramNode node)
         {
-            if (!_nodeNameToViewModelMap.ContainsKey(node.NodeType)) throw new NodeProviderException($"Tried to load node of type '{node.NodeType}' but no view model under that name was registered");
-            var viewModel = Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeType]) as AbstractNodeViewModel;
-            if (viewModel == null) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeType}'");
+            if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
+            var viewModel = Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) as AbstractNodeViewModel;
+            if (viewModel == null) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
 
             viewModel.InitializeWithNode(node);
             viewModel.X = node.X;
@@ -37,9 +37,9 @@ namespace Diiagramr.Service
             return viewModel;
         }
 
-        public AbstractNodeViewModel CreateNodeViewModelFromName(string name)
+        public AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName)
         {
-            var node = new DiagramNode(name);
+            var node = new DiagramNode(typeFullName);
             return LoadNodeViewModelFromNode(node);
         }
 

@@ -9,11 +9,10 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
 
         public int Value { get; set; }
 
-        public override string Name => "Number";
-
         public override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
+            setup.NodeName("Number Node");
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
         }
 

@@ -23,7 +23,7 @@ namespace DiiagramrUnitTests.ModelTests
         public void TestConstructor_NodeTypeSetToName()
         {
             var node = new DiagramNode("name");
-            Assert.AreEqual("name", node.NodeType);
+            Assert.AreEqual("name", node.NodeFullName);
         }
 
         [TestMethod]

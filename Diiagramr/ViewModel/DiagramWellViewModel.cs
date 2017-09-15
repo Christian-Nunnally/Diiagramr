@@ -122,7 +122,7 @@ namespace Diiagramr.ViewModel
 
             if (NodeSelectorViewModel.SelectedNode != null)
             {
-                ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.Name);
+                ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
                 NodeSelectorVisible = false;
             }
         }

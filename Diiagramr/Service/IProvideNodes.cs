@@ -10,7 +10,7 @@ namespace Diiagramr.Service
 
         AbstractNodeViewModel LoadNodeViewModelFromNode(DiagramNode node);
 
-        AbstractNodeViewModel CreateNodeViewModelFromName(string name);
+        AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName);
 
         IEnumerable<AbstractNodeViewModel> GetRegisteredNodes();
     }

@@ -7,7 +7,7 @@
              xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel1:NodeSelectorViewModel}">
-    <ItemsControl ItemsSource="{Binding AvailibleNodeViewModels}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
+    <ItemsControl ItemsSource="{Binding AvailableNodeViewModels}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
         <ItemsControl.ItemContainerStyle>
             <Style TargetType="ContentPresenter">
                 <Setter Property="ContentTemplate">

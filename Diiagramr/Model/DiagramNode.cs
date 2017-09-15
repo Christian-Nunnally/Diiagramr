@@ -10,7 +10,7 @@ namespace Diiagramr.Model
     public class DiagramNode : ModelBase
     {
         [DataMember]
-        public string NodeType { get; set; }
+        public string NodeFullName { get; set; }
 
         [DataMember]
         public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
@@ -34,7 +34,7 @@ namespace Diiagramr.Model
 
         public DiagramNode(string nodeName)
         {
-            NodeType = nodeName;
+            NodeFullName = nodeName;
             Terminals = new List<TerminalModel>();
         }
 

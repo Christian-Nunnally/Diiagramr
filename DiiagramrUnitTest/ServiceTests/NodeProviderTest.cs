@@ -23,7 +23,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _testNode = new DiagramNode("");
-            _testNode.NodeType = "TestNodeViewModel";
+            _testNode.NodeFullName = "TestNodeViewModel";
         }
 
         [TestMethod]
@@ -59,6 +59,7 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ReturnsNewViewModel()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
@@ -69,6 +70,7 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_NodesViewModelSet()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
@@ -79,6 +81,7 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ViewModelsNodeSet()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
@@ -91,6 +94,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _testNode.X = 10;
             _testNode.Y = 11;
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
@@ -104,6 +108,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _testNode.Width = 10;
             _testNode.Height = 11;
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
@@ -115,6 +120,7 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestLoadNodeViewModelFromNode_ViewModelPositionChanges_UpdatesModelPosition()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
+            _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
             nodeViewModel.X++;
@@ -136,7 +142,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.Name);
+            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.AreNotEqual(_nodeViewModelMoq.Object, nodeViewModel);
         }
@@ -146,7 +152,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.Name);
+            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.AreEqual(nodeViewModel, nodeViewModel.DiagramNode.NodeViewModel);
         }
@@ -156,7 +162,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.Name);
+            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.IsNotNull(nodeViewModel.DiagramNode);
         }
@@ -166,7 +172,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object);
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.Name);
+            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
             nodeViewModel.X++;
             nodeViewModel.Y++;
 

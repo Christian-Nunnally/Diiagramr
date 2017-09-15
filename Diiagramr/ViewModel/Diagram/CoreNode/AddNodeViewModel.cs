@@ -11,11 +11,10 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
 
         public int Value { get; set; }
 
-        public override string Name => "Add";
-
         public override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
+            setup.NodeName("Add Node");
             _inputTerminal1 = setup.InputTerminal<int>("Input", Direction.East);
             _inputTerminal2 = setup.InputTerminal<int>("Input", Direction.West);
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);

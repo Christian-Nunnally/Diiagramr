@@ -44,6 +44,10 @@ namespace Diiagramr.PluginNodeApi
             _nodeViewModel.Height = height;
         }
 
+        /// <summary>
+        /// Sets the name of a node, this is what displays above the node on the diagram.
+        /// </summary>
+        /// <param name="name"></param>
         public void NodeName(string name)
         {
             _nodeViewModel.Name = name;
