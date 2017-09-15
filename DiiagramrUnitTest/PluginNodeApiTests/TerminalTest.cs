@@ -3,7 +3,6 @@ using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace DiiagramrUnitTests.PluginNodeApiTests
 {
@@ -18,7 +17,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestInitialize]
         public void TestInitialize()
         {
-            _terminalModel = new TerminalModel("", typeof(int), 0);
+            _terminalModel = new TerminalModel("", typeof(int), Direction.None, TerminalKind.Input, 0);
             _terminalViewModel = new TerminalViewModel(_terminalModel);
             _terminal = new Terminal<int>(_terminalViewModel);
         }

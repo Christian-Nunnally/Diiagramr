@@ -130,8 +130,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public virtual void DropObject(object o)
         {
-            var terminal = o as TerminalModel;
-            if (terminal == null) return;
+            if (!(o is TerminalModel terminal)) return;
             WireToTerminal(terminal);
         }
 
@@ -143,15 +142,7 @@ namespace Diiagramr.ViewModel.Diagram
         public virtual void WireToTerminal(TerminalModel terminal)
         {
             if (terminal == null) return;
-            if (terminal is InputTerminal && Terminal is OutputTerminal) new Wire((OutputTerminal)Terminal, (InputTerminal)terminal);
-            if (Terminal is InputTerminal && terminal is OutputTerminal) new Wire((OutputTerminal)terminal, (InputTerminal)Terminal);
-        }
-
-        public virtual void WireFromTerminal(TerminalModel terminal)
-        {
-            if (terminal == null) return;
-            if (terminal is InputTerminal && Terminal is OutputTerminal) new Wire((OutputTerminal)Terminal, (InputTerminal)terminal);
-            if (Terminal is InputTerminal && terminal is OutputTerminal) new Wire((OutputTerminal)terminal, (InputTerminal)Terminal);
+            if (terminal.Kind != Terminal.Kind) new Wire(Terminal, terminal);
         }
 
         public void TerminalMouseDown(object sender, MouseEventArgs e)

@@ -27,8 +27,6 @@ namespace Diiagramr.ViewModel.Diagram
     [AddINotifyPropertyChangedInterface]
     public abstract class AbstractNodeViewModel : Screen
     {
-        public DelegateMapper DelegateMapper { get; set; }
-
         public delegate void TerminalConnectedStatusChangedDelegate(TerminalModel terminal);
 
         private static Direction _direction = Direction.North;
@@ -50,7 +48,6 @@ namespace Diiagramr.ViewModel.Diagram
         /// </summary>
         public virtual void InitializeWithNode(DiagramNode diagramNode)
         {
-            DelegateMapper = new DelegateMapper();
             DiagramNode = diagramNode;
             DiagramNode.NodeViewModel = this;
 
@@ -80,12 +77,12 @@ namespace Diiagramr.ViewModel.Diagram
                 terminal.PropertyChanged += TerminalOnPropertyChanged;
             }
 
-            foreach (var terminal in DiagramNode.Terminals.OfType<InputTerminal>())
+            foreach (var terminal in DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Input))
             {
                 TerminalViewModels.Add(new InputTerminalViewModel(terminal));
             }
 
-            foreach (var terminal in DiagramNode.Terminals.OfType<OutputTerminal>())
+            foreach (var terminal in DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Output))
             {
                 TerminalViewModels.Add(new OutputTerminalViewModel(terminal));
             }
@@ -121,12 +118,12 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
         {
-            var inputTerminal = new InputTerminal(name, type, DiagramNode, terminalIndex);
+            var inputTerminal = new TerminalModel(name, type, defaultDirection, TerminalKind.Input, terminalIndex);
             AddTerminal(inputTerminal);
             ConstructInputTerminalViewModel(inputTerminal, defaultDirection);
         }
 
-        private void ConstructInputTerminalViewModel(InputTerminal inputTerminal, Direction defaultDirection)
+        private void ConstructInputTerminalViewModel(TerminalModel inputTerminal, Direction defaultDirection)
         {
             var inputTerminalViewModel = new InputTerminalViewModel(inputTerminal);
             inputTerminalViewModel.DefaultDirection = defaultDirection;
@@ -135,12 +132,12 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
         {
-            var outputTerminal = new OutputTerminal(name, type, terminalIndex);
+            var outputTerminal = new TerminalModel(name, type, defaultDirection, TerminalKind.Output, terminalIndex);
             AddTerminal(outputTerminal);
             ConstructOutputTerminalViewModel(outputTerminal, defaultDirection);
         }
 
-        private void ConstructOutputTerminalViewModel(OutputTerminal outputTerminal, Direction defaultDirection)
+        private void ConstructOutputTerminalViewModel(TerminalModel outputTerminal, Direction defaultDirection)
         {
             var outputTerminalViewModel = new OutputTerminalViewModel(outputTerminal);
             outputTerminalViewModel.DefaultDirection = defaultDirection;
@@ -220,11 +217,6 @@ namespace Diiagramr.ViewModel.Diagram
             if (terminal == null) return;
             var dropDirection = CalculateClosestDirection(x, y);
             DropAndArrangeTerminal(terminal, dropDirection);
-        }
-
-        public void UpdateAllTerminalPositions()
-        {
-            TerminalViewModels.ForEach(viewModel => DropAndArrangeTerminal(viewModel, viewModel.Terminal.Direction));
         }
 
         private void DropAndArrangeTerminal(TerminalViewModel terminal, Direction edge)
@@ -310,11 +302,6 @@ namespace Diiagramr.ViewModel.Diagram
             nodeViewModel.DroppingTerminal = true;
         }
 
-        public void OnNodeSizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            UpdateAllTerminalPositions();
-        }
-
         public void MouseEntered(object sender, MouseEventArgs mouseEventArgs)
         {
             MouseOverBorder = true;
@@ -323,11 +310,6 @@ namespace Diiagramr.ViewModel.Diagram
         public void MouseLeft(object sender, MouseEventArgs mouseEventArgs)
         {
             MouseOverBorder = false;
-        }
-
-        public IDictionary<OutputTerminal, object> InvokeInput(int terminalIndex, object arg)
-        {
-            return DelegateMapper.Invoke(terminalIndex, arg);
         }
 
         public void ShowInputTerminalLabelsOfType(Type type)

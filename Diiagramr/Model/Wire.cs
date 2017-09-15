@@ -9,10 +9,10 @@ namespace Diiagramr.Model
     public class Wire : ModelBase
     {
         [DataMember]
-        public OutputTerminal SourceTerminal { get; set; }
+        public TerminalModel SourceTerminal { get; set; }
 
         [DataMember]
-        public InputTerminal SinkTerminal { get; set; }
+        public TerminalModel SinkTerminal { get; set; }
 
         [DataMember]
         public double X1 { get; set; }
@@ -28,12 +28,12 @@ namespace Diiagramr.Model
 
         private Wire() { }
 
-        public Wire(OutputTerminal sourceTerminal, InputTerminal sinkTerminal)
+        public Wire(TerminalModel terminal1, TerminalModel terminal2)
         {
-            if (!sourceTerminal.Type.IsSubclassOf(sinkTerminal.Type) && sourceTerminal.Type != sinkTerminal.Type) return;
+            SinkTerminal = terminal1.Kind == TerminalKind.Input ? terminal1 : terminal2;
+            SourceTerminal = terminal1.Kind == TerminalKind.Output ? terminal1 : terminal2; ;
 
-            SinkTerminal = sinkTerminal;
-            SourceTerminal = sourceTerminal;
+            if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type) return;
 
             SourceTerminal.DisconnectWire();
             SinkTerminal.DisconnectWire();

@@ -1,15 +1,18 @@
-﻿using Diiagramr.Service;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.Serialization;
-using System.Xml.Serialization;
 using Diiagramr.ViewModel.Diagram;
 
 // ReSharper disable MemberCanBePrivate.Global Public setters used for deserialization
 
 namespace Diiagramr.Model
 {
+    public enum TerminalKind
+    {
+        Input,
+        Output
+    }
+
     [DataContract(IsReference = true)]
     public class TerminalModel : ModelBase
     {
@@ -58,6 +61,9 @@ namespace Diiagramr.Model
         [DataMember]
         public Direction Direction { get; set; }
 
+        [DataMember]
+        public TerminalKind Kind { get; set; }
+
         /// <summary>
         /// The wire that is connected to this terminal. Null if no wire is connected.
         /// </summary>
@@ -69,8 +75,8 @@ namespace Diiagramr.Model
         [DataMember]
         public string TypeName
         {
-            get { return Type?.AssemblyQualifiedName; }
-            set { Type = Type.GetType(value); }
+            get => Type?.AssemblyQualifiedName;
+            set => Type = Type.GetType(value);
         }
 
         [DataMember]
@@ -80,9 +86,11 @@ namespace Diiagramr.Model
 
         protected TerminalModel() { }
 
-        public TerminalModel(string name, Type type, int index)
+        public TerminalModel(string name, Type type, Direction defaultDirection, TerminalKind kind, int index)
         {
             TerminalIndex = index;
+            Direction = defaultDirection;
+            Kind = kind;
             Type = type;
             Name = name;
         }

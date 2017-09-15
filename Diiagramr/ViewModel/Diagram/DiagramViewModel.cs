@@ -49,7 +49,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public AbstractNodeViewModel InsertingNodeViewModel
         {
-            get { return _insertingNodeViewModel; }
+            get => _insertingNodeViewModel;
             set
             {
                 _insertingNodeViewModel = value;
@@ -88,7 +88,7 @@ namespace Diiagramr.ViewModel.Diagram
             viewModel.TerminalConnectedStatusChanged += OnTerminalConnectedStatusChanged;
             NodeViewModels.Add(viewModel);
 
-            foreach (var inputTerminal in viewModel.DiagramNode.Terminals.OfType<InputTerminal>())
+            foreach (var inputTerminal in viewModel.DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Input))
             {
                 if (inputTerminal.ConnectedWire != null)
                 {
@@ -101,7 +101,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             foreach (var nodeViewModel in NodeViewModels)
             {
-                if (terminal is OutputTerminal)
+                if (terminal.Kind == TerminalKind.Output)
                 {
                     nodeViewModel.ShowInputTerminalLabelsOfType(terminal.Type);
                 }

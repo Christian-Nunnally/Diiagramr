@@ -92,7 +92,7 @@ namespace Diiagramr.Service
             project.PreSave();
             try
             {
-                var serializer = new DataContractSerializer(typeof(Project), new Type[] { typeof(InputTerminal), typeof(OutputTerminal) });
+                var serializer = new DataContractSerializer(typeof(Project));
                 var settings = new XmlWriterSettings { Indent = true };
                 using (var w = XmlWriter.Create(name, settings)) serializer.WriteObject(w, project);
             }

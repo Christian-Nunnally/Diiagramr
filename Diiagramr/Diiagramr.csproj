@@ -81,9 +81,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Model\DiagramModel.cs" />
     <Compile Include="Model\DiagramNode.cs" />
-    <Compile Include="Model\InputTerminal.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\OutputTerminal.cs" />
     <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\Wire.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
@@ -100,7 +98,6 @@
     <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\DelegateMapper.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
     <Compile Include="View\CustomControls\SaveFileDialog.cs" />
