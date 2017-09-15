@@ -66,7 +66,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public TerminalViewModel(TerminalModel terminal)
         {
-            Terminal = terminal;
+            Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             Name = Terminal.Name;
@@ -139,10 +139,12 @@ namespace Diiagramr.ViewModel.Diagram
             Terminal.DisconnectWire();
         }
 
-        public virtual void WireToTerminal(TerminalModel terminal)
+        public virtual bool WireToTerminal(TerminalModel terminal)
         {
-            if (terminal == null) return;
-            if (terminal.Kind != Terminal.Kind) new Wire(Terminal, terminal);
+            if (terminal == null) return false;
+            if (terminal.Kind == Terminal.Kind) return false;
+            new Wire(Terminal, terminal);
+            return true;
         }
 
         public void TerminalMouseDown(object sender, MouseEventArgs e)

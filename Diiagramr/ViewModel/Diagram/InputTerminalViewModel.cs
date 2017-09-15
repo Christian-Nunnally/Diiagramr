@@ -11,10 +11,10 @@ namespace Diiagramr.ViewModel.Diagram
             if (inputTerminal.Kind != TerminalKind.Input) throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
         }
 
-        public sealed override void WireToTerminal(TerminalModel terminal)
+        public sealed override bool WireToTerminal(TerminalModel terminal)
         {
-            if (terminal.Kind != TerminalKind.Output) return;
-            base.WireToTerminal(terminal);
+            if (terminal.Kind != TerminalKind.Output) return false;
+            return base.WireToTerminal(terminal);
         }
     }
 }

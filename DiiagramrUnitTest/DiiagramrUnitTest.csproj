@@ -95,6 +95,8 @@
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTest.cs" />
     <Compile Include="ViewModelTests\ShellViewModelTest.cs" />
     <Compile Include="ServiceTests\ProjectManagerTest.cs" />
+    <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
+    <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
