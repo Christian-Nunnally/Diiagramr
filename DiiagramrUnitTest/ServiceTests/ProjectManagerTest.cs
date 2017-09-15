@@ -185,31 +185,12 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void CreateDiagramTest_ProjectChanged()
-        {
-            _projectManager.CreateProject();
-            _currentProjectChanged = false;
-            _projectManager.CreateDiagram();
-            Assert.IsTrue(_currentProjectChanged);
-        }
-
-        [TestMethod]
         public void DeleteDiagramTest_DiagramDeleted()
         {
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
             Assert.AreEqual(_projectManager.CurrentDiagrams.Count, 0);
-        }
-
-        [TestMethod]
-        public void DeleteDiagramTest_ProjectChanged()
-        {
-            _projectManager.CreateProject();
-            _projectManager.CreateDiagram();
-            _currentProjectChanged = false;
-            _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
-            Assert.IsTrue(_currentProjectChanged);
         }
 
         [TestMethod]

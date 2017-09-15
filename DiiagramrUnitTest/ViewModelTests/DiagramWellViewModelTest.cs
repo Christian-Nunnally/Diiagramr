@@ -5,6 +5,7 @@ using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.ObjectModel;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -24,11 +25,11 @@ namespace DiiagramrUnitTests.ViewModelTests
             _nodeProviderMoq = MockedViewModelFactories.CreateMoqNodeProvider();
             _nodeSelectorMoq = MockedViewModelFactories.CreateMoqNodeSelectorViewModel();
 
-            Func<IProjectManager> projectManagerFactory = () => _projectManagerMoq.Object;
-            Func<IProvideNodes> nodeProviderFactory = () => _nodeProviderMoq.Object;
-            Func<NodeSelectorViewModel> nodeSelectorFactory = () => _nodeSelectorMoq.Object;
+            IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
+            IProvideNodes NodeProviderFactory() => _nodeProviderMoq.Object;
+            NodeSelectorViewModel NodeSelectorFactory() => _nodeSelectorMoq.Object;
 
-            _diagramWellViewModel = new DiagramWellViewModel(projectManagerFactory, nodeProviderFactory, nodeSelectorFactory);
+            _diagramWellViewModel = new DiagramWellViewModel(ProjectManagerFactory, NodeProviderFactory, NodeSelectorFactory);
         }
 
         [TestMethod]
@@ -110,6 +111,49 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramWellViewModel.NodeSelectorVisible = true;
             _diagramWellViewModel.LeftMouseDown();
             Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
+        }
+
+        [TestMethod]
+        public void TestProjectChanged_ProjectSetToNull_OldDiagramsClosed()
+        {
+            var projectMoq = new Mock<Project>();
+            var diagramMoq = new Mock<DiagramModel>();
+            var diagramsList = new ObservableCollection<DiagramModel>();
+            diagramsList.Add(diagramMoq.Object);
+
+            _projectManagerMoq.SetupGet(m => m.CurrentProject).Returns(projectMoq.Object);
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagramsList);
+
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            diagramMoq.VerifySet(m => m.IsOpen = false);
+        }
+
+        [TestMethod]
+        public void TestProjectChanged_NewProjectHas2Diagrams_CurrentDiagramSetWithNewDiagrams()
+        {
+            var projectMoq = new Mock<Project>();
+            var diagramMoq = new Mock<DiagramModel>();
+            var diagramsList = new ObservableCollection<DiagramModel>();
+            diagramsList.Add(diagramMoq.Object);
+
+            var newProjectMoq = new Mock<Project>();
+            var newDiagramMoq1 = new Mock<DiagramModel>();
+            var newDiagramMoq2 = new Mock<DiagramModel>();
+            var newDiagramsList = new ObservableCollection<DiagramModel>();
+            newDiagramsList.Add(newDiagramMoq1.Object);
+            newDiagramsList.Add(newDiagramMoq2.Object);
+
+            _projectManagerMoq.SetupGet(m => m.CurrentProject).Returns(projectMoq.Object);
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagramsList);
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            _projectManagerMoq.SetupGet(m => m.CurrentProject).Returns(newProjectMoq.Object);
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(newDiagramsList);
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+
+            Assert.AreEqual(newDiagramsList, _diagramWellViewModel.CurrentDiagrams);
         }
     }
 }

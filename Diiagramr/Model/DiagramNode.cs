@@ -1,6 +1,5 @@
 ﻿using Diiagramr.ViewModel.Diagram;
 using PropertyChanged;
-using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
@@ -20,7 +19,7 @@ namespace Diiagramr.Model
 
         public AbstractNodeViewModel NodeViewModel
         {
-            get { return _nodeViewModel; }
+            get => _nodeViewModel;
             set
             {
                 _nodeViewModel = value;

@@ -3,6 +3,7 @@ using Diiagramr.Service;
 using Diiagramr.ViewModel.Diagram;
 using Stylet;
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace Diiagramr.ViewModel
         private readonly IProvideNodes _nodeProvider;
 
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
+
+        public ObservableCollection<DiagramModel> CurrentDiagrams { get; private set; }
 
         public bool NodeSelectorVisible { get; set; }
 
@@ -33,13 +36,38 @@ namespace Diiagramr.ViewModel
         {
             if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
-                _projectManager.CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
-
-                foreach (var diagram in _projectManager.CurrentDiagrams)
-                {
-                    diagram.PropertyChanged += DiagramOnPropertyChanged;
-                }
+                SetCurrentDiagrams(_projectManager.CurrentDiagrams);
             }
+        }
+
+        private void SetCurrentDiagrams(ObservableCollection<DiagramModel> diagrams)
+        {
+            RemoveAllOldDiagrams();
+            CurrentDiagrams = diagrams;
+            AddAllNewDiagrams();
+        }
+
+        private void RemoveAllOldDiagrams()
+        {
+            if (CurrentDiagrams == null) return;
+
+            foreach (var diagram in CurrentDiagrams)
+            {
+                diagram.IsOpen = false;
+                diagram.PropertyChanged -= DiagramOnPropertyChanged;
+            }
+
+            CurrentDiagrams.CollectionChanged -= CurrentDiagramsOnCollectionChanged;
+        }
+
+        private void AddAllNewDiagrams()
+        {
+            foreach (var diagram in _projectManager.CurrentDiagrams)
+            {
+                diagram.PropertyChanged += DiagramOnPropertyChanged;
+            }
+
+            CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
         }
 
         private void CurrentDiagramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

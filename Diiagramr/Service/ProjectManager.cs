@@ -91,7 +91,6 @@ namespace Diiagramr.Service
             diagram.Name = dName + dNum;
             IsProjectDirty = true;
             CurrentProject.Diagrams.Add(diagram);
-            CurrentProjectChanged.Invoke();
         }
 
         public void DeleteDiagram(DiagramModel diagram)
@@ -100,7 +99,6 @@ namespace Diiagramr.Service
             CurrentProject.Diagrams.Remove(dToDelete);
 
             IsProjectDirty = true;
-            CurrentProjectChanged.Invoke();
         }
     }
 }
