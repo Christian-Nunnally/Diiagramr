@@ -15,32 +15,6 @@ namespace Diiagramr.PluginNodeApi
     [Serializable]
     public abstract class PluginNode : AbstractNodeViewModel
     {
-        /// <summary>
-        /// Saves a value to disk when the project closes.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="value">The value.</param>
-        protected void SaveValue(string key, object value)
-        {
-            DiagramNode?.SetVariable(key, value);
-        }
-
-        /// <summary>
-        /// Loads a previously saved value.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <returns>The value.</returns>
-        protected object LoadValue(string key)
-        {
-            return DiagramNode?.GetVariable(key);
-        }
-
-        protected float LoadFloatValue(string key)
-        {
-            var value = DiagramNode?.GetVariable(key);
-            return (float)(value ?? 0.0f);
-        }
-
         public sealed override void InitializeWithNode(DiagramNode diagramNode)
         {
             base.InitializeWithNode(diagramNode);
@@ -84,5 +58,19 @@ namespace Diiagramr.PluginNodeApi
         /// All node customization such as turning on/off features and setting node geometry happens here.
         /// </summary>
         public abstract void SetupNode(NodeSetup setup);
+
+        #region Plugin Node Opt-in Features
+
+        /// <summary>
+        /// Called when a node is added on a diagram or loaded from disk.
+        /// </summary>
+        protected override void Initialize() { }
+
+        /// <summary>
+        /// Called when a node is removed from a diagram.
+        /// </summary>
+        public override void Uninitialize() { }
+
+        #endregion
     }
 }

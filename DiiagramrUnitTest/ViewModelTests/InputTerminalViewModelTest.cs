@@ -19,30 +19,30 @@ namespace DiiagramrUnitTests.ViewModelTests
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructor_TerminalKindOutput_ThrowsException()
         {
-            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.None, TerminalKind.Output, 0));
+            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0));
         }
 
         [TestMethod]
         public void TestConstructor_TerminalKindInput_Passes()
         {
-            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.None, TerminalKind.Input, 0));
+            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0));
         }
 
         [TestMethod]
         public void TestWireToTerminal_WireToInput_ReturnsFalse()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.None, TerminalKind.Input, 0);
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var inputTerminalViewModel = new InputTerminalViewModel(terminalModel);
-            var otherTerminal = new TerminalModel("", typeof(int), Direction.None, TerminalKind.Input, 0);
+            var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             Assert.IsFalse(inputTerminalViewModel.WireToTerminal(otherTerminal));
         }
 
         [TestMethod]
         public void TestWireToTerminal_WireToOutput_ReturnsTrue()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.None, TerminalKind.Input, 0);
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var inputTerminalViewModel = new InputTerminalViewModel(terminalModel);
-            var otherTerminal = new TerminalModel("", typeof(int), Direction.None, TerminalKind.Output, 0);
+            var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
             Assert.IsTrue(inputTerminalViewModel.WireToTerminal(otherTerminal));
         }
     }

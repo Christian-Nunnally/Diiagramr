@@ -20,80 +20,18 @@ namespace Diiagramr.ViewModel.Diagram
         North,
         East,
         South,
-        West,
-        None
+        West
     }
 
     [AddINotifyPropertyChangedInterface]
     public abstract class AbstractNodeViewModel : Screen
     {
-        public delegate void TerminalConnectedStatusChangedDelegate(TerminalModel terminal);
-
-        private static Direction _direction = Direction.North;
-
         private readonly List<Action> _dropAndArrangeWhenViewIsLoadedCallbacks = new List<Action>();
+        private bool MouseOverBorder { get; set; }
+        private bool DroppingTerminal { get; set; }
 
-        public bool TitleVisible => IsSelected || MouseOverBorder;
-
-        public AbstractNodeViewModel()
-        {
-            TerminalViewModels = new ObservableCollection<TerminalViewModel>();
-            DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
-        }
-
-        #region Virtual Methods
-
-        /// <summary>
-        /// Called when a node is placed on a diagram.
-        /// </summary>
-        public virtual void InitializeWithNode(DiagramNode diagramNode)
-        {
-            DiagramNode = diagramNode;
-            DiagramNode.NodeViewModel = this;
-
-            LoadTerminalViewModels();
-        }
-
-        /// <summary>
-        /// Called when a node is removed from a diagram.
-        /// </summary>
-        public virtual void Uninitialize()
-        {
-        }
-
-        public virtual void SaveNodeVariables() { }
-
-        public virtual void LoadNodeVariables() { }
-
-        #endregion
-
-        /// <summary>
-        /// Called when a node is placed on a diagram.
-        /// </summary>
-        private void LoadTerminalViewModels()
-        {
-            foreach (var terminal in DiagramNode.Terminals)
-            {
-                terminal.PropertyChanged += TerminalOnPropertyChanged;
-            }
-
-            foreach (var terminal in DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Input))
-            {
-                TerminalViewModels.Add(new InputTerminalViewModel(terminal));
-            }
-
-            foreach (var terminal in DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Output))
-            {
-                TerminalViewModels.Add(new OutputTerminalViewModel(terminal));
-            }
-        }
-
-        public IList<TerminalViewModel> TerminalViewModels { get; }
-
-        public ICommand DropHandlerCommand { get; set; }
-
-        public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
-        public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
+        public delegate void TerminalConnectedStatusChangedDelegate(TerminalModel terminal);
+        public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
 
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
@@ -101,69 +39,55 @@ namespace Diiagramr.ViewModel.Diagram
         public virtual double Width { get; set; }
         public virtual double Height { get; set; }
 
-        public virtual double WidthPlus2 => Width + 2;
-        public virtual double HeightPlus2 => Height + 2;
-
-        public virtual DiagramNode DiagramNode { get; set; }
-
-        public bool MouseOverBorder { get; set; }
-
+        public bool TitleVisible => IsSelected || MouseOverBorder;
         public bool IsSelected { get; set; }
 
+        public ICommand DropHandlerCommand { get; set; }
+
+        public IList<TerminalViewModel> TerminalViewModels { get; }
+        public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
+        public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
+
         public virtual string Name { get; set; } = "Node";
+        public virtual DiagramNode DiagramNode { get; set; }
 
-        public bool DroppingTerminal { get; set; }
-
-        public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
-
-        public void ConstructNewInputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
+        public AbstractNodeViewModel()
         {
-            var inputTerminal = new TerminalModel(name, type, defaultDirection, TerminalKind.Input, terminalIndex);
-            AddTerminal(inputTerminal);
-            ConstructInputTerminalViewModel(inputTerminal, defaultDirection);
+            TerminalViewModels = new ObservableCollection<TerminalViewModel>();
+            DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
         }
 
-        private void ConstructInputTerminalViewModel(TerminalModel inputTerminal, Direction defaultDirection)
+        public virtual void InitializeWithNode(DiagramNode diagramNode)
         {
-            var inputTerminalViewModel = new InputTerminalViewModel(inputTerminal);
-            inputTerminalViewModel.DefaultDirection = defaultDirection;
-            AddTerminalViewModel(inputTerminalViewModel);
+            DiagramNode = diagramNode;
+            DiagramNode.NodeViewModel = this;
+
+            LoadTerminalViewModels();
+            Initialize();
         }
 
-        public void ConstructNewOutputTerminal(string name, Type type, Direction defaultDirection, int terminalIndex)
+        public virtual void Uninitialize() { }
+
+        protected virtual void Initialize() { }
+
+        public virtual void SaveNodeVariables() { }
+
+        public virtual void LoadNodeVariables() { }
+
+        private void LoadTerminalViewModels()
         {
-            var outputTerminal = new TerminalModel(name, type, defaultDirection, TerminalKind.Output, terminalIndex);
-            AddTerminal(outputTerminal);
-            ConstructOutputTerminalViewModel(outputTerminal, defaultDirection);
+            foreach (var terminal in DiagramNode.Terminals)
+            {
+                terminal.PropertyChanged += TerminalOnPropertyChanged;
+                TerminalViewModels.Add(TerminalViewModel.CreateTerminalViewModel(terminal));
+            }
         }
 
-        private void ConstructOutputTerminalViewModel(TerminalModel outputTerminal, Direction defaultDirection)
-        {
-            var outputTerminalViewModel = new OutputTerminalViewModel(outputTerminal);
-            outputTerminalViewModel.DefaultDirection = defaultDirection;
-            AddTerminalViewModel(outputTerminalViewModel);
-        }
-
-        private void AddTerminalViewModel(TerminalViewModel terminalViewModel)
+        public void AddTerminalViewModel(TerminalViewModel terminalViewModel)
         {
             TerminalViewModels.Add(terminalViewModel);
-            if (terminalViewModel.DefaultDirection != Direction.None)
-            {
-                DropAndArrangeTerminal(terminalViewModel, terminalViewModel.DefaultDirection);
-            }
-            else
-            {
-                PlaceTerminalUsingRoundRobinRules(terminalViewModel);
-            }
-        }
-
-        private void PlaceTerminalUsingRoundRobinRules(TerminalViewModel terminalViewModel)
-        {
-            DropAndArrangeTerminal(terminalViewModel, _direction);
-            if (_direction == Direction.North) _direction = Direction.South;
-            else if (_direction == Direction.South) _direction = Direction.West;
-            else if (_direction == Direction.West) _direction = Direction.East;
-            else _direction = Direction.North;
+            AddTerminal(terminalViewModel.Terminal);
+            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.DefaultDirection);
         }
 
         private void AddTerminal(TerminalModel terminal)
@@ -172,12 +96,11 @@ namespace Diiagramr.ViewModel.Diagram
             DiagramNode.AddTerminal(terminal);
         }
 
-        private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var terminal = sender as TerminalModel;
-            if (propertyChangedEventArgs.PropertyName.Equals("ConnectedWire"))
+            if (e.PropertyName.Equals(nameof(TerminalModel.ConnectedWire)))
             {
-                TerminalConnectedStatusChanged?.Invoke(terminal);
+                TerminalConnectedStatusChanged?.Invoke((TerminalModel)sender);
             }
         }
 
@@ -199,10 +122,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void DisconnectAllTerminals()
         {
-            foreach (var inputTerminalViewModel in InputTerminalViewModels)
-                inputTerminalViewModel.DisconnectTerminal();
-            foreach (var outputTerminalViewModel in OutputTerminalViewModels)
-                outputTerminalViewModel.DisconnectTerminal();
+            TerminalViewModels.ForEach(t => t.DisconnectTerminal());
         }
 
         public void DropEventHandler(object sender, DragEventArgs e)
@@ -271,9 +191,6 @@ namespace Diiagramr.ViewModel.Diagram
                 case Direction.West:
                     terminal.XRelativeToNode = 0;
                     terminal.YRelativeToNode = Height * precentAlongEdge;
-                    break;
-                default:
-                    PlaceTerminalUsingRoundRobinRules(terminal);
                     break;
             }
             terminal.Terminal.ConnectedWire?.PretendWireMoved();

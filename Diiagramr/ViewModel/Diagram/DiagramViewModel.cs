@@ -114,10 +114,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void HideAllTerminalLabels()
         {
-            foreach (var abstractNodeViewModel in NodeViewModels)
-            {
-                abstractNodeViewModel.HideAllTerminalLabels();
-            }
+            NodeViewModels.ForEach(n => n.HideAllTerminalLabels());
         }
 
         private void RemoveNode(AbstractNodeViewModel viewModel)
@@ -156,8 +153,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
 
-            var terminal = o as TerminalModel;
-            if (o is TerminalModel || o is TerminalViewModel)
+            if (o is TerminalModel terminal)
             {
                 HideAllTerminalLabels();
                 ShowTitlesOnTerminalsOfSameType(terminal);
@@ -166,9 +162,17 @@ namespace Diiagramr.ViewModel.Diagram
                 return;
             }
 
-            var diagram = o as DiagramModel;
-            if (diagram != null)
+            if (o is TerminalViewModel)
             {
+                e.Effects = DragDropEffects.Link;
+                e.Handled = true;
+                return;
+            }
+
+            if (o is DiagramModel diagram)
+            {
+                e.Effects = DragDropEffects.Link;
+                e.Handled = true;
                 return;
             }
 
@@ -199,8 +203,7 @@ namespace Diiagramr.ViewModel.Diagram
         public void DragLeave(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            var diagram = o as DiagramModel;
-            if (diagram != null)
+            if (o is DiagramModel diagram)
             {
                 return;
             }

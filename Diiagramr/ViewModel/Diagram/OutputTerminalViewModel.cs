@@ -5,7 +5,6 @@ namespace Diiagramr.ViewModel.Diagram
 {
     public class OutputTerminalViewModel : TerminalViewModel
     {
-
         public OutputTerminalViewModel(TerminalModel outputTerminal) : base(outputTerminal)
         {
             if (outputTerminal.Kind != TerminalKind.Output) throw new ArgumentException("Terminal must be output kind for OutputTerminalViewModel");

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using Diiagramr.Model;
 
@@ -69,6 +70,7 @@ namespace Diiagramr.ViewModel.Diagram
             Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
             terminal.PropertyChanged += TerminalOnPropertyChanged;
+            DefaultDirection = terminal.Direction;
             Name = Terminal.Name;
             SetTerminalRotationBasedOnDirection();
             TitleVisible = true;
@@ -113,11 +115,14 @@ namespace Diiagramr.ViewModel.Diagram
             var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
-            }
-            else if (e.RightButton == MouseButtonState.Pressed)
-            {
-                DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
+                }
+                else
+                {
+                    DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
+                }
             }
             e.Handled = true;
         }
@@ -154,8 +159,7 @@ namespace Diiagramr.ViewModel.Diagram
         }
 
         public void SetTerminalDirection(Direction direction)
-        {
-            Terminal.Direction = Direction.None;
+        {;
             Terminal.Direction = direction;
         }
 
@@ -172,6 +176,13 @@ namespace Diiagramr.ViewModel.Diagram
         public void ShowLabelIfCompatibleType(Type type)
         {
             TitleVisible = Terminal.Type.IsAssignableFrom(type);
+        }
+
+        public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
+        {
+            if (terminal.Kind == TerminalKind.Input) return new InputTerminalViewModel(terminal);
+            if (terminal.Kind == TerminalKind.Output) return new OutputTerminalViewModel(terminal);
+            return null;
         }
     }
 }

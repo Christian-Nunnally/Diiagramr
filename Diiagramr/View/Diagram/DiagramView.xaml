@@ -113,8 +113,8 @@
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Width" Value="{Binding WidthPlus2}"/>
-            <Setter Property="Height" Value="{Binding HeightPlus2}"/>
+            <Setter Property="Width" Value="{Binding Width}"/>
+            <Setter Property="Height" Value="{Binding Height}"/>
             <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeBorderThickness}"/>
         </Style>
 

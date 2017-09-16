@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 
 namespace Diiagramr.PluginNodeApi
@@ -57,13 +58,16 @@ namespace Diiagramr.PluginNodeApi
         /// Sets up a input terminal on this node.
         /// </summary>
         /// <param name="name">The name of the terminal.</param>
-        /// <param name="type">The data type the new terminal should accept.</param>
         /// <param name="direction">The default side of the node this terminal belongs on.</param>
-        /// <param name="function">The function that data comming in to this terminal gets passed in to.</param>
         /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
         public Terminal<T> InputTerminal<T>(string name, Direction direction)
         {
-            if (!_loadMode) _nodeViewModel.ConstructNewInputTerminal(name, typeof(T), direction, _terminalIndex);
+            if (!_loadMode)
+            {
+                var terminal = new TerminalModel(name, typeof(T), direction, TerminalKind.Input, _terminalIndex);
+                var terminalViewModel = new InputTerminalViewModel(terminal);
+                _nodeViewModel.AddTerminalViewModel(terminalViewModel);
+            }
             return CreateClientTerminal<T>(_terminalIndex);
         }
 
@@ -71,11 +75,16 @@ namespace Diiagramr.PluginNodeApi
         /// Sets up a output terminal on this node.
         /// </summary>
         /// <param name="name">The name of the terminal.</param>
-        /// <param name="type">The data type of the terminal.  This is not currently enforced so returning a value out of this output that does not match this type might yeild unexpected results.</param>
         /// <param name="direction">The default side of the node this terminal belongs on.</param>
+        /// <remarks>For now, dynamically creating output terminals at runtime is not supported</remarks>
         public Terminal<T> OutputTerminal<T>(string name, Direction direction)
         {
-            if (!_loadMode) _nodeViewModel.ConstructNewOutputTerminal(name, typeof(T), direction, _terminalIndex);
+            if (!_loadMode)
+            {
+                var terminal = new TerminalModel(name, typeof(T), direction, TerminalKind.Output, _terminalIndex);
+                var terminalViewModel = new OutputTerminalViewModel(terminal);
+                _nodeViewModel.AddTerminalViewModel(terminalViewModel);
+            }
             return CreateClientTerminal<T>(_terminalIndex);
         }
 
