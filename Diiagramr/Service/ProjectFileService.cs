@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
@@ -98,7 +99,8 @@ namespace Diiagramr.Service
             var lastBackslashIndex = path.LastIndexOf("\\");
             if (lastBackslashIndex == -1) return;
             ProjectDirectory = path.Substring(0, lastBackslashIndex);
-            project.Name = path.Substring(lastBackslashIndex + 1);
+            var lastPeriod = path.LastIndexOf(".");
+            project.Name = path.Substring(lastBackslashIndex + 1, lastPeriod - lastBackslashIndex - 1);
         }
     }
 }
