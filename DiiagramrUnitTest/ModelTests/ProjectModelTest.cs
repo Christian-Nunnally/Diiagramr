@@ -6,26 +6,26 @@ using Moq;
 namespace DiiagramrUnitTests.ModelTests
 {
     [TestClass]
-    public class ProjectTest
+    public class ProjectModelTest
     {
         [TestMethod]
         public void TestConstructor_ConstructsDiagramCollection()
         {
-            var project = new Project();
+            var project = new ProjectModel();
             Assert.IsNotNull(project.Diagrams);
         }
 
         [TestMethod]
         public void TestConstructor_SetsNameToNewProject()
         {
-            var project = new Project();
+            var project = new ProjectModel();
             Assert.AreEqual("NewProject", project.Name);
         }
 
         [TestMethod]
         public void TestPreSave_HasDiagram_CallsPreSaveOnDiagram()
         {
-            var project = new Project();
+            var project = new ProjectModel();
             var diagramMoq = new Mock<DiagramModel>();
             project.Diagrams.Add(diagramMoq.Object);
 

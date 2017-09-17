@@ -77,18 +77,18 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void AddNode(AbstractNodeViewModel viewModel)
         {
-            if (viewModel.DiagramNode == null) throw new InvalidOperationException("Can't add a node to the diagram before it's been initialized");
-            Diagram.AddNode(viewModel.DiagramNode);
+            if (viewModel.NodeModel == null) throw new InvalidOperationException("Can't add a node to the diagram before it's been initialized");
+            Diagram.AddNode(viewModel.NodeModel);
             AddNodeViewModel(viewModel);
         }
 
         private void AddNodeViewModel(AbstractNodeViewModel viewModel)
         {
-            if (!Diagram.Nodes.Contains(viewModel.DiagramNode)) throw new InvalidOperationException("Can't add a view model for a diagramNode that does not exist in the model.");
+            if (!Diagram.Nodes.Contains(viewModel.NodeModel)) throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
             viewModel.TerminalConnectedStatusChanged += OnTerminalConnectedStatusChanged;
             NodeViewModels.Add(viewModel);
 
-            foreach (var inputTerminal in viewModel.DiagramNode.Terminals.Where(t => t.Kind == TerminalKind.Input))
+            foreach (var inputTerminal in viewModel.NodeModel.Terminals.Where(t => t.Kind == TerminalKind.Input))
             {
                 if (inputTerminal.ConnectedWire != null)
                 {
@@ -119,7 +119,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void RemoveNode(AbstractNodeViewModel viewModel)
         {
-            Diagram.Nodes.Remove(viewModel.DiagramNode);
+            Diagram.RemoveNode(viewModel.NodeModel);
             NodeViewModels.Remove(viewModel);
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
@@ -129,19 +129,19 @@ namespace Diiagramr.ViewModel.Diagram
         {
             if (terminal.ConnectedWire != null)
             {
-                if (WireViewModels.Any(x => x.Wire == terminal.ConnectedWire)) return;
+                if (WireViewModels.Any(x => x.WireModel == terminal.ConnectedWire)) return;
                 AddWireViewModel(terminal.ConnectedWire);
             }
             else
             {
-                var nullWires = WireViewModels.Where(x => (x.Wire.SourceTerminal == null) || (x.Wire.SinkTerminal == null)).ToArray();
+                var nullWires = WireViewModels.Where(x => (x.WireModel.SourceTerminal == null) || (x.WireModel.SinkTerminal == null)).ToArray();
                 WireViewModels.RemoveRange(nullWires);
             }
         }
 
-        private void AddWireViewModel(Wire wire)
+        private void AddWireViewModel(WireModel wire)
         {
-            if (WireViewModels.Any(x => x.Wire == wire)) return;
+            if (WireViewModels.Any(x => x.WireModel == wire)) return;
             var wireViewModel = new WireViewModel(wire);
             WireViewModels.Add(wireViewModel);
             HideAllTerminalLabels();

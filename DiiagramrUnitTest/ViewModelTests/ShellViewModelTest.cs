@@ -4,6 +4,7 @@ using Diiagramr.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using Diiagramr.Service.Interfaces;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -23,11 +24,11 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramWellViewModelMoq = MockedViewModelFactories.CreateMoqDiagramWell();
             _projectExplorerViewModelMoq = MockedViewModelFactories.CreateMoqProjectExplorer();
 
-            Func<IProjectManager> projectManagerFactory = () => _projectManagerMoq.Object;
-            Func<DiagramWellViewModel> diagramWellFactory = () => _diagramWellViewModelMoq.Object;
-            Func<ProjectExplorerViewModel> projectExplorerFactory = () => _projectExplorerViewModelMoq.Object;
+            IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
+            DiagramWellViewModel DiagramWellFactory() => _diagramWellViewModelMoq.Object;
+            ProjectExplorerViewModel ProjectExplorerFactory() => _projectExplorerViewModelMoq.Object;
 
-            _shellViewModel = new ShellViewModel(projectExplorerFactory, diagramWellFactory, projectManagerFactory);
+            _shellViewModel = new ShellViewModel(ProjectExplorerFactory, DiagramWellFactory, ProjectManagerFactory);
         }
 
         [TestMethod]
@@ -99,7 +100,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestCanSaveProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = new Project();
+            _projectManagerMoq.Object.CurrentProject = new ProjectModel();
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_shellViewModel.CanSaveProject);
@@ -118,7 +119,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestCanSaveAsProject_ProjectChangedToNotNull_CanSaveProjectIsTrue()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = new Project();
+            _projectManagerMoq.Object.CurrentProject = new ProjectModel();
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
             Assert.IsTrue(_shellViewModel.CanSaveAsProject);

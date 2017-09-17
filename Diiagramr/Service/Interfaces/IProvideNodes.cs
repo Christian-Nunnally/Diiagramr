@@ -8,7 +8,7 @@ namespace Diiagramr.Service
     {
         void RegisterNode(AbstractNodeViewModel node);
 
-        AbstractNodeViewModel LoadNodeViewModelFromNode(DiagramNode node);
+        AbstractNodeViewModel LoadNodeViewModelFromNode(NodeModel node);
 
         AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName);
 

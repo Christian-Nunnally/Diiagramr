@@ -472,8 +472,8 @@ namespace ColorOrgan5.Annotations
   /// class Foo {
   ///   [ProvidesContext] IBarService _barService = ...;
   /// 
-  ///   void ProcessNode(INode diagramNode) {
-  ///     DoSomething(diagramNode, diagramNode.GetGlobalServices().Bar);
+  ///   void ProcessNode(INode nodeModel) {
+  ///     DoSomething(nodeModel, nodeModel.GetGlobalServices().Bar);
   ///     //              ^ Warning: use value of '_barService' field
   ///   }
   /// }

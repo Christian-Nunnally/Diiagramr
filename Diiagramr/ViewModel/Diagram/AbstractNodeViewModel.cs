@@ -49,7 +49,7 @@ namespace Diiagramr.ViewModel.Diagram
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
 
         public virtual string Name { get; set; } = "Node";
-        public virtual DiagramNode DiagramNode { get; set; }
+        public virtual NodeModel NodeModel { get; set; }
 
         public AbstractNodeViewModel()
         {
@@ -57,10 +57,10 @@ namespace Diiagramr.ViewModel.Diagram
             DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
         }
 
-        public virtual void InitializeWithNode(DiagramNode diagramNode)
+        public virtual void InitializeWithNode(NodeModel nodeModel)
         {
-            DiagramNode = diagramNode;
-            DiagramNode.NodeViewModel = this;
+            NodeModel = nodeModel;
+            NodeModel.NodeViewModel = this;
 
             LoadTerminalViewModels();
             Initialize();
@@ -76,7 +76,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void LoadTerminalViewModels()
         {
-            foreach (var terminal in DiagramNode.Terminals)
+            foreach (var terminal in NodeModel.Terminals)
             {
                 terminal.PropertyChanged += TerminalOnPropertyChanged;
                 TerminalViewModels.Add(TerminalViewModel.CreateTerminalViewModel(terminal));
@@ -93,7 +93,7 @@ namespace Diiagramr.ViewModel.Diagram
         private void AddTerminal(TerminalModel terminal)
         {
             terminal.PropertyChanged += TerminalOnPropertyChanged;
-            DiagramNode.AddTerminal(terminal);
+            NodeModel.AddTerminal(terminal);
         }
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -107,11 +107,11 @@ namespace Diiagramr.ViewModel.Diagram
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
-            if (DiagramNode == null) return;
-            if (propertyName.Equals(nameof(X))) DiagramNode.X = X;
-            if (propertyName.Equals(nameof(Y))) DiagramNode.Y = Y;
-            if (propertyName.Equals(nameof(Width))) DiagramNode.Width = Width;
-            if (propertyName.Equals(nameof(Height))) DiagramNode.Height = Height;
+            if (NodeModel == null) return;
+            if (propertyName.Equals(nameof(X))) NodeModel.X = X;
+            if (propertyName.Equals(nameof(Y))) NodeModel.Y = Y;
+            if (propertyName.Equals(nameof(Width))) NodeModel.Width = Width;
+            if (propertyName.Equals(nameof(Height))) NodeModel.Height = Height;
         }
 
         public void Wiggle()
@@ -193,7 +193,6 @@ namespace Diiagramr.ViewModel.Diagram
                     terminal.YRelativeToNode = Height * precentAlongEdge;
                     break;
             }
-            terminal.Terminal.ConnectedWire?.PretendWireMoved();
         }
 
         private IEnumerable<TerminalViewModel> GetAllTerminalsInDirection(Direction direction)

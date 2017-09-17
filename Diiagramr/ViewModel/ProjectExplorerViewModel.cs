@@ -6,6 +6,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel
 {
@@ -15,7 +16,7 @@ namespace Diiagramr.ViewModel
 
         public bool IsAddDiagramButtonVisible { get; set; }
 
-        public Project Project { get; set; }
+        public ProjectModel Project { get; set; }
 
         public ObservableCollection<DiagramModel> Diagrams { get; set; }
 
@@ -55,6 +56,7 @@ namespace Diiagramr.ViewModel
             {
                 if (SelectedDiagram != null)
                 {
+                    SelectedDiagram.IsOpen = false;
                     SelectedDiagram.IsOpen = true;
                 }
             }

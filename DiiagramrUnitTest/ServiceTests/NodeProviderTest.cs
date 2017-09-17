@@ -13,7 +13,7 @@ namespace DiiagramrUnitTests.ServiceTests
     {
         private NodeProvider _nodeProvider;
         private Mock<AbstractNodeViewModel> _nodeViewModelMoq;
-        private DiagramNode _testNode;
+        private NodeModel _testNode;
 
         [TestInitialize]
         public void TestInitialize()
@@ -22,7 +22,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
-            _testNode = new DiagramNode("");
+            _testNode = new NodeModel("");
             _testNode.NodeFullName = "TestNodeViewModel";
         }
 
@@ -85,7 +85,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
-            Assert.AreEqual(nodeViewModel.DiagramNode, _testNode);
+            Assert.AreEqual(nodeViewModel.NodeModel, _testNode);
         }
 
         [TestMethod]
@@ -154,7 +154,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
-            Assert.AreEqual(nodeViewModel, nodeViewModel.DiagramNode.NodeViewModel);
+            Assert.AreEqual(nodeViewModel, nodeViewModel.NodeModel.NodeViewModel);
         }
 
         [TestMethod]
@@ -164,7 +164,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
-            Assert.IsNotNull(nodeViewModel.DiagramNode);
+            Assert.IsNotNull(nodeViewModel.NodeModel);
         }
 
         [TestMethod]
@@ -176,8 +176,8 @@ namespace DiiagramrUnitTests.ServiceTests
             nodeViewModel.X++;
             nodeViewModel.Y++;
 
-            Assert.AreEqual(nodeViewModel.DiagramNode.X, nodeViewModel.X);
-            Assert.AreEqual(nodeViewModel.DiagramNode.Y, nodeViewModel.Y);
+            Assert.AreEqual(nodeViewModel.NodeModel.X, nodeViewModel.X);
+            Assert.AreEqual(nodeViewModel.NodeModel.Y, nodeViewModel.Y);
         }
     }
 }

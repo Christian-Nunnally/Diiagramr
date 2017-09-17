@@ -12,10 +12,10 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_SetsActualProperty()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             nodeMoq.Setup(n => n.GetVariable("PublicProperty")).Returns(5);
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 
@@ -25,9 +25,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestSaveNodeVariables_FindsImplementingPublicProperty()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.SaveNodeVariables();
 
@@ -37,9 +37,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestSaveNodeVariables_DoesntSavePublicPropertyFromPluginNode()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.SaveNodeVariables();
 
@@ -49,9 +49,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestSaveNodeVariables_DoesntSaveImplementingPrivateProperty()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.SaveNodeVariables();
 
@@ -61,9 +61,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestSaveNodeVariables_DoesntSaveImplementingPropertyWithPrivateSetter()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.SaveNodeVariables();
 
@@ -73,9 +73,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestSaveNodeVariables_DoesntSaveImplementingPropertyWithPrivateGetter()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.SaveNodeVariables();
 
@@ -85,9 +85,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_FindsImplementingPublicProperty()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 
@@ -97,9 +97,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_DoesntSavePublicPropertyFromPluginNode()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 
@@ -109,9 +109,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_DoesntSaveImplementingPrivateProperty()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 
@@ -121,9 +121,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_DoesntSaveImplementingPropertyWithPrivateSetter()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 
@@ -133,9 +133,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestLoadNodeVariables_DoesntLoadImplementingPropertyWithPrivateGetter()
         {
-            var nodeMoq = new Mock<DiagramNode>("");
+            var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.DiagramNode = nodeMoq.Object;
+            testPluginNode.NodeModel = nodeMoq.Object;
 
             testPluginNode.LoadNodeVariables();
 

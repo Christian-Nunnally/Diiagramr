@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Diiagramr.Model;
 
-namespace Diiagramr.Service
+namespace Diiagramr.Service.Interfaces
 {
     public interface IProjectFileService
     {
@@ -14,16 +13,16 @@ namespace Diiagramr.Service
         /// </summary>
         /// <param name="project">The project.</param>
         /// <param name="saveAs">Whether this should be saved with saveAs.</param>
-        bool SaveProject(Project project, bool saveAs);
+        bool SaveProject(ProjectModel project, bool saveAs);
 
         /// <summary>
         /// Loads the project.
         /// </summary>
         /// <returns>The loaded project.</returns>
-        Project LoadProject();
+        ProjectModel LoadProject();
 
         /// <summary>
-        /// Confirms Project Close.
+        /// Confirms ProjectModel Close.
         /// </summary>
         /// <returns>The Result from the calling Dialog.</returns>
         DialogResult ConfirmProjectClose();

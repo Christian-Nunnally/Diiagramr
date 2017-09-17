@@ -14,14 +14,16 @@ namespace Diiagramr.ViewModel.Diagram
         private const double UTurnLength = 50.0;
         private const double WireDistanceOutOfTerminal = 25.0;
 
-        public WireViewModel(Wire wire)
+        public WireViewModel(WireModel wire)
         {
-            Wire = wire;
+            WireModel = wire;
             wire.PropertyChanged += WireOnPropertyChanged;
             
-            wire.SetupPropertyChangedNotificationsFromTerminals();
+            X1 = wire.X1 + DiagramConstants.NodeBorderWidth;
+            X2 = wire.X2 + DiagramConstants.NodeBorderWidth;
+            Y1 = wire.Y1 + DiagramConstants.NodeBorderWidth;
+            Y2 = wire.Y2 + DiagramConstants.NodeBorderWidth;
 
-            wire.PretendWireMoved();
             ConfigureWirePoints();
         }
 
@@ -32,18 +34,18 @@ namespace Diiagramr.ViewModel.Diagram
         public double Y1 { get; set; }
         public double Y2 { get; set; }
 
-        public Wire Wire { get; set; }
+        public WireModel WireModel { get; set; }
 
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals("X1")) X1 = Wire.X1 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals("X2")) X2 = Wire.X2 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals("Y1")) Y1 = Wire.Y1 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals("Y2")) Y2 = Wire.Y2 + DiagramConstants.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramConstants.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.X2))) X2 = WireModel.X2 + DiagramConstants.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.Y1))) Y1 = WireModel.Y1 + DiagramConstants.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.Y2))) Y2 = WireModel.Y2 + DiagramConstants.NodeBorderWidth;
 
-            if (e.PropertyName.Equals("SourceTerminal") || e.PropertyName.Equals("SinkTerminal"))
+            if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {
-                Wire.PropertyChanged -= WireOnPropertyChanged;
+                WireModel.PropertyChanged -= WireOnPropertyChanged;
                 return;
             }
 
@@ -54,20 +56,20 @@ namespace Diiagramr.ViewModel.Diagram
         {
             var start = new Point(X1, Y1);
             var end = new Point(X2, Y2);
-            var stubStart = AdjustPointInDirection(start, Wire.SinkTerminal.Direction, WireDistanceOutOfTerminal);
-            var stubEnd = AdjustPointInDirection(end, Wire.SourceTerminal.Direction, WireDistanceOutOfTerminal);
+            var stubStart = TranslatePointInDirection(start, WireModel.SinkTerminal.Direction, WireDistanceOutOfTerminal);
+            var stubEnd = TranslatePointInDirection(end, WireModel.SourceTerminal.Direction, WireDistanceOutOfTerminal);
 
             var points = new List<Point>();
             points.Add(start);
-            var bannedDirectionForStart = OppositeDirection(Wire.SinkTerminal.Direction);
-            var bannedDirectionForEnd = OppositeDirection(Wire.SourceTerminal.Direction);
+            var bannedDirectionForStart = OppositeDirection(WireModel.SinkTerminal.Direction);
+            var bannedDirectionForEnd = OppositeDirection(WireModel.SourceTerminal.Direction);
             WireTwoPoints(stubStart, stubEnd, bannedDirectionForStart, bannedDirectionForEnd, points, 0);
             points.Add(end);
 
             Points = points.ToArray();
         }
 
-        private Point AdjustPointInDirection(Point p, Direction direction, double amount)
+        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
         {
             if (direction == Direction.North) return new Point(p.X, p.Y - amount);
             if (direction == Direction.South) return new Point(p.X, p.Y + amount);
@@ -81,8 +83,8 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void DisconnectWire()
         {
-            Wire.SourceTerminal?.DisconnectWire();
-            Wire.SinkTerminal?.DisconnectWire();
+            WireModel.SourceTerminal?.DisconnectWire();
+            WireModel.SinkTerminal?.DisconnectWire();
         }
 
         private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount)

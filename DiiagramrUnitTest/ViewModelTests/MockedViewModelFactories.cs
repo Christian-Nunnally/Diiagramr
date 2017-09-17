@@ -2,6 +2,7 @@
 using Diiagramr.ViewModel;
 using Moq;
 using System;
+using Diiagramr.Service.Interfaces;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {

@@ -2,6 +2,7 @@
 using Castle.Core.Internal;
 using Diiagramr.Model;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 using Diiagramr.View.CustomControls;
 using DiiagramrUnitTests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -40,14 +41,14 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void SaveAsProjectTest_SetsInitialDirectory()
         {
-            _projectFileService.SaveProject(new Project(), true);
+            _projectFileService.SaveProject(new ProjectModel(), true);
             Assert.AreEqual(Directory, _testDialog.InitialDirectory);
         }
 
         [TestMethod]
         public void SaveAsProjectTest_SetsInitialFileName()
         {
-            var proj = new Project
+            var proj = new ProjectModel
             {
                 Name = "testProj"
             };
@@ -58,7 +59,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestSaveProject_SaveAsFalseAndOkPressed_CallsPreSaveOnProject()
         {
-            var projectMoq = new Mock<Project>();
+            var projectMoq = new Mock<ProjectModel>();
             projectMoq.SetupGet(p => p.Name).Returns("project");
             _testDialog.Result = DialogResult.OK;
             _projectFileService.SaveProject(projectMoq.Object, true);

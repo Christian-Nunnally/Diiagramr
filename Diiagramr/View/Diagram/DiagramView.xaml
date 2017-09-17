@@ -132,6 +132,10 @@
                                    PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
                                    MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}">
             <Grid>
+                <!-- Wire Items Control -->
+                <ItemsControl ItemsSource="{Binding WireViewModels}"
+                              ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                              ItemContainerStyle="{StaticResource WireContainerStyle}"/>
                 <!-- Node Items Control-->
                 <ItemsControl ItemsSource="{Binding NodeViewModels}"
                               ItemsPanel="{StaticResource CanvasItemsPanelTemplate}">
@@ -222,10 +226,6 @@
                         </Style>
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
-                <!-- Wire Items Control -->
-                <ItemsControl ItemsSource="{Binding WireViewModels}"
-                              ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
-                              ItemContainerStyle="{StaticResource WireContainerStyle}"/>
             </Grid>
         </customControls:ZoomBorder>
     </Grid>

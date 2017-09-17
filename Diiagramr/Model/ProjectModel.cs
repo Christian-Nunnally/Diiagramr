@@ -7,15 +7,15 @@ namespace Diiagramr.Model
 {
     [DataContract]
     [AddINotifyPropertyChangedInterface]
-    public class Project : ModelBase
+    public class ProjectModel : ModelBase
     {
         [DataMember]
         public virtual string Name { get; set; }
 
         [DataMember]
-        public ObservableCollection<DiagramModel> Diagrams { get; set; }
+        public virtual ObservableCollection<DiagramModel> Diagrams { get; set; }
 
-        public Project()
+        public ProjectModel()
         {
             Diagrams = new ObservableCollection<DiagramModel>();
             Name = "NewProject";

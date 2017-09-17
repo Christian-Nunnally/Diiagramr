@@ -13,61 +13,94 @@
     </UserControl.Resources>
     <Border BorderBrush="LightGray" BorderThickness="1" Background="White">
         <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="25"/>
-            </Grid.RowDefinitions>
-            <Label Content="{Binding Project.Name}"
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="1" Background="White" Visibility="Hidden" x:Name="ListViewRowHeight" x:FieldModifier="private" />
+            </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Label Content="{Binding Project.Name}"
                    HorizontalContentAlignment="Center"
                    VerticalContentAlignment="Center"
                    FontSize="12"
                    Background="#ffe9e9e9"
                    Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}"/>
-            <ListView ItemsSource="{Binding Diagrams}" 
+                <ListView ItemsSource="{Binding Diagrams}" 
                       Grid.Row="1" 
                       BorderThickness="0"
+                      MaxHeight="{Binding ActualHeight, ElementName=ListViewRowHeight}"
                       SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
                       MouseMove="{s:Action MouseMoveHandler}"
                       SelectionMode="Single">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border Width="Auto" MouseDown="{s:Action DiagramProjectItemMouseDownHandler}">
-                            <Label Content="{Binding Name}">
-                                <Label.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Header="Delete Diagram" Command="{s:Action DeleteDiagram}"/>
-                                    </ContextMenu>
-                                </Label.ContextMenu>
-                            </Label>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-                <ListView.ItemContainerStyle>
-                    <Style TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-            <Button Grid.Row="2"
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="Auto" MouseDown="{s:Action DiagramProjectItemMouseDownHandler}">
+                                <Label Content="{Binding Name}">
+                                    <Label.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="Delete Diagram" Command="{s:Action DeleteDiagram}"/>
+                                        </ContextMenu>
+                                    </Label.ContextMenu>
+                                </Label>
+                            </Border>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+<!--                <Label Content="+"-->
+<!--                       HorizontalContentAlignment="Center"-->
+<!--                       VerticalContentAlignment="Center"-->
+<!--                       FontSize="18"-->
+<!--                       FontWeight="Bold"-->
+<!--                       MouseDown="{s:Action CreateDiagram}"-->
+<!--                       Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}"-->
+<!--                       Grid.Row="2">-->
+<!--                    <Label.Style>-->
+<!--                        <Style TargetType="{x:Type Label}">-->
+<!--                            <Style.Triggers>-->
+<!--                                <Trigger Property="IsMouseOver" Value="True">-->
+<!--                                    <Setter Property="Content" Value="Add Diagram"/>-->
+<!--                                    <Setter Property="FontSize" Value="12"/>-->
+<!--                                    <Setter Property="FontWeight" Value="Normal"/>-->
+<!--                                </Trigger>-->
+<!--                            </Style.Triggers>-->
+<!--                        </Style>-->
+<!--                    </Label.Style>-->
+<!--                </Label>-->
+                <Button Grid.Row="2"
                     Click="{s:Action CreateDiagram}"
                     BorderThickness="0"
+                    Background="White"
                     Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}">
-                <Button.Style>
-                    <Style TargetType="{x:Type Button}">
-                        <Setter Property="Content" Value="+"/>
-                        <Setter Property="FontSize" Value="18"/>
-                        <Setter Property="FontWeight" Value="Bold"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Content" Value="Add Diagram"/>
-                                <Setter Property="FontSize" Value="12"/>
-                                <Setter Property="FontWeight" Value="Normal"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Content" Value="+"/>
+                            <Setter Property="FontSize" Value="18"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Content" Value="Diagram"/>
+                                    <Setter Property="FontSize" Value="12"/>
+                                    <Setter Property="FontWeight" Value="Normal"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

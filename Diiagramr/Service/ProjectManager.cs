@@ -2,52 +2,52 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Diiagramr.Model;
-using System.IO;
 using System.Windows.Forms;
-using Diiagramr.Service;
+using Diiagramr.Model;
+using Diiagramr.Service.Interfaces;
+using Diiagramr.ViewModel.Diagram;
 
 namespace Diiagramr.Service
 {
     public class ProjectManager : IProjectManager
     {
+        private readonly IProvideNodes _nodeProvider;
+        private readonly IProjectFileService _projectFileService;
+        public IList<DiagramViewModel> DiagramViewModels { get; }
+
+        public ProjectManager(Func<IProjectFileService> projectFileServiceFactory, Func<IProvideNodes> nodeProviderFactory)
+        {
+            DiagramViewModels = new List<DiagramViewModel>();
+            _projectFileService = projectFileServiceFactory.Invoke();
+            _nodeProvider = nodeProviderFactory.Invoke();
+            CurrentProjectChanged += OnCurrentProjectChanged;
+        }
+
         public event Action CurrentProjectChanged;
-        public Project CurrentProject { get; set; }
+        public ProjectModel CurrentProject { get; set; }
         public bool IsProjectDirty { get; set; }
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
-        public IProjectFileService _projectFileService;
-
-        public ProjectManager(IProjectFileService projectFileService)
-        {
-            _projectFileService = projectFileService;
-        }
 
         public void CreateProject()
         {
             if (CloseProject())
             {
-                CurrentProject = new Project();
+                CurrentProject = new ProjectModel();
                 IsProjectDirty = true;
-                CurrentProjectChanged.Invoke();
+                CurrentProjectChanged?.Invoke();
             }
         }
 
         public void SaveProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, false))
-            {
                 IsProjectDirty = false;
-            }
         }
 
         public void SaveAsProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, true))
-            {
                 IsProjectDirty = false;
-            }
         }
 
         public void LoadProject()
@@ -56,7 +56,7 @@ namespace Diiagramr.Service
             {
                 CurrentProject = _projectFileService.LoadProject();
                 IsProjectDirty = false;
-                CurrentProjectChanged.Invoke();
+                CurrentProjectChanged?.Invoke();
             }
         }
 
@@ -66,13 +66,9 @@ namespace Diiagramr.Service
             {
                 var result = _projectFileService.ConfirmProjectClose();
                 if (result == DialogResult.Cancel)
-                {
                     return false;
-                }
-                else if (result == DialogResult.Yes)
-                {
+                if (result == DialogResult.Yes)
                     _projectFileService.SaveProject(CurrentProject, false);
-                }
             }
             return true;
         }
@@ -80,9 +76,7 @@ namespace Diiagramr.Service
         public void CreateDiagram()
         {
             if (CurrentProject == null)
-            {
-                throw new NullReferenceException("Project does not exist");
-            }
+                throw new NullReferenceException("ProjectModel does not exist");
             const string dName = "diagram";
             var dNum = 1;
             var diagram = new DiagramModel();
@@ -90,15 +84,27 @@ namespace Diiagramr.Service
                 dNum++;
             diagram.Name = dName + dNum;
             IsProjectDirty = true;
+            CreateDiagramViewModel(diagram);
             CurrentProject.Diagrams.Add(diagram);
         }
 
         public void DeleteDiagram(DiagramModel diagram)
         {
-            var dToDelete = CurrentDiagrams.First(x => x == diagram);
-            CurrentProject.Diagrams.Remove(dToDelete);
-
+            CurrentProject.Diagrams.Remove(diagram);
+            DiagramViewModels.Remove(DiagramViewModels.First(m => m.Diagram == diagram));
             IsProjectDirty = true;
+        }
+
+        private void OnCurrentProjectChanged()
+        {
+            DiagramViewModels.Clear();
+            CurrentDiagrams?.ForEach(CreateDiagramViewModel);
+        }
+
+        private void CreateDiagramViewModel(DiagramModel diagram)
+        {
+            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
+            DiagramViewModels.Add(diagramViewModel);
         }
     }
 }

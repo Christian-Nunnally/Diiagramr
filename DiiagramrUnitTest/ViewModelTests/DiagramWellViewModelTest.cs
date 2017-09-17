@@ -5,7 +5,11 @@ using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Diiagramr.Service.Interfaces;
+using NUnit.Framework;
+using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -64,11 +68,15 @@ namespace DiiagramrUnitTests.ViewModelTests
         private DiagramModel SetupProjectWithSingleDiagram()
         {
             var diagram = new DiagramModel();
-            var project = new Project();
+            var project = new ProjectModel();
+            var nodeProviderMoq = new Mock<IProvideNodes>();
+            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object);
+            var diagramViewModelList = new List<DiagramViewModel> { diagramViewModelMoq.Object };
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;
             _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(project.Diagrams);
+            _projectManagerMoq.SetupGet(m => m.DiagramViewModels).Returns(diagramViewModelList);
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
             project.Diagrams.Add(diagram);
             return diagram;
@@ -116,7 +124,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestProjectChanged_ProjectSetToNull_OldDiagramsClosed()
         {
-            var projectMoq = new Mock<Project>();
+            var projectMoq = new Mock<ProjectModel>();
             var diagramMoq = new Mock<DiagramModel>();
             var diagramsList = new ObservableCollection<DiagramModel>();
             diagramsList.Add(diagramMoq.Object);
@@ -133,12 +141,12 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestProjectChanged_NewProjectHas2Diagrams_CurrentDiagramSetWithNewDiagrams()
         {
-            var projectMoq = new Mock<Project>();
+            var projectMoq = new Mock<ProjectModel>();
             var diagramMoq = new Mock<DiagramModel>();
             var diagramsList = new ObservableCollection<DiagramModel>();
             diagramsList.Add(diagramMoq.Object);
 
-            var newProjectMoq = new Mock<Project>();
+            var newProjectMoq = new Mock<ProjectModel>();
             var newDiagramMoq1 = new Mock<DiagramModel>();
             var newDiagramMoq2 = new Mock<DiagramModel>();
             var newDiagramsList = new ObservableCollection<DiagramModel>();

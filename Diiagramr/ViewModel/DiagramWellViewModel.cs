@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel
 {
@@ -135,9 +136,10 @@ namespace Diiagramr.ViewModel
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
+            var diagramViewModel = _projectManager.DiagramViewModels.First(m => m.Diagram == diagram);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
-            Items.Add(diagramViewModel);
+            Items.Insert(0, diagramViewModel);
+            
             ActiveItem = diagramViewModel;
         }
 

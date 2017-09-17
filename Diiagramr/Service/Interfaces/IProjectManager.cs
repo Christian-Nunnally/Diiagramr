@@ -1,18 +1,22 @@
-﻿using Diiagramr.Model;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Diiagramr.Model;
+using Diiagramr.ViewModel.Diagram;
 
-namespace Diiagramr.Service
+namespace Diiagramr.Service.Interfaces
 {
     public interface IProjectManager
     {
         event Action CurrentProjectChanged;
 
-        Project CurrentProject { get; set; }
+        ProjectModel CurrentProject { get; set; }
 
         bool IsProjectDirty { get; set; }
 
         ObservableCollection<DiagramModel> CurrentDiagrams { get; }
+
+        IList<DiagramViewModel> DiagramViewModels { get; }
 
         void CreateProject();
 

@@ -1,7 +1,10 @@
-﻿using PropertyChanged;
-using System;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using Diiagramr.Service;
+using PropertyChanged;
 
 namespace Diiagramr.Model
 {
@@ -21,20 +24,46 @@ namespace Diiagramr.Model
         public string Name { get; set; }
 
         [DataMember]
-        public virtual List<DiagramNode> Nodes { get; set; } = new List<DiagramNode>();
+        public virtual IList<NodeModel> Nodes { get; set; } = new List<NodeModel>();
 
-        public virtual void AddNode(DiagramNode diagramNode)
+        /// <summary>
+        ///     Notifies listeners when the sematics of this diagram have changed.
+        /// </summary>
+        public event Action SemanticsChanged;
+
+        public virtual void AddNode(NodeModel nodeModel)
         {
-            if (Nodes.Contains(diagramNode)) throw new InvalidOperationException("Can not add a diagramNode twice");
-            Nodes.Add(diagramNode);
+            if (Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not add a nodeModel twice");
+            nodeModel.SemanticsChanged += NodeSematicsChanged;
+            SemanticsChanged?.Invoke();
+            Nodes.Add(nodeModel);
+        }
+
+        private void NodeSematicsChanged()
+        {
+            SemanticsChanged?.Invoke();
+        }
+
+        public virtual void RemoveNode(NodeModel nodeModel)
+        {
+            if (!Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
+            nodeModel.SemanticsChanged -= NodeSematicsChanged;
+            SemanticsChanged?.Invoke();
+            Nodes.Remove(nodeModel);
         }
 
         /// <summary>
-        /// Must be called before the diagram is serialized and saved to disk.
+        ///     Must be called before the diagram is serialized and saved to disk.
         /// </summary>
         public virtual void PreSave()
         {
             Nodes.ForEach(d => d.PreSave());
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            Nodes.ForEach(n => n.SemanticsChanged += NodeSematicsChanged);
         }
     }
 }

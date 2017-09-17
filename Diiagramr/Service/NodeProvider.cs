@@ -23,7 +23,7 @@ namespace Diiagramr.Service
             _availableNodeViewModels.Add(node);
         }
 
-        public AbstractNodeViewModel LoadNodeViewModelFromNode(DiagramNode node)
+        public AbstractNodeViewModel LoadNodeViewModelFromNode(NodeModel node)
         {
             if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
             var viewModel = Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) as AbstractNodeViewModel;
@@ -39,7 +39,7 @@ namespace Diiagramr.Service
 
         public AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName)
         {
-            var node = new DiagramNode(typeFullName);
+            var node = new NodeModel(typeFullName);
             return LoadNodeViewModelFromNode(node);
         }
 

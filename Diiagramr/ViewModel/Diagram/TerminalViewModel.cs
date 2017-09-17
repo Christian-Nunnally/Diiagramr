@@ -11,9 +11,8 @@ namespace Diiagramr.ViewModel.Diagram
 {
     public class TerminalViewModel : Screen, IViewAware
     {
-        public TerminalModel Terminal { get; set; }
+        public TerminalModel Terminal { get; private set; }
 
-        private readonly IList<Action> _whenViewIsLoadedCallbacks = new List<Action>();
         private Direction _defaultDirection;
         private object _data;
 
@@ -25,7 +24,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public virtual object Data
         {
-            get { return _data; }
+            get => _data;
             set
             {
                 _data = value;
@@ -35,29 +34,19 @@ namespace Diiagramr.ViewModel.Diagram
 
         public double XRelativeToNode
         {
-            get { return Terminal.OffsetX; }
-            set { Terminal.OffsetX = value; }
+            get => Terminal.OffsetX;
+            set => Terminal.OffsetX = value;
         }
 
         public double YRelativeToNode
         {
-            get { return Terminal.OffsetY; }
-            set { Terminal.OffsetY = value; }
-        }
-
-        protected override void OnViewLoaded()
-        {
-            base.OnViewLoaded();
-            foreach (var whenViewIsLoadedCallback in _whenViewIsLoadedCallbacks)
-            {
-                whenViewIsLoadedCallback.Invoke();
-            }
-            _whenViewIsLoadedCallbacks.Clear();
+            get => Terminal.OffsetY;
+            set => Terminal.OffsetY = value;
         }
 
         public Direction DefaultDirection
         {
-            get { return _defaultDirection; }
+            get => _defaultDirection;
             set
             {
                 _defaultDirection = value;
@@ -148,7 +137,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             if (terminal == null) return false;
             if (terminal.Kind == Terminal.Kind) return false;
-            new Wire(Terminal, terminal);
+            new WireModel(Terminal, terminal);
             return true;
         }
 

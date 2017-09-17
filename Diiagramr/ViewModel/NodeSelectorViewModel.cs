@@ -26,7 +26,7 @@ namespace Diiagramr.ViewModel
             {
                 if (nodeViewModel is PluginNode pluginNode)
                 {
-                    pluginNode.DiagramNode = new DiagramNode("");
+                    pluginNode.NodeModel = new NodeModel("");
                     pluginNode.SetupNode(new NodeSetup(pluginNode));
                 }
             }

@@ -81,9 +81,11 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="ModelTests\ProjectTest.cs" />
+    <Compile Include="ModelTests\ProjectModelTest.cs" />
     <Compile Include="ModelTests\DiagramModelTest.cs" />
-    <Compile Include="ModelTests\DiagramNodeTest.cs" />
+    <Compile Include="ModelTests\NodeModelTest.cs" />
+    <Compile Include="ModelTests\TerminalModelTest.cs" />
+    <Compile Include="ModelTests\WireModelTest.cs" />
     <Compile Include="PluginNodeApiTests\TerminalTest.cs" />
     <Compile Include="PluginNodeApiTests\PluginNodeTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Diiagramr.Service
+namespace Diiagramr.Service.Interfaces
 {
     public interface IDirectoryService
     {

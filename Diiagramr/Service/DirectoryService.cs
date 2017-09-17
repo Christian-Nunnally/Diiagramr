@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.Service
 {

@@ -1,6 +1,7 @@
 using Diiagramr.Service;
 using Stylet;
 using System;
+using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel
 {

@@ -15,11 +15,11 @@ namespace Diiagramr.PluginNodeApi
     [Serializable]
     public abstract class PluginNode : AbstractNodeViewModel
     {
-        public sealed override void InitializeWithNode(DiagramNode diagramNode)
+        public sealed override void InitializeWithNode(NodeModel nodeModel)
         {
-            base.InitializeWithNode(diagramNode);
-            var nodeSetterUpper = new NodeSetup(this, diagramNode.Initialized);
-            diagramNode.Initialized = true;
+            base.InitializeWithNode(nodeModel);
+            var nodeSetterUpper = new NodeSetup(this, nodeModel.Initialized);
+            nodeModel.Initialized = true;
             SetupNode(nodeSetterUpper);
         }
 
@@ -29,7 +29,7 @@ namespace Diiagramr.PluginNodeApi
             {
                 var key = propertyInfo.Name;
                 var value = propertyInfo.GetValue(this);
-                DiagramNode?.SetVariable(key, value);
+                NodeModel?.SetVariable(key, value);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Diiagramr.PluginNodeApi
             foreach (var propertyInfo in GetImplementingClassPublicGetAndSetProperties())
             {
                 var key = propertyInfo.Name;
-                var value = DiagramNode?.GetVariable(key);
+                var value = NodeModel?.GetVariable(key);
                 propertyInfo.SetValue(this, value);
             }
         }

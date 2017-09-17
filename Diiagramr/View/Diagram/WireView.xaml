@@ -15,7 +15,8 @@
     <Path Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
               StrokeThickness="3"
               StrokeLineJoin="Miter" 
-              StrokeMiterLimit="1">
+              StrokeMiterLimit="1"
+              MouseDown="{s:Action WireMouseDown}">
         <Path.Style>
             <Style TargetType="{x:Type Path}">
                 <Setter Property="Stroke" Value="#555555"/>

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 using Diiagramr.View.CustomControls;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
