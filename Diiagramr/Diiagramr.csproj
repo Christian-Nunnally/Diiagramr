@@ -84,6 +84,7 @@
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\WireModel.cs" />
+    <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="Service\DirectoryService.cs" />

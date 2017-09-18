@@ -7,6 +7,7 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
         private Terminal<int> _inputTerminal;
         private Terminal<int> _outputTerminal;
 
+        [PluginNodeSetting]
         public int Value { get; set; }
 
         public override void SetupNode(NodeSetup setup)

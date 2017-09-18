@@ -25,7 +25,7 @@ namespace Diiagramr.PluginNodeApi
 
         public override void SaveNodeVariables()
         {
-            foreach (var propertyInfo in GetImplementingClassPublicGetAndSetProperties())
+            foreach (var propertyInfo in GetImplementingClassSettings())
             {
                 var key = propertyInfo.Name;
                 var value = propertyInfo.GetValue(this);
@@ -35,7 +35,7 @@ namespace Diiagramr.PluginNodeApi
 
         public override void LoadNodeVariables()
         {
-            foreach (var propertyInfo in GetImplementingClassPublicGetAndSetProperties())
+            foreach (var propertyInfo in GetImplementingClassSettings())
             {
                 var key = propertyInfo.Name;
                 var value = NodeModel?.GetVariable(key);
@@ -43,7 +43,7 @@ namespace Diiagramr.PluginNodeApi
             }
         }
 
-        private IEnumerable<PropertyInfo> GetImplementingClassPublicGetAndSetProperties()
+        private IEnumerable<PropertyInfo> GetImplementingClassSettings()
         {
             var actualType = GetType();
             var pluginNodeType = typeof(PluginNode);
@@ -51,7 +51,8 @@ namespace Diiagramr.PluginNodeApi
             var pluginNodeProperties = pluginNodeType.GetProperties();
             var pluginNodePropertyNames = pluginNodeProperties.Select(i => i.Name).ToList();
             var implementingClassProperties = properties.Where(i => !pluginNodePropertyNames.Contains(i.Name));
-            return implementingClassProperties.Where(i => i.GetGetMethod() != null && i.GetSetMethod() != null);
+            var propertiesWithPublicGetSet = implementingClassProperties.Where(i => i.GetGetMethod() != null && i.GetSetMethod() != null);
+            return propertiesWithPublicGetSet.Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
         }
 
         /// <summary>

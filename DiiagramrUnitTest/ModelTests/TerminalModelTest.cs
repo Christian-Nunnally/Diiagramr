@@ -11,11 +11,12 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSemanticsChanged_ConnectedWireChanged_SemanticsChangedInvoked()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            var wireMoq = new Mock<WireModel>(terminalModel, terminalModel);
+            var terminalModelInput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalModelOutput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var wireMoq = new Mock<WireModel>(terminalModelInput, terminalModelOutput);
             var semanticsChanged = false;
-            terminalModel.SemanticsChanged += () => semanticsChanged = true;
-            terminalModel.ConnectedWire = wireMoq.Object;
+            terminalModelInput.SemanticsChanged += () => semanticsChanged = true;
+            terminalModelInput.ConnectedWire = wireMoq.Object;
 
             Assert.IsTrue(semanticsChanged);
         }

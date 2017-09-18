@@ -13,15 +13,10 @@ namespace Diiagramr.View.CustomControls
 
         private void MoveThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
-            AbstractNodeViewModel item = null;
-            var contentPresenter = DataContext as ContentPresenter;
-
-            if (contentPresenter != null)
-                item = contentPresenter.Content as AbstractNodeViewModel;
-
-            if (item == null) return;
-            item.X += e.HorizontalChange;
-            item.Y += e.VerticalChange;
+            if (!(DataContext is ContentPresenter contentPresenter)) return;
+            if (!(contentPresenter.Content is AbstractNodeViewModel node)) return;
+            node.X += e.HorizontalChange;
+            node.Y += e.VerticalChange;
         }
     }
 }
