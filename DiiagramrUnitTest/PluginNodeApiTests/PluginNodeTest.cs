@@ -47,6 +47,18 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         }
 
         [TestMethod]
+        public void TestSaveNodeVariables_DoesntSavePublicPropertyWithoutPluginNodeSettingAttribute()
+        {
+            var nodeMoq = new Mock<NodeModel>("");
+            var testPluginNode = new TestPluginNode();
+            testPluginNode.NodeModel = nodeMoq.Object;
+
+            testPluginNode.SaveNodeVariables();
+
+            nodeMoq.Verify(n => n.SetVariable("PublicPropertyNonSetting", 0), Times.Never);
+        }
+
+        [TestMethod]
         public void TestSaveNodeVariables_DoesntSaveImplementingPrivateProperty()
         {
             var nodeMoq = new Mock<NodeModel>("");
@@ -147,7 +159,10 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
     {
         public override string Name => "Test Node";
 
+        [PluginNodeSetting]
         public int PublicProperty { get; set; }
+
+        public int PublicPropertyNonSetting { get; set; }
 
         private int PrivateProperty { get; set; }
 
