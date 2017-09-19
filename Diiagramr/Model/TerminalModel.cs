@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using Diiagramr.ViewModel.Diagram;
 
@@ -101,11 +102,13 @@ namespace Diiagramr.Model
 
         [DataMember]
         public string Name { get; set; }
-
+        
+        [DataMember]
         public object Data { get; set; }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+
             if (e.PropertyName.Equals(nameof(NodeX)) || e.PropertyName.Equals(nameof(OffsetX)))
                 X = NodeX + OffsetX;
             else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
@@ -127,6 +130,22 @@ namespace Diiagramr.Model
             ConnectedWire.SourceTerminal = null;
             ConnectedWire.SinkTerminal = null;
             ConnectedWire = null;
+        }
+
+        public virtual void EnableWire()
+        {
+            ConnectedWire?.EnableWire();
+        }
+
+        public virtual void DisableWire()
+        {
+            ConnectedWire?.DisableWire();
+        }
+
+        public virtual void ResetWire()
+        {
+            ConnectedWire?.DisableWire();
+            ConnectedWire?.ResetWire();
         }
 
         /// <summary>

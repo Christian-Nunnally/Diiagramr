@@ -12,88 +12,84 @@ namespace DiiagramrUnitTests.ModelTests
     [TestClass]
     public class NodeModelTest
     {
+        private NodeModel _node;
+        private Mock<TerminalModel> _termMoq;
+
+        [TestInitialize]
+        public void SetupTests()
+        {
+            _node = new NodeModel("name");
+            _termMoq = new Mock<TerminalModel>();
+        }
+
         [TestMethod]
         public void TestConstructor_TerminalsCollectionNotNull()
         {
-            var node = new NodeModel("");
-            Assert.IsNotNull(node.Terminals);
+            Assert.IsNotNull(_node.Terminals);
         }
 
         [TestMethod]
         public void TestConstructor_NodeTypeSetToName()
         {
-            var node = new NodeModel("name");
-            Assert.AreEqual("name", node.NodeFullName);
+            Assert.AreEqual("name", _node.NodeFullName);
         }
 
         [TestMethod]
         public void TestAddTerminal_TerminalAddedToTerminals()
         {
-            var node = new NodeModel("name");
-            var terminalMoq = new Mock<TerminalModel>();
-            Assert.IsTrue(node.Terminals.IsNullOrEmpty());
+            Assert.IsTrue(_node.Terminals.IsNullOrEmpty());
 
-            node.AddTerminal(terminalMoq.Object);
+            _node.AddTerminal(_termMoq.Object);
 
-            Assert.AreEqual(terminalMoq.Object, node.Terminals[0]);
+            Assert.AreEqual(_termMoq.Object, _node.Terminals[0]);
         }
 
         [TestMethod]
         public void TestAddTerminal_TerminalNotfiedOfNodePropertyChanges()
         {
-            var node = new NodeModel("name");
-            var terminalMoq = new Mock<TerminalModel>();
+            _node.AddTerminal(_termMoq.Object);
+            _node.X++;
 
-            node.AddTerminal(terminalMoq.Object);
-            node.X++;
-
-            terminalMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
+            _termMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
         }
 
         [TestMethod]
         public void TestSetTerminalsPropertyChanged_TerminalNotfiedOfNodePropertyChanges()
         {
-            var node = new NodeModel("name");
-            var terminalMoq = new Mock<TerminalModel>();
+            _node.Terminals.Add(_termMoq.Object);
+            _node.SetTerminalsPropertyChanged();
+            _node.X++;
 
-            node.Terminals.Add(terminalMoq.Object);
-            node.SetTerminalsPropertyChanged();
-            node.X++;
-
-            terminalMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
+            _termMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
         }
 
         [TestMethod]
         public void TestSetVariable_VariableIsPutInPersistedVariables()
         {
-            var node = new NodeModel("name");
-            node.SetVariable("Key", "Value");
-            Assert.AreEqual("Value", node.PersistedVariables["Key"]);
+            _node.SetVariable("Key", "Value");
+            Assert.AreEqual("Value", _node.PersistedVariables["Key"]);
         }
 
         [TestMethod]
         public void TestGetVariable_VariableNeverSet_ReturnsNull()
         {
-            var node = new NodeModel("name");
-            Assert.IsNull(node.GetVariable("Key"));
+            Assert.IsNull(_node.GetVariable("Key"));
         }
 
         [TestMethod]
         public void TestGetVariable_VariableSet_ReturnsValue()
         {
-            var node = new NodeModel("name");
-            node.SetVariable("Key", "Value");
-            Assert.AreEqual("Value", node.GetVariable("Key"));
+            _node.SetVariable("Key", "Value");
+            Assert.AreEqual("Value", _node.GetVariable("Key"));
         }
 
         [TestMethod]
         public void TestPreSave_HasNodeViewModel_CallsSaveNodeVariablesOnNodeViewModel()
         {
-            var node = new NodeModel("name");
             var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
-            node.NodeViewModel = nodeViewModelMoq.Object;
+            _node.NodeViewModel = nodeViewModelMoq.Object;
 
-            node.PreSave();
+            _node.PreSave();
 
             nodeViewModelMoq.Verify(d => d.SaveNodeVariables());
         }
@@ -101,11 +97,9 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSemanticsChanged_TerminalAdded_SematicsChangedInvoked()
         {
-            var node = new NodeModel("name");
-            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var semanticsChanged = false;
-            node.SemanticsChanged += () => semanticsChanged = true;
-            node.AddTerminal(terminalMoq.Object);
+            _node.SemanticsChanged += () => semanticsChanged = true;
+            _node.AddTerminal(_termMoq.Object);
 
             Assert.IsTrue(semanticsChanged);
         }
@@ -113,15 +107,38 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSemanticsChanged_TerminalSemanticsChanged_SematicsChangedInvoked()
         {
-            var node = new NodeModel("name");
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var semanticsChanged = false;
-            node.SemanticsChanged += () => semanticsChanged = true;
-            node.AddTerminal(terminalMoq.Object);
+            _node.SemanticsChanged += () => semanticsChanged = true;
+            _node.AddTerminal(terminalMoq.Object);
 
             terminalMoq.Raise(n => n.SemanticsChanged += null);
 
             Assert.IsTrue(semanticsChanged);
+        }
+
+        [TestMethod]
+        public void TestEnableTerminals_CallsEnableWire()
+        {
+            _node.AddTerminal(_termMoq.Object);
+            _node.EnableTerminals();
+            _termMoq.Verify(m => m.EnableWire(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestResetTerminals_CallsResetWire()
+        {
+            _node.AddTerminal(_termMoq.Object);
+            _node.ResetTerminals();
+            _termMoq.Verify(m => m.ResetWire(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestDisableTerminals_CallsDisableWire()
+        {
+            _node.AddTerminal(_termMoq.Object);
+            _node.DisableTerminals();
+            _termMoq.Verify(m => m.DisableWire(), Times.Once);
         }
     }
 }

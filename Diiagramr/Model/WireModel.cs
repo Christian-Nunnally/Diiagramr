@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using PropertyChanged;
 
@@ -9,6 +10,9 @@ namespace Diiagramr.Model
     [AddINotifyPropertyChangedInterface]
     public class WireModel : ModelBase
     {
+
+        private bool _isActive;
+
         private WireModel() { }
 
         public WireModel(TerminalModel terminal1, TerminalModel terminal2)
@@ -28,6 +32,8 @@ namespace Diiagramr.Model
             SourceTerminal.ConnectedWire = this;
             SinkTerminal.ConnectedWire = this;
             SetupTerminalPropertyChangeNotifications();
+            SinkTerminal.Data = SourceTerminal.Data;
+            _isActive = true;
         }
 
         [DataMember]
@@ -48,11 +54,28 @@ namespace Diiagramr.Model
         [DataMember]
         public double Y2 { get; set; }
 
+        public virtual void EnableWire()
+        {
+            _isActive = true;
+            SinkTerminal.Data = SourceTerminal.Data;
+        }
+
+        public virtual void DisableWire()
+        {
+            _isActive = false;
+        }
+
+        public virtual void ResetWire()
+        {
+            SinkTerminal.Data = null;
+        }
+
         private void SourceTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var source = (TerminalModel) sender;
             if (e.PropertyName.Equals(nameof(TerminalModel.X))) X2 = source.X;
             else if (e.PropertyName.Equals(nameof(TerminalModel.Y))) Y2 = source.Y;
+            else if (!_isActive) return;
             else if (e.PropertyName.Equals(nameof(TerminalModel.Data))) SinkTerminal.Data = source.Data;
         }
 
@@ -78,8 +101,6 @@ namespace Diiagramr.Model
             Y1 = SinkTerminal.Y;
             X2 = SourceTerminal.X;
             Y2 = SourceTerminal.Y;
-
-            SinkTerminal.Data = SourceTerminal.Data;
         }
     }
 }

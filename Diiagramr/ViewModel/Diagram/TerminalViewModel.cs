@@ -59,6 +59,7 @@ namespace Diiagramr.ViewModel.Diagram
             Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
             terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
             terminal.PropertyChanged += TerminalOnPropertyChanged;
+            Data = terminal.Data;
             DefaultDirection = terminal.Direction;
             Name = Terminal.Name;
             SetTerminalRotationBasedOnDirection();

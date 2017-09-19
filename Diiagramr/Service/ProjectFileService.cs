@@ -13,20 +13,23 @@ namespace Diiagramr.Service
 {
     public class ProjectFileService : IProjectFileService
     {
-        public string ProjectDirectory { get; set; }
-
         private readonly IFileDialog _openFileDialog;
 
         private readonly IFileDialog _saveFileDialog;
 
-        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog)
+        private readonly IProjectLoadSave _loadSave;
+
+        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog, IProjectLoadSave loadSave)
         {
             _openFileDialog = openDialog;
             _saveFileDialog = saveDialog;
+            _loadSave = loadSave;
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
             if (!directoryService.Exists(ProjectDirectory)) directoryService.CreateDirectory(ProjectDirectory);
         }
+
+        public string ProjectDirectory { get; set; }
 
         public bool SaveProject(ProjectModel project, bool saveAs)
         {
@@ -46,10 +49,7 @@ namespace Diiagramr.Service
 
             if (_openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                var serializer = new DataContractSerializer(typeof(ProjectModel));
-                Stream stream = new FileStream(_openFileDialog.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-                var project = (ProjectModel)serializer.ReadObject(stream);
-                stream.Close();
+                var project = _loadSave.Open(_openFileDialog.FileName);
                 SetComponentsFromPath(project, _openFileDialog.FileName);
                 return project;
             }
@@ -83,16 +83,7 @@ namespace Diiagramr.Service
         private void SerializeAndSave(ProjectModel project, string name)
         {
             project.PreSave();
-            try
-            {
-                var serializer = new DataContractSerializer(typeof(ProjectModel));
-                var settings = new XmlWriterSettings { Indent = true };
-                using (var w = XmlWriter.Create(name, settings)) serializer.WriteObject(w, project);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+            _loadSave.Save(project, name);
         }
 
         private void SetComponentsFromPath(ProjectModel project, string path)

@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diiagramr", "Diiagramr\Diiagramr.csproj", "{6EFB487A-7176-4F27-92BA-2401FC1B6629}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrUnitTest", "DiiagramrUnitTest\DiiagramrUnitTest.csproj", "{4684600E-834A-43C6-A421-22F0EF0DBB09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrIntegrationTest", "DiiagramrIntegrationTest\DiiagramrIntegrationTest.csproj", "{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,14 @@ Global
 		{4684600E-834A-43C6-A421-22F0EF0DBB09}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4684600E-834A-43C6-A421-22F0EF0DBB09}.Release|x86.ActiveCfg = Release|Any CPU
 		{4684600E-834A-43C6-A421-22F0EF0DBB09}.Release|x86.Build.0 = Release|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Debug|x86.Build.0 = Debug|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Release|x86.ActiveCfg = Release|Any CPU
+		{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

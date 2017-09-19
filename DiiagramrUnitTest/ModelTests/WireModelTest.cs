@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -154,6 +155,24 @@ namespace DiiagramrUnitTests.ModelTests
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
             inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
             outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestConnectWire_DataPassedThrough()
+        {
+            var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
+            _outputTerminalMoq.Object.Data = 2;
+            wire.EnableWire();
+            Assert.AreEqual(_inputTerminalMoq.Object.Data, 2);
+        }
+
+        [TestMethod]
+        public void TestDisconnectWire_DataPassedThrough()
+        {
+            var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
+            _outputTerminalMoq.Object.Data = 2;
+            wire.EnableWire();
+            Assert.AreEqual(_inputTerminalMoq.Object.Data, 2);
         }
 
         private class Parent { }

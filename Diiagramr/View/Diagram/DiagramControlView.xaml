@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Diiagramr.View.Diagram.DiagramControlView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Diiagramr.View"
+             xmlns:s="https://github.com/canton7/Stylet"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="90">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="30" />
+            <ColumnDefinition Width="30" />
+        </Grid.ColumnDefinitions>
+        <ToggleButton 
+            x:Name="PlayButton" 
+            Click="{s:Action Play}"
+            Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}"
+            IsChecked="{Binding PlayChecked}"
+            Height="30"
+            Width="30">
+            <Polygon Points="0,0 20,10 0,20">
+                <Polygon.Fill>
+                    <SolidColorBrush Color="Green" Opacity=".7"/>
+                </Polygon.Fill>
+            </Polygon>
+        </ToggleButton>
+        <ToggleButton 
+            x:Name="PauseButton" 
+            Grid.Column="1" 
+            Click="{s:Action Pause}" 
+            Style="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}"
+            IsChecked="{Binding PauseChecked}"
+            Height="30"
+            Width="30">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Height="20" Width="5" Fill="Blue" Opacity=".7" Margin="0,0,1,0"/>
+                <Rectangle Height="20" Width="5" Fill="Blue" Opacity=".7" Margin="2,0,0,0"/>
+            </StackPanel>
+        </ToggleButton>
+        <Button 
+            Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+            x:Name="StopButton" 
+            Grid.Column="2" 
+            Click="{s:Action Stop}"
+            Height="30"
+            Width="30">
+            <Polygon
+                Points="0,0 20,0 20,20 0,20">
+                <Polygon.Fill>
+                    <SolidColorBrush Color="Red" Opacity=".7"/>
+                </Polygon.Fill>
+            </Polygon>
+        </Button>
+    </Grid>
+</UserControl>
+

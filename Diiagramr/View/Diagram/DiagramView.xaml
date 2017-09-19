@@ -228,5 +228,6 @@
                 </ItemsControl>
             </Grid>
         </customControls:ZoomBorder>
+        <ContentControl s:View.Model="{Binding DiagramControlViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

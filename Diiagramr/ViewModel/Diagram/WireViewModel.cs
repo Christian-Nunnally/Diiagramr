@@ -46,6 +46,7 @@ namespace Diiagramr.ViewModel.Diagram
             if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {
                 WireModel.PropertyChanged -= WireOnPropertyChanged;
+                DisconnectWire();
                 return;
             }
 
@@ -84,6 +85,7 @@ namespace Diiagramr.ViewModel.Diagram
         public void DisconnectWire()
         {
             WireModel.SourceTerminal?.DisconnectWire();
+            WireModel.SinkTerminal.Data = null;
             WireModel.SinkTerminal?.DisconnectWire();
         }
 

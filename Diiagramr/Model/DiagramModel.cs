@@ -52,6 +52,21 @@ namespace Diiagramr.Model
             Nodes.Remove(nodeModel);
         }
 
+        public virtual void Play()
+        {
+            Nodes.ForEach(n => n.EnableTerminals());
+        }
+
+        public virtual void Pause()
+        {
+            Nodes.ForEach(n => n.DisableTerminals());
+        }
+
+        public virtual void Stop()
+        {
+            Nodes.ForEach(n => n.ResetTerminals());
+        }
+
         /// <summary>
         ///     Must be called before the diagram is serialized and saved to disk.
         /// </summary>

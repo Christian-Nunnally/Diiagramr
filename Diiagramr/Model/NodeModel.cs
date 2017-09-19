@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using Diiagramr.ViewModel.Diagram;
 using PropertyChanged;
@@ -73,6 +74,21 @@ namespace Diiagramr.Model
         public virtual void SetTerminalsPropertyChanged()
         {
             Terminals.ForEach(t => PropertyChanged += t.NodePropertyChanged);
+        }
+
+        public virtual void EnableTerminals()
+        {
+            Terminals.ForEach(t => t.EnableWire());
+        }
+
+        public virtual void ResetTerminals()
+        {
+            Terminals.ForEach(t => t.ResetWire());
+        }
+
+        public virtual void DisableTerminals()
+        {
+            Terminals.ForEach(t => t.DisableWire());
         }
 
         public virtual void SetVariable(string name, object value)

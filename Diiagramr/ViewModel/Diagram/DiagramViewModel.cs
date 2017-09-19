@@ -16,11 +16,14 @@ namespace Diiagramr.ViewModel.Diagram
     {
         private AbstractNodeViewModel _insertingNodeViewModel;
 
+        public DiagramControlViewModel DiagramControlViewModel { get; private set; }
+
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider)
         {
             if (diagram == null) throw new ArgumentNullException(nameof(diagram));
             if (nodeProvider == null) throw new ArgumentNullException(nameof(nodeProvider));
 
+            DiagramControlViewModel = new DiagramControlViewModel(diagram);
             NodeViewModels = new BindableCollection<AbstractNodeViewModel>();
             WireViewModels = new BindableCollection<WireViewModel>();
 

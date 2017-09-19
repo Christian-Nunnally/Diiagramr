@@ -20,6 +20,7 @@ namespace Diiagramr
         {
             GetPluginAssemblies().ForEach(builder.Assemblies.Add);
             builder.Bind<IDirectoryService>().To<DirectoryService>();
+            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();

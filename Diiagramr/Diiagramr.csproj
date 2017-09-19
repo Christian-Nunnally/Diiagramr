@@ -90,9 +90,11 @@
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
+    <Compile Include="Service\Interfaces\IProjectLoadSave.cs" />
     <Compile Include="Service\Interfaces\IProjectManager.cs" />
     <Compile Include="Service\Interfaces\IProvideNodes.cs" />
     <Compile Include="Service\NodeProvider.cs" />
+    <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
+    <Compile Include="ViewModel\Diagram\DiagramControlViewModel.cs" />
     <Compile Include="View\CustomControls\SaveFileDialog.cs" />
     <Compile Include="View\CustomControls\OpenFileDialog.cs" />
     <Compile Include="View\CustomControls\IFileDialog.cs" />
@@ -157,6 +160,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\Diagram\DiagramControlView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\Diagram\CoreNode\AddNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

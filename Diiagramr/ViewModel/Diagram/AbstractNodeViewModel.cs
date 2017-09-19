@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -98,6 +100,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            Debug.WriteLine("Terminal property changed: " +e.PropertyName);
             if (e.PropertyName.Equals(nameof(TerminalModel.ConnectedWire)))
             {
                 TerminalConnectedStatusChanged?.Invoke((TerminalModel)sender);

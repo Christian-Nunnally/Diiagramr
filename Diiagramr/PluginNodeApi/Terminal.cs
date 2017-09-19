@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.ComponentModel;
 using Diiagramr.ViewModel.Diagram;
 
@@ -25,6 +26,7 @@ namespace Diiagramr.PluginNodeApi
         {
             _underlyingTerminal = underlyingTerminal ?? throw new ArgumentNullException(nameof(underlyingTerminal));
             _underlyingTerminal.PropertyChanged += UnderlyingTerminalOnPropertyChanged;
+            Data = (T) (underlyingTerminal.Data ?? default(T));
         }
 
         /// <summary>
@@ -36,7 +38,7 @@ namespace Diiagramr.PluginNodeApi
             get => _data;
             set
             {
-                if (_data.Equals(value)) return;
+                if (_data != null && _data.Equals(value)) return;
                 _underlyingTerminal.Data = value;
                 _data = value;
                 DataChanged?.Invoke(_data);
@@ -51,7 +53,8 @@ namespace Diiagramr.PluginNodeApi
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data))) return;
-            Data = (T) _underlyingTerminal.Data;
+            if (_underlyingTerminal.Data == null) Data = default(T);
+            else Data = (T) _underlyingTerminal.Data;
         }
     }
 }

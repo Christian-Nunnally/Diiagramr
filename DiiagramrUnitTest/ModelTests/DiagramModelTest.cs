@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using Castle.Core.Internal;
 using Diiagramr.Model;
@@ -10,72 +12,68 @@ namespace DiiagramrUnitTests.ModelTests
     [TestClass]
     public class DiagramModelTest
     {
+        private DiagramModel _diagram;
+        private Mock<NodeModel> _nodeMoq;
+
+        [TestInitialize]
+        public void SetupTests()
+        {
+            _diagram = new DiagramModel();
+            _nodeMoq = new Mock<NodeModel>("");
+            _diagram.AddNode(_nodeMoq.Object);
+        }
+
         [TestMethod]
         public void TestAddNode_NewNode_AddsNodeToNodes()
         {
-            var diagram = new DiagramModel();
-            var nodeMoq = new Mock<NodeModel>("");
-            Assert.IsTrue(diagram.Nodes.IsNullOrEmpty());
+            var dia = new DiagramModel();
+            Assert.IsTrue(dia.Nodes.IsNullOrEmpty());
 
-            diagram.AddNode(nodeMoq.Object);
+            dia.AddNode(_nodeMoq.Object);
 
-            Assert.AreEqual(nodeMoq.Object, diagram.Nodes.First());
+            Assert.AreEqual(_nodeMoq.Object, dia.Nodes.First());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestAddNode_NodeAlreadyAdded_ThrowsException()
         {
-            var diagram = new DiagramModel();
-            var nodeMoq = new Mock<NodeModel>("");
-
-            diagram.AddNode(nodeMoq.Object);
-            diagram.AddNode(nodeMoq.Object);
+            _diagram.AddNode(_nodeMoq.Object);
         }
 
         [TestMethod]
         public void TestRemoveNode_NewNode_RemovedsNodeFromNodes()
         {
-            var diagram = new DiagramModel();
-            var nodeMoq = new Mock<NodeModel>("");
-            diagram.AddNode(nodeMoq.Object);
-            Assert.IsFalse(diagram.Nodes.IsNullOrEmpty());
+            Assert.IsFalse(_diagram.Nodes.IsNullOrEmpty());
 
-            diagram.RemoveNode(nodeMoq.Object);
+            _diagram.RemoveNode(_nodeMoq.Object);
 
-            Assert.IsTrue(diagram.Nodes.IsNullOrEmpty());
+            Assert.IsTrue(_diagram.Nodes.IsNullOrEmpty());
         }
 
         [TestMethod]
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestRemoveNode_NodeNotOnDiagram_ThrowsException()
         {
-            var diagram = new DiagramModel();
-            var nodeMoq = new Mock<NodeModel>("");
-
-            diagram.RemoveNode(nodeMoq.Object);
+            var dia = new DiagramModel();
+            dia.RemoveNode(_nodeMoq.Object);
         }
 
         [TestMethod]
         public void TestPreSave_HasNode_CallsPreSaveOnNode()
         {
-            var diagram = new DiagramModel();
-            var nodeMoq = new Mock<NodeModel>("");
-            diagram.AddNode(nodeMoq.Object);
+            _diagram.PreSave();
 
-            diagram.PreSave();
-
-            nodeMoq.Verify(d => d.PreSave());
+            _nodeMoq.Verify(d => d.PreSave());
         }
 
         [TestMethod]
         public void TestSemanticsChanged_NodeAdded_SematicsChangedInvoked()
         {
-            var diagram = new DiagramModel();
             var semanticsChanged = false;
-            diagram.SemanticsChanged += () => semanticsChanged = true;
-            var nodeMoq = new Mock<NodeModel>("");
-            diagram.AddNode(nodeMoq.Object);
+            _diagram.SemanticsChanged += () => semanticsChanged = true;
+            var nodeMoq2 = new Mock<NodeModel>("");
+            _diagram.AddNode(nodeMoq2.Object);
 
             Assert.IsTrue(semanticsChanged);
         }
@@ -83,13 +81,12 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSemanticsChanged_NodeRemoved_SematicsChangedInvoked()
         {
-            var diagram = new DiagramModel();
             var semanticsChanged = false;
-            diagram.SemanticsChanged += () => semanticsChanged = true;
-            var nodeMoq = new Mock<NodeModel>("");
-            diagram.AddNode(nodeMoq.Object);
+            _diagram.SemanticsChanged += () => semanticsChanged = true;
+            var nodeMoq2 = new Mock<NodeModel>("");
+            _diagram.AddNode(nodeMoq2.Object);
             semanticsChanged = false;
-            diagram.RemoveNode(nodeMoq.Object);
+            _diagram.RemoveNode(nodeMoq2.Object);
 
             Assert.IsTrue(semanticsChanged);
         }
@@ -97,15 +94,35 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSemanticsChanged_NodeSemanticsChanged_SematicsChangedInvoked()
         {
-            var diagram = new DiagramModel();
             var semanticsChanged = false;
-            diagram.SemanticsChanged += () => semanticsChanged = true;
-            var nodeMoq = new Mock<NodeModel>("");
-            diagram.AddNode(nodeMoq.Object);
+            _diagram.SemanticsChanged += () => semanticsChanged = true;
+            var nodeMoq2 = new Mock<NodeModel>("");
+            _diagram.AddNode(nodeMoq2.Object);
 
-            nodeMoq.Raise(n => n.SemanticsChanged += null);
+            nodeMoq2.Raise(n => n.SemanticsChanged += null);
 
             Assert.IsTrue(semanticsChanged);
+        }
+
+        [TestMethod]
+        public void TestPlay_CallsEnableTerminals()
+        {
+            _diagram.Play();
+            _nodeMoq.Verify(m => m.EnableTerminals(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestPause_CallsDisableTerminals()
+        {
+            _diagram.Pause();
+            _nodeMoq.Verify(m => m.DisableTerminals(), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestStop_CallsResetTerminals()
+        {
+            _diagram.Stop();
+            _nodeMoq.Verify(m => m.ResetTerminals(), Times.Once);
         }
     }
 }

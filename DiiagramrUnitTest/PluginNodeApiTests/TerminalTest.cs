@@ -60,5 +60,21 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             _terminal.Data++;
             Assert.AreEqual(_terminalViewModel.Data, _terminal.Data);
         }
+
+        [TestMethod]
+        public void TestSetData_UnderlyingTerminalViewModelDataNullIntSet()
+        {
+            _terminalViewModel.Data = null;
+            var term = new Terminal<int>(_terminalViewModel);
+            Assert.AreEqual(term.Data, 0);
+        }
+
+        [TestMethod]
+        public void TestSetData_UnderlyingTerminalViewModelDataNullStringSet()
+        {
+            _terminalViewModel.Data = null;
+            var term = new Terminal<string>(_terminalViewModel);
+            Assert.IsNull(term.Data);
+        }
     }
 }
