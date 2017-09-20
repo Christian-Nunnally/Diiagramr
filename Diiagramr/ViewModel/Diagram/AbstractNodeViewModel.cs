@@ -72,8 +72,6 @@ namespace Diiagramr.ViewModel.Diagram
 
         protected virtual void Initialize() { }
 
-        public virtual void SaveNodeVariables() { }
-
         public virtual void LoadNodeVariables() { }
 
         private void LoadTerminalViewModels()
@@ -100,7 +98,6 @@ namespace Diiagramr.ViewModel.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Debug.WriteLine("Terminal property changed: " +e.PropertyName);
             if (e.PropertyName.Equals(nameof(TerminalModel.ConnectedWire)))
             {
                 TerminalConnectedStatusChanged?.Invoke((TerminalModel)sender);

@@ -21,17 +21,5 @@ namespace DiiagramrUnitTests.ModelTests
             var project = new ProjectModel();
             Assert.AreEqual("NewProject", project.Name);
         }
-
-        [TestMethod]
-        public void TestPreSave_HasDiagram_CallsPreSaveOnDiagram()
-        {
-            var project = new ProjectModel();
-            var diagramMoq = new Mock<DiagramModel>();
-            project.Diagrams.Add(diagramMoq.Object);
-
-            project.PreSave();
-
-            diagramMoq.Verify(d => d.PreSave());
-        }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using Castle.Core.Internal;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
@@ -71,6 +69,17 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
+        public void TestSetVariable_SemanticsChangedInvoked()
+        {
+            var semanticsChanged = false;
+            _node.SemanticsChanged += () => semanticsChanged = true;
+
+            _node.SetVariable("Key", "Value");
+
+            Assert.IsTrue(semanticsChanged);
+        }
+
+        [TestMethod]
         public void TestGetVariable_VariableNeverSet_ReturnsNull()
         {
             Assert.IsNull(_node.GetVariable("Key"));
@@ -81,17 +90,6 @@ namespace DiiagramrUnitTests.ModelTests
         {
             _node.SetVariable("Key", "Value");
             Assert.AreEqual("Value", _node.GetVariable("Key"));
-        }
-
-        [TestMethod]
-        public void TestPreSave_HasNodeViewModel_CallsSaveNodeVariablesOnNodeViewModel()
-        {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
-            _node.NodeViewModel = nodeViewModelMoq.Object;
-
-            _node.PreSave();
-
-            nodeViewModelMoq.Verify(d => d.SaveNodeVariables());
         }
 
         [TestMethod]

@@ -1,5 +1,4 @@
-﻿using System;
-using Diiagramr.Model;
+﻿using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -27,11 +26,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
+            testPluginNode.InitializeWithNode(nodeMoq.Object);
 
-            testPluginNode.SaveNodeVariables();
+            testPluginNode.PublicProperty = 5;
 
-            nodeMoq.Verify(n => n.SetVariable("PublicProperty", 0));
+            nodeMoq.Verify(n => n.SetVariable("PublicProperty", 5));
         }
 
         [TestMethod]
@@ -41,7 +40,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             testPluginNode.NodeModel = nodeMoq.Object;
 
-            testPluginNode.SaveNodeVariables();
+            testPluginNode.Width = 5;
 
             nodeMoq.Verify(n => n.SetVariable("Width", 0), Times.Never);
         }
@@ -53,45 +52,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             testPluginNode.NodeModel = nodeMoq.Object;
 
-            testPluginNode.SaveNodeVariables();
+            testPluginNode.PublicPropertyNonSetting = 5;
 
             nodeMoq.Verify(n => n.SetVariable("PublicPropertyNonSetting", 0), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestSaveNodeVariables_DoesntSaveImplementingPrivateProperty()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.SaveNodeVariables();
-
-            nodeMoq.Verify(n => n.SetVariable("PrivateProperty", 0), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestSaveNodeVariables_DoesntSaveImplementingPropertyWithPrivateSetter()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.SaveNodeVariables();
-
-            nodeMoq.Verify(n => n.SetVariable("PrivateSetter", 0), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestSaveNodeVariables_DoesntSaveImplementingPropertyWithPrivateGetter()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.SaveNodeVariables();
-
-            nodeMoq.Verify(n => n.SetVariable("PrivateGetter", 0), Times.Never);
         }
 
         [TestMethod]
@@ -105,74 +68,37 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             nodeMoq.Verify(n => n.GetVariable("PublicProperty"));
         }
-
-        [TestMethod]
-        public void TestLoadNodeVariables_DoesntSavePublicPropertyFromPluginNode()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            nodeMoq.Verify(n => n.GetVariable("Width"), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestLoadNodeVariables_DoesntSaveImplementingPrivateProperty()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            nodeMoq.Verify(n => n.GetVariable("PrivateProperty"), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestLoadNodeVariables_DoesntSaveImplementingPropertyWithPrivateSetter()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            nodeMoq.Verify(n => n.GetVariable("PrivateSetter"), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestLoadNodeVariables_DoesntLoadImplementingPropertyWithPrivateGetter()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            nodeMoq.Verify(n => n.GetVariable("PrivateGetter"), Times.Never);
-        }
     }
 
-    class TestPluginNode : PluginNode
+    internal class TestPluginNode : PluginNode
     {
+        private int _publicProperty;
+        private int _publicPropertyNonSetting;
         public override string Name => "Test Node";
 
         [PluginNodeSetting]
-        public int PublicProperty { get; set; }
+        public int PublicProperty
+        {
+            get => _publicProperty;
+            set
+            {
+                _publicProperty = value;
+                OnPropertyChanged(nameof(PublicProperty));
+            }
+        }
 
-        public int PublicPropertyNonSetting { get; set; }
-
-        private int PrivateProperty { get; set; }
-
-        public int PrivateSetter { get; private set; }
-
-        public int PrivateGetter { private get; set; }
+        public int PublicPropertyNonSetting
+        {
+            get => _publicPropertyNonSetting;
+            set
+            {
+                _publicPropertyNonSetting = value;
+                OnPropertyChanged(nameof(PublicPropertyNonSetting));
+            }
+        }
 
         public override void SetupNode(NodeSetup setup)
         {
-            throw new NotImplementedException();
         }
     }
 }

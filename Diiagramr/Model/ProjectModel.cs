@@ -20,13 +20,5 @@ namespace Diiagramr.Model
             Diagrams = new ObservableCollection<DiagramModel>();
             Name = "NewProject";
         }
-
-        /// <summary>
-        /// Must be called before the project is serialized and saved to disk.
-        /// </summary>
-        public virtual void PreSave()
-        {
-            Diagrams.ForEach(d => d.PreSave());
-        }
     }
 }

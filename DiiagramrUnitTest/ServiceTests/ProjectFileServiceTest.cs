@@ -55,17 +55,5 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectFileService.SaveProject(proj, true);
             Assert.AreEqual(proj.Name, _testDialog.FileName);
         }
-
-        [Ignore]
-        [TestMethod]
-        public void TestSaveProject_SaveAsFalseAndOkPressed_CallsPreSaveOnProject()
-        {
-            var projectMoq = new Mock<ProjectModel>();
-            projectMoq.SetupGet(p => p.Name).Returns("project");
-            _testDialog.Result = DialogResult.OK;
-            _projectFileService.SaveProject(projectMoq.Object, true);
-
-            projectMoq.Verify(p => p.PreSave());
-        }
     }
 }

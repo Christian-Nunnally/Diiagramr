@@ -16,21 +16,34 @@ namespace Diiagramr.PluginNodeApi
     [Serializable]
     public abstract class PluginNode : AbstractNodeViewModel
     {
+        private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingProperties = new Dictionary<string, PropertyInfo>();
+
         public sealed override void InitializeWithNode(NodeModel nodeModel)
         {
             base.InitializeWithNode(nodeModel);
             var nodeSetterUpper = new NodeSetup(this, nodeModel.Initialized);
             nodeModel.Initialized = true;
             SetupNode(nodeSetterUpper);
+
+            SetupPluginNodeSettings();
         }
 
-        public override void SaveNodeVariables()
+        private void SetupPluginNodeSettings()
         {
             foreach (var propertyInfo in GetImplementingClassSettings())
             {
-                var key = propertyInfo.Name;
-                var value = propertyInfo.GetValue(this);
-                NodeModel?.SetVariable(key, value);
+                _pluginNodeSettingProperties.Add(propertyInfo.Name, propertyInfo);
+            }
+        }
+
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            base.OnPropertyChanged(propertyName);
+            if (_pluginNodeSettingProperties.ContainsKey(propertyName))
+            {
+                var changedPropertyInfo = _pluginNodeSettingProperties[propertyName];
+                var value = changedPropertyInfo.GetValue(this);
+                NodeModel?.SetVariable(propertyName, value);
             }
         }
 

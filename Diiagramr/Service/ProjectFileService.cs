@@ -82,7 +82,6 @@ namespace Diiagramr.Service
 
         private void SerializeAndSave(ProjectModel project, string name)
         {
-            project.PreSave();
             _loadSave.Save(project, name);
         }
 

@@ -60,14 +60,6 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestPreSave_HasNode_CallsPreSaveOnNode()
-        {
-            _diagram.PreSave();
-
-            _nodeMoq.Verify(d => d.PreSave());
-        }
-
-        [TestMethod]
         public void TestSemanticsChanged_NodeAdded_SematicsChangedInvoked()
         {
             var semanticsChanged = false;

@@ -95,20 +95,13 @@ namespace Diiagramr.Model
         {
             if (!PersistedVariables.ContainsKey(name)) PersistedVariables.Add(name, value);
             else PersistedVariables[name] = value;
+            SemanticsChanged?.Invoke();
         }
 
         public virtual object GetVariable(string name)
         {
             if (!PersistedVariables.ContainsKey(name)) return null;
             return PersistedVariables[name];
-        }
-
-        /// <summary>
-        ///     Must be called before the node is serialized and saved to disk.
-        /// </summary>
-        public virtual void PreSave()
-        {
-            NodeViewModel.SaveNodeVariables();
         }
 
         [OnDeserialized]

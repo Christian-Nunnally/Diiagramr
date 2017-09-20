@@ -67,14 +67,6 @@ namespace Diiagramr.Model
             Nodes.ForEach(n => n.ResetTerminals());
         }
 
-        /// <summary>
-        ///     Must be called before the diagram is serialized and saved to disk.
-        /// </summary>
-        public virtual void PreSave()
-        {
-            Nodes.ForEach(d => d.PreSave());
-        }
-
         [OnDeserialized]
         public void OnDeserialized(StreamingContext context)
         {
