@@ -12,7 +12,7 @@
         <BooleanToVisibilityConverter x:Key="Btvconverter" />
     </UserControl.Resources>
     <Grid MouseLeftButtonDown="{s:Action LeftMouseDown}" 
-          MouseRightButtonDown="{s:Action RightMouseDown}">
+          MouseRightButtonDown="{s:Action RightMouseDownHandler}">
 
         <TabControl ItemsSource="{Binding Items}" 
                     SelectedItem="{Binding ActiveItem}" 
@@ -76,7 +76,8 @@
                 </Style>
             </TabControl.Resources>
         </TabControl>
-        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" 
+        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}"
+                        Margin="1,29,1,1"
                         Visibility="{Binding NodeSelectorVisible, Converter={StaticResource Btvconverter}}"/>
     </Grid>
 </UserControl>

@@ -102,6 +102,7 @@
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\WireViewModelTest.cs" />
+    <Compile Include="ViewModelTests\NodeSelectorViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

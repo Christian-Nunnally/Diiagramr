@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
-using Diiagramr.Model;
 using Diiagramr.Service;
 using Diiagramr.View;
 using Diiagramr.View.CustomControls;
@@ -13,7 +9,6 @@ using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Stylet;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
@@ -29,7 +24,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var projFileSystem = new ProjectFileService(dirService, testFileDirectory.Object, testFileDirectory.Object, new TestLoadSave());
             ProjectFileService ProjectFileServiceFactory() => projFileSystem;
             var testNode = new TestNode();
-            var testNodeList = new List<AbstractNodeViewModel> { testNode };
+            var testNodeList = new List<AbstractNodeViewModel> {testNode};
             IEnumerable<AbstractNodeViewModel> NodeFactory() => testNodeList;
             var nodeProvider = new NodeProvider(NodeFactory);
             NodeProvider NodeProviderFactory() => nodeProvider;
@@ -67,7 +62,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var diagramViewModel = shell.DiagramWellViewModel.ActiveItem;
             // must have diagram open
             Assert.IsNotNull(diagramViewModel);
-            nodeSelectorViewModel.SelectNode(node);
+            nodeSelectorViewModel.MousedOverNode = node;
+            nodeSelectorViewModel.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
             diagramViewModel.MouseMoved(pt);
             Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth, diagramViewModel.InsertingNodeViewModel.X);

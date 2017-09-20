@@ -7,6 +7,7 @@ using Moq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Diiagramr.Service.Interfaces;
 using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
@@ -85,7 +86,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestRightMouseDown_NoDiagramOpen_SetsNodeSelectorsNodeToNull()
         {
-            _diagramWellViewModel.RightMouseDown();
+            _diagramWellViewModel.RightMouseDown(new Point(0,0));
             _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
         }
 
@@ -96,7 +97,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             diagram.IsOpen = true;
 
             Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
-            _diagramWellViewModel.RightMouseDown();
+            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
             Assert.IsTrue(_diagramWellViewModel.NodeSelectorVisible);
         }
 
@@ -105,11 +106,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             var abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
             _nodeSelectorMoq.SetupGet(m => m.SelectedNode).Returns(abstractNodeViewModelMoq.Object);
-            _diagramWellViewModel.RightMouseDown();
+            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
             var diagram = SetupProjectWithSingleDiagram();
             diagram.IsOpen = true;
 
-            _diagramWellViewModel.RightMouseDown();
+            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
             _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
         }
 

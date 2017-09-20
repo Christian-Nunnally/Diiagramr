@@ -11,9 +11,9 @@ namespace Diiagramr.Service
         private readonly IList<AbstractNodeViewModel> _availableNodeViewModels = new List<AbstractNodeViewModel>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
 
-        public NodeProvider(Func<IEnumerable<AbstractNodeViewModel>> availibleNodes)
+        public NodeProvider(Func<IEnumerable<AbstractNodeViewModel>> availableNodes)
         {
-            availibleNodes.Invoke().ForEach(RegisterNode);
+            availableNodes.Invoke().ForEach(RegisterNode);
         }
 
         public void RegisterNode(AbstractNodeViewModel node)

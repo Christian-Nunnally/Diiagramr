@@ -7,6 +7,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel
@@ -29,8 +31,14 @@ namespace Diiagramr.ViewModel
 
             NodeSelectorViewModel = nodeSelectorViewModelFactory.Invoke();
             NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+            NodeSelectorViewModel.ShouldClose += CloseNodeSelector;
 
             _nodeProvider = nodeProviderFactory.Invoke();
+        }
+
+        private void CloseNodeSelector()
+        {
+            NodeSelectorVisible = false;
         }
 
         private void ProjectManagerOnCurrentProjectChanged()
@@ -118,13 +126,15 @@ namespace Diiagramr.ViewModel
 
         private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != "SelectedNode") return;
-            var selectedNode = NodeSelectorViewModel.SelectedNode;
-
-            if (NodeSelectorViewModel.SelectedNode != null)
+            if (e.PropertyName == "SelectedNode")
             {
-                ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
-                NodeSelectorVisible = false;
+                var selectedNode = NodeSelectorViewModel.SelectedNode;
+
+                if (NodeSelectorViewModel.SelectedNode != null)
+                {
+                    ActiveItem.InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
+                    NodeSelectorVisible = false;
+                }
             }
         }
 
@@ -185,14 +195,24 @@ namespace Diiagramr.ViewModel
             }
         }
 
-        public void RightMouseDown()
+        public void RightMouseDownHandler(object sender, MouseButtonEventArgs e)
+        {
+            RightMouseDown(e.GetPosition((IInputElement)sender));
+        }
+
+        public void RightMouseDown(Point mousePoint)
         {
             if (ActiveItem == null)
             {
                 NodeSelectorViewModel.SelectedNode = null;
                 return;
             }
-            if (NodeSelectorViewModel.SelectedNode == null) NodeSelectorVisible = true;
+            if (NodeSelectorViewModel.SelectedNode == null)
+            {
+                NodeSelectorViewModel.RightPosition = mousePoint.X + 1;
+                NodeSelectorViewModel.TopPosition = mousePoint.Y - 27;
+                NodeSelectorVisible = true;
+            }
             else NodeSelectorViewModel.SelectedNode = null;
         }
 

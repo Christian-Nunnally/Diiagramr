@@ -5,19 +5,141 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
+             xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
+             xmlns:view="clr-namespace:Diiagramr.View"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModel1:NodeSelectorViewModel}">
-    <ItemsControl ItemsSource="{Binding AvailableNodeViewModels}" Width="200" HorizontalAlignment="Center" VerticalAlignment="Center">
-        <ItemsControl.ItemContainerStyle>
-            <Style TargetType="ContentPresenter">
-                <Setter Property="ContentTemplate">
-                    <Setter.Value>
-                        <DataTemplate>
-                            <Button Content="{Binding Name}" Command="{s:Action SelectNode}" CommandParameter="{Binding}"></Button>
-                        </DataTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-        </ItemsControl.ItemContainerStyle>
-    </ItemsControl>
+             d:DataContext="{d:DesignInstance viewModel1:NodeSelectorViewModel}"
+             d:DesignWidth="800"
+             d:DesignHeight="450">
+    <UserControl.Resources>
+        <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
+            <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
+            <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode}" />
+            <Setter Property="ContentTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
+            <Canvas />
+        </ItemsPanelTemplate>
+        <Style x:Key="NodeBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Width" Value="{Binding MousedOverNode.Width}"/>
+            <Setter Property="Height" Value="{Binding MousedOverNode.Height}"/>
+            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeBorderThickness}"/>
+        </Style>
+
+        <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="Border.IsMouseOver" Value="True">
+                    <Setter Property="Border.Background" Value="#FFC8C8C8" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <BooleanToVisibilityConverter x:Key="Btv"/>
+    </UserControl.Resources>
+    <Canvas Background="#AAFFFFFF"
+            MouseDown="{s:Action BackgroundMouseDown}">
+        <Grid Canvas.Top="{Binding TopPosition}"
+              Canvas.Left="{Binding RightPosition}"
+              MouseLeave="{s:Action MouseLeftSelector}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+
+            <ItemsControl ItemsSource="{Binding LibrariesList}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <Border MouseEnter="{s:Action LibraryMouseEnterHandler}" Background="{Binding BackgroundBrush}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition></ColumnDefinition>
+                                                <ColumnDefinition Width="10"></ColumnDefinition>
+                                            </Grid.ColumnDefinitions>
+                                            <Label Content="{Binding Name}"
+                                                   Height="40"
+                                                   FontSize="14"
+                                                   Margin="0,0,12,0"
+                                                   VerticalContentAlignment="Center">
+                                            </Label>
+                                            <Polygon Grid.Column="1" Points="0,0 8,5 0,10" Fill="#FFAAAAAA" Margin="0, 0, 4, 0" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                            </Polygon>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+            <ItemsControl Grid.Column="1" ItemsSource="{Binding VisibleNodesList}">
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="ContentPresenter">
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type diagram:AbstractNodeViewModel}">
+                                    <Border MouseEnter="{s:Action NodeMouseEnterHandler}"
+                                            MouseDown="{s:Action SelectNode}"
+                                            Style="{StaticResource NodeSelectionBorderStyle}">
+                                        <Label Content="{Binding Name}"
+                                               Height="40"
+                                               FontSize="14"
+                                               VerticalContentAlignment="Center">
+                                        </Label>
+                                    </Border>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ItemsControl>
+
+            <Canvas Grid.Column="2" 
+                    Margin="10,10,0,0" 
+                    VerticalAlignment="Top" 
+                    HorizontalAlignment="Left"
+                    Visibility="{Binding NodePreviewVisible, Converter={StaticResource Btv}}"
+                    RenderTransformOrigin="0.5,0.5">
+                <ContentControl s:View.Model="{Binding MousedOverNode}" Canvas.Left="{Binding PreviewNodePositionX}" Canvas.Top="{Binding PreviewNodePositionY}">
+                    <ContentControl.Template>
+                        <ControlTemplate>
+                            <Grid>
+                                <ItemsControl ItemsSource="{Binding MousedOverNode.TerminalViewModels}"
+                                              ItemContainerStyle="{StaticResource TerminalContainerStyle}"
+                                              ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                                              HorizontalAlignment="Stretch"
+                                              VerticalAlignment="Stretch"/>
+
+                                <Border Style="{StaticResource NodeBorderStyle}"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top">
+                                    <ContentControl s:View.Model="{Binding MousedOverNode}"
+                                                    VerticalContentAlignment="Stretch"
+                                                    HorizontalContentAlignment="Stretch"
+                                                    IsTabStop="False" />
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </ContentControl.Template>
+                </ContentControl>
+                <Canvas.RenderTransform>
+                    <ScaleTransform ScaleX="{Binding PreviewNodeScaleX}" ScaleY="{Binding PreviewNodeScaleY}"></ScaleTransform>
+                </Canvas.RenderTransform>
+            </Canvas>
+        </Grid>
+    </Canvas>
 </UserControl>
