@@ -96,7 +96,7 @@
                                             MouseDown="{s:Action SelectNode}"
                                             Style="{StaticResource NodeSelectionBorderStyle}">
                                         <Label Content="{Binding Name}"
-                                               Height="40"
+                                               Height="28"
                                                FontSize="14"
                                                VerticalContentAlignment="Center">
                                         </Label>

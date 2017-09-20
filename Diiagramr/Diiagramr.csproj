@@ -97,6 +97,8 @@
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="ViewModel\Diagram\AbstractNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
@@ -160,6 +162,14 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="View\Diagram\CoreNode\DiagramOutputNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Diagram\CoreNode\DiagramInputNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Diagram\DiagramControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

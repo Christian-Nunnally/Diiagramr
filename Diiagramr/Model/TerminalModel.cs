@@ -128,7 +128,6 @@ namespace Diiagramr.Model
         {
             if (ConnectedWire == null) return;
             ConnectedWire.SourceTerminal = null;
-            ConnectedWire.SinkTerminal = null;
             ConnectedWire = null;
         }
 

@@ -1,0 +1,13 @@
+﻿<UserControl x:Class="Diiagramr.View.Diagram.CoreNode.DiagramOutputNodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="https://github.com/canton7/Stylet"
+             xmlns:coreNode="clr-namespace:Diiagramr.ViewModel.Diagram.CoreNode"
+             d:DataContext="{d:DesignInstance coreNode:DiagramOutputNodeViewModel}"
+             d:DesignHeight="30"
+             d:DesignWidth="30"
+             mc:Ignorable="d">
+    <Label Content="O" FontFamily="Consolas" FontSize="16" HorizontalContentAlignment="Center"/>
+</UserControl>
