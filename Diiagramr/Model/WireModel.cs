@@ -103,7 +103,7 @@ namespace Diiagramr.Model
             Y2 = SourceTerminal.Y;
         }
 
-        public void DisconnectWire()
+        public virtual void DisconnectWire()
         {
             SourceTerminal?.DisconnectWire();
             SinkTerminal.Data = null;

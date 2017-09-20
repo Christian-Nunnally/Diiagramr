@@ -159,9 +159,9 @@ namespace DiiagramrUnitTests.ModelTests
         public void TestEnableWire_DataPassedThrough()
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            _outputTerminalMoq.Object.Data = 2;
+            _outputTerminalMoq.SetupGet(m => m.Data).Returns(2);
             wire.EnableWire();
-            Assert.AreEqual(_inputTerminalMoq.Object.Data, 2);
+            _inputTerminalMoq.VerifySet(m => m.Data = 2);
         }
 
         [TestMethod]
