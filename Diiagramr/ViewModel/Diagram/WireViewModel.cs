@@ -16,7 +16,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public WireViewModel(WireModel wire)
         {
-            WireModel = wire;
+            WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += WireOnPropertyChanged;
             
             X1 = wire.X1 + DiagramConstants.NodeBorderWidth;
@@ -84,9 +84,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void DisconnectWire()
         {
-            WireModel.SourceTerminal?.DisconnectWire();
-            WireModel.SinkTerminal.Data = null;
-            WireModel.SinkTerminal?.DisconnectWire();
+            WireModel.DisconnectWire();
         }
 
         private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount)

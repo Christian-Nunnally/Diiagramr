@@ -104,7 +104,7 @@ namespace Diiagramr.Model
         public string Name { get; set; }
         
         [DataMember]
-        public object Data { get; set; }
+        public virtual object Data { get; set; }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

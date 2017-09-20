@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,7 +11,6 @@ namespace DiiagramrUnitTests.ModelTests
     {
         private Mock<TerminalModel> _inputTerminalMoq;
         private Mock<TerminalModel> _outputTerminalMoq;
-
 
         [TestInitialize]
         public void TestInitialize()
@@ -158,7 +156,7 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestConnectWire_DataPassedThrough()
+        public void TestEnableWire_DataPassedThrough()
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
             _outputTerminalMoq.Object.Data = 2;
@@ -167,12 +165,36 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestDisconnectWire_DataPassedThrough()
+        public void TestDisableWire_DataPassedThrough()
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
             _outputTerminalMoq.Object.Data = 2;
-            wire.EnableWire();
-            Assert.AreEqual(_inputTerminalMoq.Object.Data, 2);
+            wire.DisableWire();
+            Assert.IsNull(_inputTerminalMoq.Object.Data);
+        }
+
+        [TestMethod]
+        public void TestDisconnectWire_SourceTerminalDisconnected()
+        {
+            var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
+            wire.DisconnectWire();
+            _outputTerminalMoq.Verify(m => m.DisconnectWire());
+        }
+
+        [TestMethod]
+        public void TestDisconnectWire_SinkTerminalDisconnected()
+        {
+            var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
+            wire.DisconnectWire();
+            _inputTerminalMoq.Verify(m => m.DisconnectWire());
+        }
+
+        [TestMethod]
+        public void TestDisconnectWire_SinkTerminalDataSetToNull()
+        {
+            var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
+            wire.DisconnectWire();
+            _inputTerminalMoq.VerifySet(m => m.Data = null);
         }
 
         private class Parent { }

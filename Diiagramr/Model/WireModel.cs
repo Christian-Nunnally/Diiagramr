@@ -43,16 +43,16 @@ namespace Diiagramr.Model
         public TerminalModel SinkTerminal { get; set; }
 
         [DataMember]
-        public double X1 { get; set; }
+        public virtual double X1 { get; set; }
 
         [DataMember]
-        public double Y1 { get; set; }
+        public virtual double Y1 { get; set; }
 
         [DataMember]
-        public double X2 { get; set; }
+        public virtual double X2 { get; set; }
 
         [DataMember]
-        public double Y2 { get; set; }
+        public virtual double Y2 { get; set; }
 
         public virtual void EnableWire()
         {
@@ -101,6 +101,13 @@ namespace Diiagramr.Model
             Y1 = SinkTerminal.Y;
             X2 = SourceTerminal.X;
             Y2 = SourceTerminal.Y;
+        }
+
+        public void DisconnectWire()
+        {
+            SourceTerminal?.DisconnectWire();
+            SinkTerminal.Data = null;
+            SinkTerminal?.DisconnectWire();
         }
     }
 }

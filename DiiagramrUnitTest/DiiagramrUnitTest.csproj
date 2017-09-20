@@ -101,6 +101,7 @@
     <Compile Include="ServiceTests\ProjectManagerTest.cs" />
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
+    <Compile Include="ViewModelTests\WireViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
