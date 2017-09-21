@@ -87,6 +87,7 @@
     <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\Annotations1.cs" />
+    <Compile Include="Service\DiagramCopier.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />

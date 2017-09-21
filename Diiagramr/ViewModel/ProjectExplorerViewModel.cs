@@ -1,11 +1,11 @@
 ﻿using Diiagramr.Model;
-using Diiagramr.Service;
 using Stylet;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
+using Diiagramr.Service;
 using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel
@@ -60,6 +60,13 @@ namespace Diiagramr.ViewModel
                     SelectedDiagram.IsOpen = true;
                 }
             }
+        }
+
+        public void CopyDiagram()
+        {
+            var copier = new DiagramCopier();
+            var diagramCopy = copier.Copy(SelectedDiagram);
+            ProjectManager.CreateDiagram(diagramCopy);
         }
 
         public DiagramModel SelectedDiagram { get; set; }

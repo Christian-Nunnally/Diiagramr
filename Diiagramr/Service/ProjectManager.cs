@@ -75,17 +75,21 @@ namespace Diiagramr.Service
 
         public void CreateDiagram()
         {
+            CreateDiagram(new DiagramModel());
+        }
+
+        public void CreateDiagram(DiagramModel diagramModel)
+        {
             if (CurrentProject == null)
                 throw new NullReferenceException("ProjectModel does not exist");
-            const string dName = "diagram";
+            string dName = string.IsNullOrEmpty(diagramModel.Name) ? "diagram" : diagramModel.Name;
             var dNum = 1;
-            var diagram = new DiagramModel();
             while (CurrentProject.Diagrams.Any(x => x.Name.Equals(dName + dNum)))
                 dNum++;
-            diagram.Name = dName + dNum;
+            diagramModel.Name = dName + dNum;
             IsProjectDirty = true;
-            CreateDiagramViewModel(diagram);
-            CurrentProject.Diagrams.Add(diagram);
+            CreateDiagramViewModel(diagramModel);
+            CurrentProject.Diagrams.Add(diagramModel);
         }
 
         public void DeleteDiagram(DiagramModel diagram)

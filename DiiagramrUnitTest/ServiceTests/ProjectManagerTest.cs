@@ -224,6 +224,34 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
+        public void CreateDiagramTest_FromExistingDiagramModel_DiagramAdded()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram(diagramMoq.Object);
+            Assert.IsNotNull(_projectManager.CurrentDiagrams[0]);
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_FromExistingDiagramModel_DiagramViewModelAdded()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram(diagramMoq.Object);
+            Assert.AreEqual(_projectManager.CurrentDiagrams.First(), _projectManager.DiagramViewModels.First().Diagram);
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_FromExistingDiagramModel_ProjectDirty()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectManager.CreateProject();
+            _projectManager.IsProjectDirty = false;
+            _projectManager.CreateDiagram(diagramMoq.Object);
+            Assert.IsTrue(_projectManager.IsProjectDirty);
+        }
+
+        [TestMethod]
         public void DeleteDiagramTest_DiagramDeleted()
         {
             _projectManager.CreateProject();

@@ -109,5 +109,15 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             diagramMoq.VerifySet(d => d.IsOpen = true);
         }
+
+        [TestMethod]
+        public void TestCopyDiagram_DiagramSelected_NewDiagramAdded()
+        {
+            _projectExplorerViewModel.SelectedDiagram = new DiagramModel();
+
+            _projectExplorerViewModel.CopyDiagram();
+
+            _projectManagerMoq.Verify(p => p.CreateDiagram(It.IsAny<DiagramModel>()));
+        }
     }
 }

@@ -30,6 +30,8 @@ namespace Diiagramr.Service.Interfaces
 
         void CreateDiagram();
 
+        void CreateDiagram(DiagramModel diagram);
+
         void DeleteDiagram(DiagramModel diagram);
     }
 }
