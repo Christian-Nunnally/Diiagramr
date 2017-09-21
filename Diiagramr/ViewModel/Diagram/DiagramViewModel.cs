@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Diiagramr.ViewModel.Diagram.CoreNode;
 using Point = System.Windows.Point;
 
 namespace Diiagramr.ViewModel.Diagram
@@ -72,6 +73,11 @@ namespace Diiagramr.ViewModel.Diagram
         public double Zoom { get; set; }
 
         public string Name => Diagram.Name;
+
+        public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
+        private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
+
+        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.DiagramModel?.Name ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
@@ -161,7 +167,6 @@ namespace Diiagramr.ViewModel.Diagram
                 HideAllTerminalLabels();
                 ShowTitlesOnTerminalsOfSameType(terminal);
                 e.Effects = DragDropEffects.Link;
-                e.Handled = true;
                 return;
             }
 
@@ -172,47 +177,42 @@ namespace Diiagramr.ViewModel.Diagram
                 return;
             }
 
-            if (o is DiagramModel diagram)
+            if (o is DiagramModel)
             {
-                e.Effects = DragDropEffects.Link;
-                e.Handled = true;
+                e.Effects = DragDropEffects.Copy;
                 return;
             }
 
             e.Effects = DragDropEffects.None;
-            e.Handled = true;
         }
 
         public void DragEnter(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            var terminal = o as TerminalModel;
-            if (terminal != null)
+            if (o is TerminalModel terminal)
             {
                 HideAllTerminalLabels();
                 ShowTitlesOnTerminalsOfSameType(terminal);
             }
 
-            var diagram = o as DiagramModel;
-            if (diagram != null)
+            if (o is DiagramModel diagram)
             {
+                var diagramNode = new DiagramCallNodeViewModel();
+                diagramNode.DiagramModel = diagram;
+                diagramNode.InitializeWithNode(new NodeModel("Diagram Node"));
+                DraggingDiagramCallNode = diagramNode;
+                e.Effects = DragDropEffects.Move;
                 return;
             }
 
             e.Effects = DragDropEffects.None;
-            e.Handled = true;
         }
 
         public void DragLeave(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            if (o is DiagramModel diagram)
-            {
-                return;
-            }
-
-            e.Effects = DragDropEffects.None;
-            e.Handled = true;
+            if (!(o is DiagramModel)) return;
+            DraggingDiagramCallNode = null;
         }
 
         public void DropEventHandler(object sender, DragEventArgs e)
@@ -224,6 +224,14 @@ namespace Diiagramr.ViewModel.Diagram
         public void DragOverEventHandler(object sender, DragEventArgs e)
         {
             AbstractNodeViewModel.DragOverEventHandler(sender, e);
+        }
+
+        public void DroppedDiagramCallNode(object sender, DragEventArgs e)
+        {
+            HideAllTerminalLabels();
+            if (DraggingDiagramCallNode == null) return;
+            InsertingNodeViewModel = DraggingDiagramCallNode;
+            DraggingDiagramCallNode = null;
         }
 
         #endregion

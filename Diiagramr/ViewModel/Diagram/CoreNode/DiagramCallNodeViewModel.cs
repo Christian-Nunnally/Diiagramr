@@ -9,7 +9,8 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
 
         public override void SetupNode(NodeSetup setup)
         {
-            throw new System.NotImplementedException();
+            setup.NodeName("Diagram");
+            setup.NodeSize(40, 40);
         }
     }
 }

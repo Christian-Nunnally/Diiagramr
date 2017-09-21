@@ -12,6 +12,7 @@
              DragEnter="{s:Action DragEnter}"
              DragLeave="{s:Action DragLeave}"
              MouseMove="{s:Action MouseMoveHandler}"
+             Drop="{s:Action DroppedDiagramCallNode}"
              AllowDrop="True"
              d:DesignHeight="300"
              d:DesignWidth="600"
@@ -93,7 +94,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style x:Key="DeleteNodeButtonStyle" TargetType="Button">
             <Setter Property="Content" Value=""/>
             <Setter Property="Background" Value="IndianRed"/>
@@ -228,6 +229,30 @@
                 </ItemsControl>
             </Grid>
         </customControls:ZoomBorder>
+
         <ContentControl s:View.Model="{Binding DiagramControlViewModel}" HorizontalAlignment="Right" VerticalAlignment="Top"/>
+
+        <Border Background="#BBFFFFFF"
+                Visibility="{Binding IsDraggingDiagramCallNode, Converter={StaticResource Btv}}">
+            <Grid HorizontalAlignment="Center" 
+                  VerticalAlignment="Center" 
+                  Width="300" 
+                  Height="100"
+                  IsHitTestVisible="False">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="57*"/>
+                    <RowDefinition Height="43*"/>
+                </Grid.RowDefinitions>
+                <Polygon Points="20 0,25 0, 25 20, 45, 20, 45 25, 25 25, 25 45, 20 45, 20 25, 0 25, 0 25, 0, 20, 20 20" 
+                         Fill="Green" 
+                         HorizontalAlignment="Center" 
+                         VerticalAlignment="Center" 
+                         Grid.Row="0"/>
+                <Label Grid.Row="1"
+                       Content="{Binding DropDiagramCallText}"
+                       HorizontalContentAlignment="Center"
+                       FontSize="18"/>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

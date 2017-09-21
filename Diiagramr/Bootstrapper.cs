@@ -31,6 +31,7 @@ namespace Diiagramr
             builder.Bind<AbstractNodeViewModel>().To<NumberNodeViewModel>();
             builder.Bind<AbstractNodeViewModel>().To<DiagramInputNodeViewModel>();
             builder.Bind<AbstractNodeViewModel>().To<DiagramOutputNodeViewModel>();
+            builder.Bind<AbstractNodeViewModel>().To<DiagramCallNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 
