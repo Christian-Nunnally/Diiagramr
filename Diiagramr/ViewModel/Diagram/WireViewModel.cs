@@ -18,7 +18,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += WireOnPropertyChanged;
-            
+
             X1 = wire.X1 + DiagramConstants.NodeBorderWidth;
             X2 = wire.X2 + DiagramConstants.NodeBorderWidth;
             Y1 = wire.Y1 + DiagramConstants.NodeBorderWidth;
@@ -36,6 +36,8 @@ namespace Diiagramr.ViewModel.Diagram
 
         public WireModel WireModel { get; set; }
 
+        public event Action Disconnected;
+
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramConstants.NodeBorderWidth;
@@ -46,7 +48,7 @@ namespace Diiagramr.ViewModel.Diagram
             if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {
                 WireModel.PropertyChanged -= WireOnPropertyChanged;
-                DisconnectWire();
+                Disconnected?.Invoke();
                 return;
             }
 
@@ -183,9 +185,7 @@ namespace Diiagramr.ViewModel.Diagram
             if (uturnCount++ > 10)
             {
                 while (pointsSoFar.Count > 1)
-                {
                     pointsSoFar.RemoveAt(pointsSoFar.Count - 1);
-                }
                 return pointsSoFar;
             }
             Point newPoint;

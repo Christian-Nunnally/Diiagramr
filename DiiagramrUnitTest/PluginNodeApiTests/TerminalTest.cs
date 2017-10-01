@@ -9,10 +9,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
     [TestClass]
     public class TerminalTest
     {
+        private Terminal<int> _terminal;
         private TerminalModel _terminalModel;
         private TerminalViewModel _terminalViewModel;
-        private Terminal<int> _terminal;
-
 
         [TestInitialize]
         public void TestInitialize()
@@ -65,16 +64,24 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public void TestSetData_UnderlyingTerminalViewModelDataNullIntSet()
         {
             _terminalViewModel.Data = null;
-            var term = new Terminal<int>(_terminalViewModel);
-            Assert.AreEqual(term.Data, 0);
+            var terminal = new Terminal<int>(_terminalViewModel);
+            Assert.AreEqual(terminal.Data, 0);
         }
 
         [TestMethod]
         public void TestSetData_UnderlyingTerminalViewModelDataNullStringSet()
         {
             _terminalViewModel.Data = null;
-            var term = new Terminal<string>(_terminalViewModel);
-            Assert.IsNull(term.Data);
+            var terminal = new Terminal<string>(_terminalViewModel);
+            Assert.IsNull(terminal.Data);
+        }
+
+        [TestMethod]
+        public void TestChangeTerminalData_SetsTerminalData()
+        {
+            var terminal = new Terminal<string>(_terminalViewModel);
+            terminal.ChangeTerminalData("Hello");
+            Assert.AreEqual(terminal.Data, "Hello");
         }
     }
 }

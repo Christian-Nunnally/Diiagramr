@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 using PropertyChanged;
 
@@ -13,7 +12,9 @@ namespace Diiagramr.Model
 
         private bool _isActive;
 
-        private WireModel() { }
+        private WireModel()
+        {
+        }
 
         public WireModel(TerminalModel terminal1, TerminalModel terminal2)
         {
@@ -24,7 +25,8 @@ namespace Diiagramr.Model
             SinkTerminal = terminal1.Kind == TerminalKind.Input ? terminal1 : terminal2;
             SourceTerminal = terminal1.Kind == TerminalKind.Output ? terminal1 : terminal2;
 
-            if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type) return;
+            if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type)
+                if (SourceTerminal.Type != typeof(object)) return;
 
             SourceTerminal.DisconnectWire();
             SinkTerminal.DisconnectWire();
@@ -105,9 +107,13 @@ namespace Diiagramr.Model
 
         public virtual void DisconnectWire()
         {
-            SourceTerminal?.DisconnectWire();
+            SourceTerminal.PropertyChanged -= SourceTerminalOnPropertyChanged;
+            SinkTerminal.PropertyChanged -= SinkTerminalOnPropertyChanged;
+            SourceTerminal.ConnectedWire = null;
             SinkTerminal.Data = null;
-            SinkTerminal?.DisconnectWire();
+            SinkTerminal.ConnectedWire = null;
+            SourceTerminal = null;
+            SinkTerminal = null;
         }
     }
 }

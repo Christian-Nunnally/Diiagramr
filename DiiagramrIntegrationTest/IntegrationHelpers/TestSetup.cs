@@ -79,11 +79,11 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         public static WireViewModel WireTerminals(this ShellViewModel shell, TerminalViewModel sourceTerminal,
             TerminalViewModel sinkTerminal)
         {
-            sourceTerminal.DropObject(sinkTerminal.Terminal);
-            Assert.IsNotNull(sourceTerminal.Terminal.ConnectedWire);
-            Assert.IsNotNull(sinkTerminal.Terminal.ConnectedWire);
+            sourceTerminal.DropObject(sinkTerminal.TerminalModel);
+            Assert.IsNotNull(sourceTerminal.TerminalModel.ConnectedWire);
+            Assert.IsNotNull(sinkTerminal.TerminalModel.ConnectedWire);
             var wireViewModel = shell.DiagramWellViewModel.ActiveItem.WireViewModels.Last();
-            Assert.AreEqual(wireViewModel.WireModel, sourceTerminal.Terminal.ConnectedWire);
+            Assert.AreEqual(wireViewModel.WireModel, sourceTerminal.TerminalModel.ConnectedWire);
             return wireViewModel;
         }
     }

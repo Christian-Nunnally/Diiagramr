@@ -1,8 +1,10 @@
-﻿using Diiagramr.Model;
-using Diiagramr.ViewModel.Diagram;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Diiagramr.Model;
+using Diiagramr.Service.Interfaces;
+using Diiagramr.ViewModel.Diagram;
+using Diiagramr.ViewModel.Diagram.CoreNode;
 
 namespace Diiagramr.Service
 {
@@ -16,6 +18,8 @@ namespace Diiagramr.Service
             availableNodes.Invoke().ForEach(RegisterNode);
         }
 
+        public IProjectManager ProjectManager { get; set; }
+
         public void RegisterNode(AbstractNodeViewModel node)
         {
             if (_availableNodeViewModels.Contains(node)) return;
@@ -26,10 +30,16 @@ namespace Diiagramr.Service
         public AbstractNodeViewModel LoadNodeViewModelFromNode(NodeModel node)
         {
             if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
-            var viewModel = Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) as AbstractNodeViewModel;
-            if (viewModel == null) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
+            if (!(Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) is AbstractNodeViewModel viewModel)) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
 
             viewModel.InitializeWithNode(node);
+            if (viewModel is DiagramCallNodeViewModel diagramCallNode)
+            {
+                if (ProjectManager == null) throw new InvalidOperationException("Diagram call nodes can not be created without being able to resolve the diagram");
+                diagramCallNode.NodeProvider = this;
+                diagramCallNode.SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(m => m.Name == diagramCallNode.DiagramName));
+            }
+
             viewModel.X = node.X;
             viewModel.Y = node.Y;
             viewModel.Width = node.Width != 0 ? node.Width : viewModel.Width;

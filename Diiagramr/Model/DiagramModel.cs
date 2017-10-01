@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
-using Diiagramr.Service;
 using PropertyChanged;
 
 namespace Diiagramr.Model
@@ -12,7 +9,6 @@ namespace Diiagramr.Model
     [AddINotifyPropertyChangedInterface]
     public class DiagramModel : ModelBase
     {
-
         public DiagramModel()
         {
             Name = "";
@@ -24,7 +20,7 @@ namespace Diiagramr.Model
         public string Name { get; set; }
 
         [DataMember]
-        public virtual IList<NodeModel> Nodes { get; set; } = new List<NodeModel>();
+        public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();
 
         /// <summary>
         ///     Notifies listeners when the sematics of this diagram have changed.
@@ -35,8 +31,8 @@ namespace Diiagramr.Model
         {
             if (Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not add a nodeModel twice");
             nodeModel.SemanticsChanged += NodeSematicsChanged;
-            SemanticsChanged?.Invoke();
             Nodes.Add(nodeModel);
+            SemanticsChanged?.Invoke();
         }
 
         private void NodeSematicsChanged()
@@ -48,8 +44,8 @@ namespace Diiagramr.Model
         {
             if (!Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
             nodeModel.SemanticsChanged -= NodeSematicsChanged;
-            SemanticsChanged?.Invoke();
             Nodes.Remove(nodeModel);
+            SemanticsChanged?.Invoke();
         }
 
         public virtual void Play()

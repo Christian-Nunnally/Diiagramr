@@ -101,6 +101,7 @@
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
+    <Compile Include="ViewModel\Diagram\CoreNode\IONode.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
     <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />

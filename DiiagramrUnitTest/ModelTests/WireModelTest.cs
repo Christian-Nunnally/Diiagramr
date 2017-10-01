@@ -146,6 +146,16 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
+        public void TestConstructor_InputIsObject_OverridesRulesAndConnectsTerminals()
+        {
+            var inputTerminalMoq = new Mock<TerminalModel>("", typeof(object), Direction.North, TerminalKind.Input, 0);
+            var outputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Output, 0);
+            var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
+            inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+            outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+        }
+
+        [TestMethod]
         public void TestConstructor_InputCantBeCastToOutput_DoesNotConnectTerminals()
         {
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Input, 0);

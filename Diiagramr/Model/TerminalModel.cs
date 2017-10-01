@@ -1,10 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 using Diiagramr.ViewModel.Diagram;
-
-// ReSharper disable MemberCanBePrivate.Global Public setters used for deserialization
 
 namespace Diiagramr.Model
 {
@@ -17,24 +14,18 @@ namespace Diiagramr.Model
     [DataContract(IsReference = true)]
     public class TerminalModel : ModelBase
     {
-
         protected TerminalModel()
         {
         }
 
         public TerminalModel(string name, Type type, Direction defaultDirection, TerminalKind kind, int index)
         {
-            PropertyChanged += OnWirePropertyChanged;
+            PropertyChanged += OnTerminalPropertyChanged;
             TerminalIndex = index;
             Direction = defaultDirection;
             Kind = kind;
             Type = type;
             Name = name;
-        }
-
-        private void OnWirePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(nameof(ConnectedWire))) SemanticsChanged?.Invoke();
         }
 
         /// <summary>
@@ -71,16 +62,16 @@ namespace Diiagramr.Model
         ///     The x position of the terminal relative to the left of the node.
         /// </summary>
         [DataMember]
-        public double OffsetX { get; set; }
+        public virtual double OffsetX { get; set; }
 
         /// <summary>
         ///     The y position of the terminal relative to the top of the node.
         /// </summary>
         [DataMember]
-        public double OffsetY { get; set; }
+        public virtual double OffsetY { get; set; }
 
         [DataMember]
-        public Direction Direction { get; set; }
+        public virtual Direction Direction { get; set; }
 
         [DataMember]
         public TerminalKind Kind { get; set; }
@@ -101,34 +92,40 @@ namespace Diiagramr.Model
         }
 
         [DataMember]
-        public string Name { get; set; }
-        
+        public virtual string Name { get; set; }
+
         [DataMember]
         public virtual object Data { get; set; }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-
             if (e.PropertyName.Equals(nameof(NodeX)) || e.PropertyName.Equals(nameof(OffsetX)))
                 X = NodeX + OffsetX;
             else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
                 Y = NodeY + OffsetY;
+            else if (e.PropertyName.Equals(nameof(ConnectedWire)))
+                SemanticsChanged?.Invoke();
         }
 
         public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var node = (NodeModel) sender;
-            if (e.PropertyName.Equals("X"))
+            if (e.PropertyName.Equals(nameof(NodeModel.X)))
                 NodeX = node.X;
-            if (e.PropertyName.Equals("Y"))
+            if (e.PropertyName.Equals(nameof(NodeModel.Y)))
                 NodeY = node.Y;
+        }
+
+        public void AddToNode(NodeModel node)
+        {
+            node.PropertyChanged += NodePropertyChanged;
+            NodeX = node.X;
+            NodeY = node.Y;
         }
 
         public virtual void DisconnectWire()
         {
-            if (ConnectedWire == null) return;
-            ConnectedWire.SourceTerminal = null;
-            ConnectedWire = null;
+            ConnectedWire?.DisconnectWire();
         }
 
         public virtual void EnableWire()
@@ -147,13 +144,10 @@ namespace Diiagramr.Model
             ConnectedWire?.ResetWire();
         }
 
-        /// <summary>
-        ///     Wiggles this instance so that property changed notifications are sent.
-        /// </summary>
-        public void Wiggle()
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
         {
-            OnModelPropertyChanged(nameof(X));
-            OnModelPropertyChanged(nameof(Y));
+            PropertyChanged += OnTerminalPropertyChanged;
         }
 
         /// <summary>

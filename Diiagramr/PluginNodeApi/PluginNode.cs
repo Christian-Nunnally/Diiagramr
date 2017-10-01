@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Diiagramr.Model;
@@ -21,18 +20,17 @@ namespace Diiagramr.PluginNodeApi
         public sealed override void InitializeWithNode(NodeModel nodeModel)
         {
             base.InitializeWithNode(nodeModel);
-            var nodeSetterUpper = new NodeSetup(this, nodeModel.Initialized);
-            nodeModel.Initialized = true;
+            var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
-
-            SetupPluginNodeSettings();
         }
 
-        private void SetupPluginNodeSettings()
+        public override void SetupPluginNodeSettings()
         {
             foreach (var propertyInfo in GetImplementingClassSettings())
             {
                 _pluginNodeSettingProperties.Add(propertyInfo.Name, propertyInfo);
+                var value = propertyInfo.GetValue(this);
+                if (!NodeModel.PersistedVariables.ContainsKey(propertyInfo.Name)) NodeModel?.SetVariable(propertyInfo.Name, value);
             }
         }
 
@@ -70,22 +68,27 @@ namespace Diiagramr.PluginNodeApi
         }
 
         /// <summary>
-        /// All node customization such as turning on/off features and setting node geometry happens here.
+        ///     All node customization such as turning on/off features and setting node geometry happens here.
         /// </summary>
         public abstract void SetupNode(NodeSetup setup);
 
         #region Plugin Node Opt-in Features
 
         /// <summary>
-        /// Called when a node is added on a diagram or loaded from disk.
+        ///     Called when a node is added on a diagram or loaded from disk.
         /// </summary>
-        protected override void Initialize() { }
+        public override void Initialize()
+        {
+        }
 
         /// <summary>
-        /// Called when a node is removed from a diagram.
+        ///     Called when a node is removed from a diagram.
         /// </summary>
-        public override void Uninitialize() { }
+        public override void Uninitialize()
+        {
+        }
 
         #endregion
+
     }
 }

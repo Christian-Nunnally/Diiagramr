@@ -54,8 +54,8 @@ namespace DiiagramrIntegrationTest
             node2.X = 16;
             node2.Y = 17;
     
-            var inTermNode2 = node2.InputTerminalViewModels.First().Terminal;
-            var outTermNode1 = node1.OutputTerminalViewModels.First().Terminal;
+            var inTermNode2 = node2.InputTerminalViewModels.First().TerminalModel;
+            var outTermNode1 = node1.OutputTerminalViewModels.First().TerminalModel;
             Assert.AreEqual(inTermNode2.X, node2.X);
             Assert.AreEqual(inTermNode2.Y, node2.Y);
             Assert.AreEqual(inTermNode2.NodeX + inTermNode2.OffsetX, inTermNode2.X);
@@ -79,8 +79,8 @@ namespace DiiagramrIntegrationTest
             // check wire nodes
             outTerm = node1.OutputTerminalViewModels.First();
             inTerm = node2.InputTerminalViewModels.First();
-            Assert.IsNotNull(outTerm.Terminal.ConnectedWire);
-            Assert.IsNotNull(inTerm.Terminal.ConnectedWire);
+            Assert.IsNotNull(outTerm.TerminalModel.ConnectedWire);
+            Assert.IsNotNull(inTerm.TerminalModel.ConnectedWire);
             Assert.AreEqual(5, ((TestNode)node2).InputTerminal.Data);
             Assert.AreEqual(5, ((TestNode)node1).OutputTerminal.Data);
             Assert.AreEqual(6, ((TestNode)node2).OutputTerminal.Data);
@@ -94,8 +94,8 @@ namespace DiiagramrIntegrationTest
             // change location
             node1.X = 11;
             node1.Y = 12;
-            inTermNode2 = inTerm.Terminal;
-            outTermNode1 = outTerm.Terminal;
+            inTermNode2 = inTerm.TerminalModel;
+            outTermNode1 = outTerm.TerminalModel;
             wireViewModel = diagramWellViewModel.ActiveItem.WireViewModels.First();
             Assert.AreEqual(inTermNode2.X, node2.X);
             Assert.AreEqual(inTermNode2.Y, node2.Y);

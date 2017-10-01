@@ -138,5 +138,21 @@ namespace DiiagramrUnitTests.ModelTests
             _node.DisableTerminals();
             _termMoq.Verify(m => m.DisableWire(), Times.Once);
         }
+
+        [TestMethod]
+        public void TestSetNodeViewModel_LoadNodeVariablesInvokedOnViewModel()
+        {
+            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _node.NodeViewModel = nodeViewModelMoq.Object;
+            nodeViewModelMoq.Verify(n => n.LoadNodeVariables());
+        }
+
+        [TestMethod]
+        public void TestSetNodeViewModel_SetupPluginNodeSettingsInvokedOnViewModel()
+        {
+            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _node.NodeViewModel = nodeViewModelMoq.Object;
+            nodeViewModelMoq.Verify(n => n.SetupPluginNodeSettings());
+        }
     }
 }

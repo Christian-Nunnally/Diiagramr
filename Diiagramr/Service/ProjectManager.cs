@@ -20,6 +20,7 @@ namespace Diiagramr.Service
             DiagramViewModels = new List<DiagramViewModel>();
             _projectFileService = projectFileServiceFactory.Invoke();
             _nodeProvider = nodeProviderFactory.Invoke();
+            _nodeProvider.ProjectManager = this;
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 

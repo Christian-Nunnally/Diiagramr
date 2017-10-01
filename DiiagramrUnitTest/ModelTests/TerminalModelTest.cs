@@ -1,4 +1,5 @@
-﻿using Diiagramr.Model;
+﻿using System.ComponentModel;
+using Diiagramr.Model;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -23,7 +24,7 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestSemanticsChanged_ConnectedWireChanged_SemanticsChangedInvoked()
+        public void TestOnTerminalPropertyChanged_ConnectedWireChanged_SemanticsChangedInvoked()
         {
             var terminalModelInput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalModelOutput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
@@ -76,6 +77,93 @@ namespace DiiagramrUnitTests.ModelTests
         {
             var terminalModelInput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             terminalModelInput.ResetWire();
+        }
+
+        [TestMethod]
+        public void TestAddToNode_TerminalNodePositionSet()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var nodeMoq = new Mock<NodeModel>(string.Empty);
+            nodeMoq.SetupGet(model => model.X).Returns(20);
+            nodeMoq.SetupGet(model => model.Y).Returns(30);
+
+            terminalModel.AddToNode(nodeMoq.Object);
+
+            Assert.AreEqual(20, terminalModel.NodeX);
+            Assert.AreEqual(30, terminalModel.NodeY);
+        }
+
+        [TestMethod]
+        public void TestNodePropertyChanged_NodeXChanged_NodeXOnTerminalSet()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var nodeMoq = new Mock<NodeModel>(string.Empty);
+            nodeMoq.SetupGet(model => model.X).Returns(20);
+            Assert.AreEqual(0, terminalModel.NodeX);
+
+            terminalModel.NodePropertyChanged(nodeMoq.Object, new PropertyChangedEventArgs(nameof(NodeModel.X)));
+
+            Assert.AreEqual(20, terminalModel.NodeX);
+        }
+
+        [TestMethod]
+        public void TestNodePropertyChanged_NodeYChanged_NodeYOnTerminalSet()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var nodeMoq = new Mock<NodeModel>(string.Empty);
+            nodeMoq.SetupGet(model => model.Y).Returns(20);
+            Assert.AreEqual(0, terminalModel.NodeY);
+
+            terminalModel.NodePropertyChanged(nodeMoq.Object, new PropertyChangedEventArgs(nameof(NodeModel.Y)));
+
+            Assert.AreEqual(20, terminalModel.NodeY);
+        }
+
+        [TestMethod]
+        public void TestOnTerminalPropertyChanged_NodeXChanged_TerminalXSetToOffsetXPlusNodeX()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            terminalModel.OffsetX = 2;
+            terminalModel.NodeX = 1;
+            Assert.AreEqual(terminalModel.NodeX + terminalModel.OffsetX, terminalModel.X);
+        }
+
+        [TestMethod]
+        public void TestOnTerminalPropertyChanged_OffsetXChanged_TerminalXSetToOffsetXPlusNodeX()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            terminalModel.NodeX = 6;
+            terminalModel.OffsetX = 4;
+            Assert.AreEqual(terminalModel.NodeX + terminalModel.OffsetX, terminalModel.X);
+        }
+
+        [TestMethod]
+        public void TestOnTerminalPropertyChanged_NodeYChanged_TerminalYSetToOffsetYPlusNodeX()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            terminalModel.OffsetY = 2;
+            terminalModel.NodeY = 1;
+            Assert.AreEqual(terminalModel.NodeY + terminalModel.OffsetY, terminalModel.Y);
+        }
+
+        [TestMethod]
+        public void TestOnTerminalPropertyChanged_OffsetYChanged_TerminalXSetToOffsetXPlusNodeX()
+        {
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            terminalModel.NodeY = 6;
+            terminalModel.OffsetY = 4;
+            Assert.AreEqual(terminalModel.NodeY + terminalModel.OffsetY, terminalModel.Y);
+        }
+
+        [TestMethod]
+        public void TestDisconnectWire_DisconnectWireOnConnectedWireInvoked()
+        {
+            var terminalModelInput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalModelOutput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var wireMoq = new Mock<WireModel>(terminalModelInput, terminalModelOutput);
+            terminalModelInput.ConnectedWire = wireMoq.Object;
+            terminalModelInput.DisconnectWire();
+            wireMoq.Verify(model => model.DisconnectWire());
         }
     }
 }

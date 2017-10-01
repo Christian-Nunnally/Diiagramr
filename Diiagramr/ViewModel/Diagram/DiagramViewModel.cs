@@ -1,28 +1,27 @@
-﻿using Diiagramr.Model;
-using Diiagramr.Service;
-using Diiagramr.View;
-using Stylet;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Diiagramr.Model;
+using Diiagramr.Service;
+using Diiagramr.View;
 using Diiagramr.ViewModel.Diagram.CoreNode;
-using Point = System.Windows.Point;
+using Stylet;
 
 namespace Diiagramr.ViewModel.Diagram
 {
     public class DiagramViewModel : Screen
     {
-        private AbstractNodeViewModel _insertingNodeViewModel;
 
-        public DiagramControlViewModel DiagramControlViewModel { get; private set; }
+        private readonly IProvideNodes _nodeProvider;
+        private AbstractNodeViewModel _insertingNodeViewModel;
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider)
         {
             if (diagram == null) throw new ArgumentNullException(nameof(diagram));
-            if (nodeProvider == null) throw new ArgumentNullException(nameof(nodeProvider));
+            _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
 
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
             NodeViewModels = new BindableCollection<AbstractNodeViewModel>();
@@ -31,7 +30,6 @@ namespace Diiagramr.ViewModel.Diagram
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
             if (diagram.Nodes != null)
-            {
                 foreach (var abstractNode in diagram.Nodes)
                 {
                     var viewModel = nodeProvider.LoadNodeViewModelFromNode(abstractNode);
@@ -44,8 +42,9 @@ namespace Diiagramr.ViewModel.Diagram
                         AddWireViewModel(terminal.ConnectedWire);
                     }
                 }
-            }
         }
+
+        public DiagramControlViewModel DiagramControlViewModel { get; }
 
         public BindableCollection<AbstractNodeViewModel> NodeViewModels { get; set; }
 
@@ -58,9 +57,7 @@ namespace Diiagramr.ViewModel.Diagram
             {
                 _insertingNodeViewModel = value;
                 if (_insertingNodeViewModel != null)
-                {
                     AddNode(_insertingNodeViewModel);
-                }
             }
         }
 
@@ -77,7 +74,7 @@ namespace Diiagramr.ViewModel.Diagram
         public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
         private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
 
-        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.DiagramModel?.Name ?? ""} Call";
+        public string DropDiagramCallText => $"Drop { DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
@@ -98,27 +95,19 @@ namespace Diiagramr.ViewModel.Diagram
             NodeViewModels.Add(viewModel);
 
             foreach (var inputTerminal in viewModel.NodeModel.Terminals.Where(t => t.Kind == TerminalKind.Input))
-            {
                 if (inputTerminal.ConnectedWire != null)
-                {
                     AddWireViewModel(inputTerminal.ConnectedWire);
-                }
-            }
+
+            viewModel.Initialize();
         }
 
         private void ShowTitlesOnTerminalsOfSameType(TerminalModel terminal)
         {
             foreach (var nodeViewModel in NodeViewModels)
-            {
                 if (terminal.Kind == TerminalKind.Output)
-                {
                     nodeViewModel.ShowInputTerminalLabelsOfType(terminal.Type);
-                }
                 else
-                {
                     nodeViewModel.ShowOutputTerminalLabelsOfType(terminal.Type);
-                }
-            }
         }
 
         private void HideAllTerminalLabels()
@@ -141,19 +130,21 @@ namespace Diiagramr.ViewModel.Diagram
                 if (WireViewModels.Any(x => x.WireModel == terminal.ConnectedWire)) return;
                 AddWireViewModel(terminal.ConnectedWire);
             }
-            else
-            {
-                var nullWires = WireViewModels.Where(x => (x.WireModel.SourceTerminal == null) || (x.WireModel.SinkTerminal == null)).ToArray();
-                WireViewModels.RemoveRange(nullWires);
-            }
         }
 
         private void AddWireViewModel(WireModel wire)
         {
             if (WireViewModels.Any(x => x.WireModel == wire)) return;
             var wireViewModel = new WireViewModel(wire);
+            wireViewModel.Disconnected += WireViewModelOnDisconnected;
             WireViewModels.Add(wireViewModel);
             HideAllTerminalLabels();
+        }
+
+        private void WireViewModelOnDisconnected()
+        {
+            var nullWires = WireViewModels.Where(x => x.WireModel.SourceTerminal == null || x.WireModel.SinkTerminal == null).ToArray();
+            WireViewModels.RemoveRange(nullWires);
         }
 
         #region Drag Drop Handlers
@@ -198,8 +189,9 @@ namespace Diiagramr.ViewModel.Diagram
             if (o is DiagramModel diagram)
             {
                 var diagramNode = new DiagramCallNodeViewModel();
-                diagramNode.DiagramModel = diagram;
-                diagramNode.InitializeWithNode(new NodeModel("Diagram Node"));
+                diagramNode.InitializeWithNode(new NodeModel(typeof(DiagramCallNodeViewModel).FullName));
+                diagramNode.NodeProvider = _nodeProvider;
+                diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
                 DraggingDiagramCallNode = diagramNode;
                 e.Effects = DragDropEffects.Move;
                 return;
@@ -292,7 +284,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void PreviewRightMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
         {
-            Point relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
+            var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
             PreviewRightMouseButtonDown(relativeMousePosition);
         }
 
@@ -305,7 +297,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
         {
-            var inputElement = (IInputElement)sender;
+            var inputElement = (IInputElement) sender;
             var relativeMousePosition = e.GetPosition(inputElement);
             MouseMoved(relativeMousePosition);
         }
@@ -333,21 +325,22 @@ namespace Diiagramr.ViewModel.Diagram
 
         private static Point GetMousePositionRelativeToSender(object sender, MouseButtonEventArgs e)
         {
-            var inputElement = (IInputElement)sender;
+            var inputElement = (IInputElement) sender;
             return e.GetPosition(inputElement);
         }
 
         private static AbstractNodeViewModel UnpackNodeViewModelFromSender(object sender)
         {
-            return UnpackNodeViewModelFromControl((Control)sender);
+            return UnpackNodeViewModelFromControl((Control) sender);
         }
 
         private static AbstractNodeViewModel UnpackNodeViewModelFromControl(Control control)
         {
             var contentPresenter = control.DataContext as ContentPresenter;
-            return (AbstractNodeViewModel)(contentPresenter?.Content ?? control.DataContext);
+            return (AbstractNodeViewModel) (contentPresenter?.Content ?? control.DataContext);
         }
 
         #endregion
+
     }
 }

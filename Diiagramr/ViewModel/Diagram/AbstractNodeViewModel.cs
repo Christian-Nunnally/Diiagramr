@@ -1,18 +1,16 @@
-﻿using Diiagramr.Model;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Diiagramr.Model;
 using Diiagramr.Service;
 using PropertyChanged;
 using Stylet;
 using Stylet.Xaml;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Diiagramr.ViewModel.Diagram
 {
@@ -28,12 +26,19 @@ namespace Diiagramr.ViewModel.Diagram
     [AddINotifyPropertyChangedInterface]
     public abstract class AbstractNodeViewModel : Screen
     {
-        private readonly List<Action> _dropAndArrangeWhenViewIsLoadedCallbacks = new List<Action>();
-        private bool MouseOverBorder { get; set; }
-        private bool DroppingTerminal { get; set; }
 
         public delegate void TerminalConnectedStatusChangedDelegate(TerminalModel terminal);
-        public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
+
+        private readonly List<Action> _dropAndArrangeWhenViewIsLoadedCallbacks = new List<Action>();
+
+        public AbstractNodeViewModel()
+        {
+            TerminalViewModels = new ObservableCollection<TerminalViewModel>();
+            DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
+        }
+
+        private bool MouseOverBorder { get; set; }
+        private bool DroppingTerminal { get; set; }
 
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
@@ -46,18 +51,13 @@ namespace Diiagramr.ViewModel.Diagram
 
         public ICommand DropHandlerCommand { get; set; }
 
-        public IList<TerminalViewModel> TerminalViewModels { get; }
+        public virtual IList<TerminalViewModel> TerminalViewModels { get; }
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
 
         public virtual string Name { get; set; } = "Node";
         public virtual NodeModel NodeModel { get; set; }
-
-        public AbstractNodeViewModel()
-        {
-            TerminalViewModels = new ObservableCollection<TerminalViewModel>();
-            DropHandlerCommand = new CommandAction(View, View, "DropEventHandler", ActionUnavailableBehaviour.Disable, ActionUnavailableBehaviour.Throw);
-        }
+        public event TerminalConnectedStatusChangedDelegate TerminalConnectedStatusChanged;
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
@@ -65,14 +65,19 @@ namespace Diiagramr.ViewModel.Diagram
             NodeModel.NodeViewModel = this;
 
             LoadTerminalViewModels();
-            Initialize();
         }
 
-        public virtual void Uninitialize() { }
+        public virtual void Uninitialize()
+        {
+        }
 
-        protected virtual void Initialize() { }
+        public virtual void Initialize()
+        {
+        }
 
-        public virtual void LoadNodeVariables() { }
+        public virtual void LoadNodeVariables()
+        {
+        }
 
         private void LoadTerminalViewModels()
         {
@@ -83,11 +88,18 @@ namespace Diiagramr.ViewModel.Diagram
             }
         }
 
-        public void AddTerminalViewModel(TerminalViewModel terminalViewModel)
+        public virtual void AddTerminalViewModel(TerminalViewModel terminalViewModel)
         {
             TerminalViewModels.Add(terminalViewModel);
-            AddTerminal(terminalViewModel.Terminal);
-            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.DefaultDirection);
+            AddTerminal(terminalViewModel.TerminalModel);
+            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.TerminalModel.Direction);
+        }
+
+        public void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)
+        {
+            TerminalViewModels.Remove(terminalViewModel);
+            RemoveTerminal(terminalViewModel.TerminalModel);
+            FixOtherTerminalsOnEdge(terminalViewModel.TerminalModel.Direction);
         }
 
         private void AddTerminal(TerminalModel terminal)
@@ -96,12 +108,16 @@ namespace Diiagramr.ViewModel.Diagram
             NodeModel.AddTerminal(terminal);
         }
 
+        private void RemoveTerminal(TerminalModel terminal)
+        {
+            terminal.PropertyChanged -= TerminalOnPropertyChanged;
+            NodeModel.RemoveTerminal(terminal);
+        }
+
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(TerminalModel.ConnectedWire)))
-            {
-                TerminalConnectedStatusChanged?.Invoke((TerminalModel)sender);
-            }
+                TerminalConnectedStatusChanged?.Invoke((TerminalModel) sender);
         }
 
         protected override void OnPropertyChanged(string propertyName)
@@ -212,9 +228,9 @@ namespace Diiagramr.ViewModel.Diagram
 
         public static void DragOverEventHandler(object sender, DragEventArgs e)
         {
-            var control = (Control)sender;
-            var contentPresenter = (ContentPresenter)control.DataContext;
-            var nodeViewModel = (AbstractNodeViewModel)contentPresenter.Content;
+            var control = (Control) sender;
+            var contentPresenter = (ContentPresenter) control.DataContext;
+            var nodeViewModel = (AbstractNodeViewModel) contentPresenter.Content;
             nodeViewModel.DroppingTerminal = true;
         }
 
@@ -242,5 +258,7 @@ namespace Diiagramr.ViewModel.Diagram
         {
             TerminalViewModels.ForEach(terminal => terminal.TitleVisible = false);
         }
+
+        public virtual void SetupPluginNodeSettings() { }
     }
 }

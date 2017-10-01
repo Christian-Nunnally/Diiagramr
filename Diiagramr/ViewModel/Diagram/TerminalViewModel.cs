@@ -1,20 +1,28 @@
-﻿using Stylet;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Diiagramr.Model;
+using Stylet;
 
 namespace Diiagramr.ViewModel.Diagram
 {
-    public class TerminalViewModel : Screen, IViewAware
+    public class TerminalViewModel : Screen
     {
-        public TerminalModel Terminal { get; private set; }
+        private object _data;
 
         private Direction _defaultDirection;
-        private object _data;
+
+        public TerminalViewModel(TerminalModel terminal)
+        {
+            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            terminal.PropertyChanged += TerminalOnPropertyChanged;
+            Data = terminal.Data;
+            Name = TerminalModel.Name;
+            SetTerminalRotationBasedOnDirection();
+        }
+
+        public TerminalModel TerminalModel { get; }
 
         public string Name { get; set; }
 
@@ -28,60 +36,33 @@ namespace Diiagramr.ViewModel.Diagram
             set
             {
                 _data = value;
-                Terminal.Data = value;
+                TerminalModel.Data = value;
             }
         }
 
         public double XRelativeToNode
         {
-            get => Terminal.OffsetX;
-            set => Terminal.OffsetX = value;
+            get => TerminalModel.OffsetX;
+            set => TerminalModel.OffsetX = value;
         }
 
         public double YRelativeToNode
         {
-            get => Terminal.OffsetY;
-            set => Terminal.OffsetY = value;
-        }
-
-        public Direction DefaultDirection
-        {
-            get => _defaultDirection;
-            set
-            {
-                _defaultDirection = value;
-                Terminal.Direction = _defaultDirection;
-            }
-        }
-
-        public TerminalViewModel(TerminalModel terminal)
-        {
-            Terminal = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            terminal.PropertyChanged += terminal.OnTerminalPropertyChanged;
-            terminal.PropertyChanged += TerminalOnPropertyChanged;
-            Data = terminal.Data;
-            DefaultDirection = terminal.Direction;
-            Name = Terminal.Name;
-            SetTerminalRotationBasedOnDirection();
-            TitleVisible = true;
-            TitleVisible = false;
+            get => TerminalModel.OffsetY;
+            set => TerminalModel.OffsetY = value;
         }
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Terminal.Direction)))
-            {
+            if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
                 SetTerminalRotationBasedOnDirection();
-            }
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
-            {
-                Data = Terminal.Data;
-            }
+            else if (e.PropertyName.Equals(nameof(Model.TerminalModel.Data)))
+                Data = TerminalModel.Data;
         }
 
         private void SetTerminalRotationBasedOnDirection()
         {
-            switch (Terminal.Direction)
+            switch (TerminalModel.Direction)
             {
                 case Direction.North:
                     TerminalRotation = 0;
@@ -100,20 +81,14 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void MouseMove(object sender, MouseEventArgs e)
         {
-            var uiElement = (UIElement)sender;
-            var dataObjectModel = new DataObject(DataFormats.StringFormat, Terminal);
+            var uiElement = (UIElement) sender;
+            var dataObjectModel = new DataObject(DataFormats.StringFormat, TerminalModel);
             var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
             if (e.LeftButton == MouseButtonState.Pressed)
-            {
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                {
                     DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
-                }
                 else
-                {
                     DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
-                }
-            }
             e.Handled = true;
         }
 
@@ -131,26 +106,25 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void DisconnectTerminal()
         {
-            Terminal.DisconnectWire();
+            TerminalModel.DisconnectWire();
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)
         {
             if (terminal == null) return false;
-            if (terminal.Kind == Terminal.Kind) return false;
-            new WireModel(Terminal, terminal);
+            if (terminal.Kind == TerminalModel.Kind) return false;
+            new WireModel(TerminalModel, terminal);
             return true;
         }
 
         public void TerminalMouseDown(object sender, MouseEventArgs e)
         {
-            DisconnectTerminal();
             e.Handled = true;
         }
 
         public void SetTerminalDirection(Direction direction)
-        {;
-            Terminal.Direction = direction;
+        {
+            TerminalModel.Direction = direction;
         }
 
         public void MouseEntered(object sender, MouseEventArgs e)
@@ -165,7 +139,7 @@ namespace Diiagramr.ViewModel.Diagram
 
         public void ShowLabelIfCompatibleType(Type type)
         {
-            TitleVisible = Terminal.Type.IsAssignableFrom(type);
+            TitleVisible = TerminalModel.Type.IsAssignableFrom(type);
         }
 
         public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)

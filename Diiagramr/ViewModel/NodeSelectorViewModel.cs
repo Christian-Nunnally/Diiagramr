@@ -9,6 +9,7 @@ using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
 using Diiagramr.View;
 using Diiagramr.ViewModel.Diagram;
+using Diiagramr.ViewModel.Diagram.CoreNode;
 using PropertyChanged;
 using Stylet;
 
@@ -23,6 +24,7 @@ namespace Diiagramr.ViewModel
 
             foreach (var nodeViewModel in nodeProvidor.GetRegisteredNodes())
             {
+                if (nodeViewModel is DiagramCallNodeViewModel) continue;
                 var fullTypeName = nodeViewModel.GetType().FullName;
                 var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
                 var library = GetOrCreateLibrary(libraryName);
@@ -133,8 +135,8 @@ namespace Diiagramr.ViewModel
             Nodes = new List<AbstractNodeViewModel>();
         }
 
-        public virtual List<AbstractNodeViewModel> Nodes { get; private set; }
-        public string Name { get; private set; }
+        public virtual List<AbstractNodeViewModel> Nodes { get; }
+        public string Name { get; }
         public Brush BackgroundBrush { get; private set; }
 
         public virtual void Select()

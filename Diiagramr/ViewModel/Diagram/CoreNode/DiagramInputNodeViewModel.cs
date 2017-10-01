@@ -2,7 +2,7 @@
 
 namespace Diiagramr.ViewModel.Diagram.CoreNode
 {
-    public class DiagramInputNodeViewModel : PluginNode
+    public class DiagramInputNodeViewModel : IoNode
     {
         public Terminal<object> OutputTerminal;
 
@@ -11,6 +11,11 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
             setup.NodeSize(30, 30);
             setup.NodeName("Input");
             OutputTerminal = setup.OutputTerminal<object>("Data out", Direction.South);
+        }
+
+        public void TerminalDataChanged(object data)
+        {
+            OutputTerminal.Data = data;
         }
     }
 }

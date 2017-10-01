@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 using Diiagramr.ViewModel.Diagram;
 using PropertyChanged;
@@ -11,7 +10,6 @@ namespace Diiagramr.Model
     [AddINotifyPropertyChangedInterface]
     public class NodeModel : ModelBase
     {
-
         [DataMember] public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
         private AbstractNodeViewModel _nodeViewModel;
@@ -21,9 +19,9 @@ namespace Diiagramr.Model
             Terminals = new List<TerminalModel>();
         }
 
-        public NodeModel(string nodeName)
+        public NodeModel(string nodeTypeFullName)
         {
-            NodeFullName = nodeName;
+            NodeFullName = nodeTypeFullName;
             Terminals = new List<TerminalModel>();
         }
 
@@ -36,24 +34,22 @@ namespace Diiagramr.Model
             set
             {
                 _nodeViewModel = value;
+                _nodeViewModel.SetupPluginNodeSettings();
                 _nodeViewModel.LoadNodeVariables();
             }
         }
 
         [DataMember]
-        public double X { get; set; }
+        public virtual double X { get; set; }
 
         [DataMember]
-        public double Y { get; set; }
+        public virtual double Y { get; set; }
 
         [DataMember]
         public double Width { get; set; }
 
         [DataMember]
         public double Height { get; set; }
-
-        [DataMember]
-        public bool Initialized { get; set; }
 
         [DataMember]
         public List<TerminalModel> Terminals { get; set; }
@@ -68,7 +64,7 @@ namespace Diiagramr.Model
             Terminals.Add(terminal);
             SemanticsChanged?.Invoke();
             terminal.SemanticsChanged += TerminalSematicsChanged;
-            PropertyChanged += terminal.NodePropertyChanged;
+            terminal.AddToNode(this);
         }
 
         public virtual void SetTerminalsPropertyChanged()
@@ -113,6 +109,15 @@ namespace Diiagramr.Model
         private void TerminalSematicsChanged()
         {
             SemanticsChanged?.Invoke();
+        }
+
+        public void RemoveTerminal(TerminalModel terminal)
+        {
+            terminal.DisconnectWire();
+            terminal.SemanticsChanged -= TerminalSematicsChanged;
+            PropertyChanged -= terminal.NodePropertyChanged;
+            Terminals.Remove(terminal);
+            TerminalSematicsChanged();
         }
     }
 }

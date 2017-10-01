@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.ComponentModel;
 using Diiagramr.ViewModel.Diagram;
 
@@ -19,19 +18,20 @@ namespace Diiagramr.PluginNodeApi
     /// <typeparam name="T">The datatype of the terminal.</typeparam>
     public class Terminal<T>
     {
-        private readonly TerminalViewModel _underlyingTerminal;
         private T _data;
 
         public Terminal(TerminalViewModel underlyingTerminal)
         {
-            _underlyingTerminal = underlyingTerminal ?? throw new ArgumentNullException(nameof(underlyingTerminal));
-            _underlyingTerminal.PropertyChanged += UnderlyingTerminalOnPropertyChanged;
+            UnderlyingTerminal = underlyingTerminal ?? throw new ArgumentNullException(nameof(underlyingTerminal));
+            UnderlyingTerminal.PropertyChanged += UnderlyingTerminalOnPropertyChanged;
             Data = (T) (underlyingTerminal.Data ?? default(T));
         }
 
+        public TerminalViewModel UnderlyingTerminal { get; }
+
         /// <summary>
-        /// The data on the terminal. Setting this will result in data propagating to connected wires.
-        /// When data is set, <see cref="DataChanged"/> will be invoked with the new value as the argument.
+        ///     The data on the terminal. Setting this will result in data propagating to connected wires.
+        ///     When data is set, <see cref="DataChanged" /> will be invoked with the new value as the argument.
         /// </summary>
         public T Data
         {
@@ -39,22 +39,27 @@ namespace Diiagramr.PluginNodeApi
             set
             {
                 if (_data != null && _data.Equals(value)) return;
-                _underlyingTerminal.Data = value;
+                UnderlyingTerminal.Data = value;
                 _data = value;
                 DataChanged?.Invoke(_data);
             }
         }
 
         /// <summary>
-        /// Notifies subscribers when <see cref="Data"/> is changed.
+        ///     Notifies subscribers when <see cref="Data" /> is changed.
         /// </summary>
         public event TerminalDataChangedDelegate<T> DataChanged;
 
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data))) return;
-            if (_underlyingTerminal.Data == null) Data = default(T);
-            else Data = (T) _underlyingTerminal.Data;
+            if (UnderlyingTerminal.Data == null) Data = default(T);
+            else Data = (T) UnderlyingTerminal.Data;
+        }
+
+        public void ChangeTerminalData(object data)
+        {
+            Data = (T) (data ?? default(T));
         }
     }
 }
