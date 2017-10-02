@@ -40,6 +40,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var dataChangedCalled = false;
             _terminal.DataChanged += i => dataChangedCalled = true;
+            dataChangedCalled = false;
             _terminal.Data += 0;
             Assert.IsFalse(dataChangedCalled);
         }

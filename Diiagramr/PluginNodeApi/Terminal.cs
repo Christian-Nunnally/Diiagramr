@@ -41,14 +41,24 @@ namespace Diiagramr.PluginNodeApi
                 if (_data != null && _data.Equals(value)) return;
                 UnderlyingTerminal.Data = value;
                 _data = value;
-                DataChanged?.Invoke(_data);
+                _dataChanged?.Invoke(_data);
             }
         }
+
+        private event TerminalDataChangedDelegate<T> _dataChanged; 
 
         /// <summary>
         ///     Notifies subscribers when <see cref="Data" /> is changed.
         /// </summary>
-        public event TerminalDataChangedDelegate<T> DataChanged;
+        public event TerminalDataChangedDelegate<T> DataChanged
+        {
+            add
+            {
+                _dataChanged += value;
+                _dataChanged.Invoke(_data);
+            }
+            remove { _dataChanged -= value; }
+        }
 
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {

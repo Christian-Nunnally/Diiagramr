@@ -47,6 +47,7 @@ namespace DiiagramrIntegrationTest
             var wireViewModel = shell.WireTerminals(outTerm, inTerm);
 
             // set output
+            node1.InputTerminalViewModels.First().Data = 4;
             outTerm.Data = 5;
             Assert.AreEqual(((TestNode) node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
 
@@ -84,7 +85,9 @@ namespace DiiagramrIntegrationTest
             Assert.AreEqual(5, ((TestNode)node2).InputTerminal.Data);
             Assert.AreEqual(5, ((TestNode)node1).OutputTerminal.Data);
             Assert.AreEqual(6, ((TestNode)node2).OutputTerminal.Data);
+            Assert.AreEqual(6, ((TestNode)node2).Value);
             Assert.AreEqual(((TestNode)node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
+            
 
             // change data
             outTerm.Data = 6;

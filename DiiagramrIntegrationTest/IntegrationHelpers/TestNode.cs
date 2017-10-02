@@ -14,6 +14,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         
         public Terminal<int> OutputTerminal { get; set; }
 
+        public int Value { get; set; }
+
         public override void SetupNode(NodeSetup setup)
         {
             InputTerminal = setup.InputTerminal<int>("testIn", Direction.West);
@@ -23,6 +25,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 
         private void InputTerminalOnDataChanged(int data)
         {
+            Value = data + 1;
             OutputTerminal.Data = data + 1;
         }
     }
