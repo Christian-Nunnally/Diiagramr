@@ -7,6 +7,7 @@ using System.Windows.Media;
 using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 using Diiagramr.View;
 using Diiagramr.ViewModel.Diagram;
 using Diiagramr.ViewModel.Diagram.CoreNode;
@@ -30,21 +31,18 @@ namespace Diiagramr.ViewModel
                 var library = GetOrCreateLibrary(libraryName);
                 library.Nodes.Add(nodeViewModel);
 
-                if (nodeViewModel is PluginNode pluginNode)
-                {
-                    pluginNode.NodeModel = new NodeModel("");
-                    pluginNode.SetupNode(new NodeSetup(pluginNode));
-                }
+                nodeViewModel.NodeModel = new NodeModel("");
+                nodeViewModel.SetupNode(new NodeSetup(nodeViewModel));
             }
         }
 
-        public virtual AbstractNodeViewModel SelectedNode { get; set; }
+        public virtual PluginNode SelectedNode { get; set; }
 
-        public IEnumerable<AbstractNodeViewModel> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
-        public BindableCollection<AbstractNodeViewModel> VisibleNodesList { get; set; } = new BindableCollection<AbstractNodeViewModel>();
+        public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
+        public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
         public BindableCollection<Library> LibrariesList { get; set; } = new BindableCollection<Library>();
 
-        public AbstractNodeViewModel MousedOverNode { get; set; }
+        public PluginNode MousedOverNode { get; set; }
 
         public bool NodePreviewVisible => MousedOverNode != null;
 
@@ -84,7 +82,7 @@ namespace Diiagramr.ViewModel
 
         public void NodeMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border) sender).DataContext is AbstractNodeViewModel node)) return;
+            if (!(((Border) sender).DataContext is PluginNode node)) return;
             PreviewNode(node);
         }
 
@@ -97,7 +95,7 @@ namespace Diiagramr.ViewModel
             MousedOverNode = null;
         }
 
-        private void PreviewNode(AbstractNodeViewModel node)
+        private void PreviewNode(PluginNode node)
         {
             const int workingWidth = 100;
             const int workingHeight = 100;
@@ -132,10 +130,10 @@ namespace Diiagramr.ViewModel
         public Library(string name)
         {
             Name = name;
-            Nodes = new List<AbstractNodeViewModel>();
+            Nodes = new List<PluginNode>();
         }
 
-        public virtual List<AbstractNodeViewModel> Nodes { get; }
+        public virtual List<PluginNode> Nodes { get; }
         public string Name { get; }
         public Brush BackgroundBrush { get; private set; }
 

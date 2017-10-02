@@ -5,11 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
 using Diiagramr.Service.Interfaces;
 using Diiagramr.View.CustomControls;
 using Diiagramr.ViewModel;
-using Diiagramr.ViewModel.Diagram;
 using Diiagramr.ViewModel.Diagram.CoreNode;
 
 namespace Diiagramr
@@ -26,12 +26,12 @@ namespace Diiagramr
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
-            builder.Bind<AbstractNodeViewModel>().To<DemoNodeViewModel>();
-            builder.Bind<AbstractNodeViewModel>().To<AddNodeViewModel>();
-            builder.Bind<AbstractNodeViewModel>().To<NumberNodeViewModel>();
-            builder.Bind<AbstractNodeViewModel>().To<DiagramInputNodeViewModel>();
-            builder.Bind<AbstractNodeViewModel>().To<DiagramOutputNodeViewModel>();
-            builder.Bind<AbstractNodeViewModel>().To<DiagramCallNodeViewModel>();
+            builder.Bind<PluginNode>().To<DemoNodeViewModel>();
+            builder.Bind<PluginNode>().To<AddNodeViewModel>();
+            builder.Bind<PluginNode>().To<NumberNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramInputNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramOutputNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramCallNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 
@@ -39,8 +39,8 @@ namespace Diiagramr
         {
             foreach (var pluginAssembly in GetPluginAssemblies())
                 foreach (var exportedType in pluginAssembly.ExportedTypes)
-                    if (exportedType.Implements(typeof(AbstractNodeViewModel)))
-                        builder.Bind<AbstractNodeViewModel>().To(exportedType);
+                    if (exportedType.Implements(typeof(PluginNode)))
+                        builder.Bind<PluginNode>().To(exportedType);
         }
 
         protected override void Configure()

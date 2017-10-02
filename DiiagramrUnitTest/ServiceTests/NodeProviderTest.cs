@@ -1,10 +1,10 @@
 ﻿using Diiagramr.Model;
 using Diiagramr.Service;
-using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using Diiagramr.PluginNodeApi;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -12,14 +12,15 @@ namespace DiiagramrUnitTests.ServiceTests
     public class NodeProviderTest
     {
         private NodeProvider _nodeProvider;
-        private Mock<AbstractNodeViewModel> _nodeViewModelMoq;
+        private Mock<PluginNode> _nodeViewModelMoq;
         private NodeModel _testNode;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _nodeProvider = new NodeProvider(() => new AbstractNodeViewModel[0]);
-            _nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _nodeProvider = new NodeProvider(() => new PluginNode[0]);
+            _nodeViewModelMoq = new Mock<PluginNode>();
+            _nodeViewModelMoq.CallBase = false;
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _testNode = new NodeModel("");
@@ -29,7 +30,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestConstructor_InjectNode_InjectedNodeRegistered()
         {
-            var nodeProvider = new NodeProvider(() => new List<AbstractNodeViewModel> { _nodeViewModelMoq.Object });
+            var nodeProvider = new NodeProvider(() => new List<PluginNode> { _nodeViewModelMoq.Object });
             Assert.IsTrue(nodeProvider.GetRegisteredNodes().Contains(_nodeViewModelMoq.Object));
         }
 

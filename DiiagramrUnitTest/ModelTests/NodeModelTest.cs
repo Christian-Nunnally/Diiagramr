@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Castle.Core.Internal;
 using Diiagramr.Model;
-using Diiagramr.ViewModel.Diagram;
+using Diiagramr.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -140,19 +140,11 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestSetNodeViewModel_LoadNodeVariablesInvokedOnViewModel()
-        {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
-            _node.NodeViewModel = nodeViewModelMoq.Object;
-            nodeViewModelMoq.Verify(n => n.LoadNodeVariables());
-        }
-
-        [TestMethod]
         public void TestSetNodeViewModel_SetupPluginNodeSettingsInvokedOnViewModel()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             _node.NodeViewModel = nodeViewModelMoq.Object;
-            nodeViewModelMoq.Verify(n => n.SetupPluginNodeSettings());
+            nodeViewModelMoq.Verify(n => n.InitializePluginNodeSettings());
         }
     }
 }

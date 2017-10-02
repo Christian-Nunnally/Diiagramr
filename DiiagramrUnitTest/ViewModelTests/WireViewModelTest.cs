@@ -1,5 +1,6 @@
 ﻿using System;
 using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.View;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

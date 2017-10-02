@@ -7,6 +7,7 @@
              xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
              xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
              xmlns:view="clr-namespace:Diiagramr.View"
+             xmlns:pluginNodeApi="clr-namespace:Diiagramr.PluginNodeApi"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel1:NodeSelectorViewModel}"
              d:DesignWidth="800"
@@ -91,7 +92,7 @@
                     <Style TargetType="ContentPresenter">
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
-                                <DataTemplate DataType="{x:Type diagram:AbstractNodeViewModel}">
+                                <DataTemplate DataType="{x:Type pluginNodeApi:PluginNode}">
                                     <Border MouseEnter="{s:Action NodeMouseEnterHandler}"
                                             MouseDown="{s:Action SelectNode}"
                                             Style="{StaticResource NodeSelectionBorderStyle}">

@@ -10,14 +10,14 @@ namespace Diiagramr.PluginNodeApi
     /// </summary>
     public class NodeSetup
     {
-        private readonly AbstractNodeViewModel _nodeViewModel;
+        private readonly PluginNode _nodeViewModel;
         private int _terminalIndex;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="NodeSetup" /> class.
         /// </summary>
         /// <param name="nodeViewModel">The node view model.</param>
-        public NodeSetup(AbstractNodeViewModel nodeViewModel)
+        public NodeSetup(PluginNode nodeViewModel)
         {
             _nodeViewModel = nodeViewModel ?? throw new ArgumentNullException(nameof(nodeViewModel));
         }

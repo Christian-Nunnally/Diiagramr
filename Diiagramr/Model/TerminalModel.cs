@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using Diiagramr.ViewModel.Diagram;
+using Diiagramr.PluginNodeApi;
 
 namespace Diiagramr.Model
 {

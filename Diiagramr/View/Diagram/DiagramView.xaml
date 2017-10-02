@@ -7,6 +7,7 @@
              xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
              xmlns:view="clr-namespace:Diiagramr.View"
              xmlns:customControls="clr-namespace:Diiagramr.View.CustomControls"
+             xmlns:pluginNodeApi="clr-namespace:Diiagramr.PluginNodeApi"
              d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
              DragOver="{s:Action DragOver}"
              DragEnter="{s:Action DragEnter}"
@@ -146,7 +147,7 @@
                             <Setter Property="Canvas.Top" Value="{Binding Y, Mode=TwoWay}" />
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
-                                    <DataTemplate DataType="{x:Type diagram:AbstractNodeViewModel}">
+                                    <DataTemplate DataType="{x:Type pluginNodeApi:PluginNode}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
@@ -181,7 +182,6 @@
                                                                           DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                                           PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorder}"
                                                                           Template="{StaticResource MoveThumbTemplate}"
-                                                                          DragOver="{s:Action DragOverEventHandler}"
                                                                           MouseEnter="{s:Action MouseEntered}"  
                                                                           Drop="{s:Action DropEventHandler}"
                                                                           MouseLeave="{s:Action MouseLeft}"         
@@ -210,7 +210,6 @@
                                                     HorizontalAlignment="Stretch"
                                                     Style="{StaticResource NodeBorderStyle}">
                                                 <ContentControl s:View.Model="{Binding}"
-                                                                Loaded="{s:Action NodeViewLoaded}"
                                                                 VerticalContentAlignment="Stretch"
                                                                 HorizontalContentAlignment="Stretch"
                                                                 IsTabStop="False" />

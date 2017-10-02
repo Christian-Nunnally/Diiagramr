@@ -9,19 +9,6 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
     public class PluginNodeTest
     {
         [TestMethod]
-        public void TestLoadNodeVariables_SetsActualProperty()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            nodeMoq.Setup(n => n.GetVariable("PublicProperty")).Returns(5);
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            Assert.AreEqual(5, testPluginNode.PublicProperty);
-        }
-
-        [TestMethod]
         public void TestSaveNodeVariables_FindsImplementingPublicProperty()
         {
             var nodeMoq = new Mock<NodeModel>("");
@@ -55,18 +42,6 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             testPluginNode.PublicPropertyNonSetting = 5;
 
             nodeMoq.Verify(n => n.SetVariable("PublicPropertyNonSetting", 0), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestLoadNodeVariables_FindsImplementingPublicProperty()
-        {
-            var nodeMoq = new Mock<NodeModel>("");
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.NodeModel = nodeMoq.Object;
-
-            testPluginNode.LoadNodeVariables();
-
-            nodeMoq.Verify(n => n.GetVariable("PublicProperty"));
         }
     }
 

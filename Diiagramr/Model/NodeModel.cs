@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.Serialization;
-using Diiagramr.ViewModel.Diagram;
+using Diiagramr.PluginNodeApi;
 using PropertyChanged;
 
 namespace Diiagramr.Model
@@ -12,7 +13,7 @@ namespace Diiagramr.Model
     {
         [DataMember] public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
-        private AbstractNodeViewModel _nodeViewModel;
+        private PluginNode _nodeViewModel;
 
         private NodeModel()
         {
@@ -28,14 +29,13 @@ namespace Diiagramr.Model
         [DataMember]
         public string NodeFullName { get; set; }
 
-        public AbstractNodeViewModel NodeViewModel
+        public PluginNode NodeViewModel
         {
             get => _nodeViewModel;
             set
             {
                 _nodeViewModel = value;
-                _nodeViewModel.SetupPluginNodeSettings();
-                _nodeViewModel.LoadNodeVariables();
+                _nodeViewModel.InitializePluginNodeSettings();
             }
         }
 
@@ -118,6 +118,14 @@ namespace Diiagramr.Model
             PropertyChanged -= terminal.NodePropertyChanged;
             Terminals.Remove(terminal);
             TerminalSematicsChanged();
+        }
+
+        public void InitializePersistedVariableToProperty(PropertyInfo info)
+        {
+            if (!PersistedVariables.ContainsKey(info.Name))
+            {
+                SetVariable(info.Name, info.GetValue(_nodeViewModel));
+            }
         }
     }
 }

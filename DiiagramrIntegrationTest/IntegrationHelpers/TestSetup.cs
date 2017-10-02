@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
 using Diiagramr.View;
 using Diiagramr.View.CustomControls;
@@ -24,8 +25,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var projFileSystem = new ProjectFileService(dirService, testFileDirectory.Object, testFileDirectory.Object, new TestLoadSave());
             ProjectFileService ProjectFileServiceFactory() => projFileSystem;
             var testNode = new TestNode();
-            var testNodeList = new List<AbstractNodeViewModel> {testNode};
-            IEnumerable<AbstractNodeViewModel> NodeFactory() => testNodeList;
+            var testNodeList = new List<PluginNode> {testNode};
+            IEnumerable<PluginNode> NodeFactory() => testNodeList;
             var nodeProvider = new NodeProvider(NodeFactory);
             NodeProvider NodeProviderFactory() => nodeProvider;
             var projManager = new ProjectManager(ProjectFileServiceFactory, NodeProviderFactory);
@@ -55,7 +56,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 
 
         // Places the given node at (ptX, ptY) on active diagram and returns new node
-        public static AbstractNodeViewModel PlaceNode(this ShellViewModel shell, AbstractNodeViewModel node, int ptX = 0, int ptY = 0)
+        public static PluginNode PlaceNode(this ShellViewModel shell, PluginNode node, int ptX = 0, int ptY = 0)
         {
             var nodeSelectorViewModel = shell.DiagramWellViewModel.NodeSelectorViewModel;
             var pt = new Point(ptX, ptY);

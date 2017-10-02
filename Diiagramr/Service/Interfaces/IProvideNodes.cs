@@ -1,20 +1,19 @@
-﻿using Diiagramr.Model;
-using Diiagramr.ViewModel.Diagram;
-using System.Collections.Generic;
-using Diiagramr.Service.Interfaces;
+﻿using System.Collections.Generic;
+using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 
-namespace Diiagramr.Service
+namespace Diiagramr.Service.Interfaces
 {
     public interface IProvideNodes
     {
         IProjectManager ProjectManager { get; set; }
 
-        void RegisterNode(AbstractNodeViewModel node);
+        void RegisterNode(PluginNode node);
 
-        AbstractNodeViewModel LoadNodeViewModelFromNode(NodeModel node);
+        PluginNode LoadNodeViewModelFromNode(NodeModel node);
 
-        AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName);
+        PluginNode CreateNodeViewModelFromName(string typeFullName);
 
-        IEnumerable<AbstractNodeViewModel> GetRegisteredNodes();
+        IEnumerable<PluginNode> GetRegisteredNodes();
     }
 }

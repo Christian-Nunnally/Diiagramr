@@ -4,6 +4,7 @@ using System.Linq;
 using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 
 namespace Diiagramr.ViewModel.Diagram.CoreNode
 {

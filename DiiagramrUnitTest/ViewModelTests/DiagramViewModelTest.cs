@@ -1,5 +1,4 @@
 ﻿using Diiagramr.Model;
-using Diiagramr.Service;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -7,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using Diiagramr.PluginNodeApi;
+using Diiagramr.Service.Interfaces;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -16,7 +17,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private DiagramViewModel _diagramViewModel;
         private Mock<DiagramModel> _diagramMoq;
         private Mock<NodeModel> _nodeMoq;
-        private Mock<AbstractNodeViewModel> _abstractNodeViewModelMoq;
+        private Mock<PluginNode> _abstractNodeViewModelMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
 
         [TestInitialize]
@@ -58,7 +59,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_abstractNodeViewModelMoq.Object);
@@ -103,7 +104,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestSetInsertingNodeViewModel_AddsNodeToDiagram()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
@@ -117,7 +118,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewRightMouseButtonDown_InsertingNode_InsertingNodeSetToNull()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _abstractNodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
@@ -132,7 +133,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewRightMouseButtonDown_InsertingNode_InsertingNodeRemovedFromDiagram()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _abstractNodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
@@ -147,7 +148,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewLeftMouseButtonDown_InsertingNode_InsertingNodeViewModelSetToNull()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
@@ -167,7 +168,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestMouseMoved_InsertingNode_SetsInsertingNodePosition()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _abstractNodeViewModelMoq.SetupGet(m => m.X).Returns(10);
@@ -184,7 +185,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestMouseMoved_InsertingNode_SetsInsertingNodePositionCenteredOnMouseRespectingZoom()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            _abstractNodeViewModelMoq = new Mock<PluginNode>();
             _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _abstractNodeViewModelMoq.SetupGet(m => m.X).Returns(10);

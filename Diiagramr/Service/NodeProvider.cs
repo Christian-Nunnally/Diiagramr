@@ -2,35 +2,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.Service.Interfaces;
-using Diiagramr.ViewModel.Diagram;
 using Diiagramr.ViewModel.Diagram.CoreNode;
 
 namespace Diiagramr.Service
 {
     public class NodeProvider : IProvideNodes
     {
-        private readonly IList<AbstractNodeViewModel> _availableNodeViewModels = new List<AbstractNodeViewModel>();
+        private readonly IList<PluginNode> _availableNodeViewModels = new List<PluginNode>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
 
-        public NodeProvider(Func<IEnumerable<AbstractNodeViewModel>> availableNodes)
+        public NodeProvider(Func<IEnumerable<PluginNode>> availableNodes)
         {
             availableNodes.Invoke().ForEach(RegisterNode);
         }
 
         public IProjectManager ProjectManager { get; set; }
 
-        public void RegisterNode(AbstractNodeViewModel node)
+        public void RegisterNode(PluginNode node)
         {
             if (_availableNodeViewModels.Contains(node)) return;
             _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
         }
 
-        public AbstractNodeViewModel LoadNodeViewModelFromNode(NodeModel node)
+        public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
             if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
-            if (!(Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) is AbstractNodeViewModel viewModel)) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
+            if (!(Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) is PluginNode viewModel)) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
 
             viewModel.InitializeWithNode(node);
             if (viewModel is DiagramCallNodeViewModel diagramCallNode)
@@ -47,13 +47,13 @@ namespace Diiagramr.Service
             return viewModel;
         }
 
-        public AbstractNodeViewModel CreateNodeViewModelFromName(string typeFullName)
+        public PluginNode CreateNodeViewModelFromName(string typeFullName)
         {
             var node = new NodeModel(typeFullName);
             return LoadNodeViewModelFromNode(node);
         }
 
-        public IEnumerable<AbstractNodeViewModel> GetRegisteredNodes()
+        public IEnumerable<PluginNode> GetRegisteredNodes()
         {
             return _availableNodeViewModels.ToArray();
         }

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using Diiagramr.ViewModel.Diagram;
+using Diiagramr.PluginNodeApi;
 
 namespace Diiagramr.View.CustomControls
 {
@@ -14,7 +14,7 @@ namespace Diiagramr.View.CustomControls
         private void MoveThumb_DragDelta(object sender, DragDeltaEventArgs e)
         {
             if (!(DataContext is ContentPresenter contentPresenter)) return;
-            if (!(contentPresenter.Content is AbstractNodeViewModel node)) return;
+            if (!(contentPresenter.Content is PluginNode node)) return;
             node.X += e.HorizontalChange;
             node.Y += e.VerticalChange;
         }

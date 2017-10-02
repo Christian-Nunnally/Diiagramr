@@ -5,7 +5,9 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 using Diiagramr.View;
 using Diiagramr.ViewModel.Diagram.CoreNode;
 using Stylet;
@@ -16,7 +18,7 @@ namespace Diiagramr.ViewModel.Diagram
     {
 
         private readonly IProvideNodes _nodeProvider;
-        private AbstractNodeViewModel _insertingNodeViewModel;
+        private PluginNode _insertingNodeViewModel;
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider)
         {
@@ -24,7 +26,7 @@ namespace Diiagramr.ViewModel.Diagram
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
 
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
-            NodeViewModels = new BindableCollection<AbstractNodeViewModel>();
+            NodeViewModels = new BindableCollection<PluginNode>();
             WireViewModels = new BindableCollection<WireViewModel>();
 
             Diagram = diagram;
@@ -46,11 +48,11 @@ namespace Diiagramr.ViewModel.Diagram
 
         public DiagramControlViewModel DiagramControlViewModel { get; }
 
-        public BindableCollection<AbstractNodeViewModel> NodeViewModels { get; set; }
+        public BindableCollection<PluginNode> NodeViewModels { get; set; }
 
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
 
-        public AbstractNodeViewModel InsertingNodeViewModel
+        public PluginNode InsertingNodeViewModel
         {
             get => _insertingNodeViewModel;
             set
@@ -81,14 +83,14 @@ namespace Diiagramr.ViewModel.Diagram
             if (propertyChangedEventArgs.PropertyName.Equals("Name")) NotifyOfPropertyChange(() => Name);
         }
 
-        private void AddNode(AbstractNodeViewModel viewModel)
+        private void AddNode(PluginNode viewModel)
         {
             if (viewModel.NodeModel == null) throw new InvalidOperationException("Can't add a node to the diagram before it's been initialized");
             Diagram.AddNode(viewModel.NodeModel);
             AddNodeViewModel(viewModel);
         }
 
-        private void AddNodeViewModel(AbstractNodeViewModel viewModel)
+        private void AddNodeViewModel(PluginNode viewModel)
         {
             if (!Diagram.Nodes.Contains(viewModel.NodeModel)) throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
             viewModel.TerminalConnectedStatusChanged += OnTerminalConnectedStatusChanged;
@@ -115,7 +117,7 @@ namespace Diiagramr.ViewModel.Diagram
             NodeViewModels.ForEach(n => n.HideAllTerminalLabels());
         }
 
-        private void RemoveNode(AbstractNodeViewModel viewModel)
+        private void RemoveNode(PluginNode viewModel)
         {
             Diagram.RemoveNode(viewModel.NodeModel);
             NodeViewModels.Remove(viewModel);
@@ -213,11 +215,6 @@ namespace Diiagramr.ViewModel.Diagram
             nodeViewModel.DropEventHandler(sender, e);
         }
 
-        public void DragOverEventHandler(object sender, DragEventArgs e)
-        {
-            AbstractNodeViewModel.DragOverEventHandler(sender, e);
-        }
-
         public void DroppedDiagramCallNode(object sender, DragEventArgs e)
         {
             HideAllTerminalLabels();
@@ -240,12 +237,6 @@ namespace Diiagramr.ViewModel.Diagram
         {
             var nodeViewModel = UnpackNodeViewModelFromSender(sender);
             nodeViewModel.MouseLeft(sender, e);
-        }
-
-        public void NodeViewLoaded(object sender, RoutedEventArgs e)
-        {
-            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
-            abstractNodeViewModel.Wiggle();
         }
 
         public void PreviewLeftMouseDownOnBorder(object sender, MouseButtonEventArgs e)
@@ -329,15 +320,15 @@ namespace Diiagramr.ViewModel.Diagram
             return e.GetPosition(inputElement);
         }
 
-        private static AbstractNodeViewModel UnpackNodeViewModelFromSender(object sender)
+        private static PluginNode UnpackNodeViewModelFromSender(object sender)
         {
             return UnpackNodeViewModelFromControl((Control) sender);
         }
 
-        private static AbstractNodeViewModel UnpackNodeViewModelFromControl(Control control)
+        private static PluginNode UnpackNodeViewModelFromControl(Control control)
         {
             var contentPresenter = control.DataContext as ContentPresenter;
-            return (AbstractNodeViewModel) (contentPresenter?.Content ?? control.DataContext);
+            return (PluginNode) (contentPresenter?.Content ?? control.DataContext);
         }
 
         #endregion

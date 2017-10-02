@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 using Stylet;
 
 namespace Diiagramr.ViewModel.Diagram

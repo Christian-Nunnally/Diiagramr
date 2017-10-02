@@ -1,5 +1,4 @@
 ﻿using Diiagramr.Model;
-using Diiagramr.Service;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.Service.Interfaces;
-using NUnit.Framework;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace DiiagramrUnitTests.ViewModelTests
@@ -104,7 +103,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestRightMouseDown_DiagramOpenAndNodeSelected_SetsNodeSelectorSelectedNodeToNull()
         {
-            var abstractNodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var abstractNodeViewModelMoq = new Mock<PluginNode>();
             _nodeSelectorMoq.SetupGet(m => m.SelectedNode).Returns(abstractNodeViewModelMoq.Object);
             _diagramWellViewModel.RightMouseDown(new Point(0, 0));
             var diagram = SetupProjectWithSingleDiagram();

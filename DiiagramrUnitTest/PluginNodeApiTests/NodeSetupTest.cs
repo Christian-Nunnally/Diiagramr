@@ -21,7 +21,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestNodeSize_SetsNodeWidthAndHeight()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.NodeSize(30, 40);
 
@@ -32,7 +32,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestNodeName_SetsNodeName()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.NodeName("bob");
 
@@ -42,7 +42,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestInputTerminal_AddsInputTerminalViewModelToNode()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -54,7 +54,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestInputTerminal_DirectionSouth_AddedTerminalHasSouthDirection()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -66,7 +66,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestInputTerminal_TerminalName_AddedTerminalHasNameSet()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -78,7 +78,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestInputTerminal_DoesNotReturnNull()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -88,7 +88,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestOutputTerminal_AddsInputTerminalViewModelToNode()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -100,7 +100,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestOutputTerminal_DirectionSouth_AddedTerminalHasSouthDirection()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -112,7 +112,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestOutputTerminal_TerminalName_AddedTerminalHasNameSet()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -124,7 +124,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestOutputTerminal_DoesNotReturnNull()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>(string.Empty).Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -135,7 +135,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [ExpectedException(typeof(InvalidOperationException))]
         public void TestCreateClientTerminal_ViewModelNotOnNode_ThrowsException()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             var terminalViewModelMoq = new Mock<TerminalViewModel>(new Mock<TerminalModel>().Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
@@ -146,7 +146,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         [TestMethod]
         public void TestCreateClientTerminal_ViewModelOnNode_ReturnsTerminal()
         {
-            var nodeViewModelMoq = new Mock<AbstractNodeViewModel>();
+            var nodeViewModelMoq = new Mock<PluginNode>();
             var terminalViewModelMoq = new Mock<TerminalViewModel>(new Mock<TerminalModel>().Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel> { terminalViewModelMoq.Object });
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);

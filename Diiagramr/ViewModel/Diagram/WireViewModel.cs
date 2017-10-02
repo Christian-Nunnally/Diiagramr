@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using Diiagramr.Model;
+using Diiagramr.PluginNodeApi;
 using Diiagramr.View;
 using Stylet;
 
