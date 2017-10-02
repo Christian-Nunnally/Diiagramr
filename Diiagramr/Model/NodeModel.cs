@@ -29,7 +29,7 @@ namespace Diiagramr.Model
         [DataMember]
         public string NodeFullName { get; set; }
 
-        public PluginNode NodeViewModel
+        public virtual PluginNode NodeViewModel
         {
             get => _nodeViewModel;
             set
@@ -59,7 +59,7 @@ namespace Diiagramr.Model
         /// </summary>
         public virtual event Action SemanticsChanged;
 
-        public void AddTerminal(TerminalModel terminal)
+        public virtual void AddTerminal(TerminalModel terminal)
         {
             Terminals.Add(terminal);
             SemanticsChanged?.Invoke();
@@ -111,7 +111,7 @@ namespace Diiagramr.Model
             SemanticsChanged?.Invoke();
         }
 
-        public void RemoveTerminal(TerminalModel terminal)
+        public virtual void RemoveTerminal(TerminalModel terminal)
         {
             terminal.DisconnectWire();
             terminal.SemanticsChanged -= TerminalSematicsChanged;
@@ -120,11 +120,11 @@ namespace Diiagramr.Model
             TerminalSematicsChanged();
         }
 
-        public void InitializePersistedVariableToProperty(PropertyInfo info)
+        public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
         {
             if (!PersistedVariables.ContainsKey(info.Name))
             {
-                SetVariable(info.Name, info.GetValue(_nodeViewModel));
+                SetVariable(info.Name, info.GetValue(NodeViewModel));
             }
         }
     }

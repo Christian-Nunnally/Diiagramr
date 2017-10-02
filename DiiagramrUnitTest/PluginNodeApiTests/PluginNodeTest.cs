@@ -1,5 +1,8 @@
-﻿using Diiagramr.Model;
+﻿using System.Linq;
+using System.Reflection;
+using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
+using Diiagramr.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -9,19 +12,17 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
     public class PluginNodeTest
     {
         [TestMethod]
-        public void TestSaveNodeVariables_FindsImplementingPublicProperty()
+        public void TestInitializeWithNode_SetsNodeViewModel()
         {
             var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
             testPluginNode.InitializeWithNode(nodeMoq.Object);
 
-            testPluginNode.PublicProperty = 5;
-
-            nodeMoq.Verify(n => n.SetVariable("PublicProperty", 5));
+            nodeMoq.VerifySet(n => n.NodeViewModel = testPluginNode);
         }
 
         [TestMethod]
-        public void TestSaveNodeVariables_DoesntSavePublicPropertyFromPluginNode()
+        public void TestInitializeWithNode_DoesntSavePublicPropertyFromPluginNode()
         {
             var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
@@ -33,7 +34,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         }
 
         [TestMethod]
-        public void TestSaveNodeVariables_DoesntSavePublicPropertyWithoutPluginNodeSettingAttribute()
+        public void TestInitializeWithNode_DoesntSavePublicPropertyWithoutPluginNodeSettingAttribute()
         {
             var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
@@ -42,6 +43,227 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             testPluginNode.PublicPropertyNonSetting = 5;
 
             nodeMoq.Verify(n => n.SetVariable("PublicPropertyNonSetting", 0), Times.Never);
+        }
+
+        [TestMethod]
+        public void TestInitializePluginNodeSettings_InitializesNewSettingInNodeModelPersistedVariables()
+        {
+            var nodeMoq = new Mock<NodeModel>("");
+            var testPluginNode = new TestPluginNode();
+            testPluginNode.NodeModel = nodeMoq.Object;
+            nodeMoq.SetupGet(n => n.NodeViewModel).Returns(testPluginNode);
+
+            testPluginNode.InitializePluginNodeSettings();
+
+            nodeMoq.Verify(n => n.InitializePersistedVariableToProperty(It.IsAny<PropertyInfo>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestInitializePluginNodeSettings_InitializesLoadedSettingOnPluginNode()
+        {
+            var nodeMoq = new Mock<NodeModel>("");
+            var testPluginNode = new TestPluginNode();
+            testPluginNode.NodeModel = nodeMoq.Object;
+            nodeMoq.SetupGet(n => n.NodeViewModel).Returns(testPluginNode);
+
+            testPluginNode.InitializePluginNodeSettings();
+
+            nodeMoq.Verify(n => n.GetVariable(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void TestHideAllTerminalLabels_SetsTitleVisibleToFalseOnTerminalViewModels()
+        {
+            var nodeMoq = new Mock<NodeModel>("");
+            var testPluginNode = new TestPluginNode();
+            testPluginNode.NodeModel = nodeMoq.Object;
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalViewModelMoq = new Mock<TerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.HideAllTerminalLabels();
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = false);
+        }
+
+        [TestMethod]
+        public void TestShowOutputTerminalLabelsOfType_TerminalTypeCompatible_SetsTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(int));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true);
+        }
+
+        [TestMethod]
+        public void TestShowOutputTerminalLabelsOfType_TerminalTypeNotCompatible_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(string));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestShowOutputTerminalLabelsOfType_TerminalTypeCompatibleButInput_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalViewModelMoq = new Mock<InputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(string));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestShowInputTerminalLabelsOfType_TerminalTypeCompatible_SetsTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalViewModelMoq = new Mock<InputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowInputTerminalLabelsOfType(typeof(int));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true);
+        }
+
+        [TestMethod]
+        public void TestShowInputTerminalLabelsOfType_TerminalTypeNotCompatible_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalViewModelMoq = new Mock<InputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowInputTerminalLabelsOfType(typeof(string));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestShowInputTerminalLabelsOfType_TerminalTypeCompatibleButOutput_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.ShowInputTerminalLabelsOfType(typeof(string));
+
+            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+        }
+
+        [TestMethod]
+        public void TestDisconnectAllTerminals_InvokesDisconnectTerminalOnTerminalViewModels()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
+
+            testPluginNode.DisconnectAllTerminals();
+
+            terminalViewModelMoq.Verify(n => n.DisconnectTerminal());
+        }
+
+        [TestMethod]
+        public void TestMouseEntered_TitleVisibleSetToTrue()
+        {
+            var testPluginNode = new TestPluginNode();
+            Assert.IsFalse(testPluginNode.TitleVisible);
+            testPluginNode.MouseEntered(null, null);
+            Assert.IsTrue(testPluginNode.TitleVisible);
+        }
+
+        [TestMethod]
+        public void TestMouseLeft_TitleVisibleSetToFalse()
+        {
+            var testPluginNode = new TestPluginNode();
+            testPluginNode.MouseEntered(null, null);
+            Assert.IsTrue(testPluginNode.TitleVisible);
+            testPluginNode.MouseLeft(null, null);
+            Assert.IsFalse(testPluginNode.TitleVisible);
+        }
+
+        [TestMethod]
+        public void TestAddTerminalViewModel_TerminalViewModelAddedToTerminalViewModels()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            var nodeMoq = new Mock<NodeModel>("");
+            testPluginNode.NodeModel = nodeMoq.Object;
+
+            testPluginNode.AddTerminalViewModel(terminalViewModelMoq.Object);
+
+            Assert.AreEqual(terminalViewModelMoq.Object, testPluginNode.TerminalViewModels.First());
+        }
+
+        [TestMethod]
+        public void TestAddTerminalViewModel_TerminalModelAddedToNodeModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            var nodeMoq = new Mock<NodeModel>("");
+            testPluginNode.NodeModel = nodeMoq.Object;
+
+            testPluginNode.AddTerminalViewModel(terminalViewModelMoq.Object);
+
+            nodeMoq.Verify(n => n.AddTerminal(terminalMoq.Object));
+        }
+
+        [TestMethod]
+        public void TestRemoveTerminalViewModel_TerminalViewModelRemovedFromTerminalViewModels()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            var nodeMoq = new Mock<NodeModel>("");
+            testPluginNode.NodeModel = nodeMoq.Object;
+
+            testPluginNode.AddTerminalViewModel(terminalViewModelMoq.Object);
+            testPluginNode.RemoveTerminalViewModel(terminalViewModelMoq.Object);
+
+            Assert.AreEqual(0, testPluginNode.TerminalViewModels.Count);
+        }
+
+        [TestMethod]
+        public void TestRemoveTerminalViewModel_TerminalModelRemovedFromNodeModel()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            var nodeMoq = new Mock<NodeModel>("");
+            testPluginNode.NodeModel = nodeMoq.Object;
+
+            testPluginNode.AddTerminalViewModel(terminalViewModelMoq.Object);
+            testPluginNode.RemoveTerminalViewModel(terminalViewModelMoq.Object);
+
+            nodeMoq.Verify(n => n.RemoveTerminal(terminalMoq.Object));
         }
     }
 
@@ -74,6 +296,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
         public override void SetupNode(NodeSetup setup)
         {
+            setup.NodeSize(40, 40);
         }
     }
 }

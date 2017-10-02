@@ -19,15 +19,15 @@ namespace Diiagramr.ViewModel.Diagram
             TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
             terminal.PropertyChanged += TerminalOnPropertyChanged;
             Data = terminal.Data;
-            Name = TerminalModel.Name;
+            Name = terminal.Name;
             SetTerminalRotationBasedOnDirection();
         }
 
-        public TerminalModel TerminalModel { get; }
+        public virtual TerminalModel TerminalModel { get; }
 
         public string Name { get; set; }
 
-        public bool TitleVisible { get; set; }
+        public virtual bool TitleVisible { get; set; }
 
         public float TerminalRotation { get; set; }
 
@@ -105,7 +105,7 @@ namespace Diiagramr.ViewModel.Diagram
             WireToTerminal(terminal);
         }
 
-        public void DisconnectTerminal()
+        public virtual void DisconnectTerminal()
         {
             TerminalModel.DisconnectWire();
         }
@@ -123,7 +123,7 @@ namespace Diiagramr.ViewModel.Diagram
             e.Handled = true;
         }
 
-        public void SetTerminalDirection(Direction direction)
+        public virtual void SetTerminalDirection(Direction direction)
         {
             TerminalModel.Direction = direction;
         }

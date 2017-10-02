@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using ColorOrgan5.Annotations;
@@ -9,6 +8,16 @@ namespace Diiagramr.Model
     [DataContract(IsReference = true)]
     public class ModelBase : INotifyPropertyChanged
     {
+        public ModelBase()
+        {
+            Id = StaticId++;
+        }
+
+        [DataMember]
+        public int Id { get; set; }
+
+        private static int StaticId { get; set; }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]

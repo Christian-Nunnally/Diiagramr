@@ -14,11 +14,12 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
         private readonly DiagramCopier _diagramCopier = new DiagramCopier();
 
         private readonly Dictionary<DiagramInputNodeViewModel, Terminal<object>> _inputNodeToTerminal = new Dictionary<DiagramInputNodeViewModel, Terminal<object>>();
-
-        private readonly Dictionary<int, TerminalViewModel> _ioNodeIdToTerminalViewModel = new Dictionary<int, TerminalViewModel>();
         private readonly Dictionary<DiagramOutputNodeViewModel, Terminal<object>> _outputNodeToTerminal = new Dictionary<DiagramOutputNodeViewModel, Terminal<object>>();
 
+        private readonly Dictionary<int, TerminalViewModel> _ioNodeIdToTerminalViewModel = new Dictionary<int, TerminalViewModel>();
+
         private NodeSetup _nodeSetup;
+        private bool _diagramValidated;
 
         public DiagramModel ReferencingDiagramModel { get; private set; }
 
@@ -84,6 +85,7 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
             }
 
             _outputNodeToTerminal.Add(outputNode, terminal);
+            outputNode.DataChanged += ValidateDiagramReference;
             outputNode.DataChanged += terminal.ChangeTerminalData;
             terminal.Data = outputNode.InputTerminal.Data;
         }
@@ -97,15 +99,23 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
             }
 
             _inputNodeToTerminal.Add(inputNode, terminal);
+            terminal.DataChanged += ValidateDiagramReference;
             terminal.DataChanged += inputNode.TerminalDataChanged;
         }
 
         private void DiagramModelOnSemanticsChanged()
         {
+            _diagramValidated = false;
+            if (ReferencingDiagramModel.Nodes.Select(n => n.NodeViewModel).OfType<IoNode>().Count() == _ioNodeIdToTerminalViewModel.Count) return;
+            ValidateDiagramReference();
+        }
+
+        private void ValidateDiagramReference(object data = null)
+        {
+            if (_diagramValidated) return;
+            _diagramValidated = true;
             UnsyncOldTerminals();
-
             CopyReferencingDiagramAvoidingRecursion();
-
             RemoveTerminalsForNoLongerExistingIoNodes();
             SyncTerminals();
         }
@@ -120,10 +130,16 @@ namespace Diiagramr.ViewModel.Diagram.CoreNode
         private void UnsyncOldTerminals()
         {
             foreach (var inputNodeAndTerminal in _inputNodeToTerminal)
+            {
+                inputNodeAndTerminal.Value.DataChanged -= ValidateDiagramReference;
                 inputNodeAndTerminal.Value.DataChanged -= inputNodeAndTerminal.Key.TerminalDataChanged;
+            }
 
             foreach (var outputNodeAndTerminal in _outputNodeToTerminal)
+            {
+                outputNodeAndTerminal.Key.DataChanged -= ValidateDiagramReference;
                 outputNodeAndTerminal.Key.DataChanged -= outputNodeAndTerminal.Value.ChangeTerminalData;
+            }
         }
 
         public override void Initialize()

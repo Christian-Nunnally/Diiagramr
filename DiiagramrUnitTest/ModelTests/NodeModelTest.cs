@@ -140,7 +140,7 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestSetNodeViewModel_SetupPluginNodeSettingsInvokedOnViewModel()
+        public void TestSetNodeViewModel_InitializePluginNodeSettingsInvokedOnViewModel()
         {
             var nodeViewModelMoq = new Mock<PluginNode>();
             _node.NodeViewModel = nodeViewModelMoq.Object;

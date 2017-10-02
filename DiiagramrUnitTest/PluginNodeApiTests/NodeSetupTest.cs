@@ -137,6 +137,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<PluginNode>();
             var terminalViewModelMoq = new Mock<TerminalViewModel>(new Mock<TerminalModel>().Object);
+            terminalViewModelMoq.SetupGet(model => model.TerminalModel).Returns(new Mock<TerminalModel>().Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
 
@@ -148,6 +149,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<PluginNode>();
             var terminalViewModelMoq = new Mock<TerminalViewModel>(new Mock<TerminalModel>().Object);
+            terminalViewModelMoq.SetupGet(model => model.TerminalModel).Returns(new Mock<TerminalModel>().Object);
             nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel> { terminalViewModelMoq.Object });
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
 

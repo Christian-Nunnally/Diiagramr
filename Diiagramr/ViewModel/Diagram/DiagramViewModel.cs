@@ -16,7 +16,6 @@ namespace Diiagramr.ViewModel.Diagram
 {
     public class DiagramViewModel : Screen
     {
-
         private readonly IProvideNodes _nodeProvider;
         private PluginNode _insertingNodeViewModel;
 
