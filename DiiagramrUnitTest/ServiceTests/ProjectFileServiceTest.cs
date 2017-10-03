@@ -4,7 +4,6 @@ using Diiagramr.Model;
 using Diiagramr.Service;
 using Diiagramr.Service.Interfaces;
 using Diiagramr.View.CustomControls;
-using DiiagramrUnitTests.TestClasses;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -16,18 +15,20 @@ namespace DiiagramrUnitTests.ServiceTests
         private Mock<IDirectoryService> _directoryServiceMoq;
         private ProjectFileService _projectFileService;
         private const string Directory = "test";
-        private TestFileDialog _testDialog;
+        private Mock<IFileDialog> _testDialogMoq;
 
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _testDialog = new TestFileDialog();
+            _testDialogMoq = new Mock<IFileDialog>();
+            _testDialogMoq.Setup(d => d.ShowDialog()).Returns(DialogResult.Cancel);
+            _testDialogMoq.SetupAllProperties();
             _directoryServiceMoq = new Mock<IDirectoryService>();
             _directoryServiceMoq.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
             _directoryServiceMoq.Setup(m => m.GetCurrentDirectory()).Returns("testDirectory");
             _projectFileService =
-                new ProjectFileService(_directoryServiceMoq.Object, _testDialog, _testDialog, new ProjectLoadSave());
+                new ProjectFileService(_directoryServiceMoq.Object, _testDialogMoq.Object, _testDialogMoq.Object, new ProjectLoadSave());
             _projectFileService.ProjectDirectory = Directory;
         }
 
@@ -42,7 +43,7 @@ namespace DiiagramrUnitTests.ServiceTests
         public void SaveAsProjectTest_SetsInitialDirectory()
         {
             _projectFileService.SaveProject(new ProjectModel(), true);
-            Assert.AreEqual(Directory, _testDialog.InitialDirectory);
+            Assert.AreEqual(Directory, _testDialogMoq.Object.InitialDirectory);
         }
 
         [TestMethod]
@@ -53,7 +54,7 @@ namespace DiiagramrUnitTests.ServiceTests
                 Name = "testProj"
             };
             _projectFileService.SaveProject(proj, true);
-            Assert.AreEqual(proj.Name, _testDialog.FileName);
+            Assert.AreEqual(proj.Name, _testDialogMoq.Object.FileName);
         }
     }
 }

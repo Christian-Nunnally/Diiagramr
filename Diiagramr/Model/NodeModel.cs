@@ -36,6 +36,7 @@ namespace Diiagramr.Model
             {
                 _nodeViewModel = value;
                 _nodeViewModel.InitializePluginNodeSettings();
+                NodeFullName = _nodeViewModel.GetType().FullName;
             }
         }
 

@@ -9,7 +9,6 @@
              d:DataContext="{d:DesignInstance diagram1:TerminalViewModel}"
              Width="14" 
              Height="14">
-
     <Border AllowDrop="True"
             Drop="{s:Action DropEventHandler}"
             MouseMove="{s:Action MouseMove}"

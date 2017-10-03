@@ -189,16 +189,21 @@ namespace Diiagramr.ViewModel.Diagram
 
             if (o is DiagramModel diagram)
             {
-                var diagramNode = new DiagramCallNodeViewModel();
-                diagramNode.InitializeWithNode(new NodeModel(typeof(DiagramCallNodeViewModel).FullName));
-                diagramNode.NodeProvider = _nodeProvider;
-                diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
-                DraggingDiagramCallNode = diagramNode;
                 e.Effects = DragDropEffects.Move;
+                DiagramDragEnter(diagram);
                 return;
             }
 
             e.Effects = DragDropEffects.None;
+        }
+
+        public void DiagramDragEnter(DiagramModel diagram)
+        {
+            var diagramNode = new DiagramCallNodeViewModel();
+            diagramNode.InitializeWithNode(new NodeModel(typeof(DiagramCallNodeViewModel).FullName));
+            diagramNode.NodeProvider = _nodeProvider;
+            diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
+            DraggingDiagramCallNode = diagramNode;
         }
 
         public void DragLeave(object sender, DragEventArgs e)

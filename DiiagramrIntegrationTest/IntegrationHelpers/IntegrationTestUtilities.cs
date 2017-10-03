@@ -2,43 +2,43 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using Diiagramr.Model;
 using Diiagramr.PluginNodeApi;
 using Diiagramr.Service;
+using Diiagramr.Service.Interfaces;
 using Diiagramr.View;
 using Diiagramr.View.CustomControls;
 using Diiagramr.ViewModel;
 using Diiagramr.ViewModel.Diagram;
+using Diiagramr.ViewModel.Diagram.CoreNode;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using StyletIoC;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
-    public static class TestSetup
+    public static class IntegrationTestUtilities
     {
         public static ShellViewModel SetupShellViewModel()
         {
-            var dirService = new DirectoryService();
-            var testFileDirectory = new Mock<IFileDialog>();
-            testFileDirectory.Setup(m => m.ShowDialog()).Returns(DialogResult.OK);
-            testFileDirectory.Setup(m => m.FileName).Returns("testProj");
-            testFileDirectory.Setup(m => m.InitialDirectory).Returns("c://");
-            var projFileSystem = new ProjectFileService(dirService, testFileDirectory.Object, testFileDirectory.Object, new TestLoadSave());
-            ProjectFileService ProjectFileServiceFactory() => projFileSystem;
-            var testNode = new TestNode();
-            var testNodeList = new List<PluginNode> {testNode};
-            IEnumerable<PluginNode> NodeFactory() => testNodeList;
-            var nodeProvider = new NodeProvider(NodeFactory);
-            NodeProvider NodeProviderFactory() => nodeProvider;
-            var projManager = new ProjectManager(ProjectFileServiceFactory, NodeProviderFactory);
-            ProjectManager ProjectManagerFactory() => projManager;
-            var projExplorer = new ProjectExplorerViewModel(ProjectManagerFactory);
-            ProjectExplorerViewModel ProjectExplorerViewModelFactory() => projExplorer;
-            var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProviderFactory);
-            NodeSelectorViewModel NodeSelectorViewModelFactory() => nodeSelectorViewModel;
-            var diagramWellViewModel = new DiagramWellViewModel(ProjectManagerFactory, NodeProviderFactory, NodeSelectorViewModelFactory);
-            DiagramWellViewModel DiagramWellViewModelFactory() => diagramWellViewModel;
-            var shell = new ShellViewModel(ProjectExplorerViewModelFactory, DiagramWellViewModelFactory, ProjectManagerFactory);
-            return shell;
+            IStyletIoCBuilder builder = new StyletIoCBuilder();
+            builder.Bind<ShellViewModel>().ToSelf();
+            builder.Bind<ProjectExplorerViewModel>().ToSelf();
+            builder.Bind<DiagramWellViewModel>().ToSelf();
+            builder.Bind<DiagramViewModel>().ToSelf();
+            builder.Bind<NodeSelectorViewModel>().ToSelf();
+            builder.Bind<IDirectoryService>().To<DirectoryService>();
+            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
+            builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
+            builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
+            builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
+            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
+            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
+            builder.Bind<PluginNode>().To<DiagramInputNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramOutputNodeViewModel>();
+            builder.Bind<PluginNode>().To<TestNode>();
+            var container = builder.BuildContainer();
+            return container.Get<ShellViewModel>();
         }
 
         // Opens diagram at index, default to first
@@ -61,19 +61,18 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var nodeSelectorViewModel = shell.DiagramWellViewModel.NodeSelectorViewModel;
             var pt = new Point(ptX, ptY);
             var diagramViewModel = shell.DiagramWellViewModel.ActiveItem;
-            // must have diagram open
-            Assert.IsNotNull(diagramViewModel);
+            Assert.IsNotNull(diagramViewModel, "must have diagram open");
             nodeSelectorViewModel.MousedOverNode = node;
             nodeSelectorViewModel.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
             diagramViewModel.MouseMoved(pt);
-            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth, diagramViewModel.InsertingNodeViewModel.X);
-            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth, diagramViewModel.InsertingNodeViewModel.Y);
+            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
+            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Height / 2, diagramViewModel.InsertingNodeViewModel.Y);
             diagramViewModel.PreviewLeftMouseButtonDown(pt);
             diagramViewModel.LeftMouseButtonDown(pt);
             var placedNode = diagramViewModel.NodeViewModels.Last();
-            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth, placedNode.X);
-            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth, placedNode.Y);
+            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth - placedNode.Width / 2, placedNode.X);
+            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth - placedNode.Height / 2, placedNode.Y);
             return placedNode;
         }
 
@@ -86,6 +85,14 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var wireViewModel = shell.DiagramWellViewModel.ActiveItem.WireViewModels.Last();
             Assert.AreEqual(wireViewModel.WireModel, sourceTerminal.TerminalModel.ConnectedWire);
             return wireViewModel;
+        }
+
+        public static DiagramCallNodeViewModel PlaceDiagramCallNodeFor(this DiagramViewModel diagramViewModel, DiagramModel diagram)
+        {
+            diagramViewModel.DiagramDragEnter(diagram);
+            diagramViewModel.DroppedDiagramCallNode(null, null);
+            diagramViewModel.LeftMouseButtonDown(new Point(0, 0));
+            return diagramViewModel.NodeViewModels.Last() as DiagramCallNodeViewModel;
         }
     }
 }

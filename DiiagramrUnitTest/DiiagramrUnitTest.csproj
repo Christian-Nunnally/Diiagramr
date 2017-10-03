@@ -98,7 +98,6 @@
     <Compile Include="ServiceTests\NodeProviderTest.cs" />
     <Compile Include="ServiceTests\ProjectFileServiceTest.cs" />
     <Compile Include="ServiceTests\DiagramCopierTest.cs" />
-    <Compile Include="TestClasses\TestFileDialog.cs" />
     <Compile Include="ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\Diagram\DiagramControlViewModelTest.cs" />

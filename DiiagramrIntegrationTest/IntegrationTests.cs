@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Diiagramr.PluginNodeApi;
-using Diiagramr.Service;
-using Diiagramr.View.CustomControls;
-using Diiagramr.ViewModel;
-using Diiagramr.ViewModel.Diagram;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Windows;
-using Diiagramr.View;
+﻿using Diiagramr.View;
 using DiiagramrIntegrationTest.IntegrationHelpers;
-using System.Windows.Forms;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace DiiagramrIntegrationTest
 {
@@ -21,7 +11,7 @@ namespace DiiagramrIntegrationTest
         [TestMethod]
         public void LoadSave()
         {
-            var shell = TestSetup.SetupShellViewModel();
+            var shell = IntegrationTestUtilities.SetupShellViewModel();
             var projExplorer = shell.ProjectExplorerViewModel;
             var projManager = projExplorer.ProjectManager;
             var diagramWellViewModel = shell.DiagramWellViewModel;
@@ -113,7 +103,7 @@ namespace DiiagramrIntegrationTest
         [TestMethod]
         public void RunPauseStop()
         {
-            var shell = TestSetup.SetupShellViewModel();
+            var shell = IntegrationTestUtilities.SetupShellViewModel();
             var projExplorer = shell.ProjectExplorerViewModel;
             var projManager = projExplorer.ProjectManager;
             var diagramWellViewModel = shell.DiagramWellViewModel;

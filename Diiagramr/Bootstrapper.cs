@@ -26,12 +26,7 @@ namespace Diiagramr
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
-            builder.Bind<PluginNode>().To<DemoNodeViewModel>();
-            builder.Bind<PluginNode>().To<AddNodeViewModel>();
-            builder.Bind<PluginNode>().To<NumberNodeViewModel>();
-            builder.Bind<PluginNode>().To<DiagramInputNodeViewModel>();
-            builder.Bind<PluginNode>().To<DiagramOutputNodeViewModel>();
-            builder.Bind<PluginNode>().To<DiagramCallNodeViewModel>();
+            builder.Bind<PluginNode>().ToAllImplementations();
             ConfigurePluginNodesIntoIoC(builder);
         }
 
