@@ -23,6 +23,7 @@ namespace Diiagramr.Service
         public void RegisterNode(PluginNode node)
         {
             if (_availableNodeViewModels.Contains(node)) return;
+            if (_nodeNameToViewModelMap.ContainsKey(node.GetType().FullName)) return;
             _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
         }
