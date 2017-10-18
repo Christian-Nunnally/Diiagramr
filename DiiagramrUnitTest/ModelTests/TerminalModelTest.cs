@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using Diiagramr.Model;
-using Diiagramr.PluginNodeApi;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

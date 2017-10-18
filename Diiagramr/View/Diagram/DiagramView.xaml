@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
              xmlns:view="clr-namespace:Diiagramr.View"
-             xmlns:customControls="clr-namespace:Diiagramr.View.CustomControls"
-             xmlns:pluginNodeApi="clr-namespace:Diiagramr.PluginNodeApi"
+             xmlns:customControls="clr-namespace:DiiagramrAPI.CustomControls;assembly=DiiagramrAPI"
+             xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
+             xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
+             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
              d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
              DragOver="{s:Action DragOver}"
              DragEnter="{s:Action DragEnter}"
@@ -101,13 +102,13 @@
             <Setter Property="Background" Value="IndianRed"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="0"/>
-            <Setter Property="Width" Value="{x:Static view:DiagramConstants.NodeBorderWidth}"/>
-            <Setter Property="Height" Value="{x:Static view:DiagramConstants.NodeBorderWidth}"/>
+            <Setter Property="Width" Value="{x:Static viewModel:DiagramConstants.NodeBorderWidth}"/>
+            <Setter Property="Height" Value="{x:Static viewModel:DiagramConstants.NodeBorderWidth}"/>
         </Style>
 
         <Style x:Key="SelectionStyle" TargetType="Rectangle">
             <Setter Property="Fill" Value="DodgerBlue"/>
-            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeSelectionBorderThickness}"/>
+            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeSelectionBorderThickness}"/>
             <Setter Property="IsHitTestVisible" Value="False"/>
         </Style>
 
@@ -117,7 +118,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Width" Value="{Binding Width}"/>
             <Setter Property="Height" Value="{Binding Height}"/>
-            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeBorderThickness}"/>
+            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}"/>
         </Style>
 
         <BooleanToVisibilityConverter x:Key="Btv" />
@@ -151,10 +152,10 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition MaxWidth="{x:Static view:DiagramConstants.NodeBorderWidth}" />
+                                                <ColumnDefinition MaxWidth="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition MaxHeight="{x:Static view:DiagramConstants.NodeBorderWidth}" />
+                                                <RowDefinition MaxHeight="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
 

@@ -1,10 +1,9 @@
-﻿using Diiagramr.PluginNodeApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Diiagramr.ViewModel.Diagram;
+using DiiagramrAPI.PluginNodeApi;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {

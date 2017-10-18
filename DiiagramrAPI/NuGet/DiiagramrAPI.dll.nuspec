@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>DiiagramrAPI</id>
+    <version>1.0.0-alpha</version>
+    <authors>Christian</authors>
+    <owners>Christian</owners>
+    <licenseUrl>https://mit-license.org/</licenseUrl>
+    <projectUrl>https://christiannunnally.visualstudio.com/Diiagramr/_wiki</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>TODO</description>
+    <releaseNotes>Alpha release</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>Taggy mc tagface</tags>
+    <dependencies>
+      <dependency id="Stylet" version="1.1.21.0" />
+    </dependencies>
+  </metadata>
+</package>

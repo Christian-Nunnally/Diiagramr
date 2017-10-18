@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Diiagramr.Model;
-using Diiagramr.PluginNodeApi;
-using Diiagramr.ViewModel.Diagram;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

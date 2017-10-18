@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:coreNode="clr-namespace:Diiagramr.ViewModel.Diagram.CoreNode"
+             xmlns:coreNode="clr-namespace:DiiagramrAPI.ViewModel.Diagram.CoreNode;assembly=DiiagramrAPI"
              d:DataContext="{d:DesignInstance coreNode:DiagramOutputNodeViewModel}"
              d:DesignHeight="30"
              d:DesignWidth="30"

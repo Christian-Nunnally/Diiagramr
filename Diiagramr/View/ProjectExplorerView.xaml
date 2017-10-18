@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
-             d:DataContext="{d:DesignInstance viewModel1:ProjectExplorerViewModel}"
+             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+             d:DataContext="{d:DesignInstance viewModel:ProjectExplorerViewModel}"
              d:DesignHeight="300" d:DesignWidth="150">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="btv"/>

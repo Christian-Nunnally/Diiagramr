@@ -1,11 +1,10 @@
-﻿using Diiagramr.Model;
-using Diiagramr.Service;
-using Diiagramr.ViewModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Stylet;
 using System;
-using Diiagramr.Service.Interfaces;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
 using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace DiiagramrUnitTests.ViewModelTests

@@ -1,8 +1,7 @@
-﻿using Diiagramr.Service;
-using Diiagramr.ViewModel;
-using Moq;
+﻿using Moq;
 using System;
-using Diiagramr.Service.Interfaces;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {

@@ -1,10 +1,9 @@
-﻿using Diiagramr.Model;
-using Diiagramr.Service;
-using Diiagramr.ViewModel;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
-using Diiagramr.Service.Interfaces;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {

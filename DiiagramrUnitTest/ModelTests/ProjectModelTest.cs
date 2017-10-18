@@ -1,5 +1,5 @@
 ﻿using System;
-using Diiagramr.Model;
+using DiiagramrAPI.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

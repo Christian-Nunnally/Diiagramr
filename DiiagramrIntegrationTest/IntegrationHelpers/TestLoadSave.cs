@@ -5,10 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Diiagramr.Model;
-using Diiagramr.Service.Interfaces;
 using System.Runtime.Serialization;
 using System.Xml;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {

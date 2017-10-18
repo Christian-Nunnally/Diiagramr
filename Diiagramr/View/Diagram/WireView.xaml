@@ -4,8 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
              xmlns:diagram="clr-namespace:Diiagramr.View.Diagram"
+             xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance diagram1:WireViewModel}">
     <UserControl.Resources>

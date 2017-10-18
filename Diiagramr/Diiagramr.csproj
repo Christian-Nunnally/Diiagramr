@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Diiagramr</RootNamespace>
     <AssemblyName>Diiagramr</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -17,6 +17,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>C:\Users\Christian\Documents\Projects\DiiagramrPublish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -71,6 +72,9 @@
   <PropertyGroup>
     <SignManifests>true</SignManifests>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.DotNet.PlatformAbstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.DotNet.PlatformAbstractions.2.0.0\lib\net45\Microsoft.DotNet.PlatformAbstractions.dll</HintPath>
@@ -114,61 +118,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Model\DiagramModel.cs" />
-    <Compile Include="Model\NodeModel.cs" />
-    <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\TerminalModel.cs" />
-    <Compile Include="Model\WireModel.cs" />
-    <Compile Include="PluginNodeApi\Direction.cs" />
-    <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
-    <Compile Include="PluginNodeApi\Terminal.cs" />
+    <Compile Include="CustomViewManager.cs" />
     <Compile Include="Properties\Annotations1.cs" />
-    <Compile Include="Service\DiagramCopier.cs" />
-    <Compile Include="Service\DirectoryService.cs" />
-    <Compile Include="Service\Interfaces\IDirectoryService.cs" />
-    <Compile Include="Service\EnumerableExtensionMethods.cs" />
-    <Compile Include="Service\Interfaces\IProjectLoadSave.cs" />
-    <Compile Include="Service\Interfaces\IProjectManager.cs" />
-    <Compile Include="Service\Interfaces\IProvideNodes.cs" />
-    <Compile Include="Service\NodeProvider.cs" />
-    <Compile Include="Service\ProjectLoadSave.cs" />
-    <Compile Include="Service\ProjectManager.cs" />
-    <Compile Include="PluginNodeApi\PluginNode.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\IONode.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
-    <Compile Include="PluginNodeApi\NodeSetup.cs" />
-    <Compile Include="ViewModel\Diagram\DiagramControlViewModel.cs" />
-    <Compile Include="View\CustomControls\SaveFileDialog.cs" />
-    <Compile Include="View\CustomControls\OpenFileDialog.cs" />
-    <Compile Include="View\CustomControls\IFileDialog.cs" />
     <Compile Include="View\Diagram\PointsToPathConverter.cs" />
-    <Compile Include="ViewModel\Diagram\TerminalViewModel.cs" />
-    <Compile Include="ViewModel\NodeSelectorViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\DiagramViewModel.cs" />
-    <Compile Include="ViewModel\DiagramWellViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\InputTerminalViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\OutputTerminalViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\WireViewModel.cs" />
-    <Compile Include="View\CustomControls\EditableTextBlock.xaml.cs">
-      <DependentUpon>EditableTextBlock.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\CustomControls\NodeMoveThumb.cs" />
-    <Compile Include="View\CustomControls\ZoomBorder.cs" />
-    <Compile Include="View\DiagramConstants.cs" />
     <Compile Include="View\Diagram\WireView.xaml.cs">
       <DependentUpon>WireView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\ProjectModel.cs" />
-    <Compile Include="Service\ProjectFileService.cs" />
-    <Compile Include="Service\Interfaces\IProjectFileService.cs" />
-    <Compile Include="ViewModel\ProjectExplorerViewModel.cs" />
-    <Compile Include="ViewModel\ShellViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -235,10 +192,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\CustomControls\EditableTextBlock.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\Diagram\InputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -268,7 +221,6 @@
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="bass.dll" />
     <Resource Include="logo32x32_e3S_icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -324,6 +276,12 @@
       <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj">
+      <Project>{27b53540-1ffb-490c-9db1-d829179869ea}</Project>
+      <Name>DiiagramrAPI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
