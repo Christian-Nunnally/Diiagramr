@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Diiagramr.Model;
-using Diiagramr.Service;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiiagramrUnitTests.ServiceTests

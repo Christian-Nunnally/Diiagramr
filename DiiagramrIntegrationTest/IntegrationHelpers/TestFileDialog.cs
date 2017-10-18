@@ -1,5 +1,5 @@
 ﻿using System.Windows.Forms;
-using Diiagramr.View.CustomControls;
+using DiiagramrAPI.CustomControls;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {

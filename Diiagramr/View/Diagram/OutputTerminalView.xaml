@@ -4,11 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram1="clr-namespace:Diiagramr.ViewModel.Diagram"
-             xmlns:view="clr-namespace:Diiagramr.View"
+             xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
+             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
              mc:Ignorable="d"
-             Width="{x:Static view:DiagramConstants.TerminalDiameter}" 
-             Height="{x:Static view:DiagramConstants.TerminalDiameter}"
+             Width="{x:Static viewModel:DiagramConstants.TerminalDiameter}" 
+             Height="{x:Static viewModel:DiagramConstants.TerminalDiameter}"
              d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}">
     <Grid RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
@@ -62,7 +62,7 @@
                 MouseDown="{s:Action TerminalMouseDown}"
                 MouseEnter="{s:Action MouseEntered}"
                 MouseLeave="{s:Action MouseLeft}"
-                CornerRadius="{x:Static view:DiagramConstants.TerminalCornerRadius}">
+                CornerRadius="{x:Static viewModel:DiagramConstants.TerminalCornerRadius}">
             <Border.Style>
                 <Style>
                     <Setter Property="Border.Background" Value="#f888"/>

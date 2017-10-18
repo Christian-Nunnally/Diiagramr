@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:coreNode="clr-namespace:Diiagramr.ViewModel.Diagram.CoreNode"
+             xmlns:coreNode="clr-namespace:DiiagramrAPI.ViewModel.Diagram.CoreNode;assembly=DiiagramrAPI"
              d:DataContext="{d:DesignInstance coreNode:DiagramCallNodeViewModel}"
              d:DesignWidth="40"
              d:DesignHeight="40"

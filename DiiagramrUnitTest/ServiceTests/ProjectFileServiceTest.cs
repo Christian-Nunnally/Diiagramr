@@ -1,9 +1,9 @@
 ﻿using System.Windows.Forms;
 using Castle.Core.Internal;
-using Diiagramr.Model;
-using Diiagramr.Service;
-using Diiagramr.Service.Interfaces;
-using Diiagramr.View.CustomControls;
+using DiiagramrAPI.CustomControls;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.Service;
+using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

@@ -1,10 +1,10 @@
-﻿using Diiagramr.Model;
-using Diiagramr.Service;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
-using Diiagramr.PluginNodeApi;
+using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Service;
 
 namespace DiiagramrUnitTests.ServiceTests
 {

@@ -80,6 +80,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj">
+      <Project>{27B53540-1FFB-490C-9DB1-D829179869EA}</Project>
+      <Name>DiiagramrAPI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Diiagramr\Diiagramr.csproj">
       <Project>{6efb487a-7176-4f27-92ba-2401fc1b6629}</Project>
       <Name>Diiagramr</Name>

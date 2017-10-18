@@ -4,12 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
-             xmlns:diagram="clr-namespace:Diiagramr.ViewModel.Diagram"
-             xmlns:view="clr-namespace:Diiagramr.View"
-             xmlns:pluginNodeApi="clr-namespace:Diiagramr.PluginNodeApi"
+             xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
+             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModel1:NodeSelectorViewModel}"
+             d:DataContext="{d:DesignInstance viewModel:NodeSelectorViewModel}"
              d:DesignWidth="800"
              d:DesignHeight="450">
     <UserControl.Resources>
@@ -33,7 +31,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Width" Value="{Binding MousedOverNode.Width}"/>
             <Setter Property="Height" Value="{Binding MousedOverNode.Height}"/>
-            <Setter Property="Margin" Value="{x:Static view:DiagramConstants.NodeBorderThickness}"/>
+            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}"/>
         </Style>
 
         <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">

@@ -8,8 +8,8 @@
         Height="450" 
         Width="800"
         xmlns:s="https://github.com/canton7/Stylet"
-        xmlns:viewModel1="clr-namespace:Diiagramr.ViewModel"
-        d:DataContext="{d:DesignInstance viewModel1:ShellViewModel}">
+        xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+        d:DataContext="{d:DesignInstance viewModel:ShellViewModel}">
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
             <MenuItem Header="File">

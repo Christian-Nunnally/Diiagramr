@@ -2,6 +2,7 @@
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
+using DiiagramrAPI.ViewModel;
 
 namespace DiiagramrIntegrationTest
 {

@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Diiagramr.PluginNodeApi;
-using Diiagramr.Service;
-using Diiagramr.Service.Interfaces;
-using Diiagramr.View.CustomControls;
-using Diiagramr.ViewModel;
-using Diiagramr.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.CustomControls;
+using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Service;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
 
 namespace Diiagramr
 {
@@ -18,7 +17,10 @@ namespace Diiagramr
     {
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
+            builder.Bind<IViewManager>().To<CustomViewManager>().InSingletonScope();
+            builder.Bind<ViewManager>().To<CustomViewManager>().InSingletonScope();
             GetPluginAssemblies().ForEach(builder.Assemblies.Add);
+            builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
@@ -41,6 +43,7 @@ namespace Diiagramr
         protected override void Configure()
         {
             var viewManager = Container.Get<ViewManager>();
+            viewManager.ViewAssemblies.Add(Assembly.GetCallingAssembly());
             GetPluginAssemblies().ForEach(viewManager.ViewAssemblies.Add);
         }
 
@@ -51,4 +54,5 @@ namespace Diiagramr
             return Directory.GetFiles(pluginDir, "*.dll").Select(Assembly.LoadFile);
         }
     }
+
 }
