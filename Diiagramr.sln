@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diiagramr", "Diiagramr\Diiagramr.csproj", "{6EFB487A-7176-4F27-92BA-2401FC1B6629}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrIntegrationTest", "DiiagramrIntegrationTest\DiiagramrIntegrationTest.csproj", "{EB50ACDC-F34D-418B-887A-0F3BBFB1396E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrAPI", "DiiagramrAPI\DiiagramrAPI.csproj", "{27B53540-1FFB-490C-9DB1-D829179869EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrNuGetServer", "DiiagramrNuGetServer\DiiagramrNuGetServer.csproj", "{A308A0AB-4CDB-4D99-B6CD-E434F7559115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,14 @@ Global
 		{27B53540-1FFB-490C-9DB1-D829179869EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{27B53540-1FFB-490C-9DB1-D829179869EA}.Release|x86.ActiveCfg = Release|Any CPU
 		{27B53540-1FFB-490C-9DB1-D829179869EA}.Release|x86.Build.0 = Release|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Debug|x86.Build.0 = Debug|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|x86.ActiveCfg = Release|Any CPU
+		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
