@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using Diiagramr.View;
 using Diiagramr.View.Diagram;
 using Diiagramr.View.Diagram.CoreNode;
+using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
@@ -35,6 +38,16 @@ namespace Diiagramr
             if (modelType == typeof(DiagramInputNodeViewModel)) return typeof(DiagramInputNodeView);
             if (modelType == typeof(DiagramCallNodeViewModel)) return typeof(DiagramCallNodeView);
             if (modelType == typeof(AddNodeViewModel)) return typeof(AddNodeView);
+
+            if (modelType.IsSubclassOf(typeof(PluginNode)))
+            {
+                var viewModelName = modelType.Name;
+                var viewName = viewModelName.Substring(0, viewModelName.Length - 5);
+                var assembly = Assembly.GetAssembly(modelType);
+                var viewType = assembly.ExportedTypes.First(t => t.Name == viewName);
+                return viewType;
+            }
+
             return base.LocateViewForModel(modelType);
         }
     }

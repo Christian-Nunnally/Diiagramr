@@ -10,6 +10,7 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 
 namespace Diiagramr
 {
@@ -28,7 +29,10 @@ namespace Diiagramr
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
-            builder.Bind<PluginNode>().ToAllImplementations();
+            builder.Bind<PluginNode>().To<AddNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramInputNodeViewModel>();
+            builder.Bind<PluginNode>().To<DiagramOutputNodeViewModel>();
+            builder.Bind<PluginNode>().To<NumberNodeViewModel>();
             ConfigurePluginNodesIntoIoC(builder);
         }
 

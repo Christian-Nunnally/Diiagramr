@@ -121,6 +121,6 @@
     <Error Condition="!Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)bin\release\$(ProjectName).dll" "$(ProjectDir)NuGet\lib" /d</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(ProjectDir)bin\release\$(ProjectName).dll" "$(ProjectDir)NuGet\lib" /d /Y</PostBuildEvent>
   </PropertyGroup>
 </Project>
