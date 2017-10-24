@@ -5,6 +5,8 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using StyletIoC.Internal;
+using System.ComponentModel;
 
 namespace DiiagramrAPI.Service
 {
@@ -12,10 +14,15 @@ namespace DiiagramrAPI.Service
     {
         private readonly IList<PluginNode> _availableNodeViewModels = new List<PluginNode>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
+        private IPluginWatcher _pluginWatcher;
+        
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        public NodeProvider(Func<IEnumerable<PluginNode>> availableNodes)
+        public NodeProvider(Func<IPluginWatcher> pluginWatcher)
         {
-            availableNodes.Invoke().ForEach(RegisterNode);
+            _pluginWatcher = pluginWatcher.Invoke();
+            _pluginWatcher.PropertyChanged += AssembliesOnPropertyChanged;
+            RegisterNodesFromAssemblies();
         }
 
         public IProjectManager ProjectManager { get; set; }
@@ -26,6 +33,7 @@ namespace DiiagramrAPI.Service
             if (_nodeNameToViewModelMap.ContainsKey(node.GetType().FullName)) return;
             _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
@@ -57,6 +65,21 @@ namespace DiiagramrAPI.Service
         public IEnumerable<PluginNode> GetRegisteredNodes()
         {
             return _availableNodeViewModels.ToArray();
+        }
+
+        private void RegisterNodesFromAssemblies()
+        {
+            foreach (var pluginAssembly in _pluginWatcher.Assemblies)
+                foreach (var exportedType in pluginAssembly.ExportedTypes)
+                    if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
+                    {
+                        RegisterNode((PluginNode)Activator.CreateInstance(exportedType));
+                    }
+        }
+
+        private void AssembliesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            RegisterNodesFromAssemblies();
         }
     }
 

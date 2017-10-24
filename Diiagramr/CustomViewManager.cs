@@ -9,7 +9,10 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.PluginNodeApi;
 using Stylet;
+using System.Reflection;
+using System.Linq;
 
 namespace Diiagramr
 {
@@ -38,7 +41,6 @@ namespace Diiagramr
             if (modelType == typeof(DiagramInputNodeViewModel)) return typeof(DiagramInputNodeView);
             if (modelType == typeof(DiagramCallNodeViewModel)) return typeof(DiagramCallNodeView);
             if (modelType == typeof(AddNodeViewModel)) return typeof(AddNodeView);
-
             if (modelType.IsSubclassOf(typeof(PluginNode)))
             {
                 var viewModelName = modelType.Name;
@@ -47,7 +49,6 @@ namespace Diiagramr
                 var viewType = assembly.ExportedTypes.First(t => t.Name == viewName);
                 return viewType;
             }
-
             return base.LocateViewForModel(modelType);
         }
     }

@@ -28,13 +28,16 @@ namespace DiiagramrIntegrationTest
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
+            builder.Bind<IPluginWatcher>().To<PluginWatcher>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
-            builder.Bind<PluginNode>().To<DiagramInputNodeViewModel>();
-            builder.Bind<PluginNode>().To<DiagramOutputNodeViewModel>();
-            builder.Bind<PluginNode>().To<TestNode>();
             var container = builder.BuildContainer();
+
+            var nodeProvider = container.Get<IProvideNodes>();
+            nodeProvider.RegisterNode(new TestNode());
+            nodeProvider.RegisterNode(new DiagramInputNodeViewModel());
+            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel());
 
             var shell = container.Get<ShellViewModel>();
             var nodeSelectorViewModel = shell.DiagramWellViewModel.NodeSelectorViewModel;
