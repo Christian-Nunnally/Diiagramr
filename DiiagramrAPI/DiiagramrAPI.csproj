@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Windows" />
     <Reference Include="System.Windows.Forms" />
@@ -101,6 +102,7 @@
     <Compile Include="ViewModel\Diagram\OutputTerminalViewModel.cs" />
     <Compile Include="ViewModel\Diagram\TerminalViewModel.cs" />
     <Compile Include="ViewModel\Diagram\WireViewModel.cs" />
+    <Compile Include="ViewModel\LibraryManagerViewModel.cs" />
     <Compile Include="ViewModel\NodeSelectorViewModel.cs" />
     <Compile Include="ViewModel\ProjectExplorerViewModel.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />

@@ -8,8 +8,8 @@ namespace DiiagramrAPI.ViewModel
     {
         private readonly IProjectManager _projectManager;
 
+        public LibraryManagerViewModel LibraryManagerViewModel{ get; set; }
         public ProjectExplorerViewModel ProjectExplorerViewModel { get; set; }
-
         public DiagramWellViewModel DiagramWellViewModel { get; set; }
 
         public bool CanSaveProject { get; set; }
@@ -20,6 +20,7 @@ namespace DiiagramrAPI.ViewModel
         {
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
+            LibraryManagerViewModel = new LibraryManagerViewModel();
             _projectManager = projectManagerFactory.Invoke();
 
             _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
@@ -58,6 +59,12 @@ namespace DiiagramrAPI.ViewModel
         public void SaveAsProject()
         {
             _projectManager.SaveAsProject();
+        }
+
+        // TODO: Unit test
+        public void ManageLibraries()
+        {
+            LibraryManagerViewModel.Visible = true;
         }
 
         public void Close()

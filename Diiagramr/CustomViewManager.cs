@@ -36,6 +36,7 @@ namespace Diiagramr
             if (modelType == typeof(InputTerminalViewModel)) return typeof(InputTerminalView);
             if (modelType == typeof(DiagramViewModel)) return typeof(DiagramView);
             if (modelType == typeof(DiagramControlViewModel)) return typeof(DiagramControlView);
+            if (modelType == typeof(LibraryManagerViewModel)) return typeof(LibraryManagerView);
             if (modelType == typeof(NumberNodeViewModel)) return typeof(NumberNodeView);
             if (modelType == typeof(DiagramOutputNodeViewModel)) return typeof(DiagramOutputNodeView);
             if (modelType == typeof(DiagramInputNodeViewModel)) return typeof(DiagramInputNodeView);

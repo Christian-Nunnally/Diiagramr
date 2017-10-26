@@ -124,6 +124,9 @@
     <Compile Include="View\Diagram\WireView.xaml.cs">
       <DependentUpon>WireView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\LibraryManagerView.xaml.cs">
+      <DependentUpon>LibraryManagerView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -192,6 +195,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Diagram\InputTerminalView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LibraryManagerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
