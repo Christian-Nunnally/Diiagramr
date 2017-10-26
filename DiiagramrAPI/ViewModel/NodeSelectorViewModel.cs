@@ -11,27 +11,19 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using PropertyChanged;
 using Stylet;
+using System.ComponentModel;
 
 namespace DiiagramrAPI.ViewModel
 {
     public class NodeSelectorViewModel : Screen
     {
+        private readonly IProvideNodes _nodeProvider;
 
         public NodeSelectorViewModel(Func<IProvideNodes> nodeProvider)
         {
-            var nodeProvidor = nodeProvider.Invoke();
-
-            foreach (var nodeViewModel in nodeProvidor.GetRegisteredNodes())
-            {
-                if (nodeViewModel is DiagramCallNodeViewModel) continue;
-                var fullTypeName = nodeViewModel.GetType().FullName;
-                var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
-                var library = GetOrCreateLibrary(libraryName);
-                library.Nodes.Add(nodeViewModel);
-
-                nodeViewModel.NodeModel = new NodeModel("");
-                nodeViewModel.SetupNode(new NodeSetup(nodeViewModel));
-            }
+            _nodeProvider = nodeProvider.Invoke();
+            _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
+            AddNodes();
         }
 
         public virtual PluginNode SelectedNode { get; set; }
@@ -52,6 +44,21 @@ namespace DiiagramrAPI.ViewModel
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
         public event Action ShouldClose;
+
+        public void AddNodes()
+        {
+            foreach (var nodeViewModel in _nodeProvider.GetRegisteredNodes())
+            {
+                if (nodeViewModel is DiagramCallNodeViewModel) continue;
+                var fullTypeName = nodeViewModel.GetType().FullName;
+                var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
+                var library = GetOrCreateLibrary(libraryName);
+                library.Nodes.Add(nodeViewModel);
+
+                nodeViewModel.NodeModel = new NodeModel("");
+                nodeViewModel.SetupNode(new NodeSetup(nodeViewModel));
+            }
+        }
 
         private Library GetOrCreateLibrary(string libraryName)
         {
@@ -119,6 +126,11 @@ namespace DiiagramrAPI.ViewModel
             LibrariesList.ForEach(l => l.Unselect());
             VisibleNodesList.Clear();
             MousedOverNode = null;
+        }
+
+        private void NodesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            AddNodes();
         }
     }
 

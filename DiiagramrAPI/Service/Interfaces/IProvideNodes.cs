@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
+using System.ComponentModel;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProvideNodes
+    public interface IProvideNodes : INotifyPropertyChanged
     {
         IProjectManager ProjectManager { get; set; }
 

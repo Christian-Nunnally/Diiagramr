@@ -77,11 +77,13 @@
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
+    <Compile Include="Service\Interfaces\IPluginWatcher.cs" />
     <Compile Include="Service\Interfaces\IProjectFileService.cs" />
     <Compile Include="Service\Interfaces\IProjectLoadSave.cs" />
     <Compile Include="Service\Interfaces\IProjectManager.cs" />
     <Compile Include="Service\Interfaces\IProvideNodes.cs" />
     <Compile Include="Service\NodeProvider.cs" />
+    <Compile Include="Service\PluginWatcher.cs" />
     <Compile Include="Service\ProjectFileService.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
@@ -121,6 +123,7 @@
     <Error Condition="!Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(ProjectDir)bin\release\$(ProjectName).dll" "$(ProjectDir)NuGet\lib" /d /Y</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
