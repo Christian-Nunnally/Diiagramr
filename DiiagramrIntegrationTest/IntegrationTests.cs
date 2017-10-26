@@ -109,7 +109,7 @@ namespace DiiagramrIntegrationTest
             var projManager = projExplorer.ProjectManager;
             var diagramWellViewModel = shell.DiagramWellViewModel;
             var nodeSelectorViewModel = diagramWellViewModel.NodeSelectorViewModel;
-            var testNode = nodeSelectorViewModel.AvailableNodeViewModels.First();
+            var testNode = nodeSelectorViewModel.AvailableNodeViewModels.OfType<TestNode>().First();
 
             shell.CreateProject();
             projManager.CreateDiagram();

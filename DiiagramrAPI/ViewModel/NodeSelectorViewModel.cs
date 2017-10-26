@@ -53,6 +53,7 @@ namespace DiiagramrAPI.ViewModel
                 var fullTypeName = nodeViewModel.GetType().FullName;
                 var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
                 var library = GetOrCreateLibrary(libraryName);
+                if (library.Nodes.Any(n => n.Equals(nodeViewModel))) continue;
                 library.Nodes.Add(nodeViewModel);
 
                 nodeViewModel.NodeModel = new NodeModel("");

@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 {
-    public class IoNode : PluginNode
+    public abstract class IoNode : PluginNode
     {
         public IoNode()
         {
