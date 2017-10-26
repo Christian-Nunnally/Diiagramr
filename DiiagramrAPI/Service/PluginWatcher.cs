@@ -34,8 +34,14 @@ namespace DiiagramrAPI.Service
             FileSystemWatcher watch = new FileSystemWatcher(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins");
             FileSystemEventHandler createdHandler = (s, e) =>
             {
-                GetPluginAssemblies().ForEach(Assemblies.Add);
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Assembly"));
+                var len = Assemblies.Count;
+                GetPluginAssemblies().ForEach(a => {
+                    if (!Assemblies.Contains(a))
+                    {
+                        Assemblies.Add(a);
+                    }
+                });
+                if (Assemblies.Count != len) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Assembly"));
             };
 
             watch.Created += createdHandler;
