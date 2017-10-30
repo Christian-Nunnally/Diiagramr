@@ -9,10 +9,10 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using DiiagramrAPI.PluginNodeApi;
 using Stylet;
-using System.Reflection;
-using System.Linq;
+using Diiagramr.View.ShellScreen.ProjectScreen;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 
 namespace Diiagramr
 {
@@ -27,6 +27,8 @@ namespace Diiagramr
         protected override Type LocateViewForModel(Type modelType)
         {
             if (modelType == typeof(ShellViewModel)) return typeof(ShellView);
+            if (modelType == typeof(ProjectScreenViewModel)) return typeof(ProjectScreenView);
+            if (modelType == typeof(LibraryManagerScreenViewModel)) return typeof(LibraryManagerScreenView);
             if (modelType == typeof(ProjectExplorerViewModel)) return typeof(ProjectExplorerView);
             if (modelType == typeof(NodeSelectorViewModel)) return typeof(NodeSelectorView);
             if (modelType == typeof(DiagramWellViewModel)) return typeof(DiagramWellView);
@@ -36,7 +38,7 @@ namespace Diiagramr
             if (modelType == typeof(InputTerminalViewModel)) return typeof(InputTerminalView);
             if (modelType == typeof(DiagramViewModel)) return typeof(DiagramView);
             if (modelType == typeof(DiagramControlViewModel)) return typeof(DiagramControlView);
-            if (modelType == typeof(LibraryManagerViewModel)) return typeof(LibraryManagerView);
+            if (modelType == typeof(LibraryManagerScreenViewModel)) return typeof(LibraryManagerScreenView);
             if (modelType == typeof(NumberNodeViewModel)) return typeof(NumberNodeView);
             if (modelType == typeof(DiagramOutputNodeViewModel)) return typeof(DiagramOutputNodeView);
             if (modelType == typeof(DiagramInputNodeViewModel)) return typeof(DiagramInputNodeView);

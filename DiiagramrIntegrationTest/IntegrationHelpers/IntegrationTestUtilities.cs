@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
-using Diiagramr.View;
 using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
@@ -11,8 +8,9 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using StyletIoC;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
@@ -27,6 +25,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             builder.Bind<DiagramWellViewModel>().ToSelf();
             builder.Bind<DiagramViewModel>().ToSelf();
             builder.Bind<NodeSelectorViewModel>().ToSelf();
+            builder.Bind<ProjectScreenViewModel>().ToSelf();
+            builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
@@ -48,13 +48,14 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         // Opens diagram at index, default to first
         public static DiagramViewModel OpenDiagram(this ShellViewModel shell, int index = 0)
         {
-            var projExplorer = shell.ProjectExplorerViewModel;
-            var projManager = projExplorer.ProjectManager;
-            var diagram = projManager.CurrentDiagrams[index];
-            projExplorer.SelectedDiagram = diagram;
-            projExplorer.DiagramProjectItemMouseDown(2);
-            var diagramViewModel = projManager.DiagramViewModels.First(d => d.Diagram == diagram);
-            Assert.AreEqual(diagramViewModel, shell.DiagramWellViewModel.ActiveItem);
+            var projectScreen = shell.ProjectScreenViewModel;
+            var projectExplorer = projectScreen.ProjectExplorerViewModel;
+            var projectManager = projectExplorer.ProjectManager;
+            var diagram = projectManager.CurrentDiagrams[index];
+            projectExplorer.SelectedDiagram = diagram;
+            projectExplorer.DiagramProjectItemMouseDown(2);
+            var diagramViewModel = projectManager.DiagramViewModels.First(d => d.Diagram == diagram);
+            Assert.AreEqual(diagramViewModel, projectScreen.DiagramWellViewModel.ActiveItem);
             return diagramViewModel;
         }
 
@@ -62,12 +63,14 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         // Places the given node at (ptX, ptY) on active diagram and returns new node
         public static PluginNode PlaceNode(this ShellViewModel shell, PluginNode node, int ptX = 0, int ptY = 0)
         {
-            var nodeSelectorViewModel = shell.DiagramWellViewModel.NodeSelectorViewModel;
+            var projectScreen = shell.ProjectScreenViewModel;
+            var diagramWell = projectScreen.DiagramWellViewModel;
+            var nodeSelector = diagramWell.NodeSelectorViewModel;
             var pt = new Point(ptX, ptY);
-            var diagramViewModel = shell.DiagramWellViewModel.ActiveItem;
+            var diagramViewModel = diagramWell.ActiveItem;
             Assert.IsNotNull(diagramViewModel, "must have diagram open");
-            nodeSelectorViewModel.MousedOverNode = node;
-            nodeSelectorViewModel.SelectNode();
+            nodeSelector.MousedOverNode = node;
+            nodeSelector.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
             diagramViewModel.MouseMoved(pt);
             Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
@@ -83,10 +86,11 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         public static WireViewModel WireTerminals(this ShellViewModel shell, TerminalViewModel sourceTerminal,
             TerminalViewModel sinkTerminal)
         {
+            var projectScreen = shell.ProjectScreenViewModel;
             sourceTerminal.DropObject(sinkTerminal.TerminalModel);
             Assert.IsNotNull(sourceTerminal.TerminalModel.ConnectedWire);
             Assert.IsNotNull(sinkTerminal.TerminalModel.ConnectedWire);
-            var wireViewModel = shell.DiagramWellViewModel.ActiveItem.WireViewModels.Last();
+            var wireViewModel = projectScreen.DiagramWellViewModel.ActiveItem.WireViewModels.Last();
             Assert.AreEqual(wireViewModel.WireModel, sourceTerminal.TerminalModel.ConnectedWire);
             return wireViewModel;
         }
