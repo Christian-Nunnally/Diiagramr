@@ -17,6 +17,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private Mock<ProjectExplorerViewModel> _projectExplorerViewModelMoq;
         private Mock<ProjectScreenViewModel> _projectScreenViewModelMoq;
         private Mock<LibraryManagerScreenViewModel> _libraryManagerViewModelMoq;
+        private Mock<IPluginLoader> _pluginLoaderMoq;
         private ShellViewModel _shellViewModel;
 
         [TestInitialize]
@@ -26,6 +27,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
             _diagramWellViewModelMoq = MockedViewModelFactories.CreateMoqDiagramWell();
             _projectExplorerViewModelMoq = MockedViewModelFactories.CreateMoqProjectExplorer();
+            _pluginLoaderMoq = new Mock<IPluginLoader>();
 
 
             IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
@@ -36,7 +38,7 @@ namespace DiiagramrUnitTests.ViewModelTests
                 (Func<ProjectExplorerViewModel>) ProjectExplorerFactory,
                 (Func<DiagramWellViewModel>) DiagramWellFactory,
                 (Func<IProjectManager>) ProjectManagerFactory);
-            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>();
+            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>((Func<IPluginLoader>)( () => _pluginLoaderMoq.Object));
 
             ProjectScreenViewModel ScreenViewModelMoqFactory() => _projectScreenViewModelMoq.Object;
             LibraryManagerScreenViewModel LibraryManagerViewModelMoqFactory() => _libraryManagerViewModelMoq.Object;

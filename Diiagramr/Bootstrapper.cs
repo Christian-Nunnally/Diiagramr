@@ -6,6 +6,8 @@ using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ShellScreen;
 using Stylet;
 using StyletIoC;
+using System;
+using System.Collections.Generic;
 
 namespace Diiagramr
 {
@@ -21,10 +23,16 @@ namespace Diiagramr
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-            builder.Bind<IPluginWatcher>().To<PluginWatcher>().InSingletonScope();
+            builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
             builder.Bind<LibraryManagerScreenViewModel>().To<LibraryManagerScreenViewModel>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
+            var viewManagerConfig = new ViewManagerConfig()
+            {
+                ViewFactory = Activator.CreateInstance,
+                ViewAssemblies = new List<Assembly>() { this.GetType().Assembly }
+            };
+            builder.Bind<ViewManagerConfig>().ToInstance(viewManagerConfig);
         }
     }
 }

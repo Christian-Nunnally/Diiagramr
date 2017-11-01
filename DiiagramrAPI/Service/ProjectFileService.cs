@@ -32,7 +32,7 @@ namespace DiiagramrAPI.Service
             {
                 return SaveAsProject(project);
             }
-            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name);
+            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ".xml");
             return true;
         }
 

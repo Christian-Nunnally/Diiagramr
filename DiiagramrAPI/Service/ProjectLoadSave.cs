@@ -18,6 +18,7 @@ namespace DiiagramrAPI.Service
         public ProjectModel Open(string fileName)
         {
             Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            
             var project = (ProjectModel) _serializer.ReadObject(stream);
             stream.Close();
             return project;
@@ -26,11 +27,13 @@ namespace DiiagramrAPI.Service
         public void Save(ProjectModel project, string name)
         {
             var settings = new XmlWriterSettings {Indent = true};
-            using (var w = XmlWriter.Create(name, settings))
+            using (var writer = new FileStream(name, FileMode.OpenOrCreate, FileAccess.ReadWrite))
             {
-                _serializer.WriteObject(w, project);
+                using (var w = XmlWriter.Create(writer))
+                {
+                    _serializer.WriteObject(w, project);
+                }
             }
         }
-
     }
 }

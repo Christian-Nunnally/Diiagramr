@@ -58,6 +58,7 @@
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />
     <Compile Include="CustomControls\ZoomBorder.cs" />
+    <Compile Include="Model\DependencyModel.cs" />
     <Compile Include="Model\DiagramModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\NodeModel.cs" />
@@ -74,13 +75,13 @@
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
-    <Compile Include="Service\Interfaces\IPluginWatcher.cs" />
+    <Compile Include="Service\Interfaces\IPluginLoader.cs" />
     <Compile Include="Service\Interfaces\IProjectFileService.cs" />
     <Compile Include="Service\Interfaces\IProjectLoadSave.cs" />
     <Compile Include="Service\Interfaces\IProjectManager.cs" />
     <Compile Include="Service\Interfaces\IProvideNodes.cs" />
     <Compile Include="Service\NodeProvider.cs" />
-    <Compile Include="Service\PluginWatcher.cs" />
+    <Compile Include="Service\PluginLoader.cs" />
     <Compile Include="Service\ProjectFileService.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
