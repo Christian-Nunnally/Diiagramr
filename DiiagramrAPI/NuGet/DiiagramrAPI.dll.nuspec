@@ -2,16 +2,16 @@
 <package >
   <metadata>
     <id>DiiagramrAPI</id>
-    <version>1.0.1-alpha</version>
+    <version>1.0.2-alpha</version>
     <authors>Christian</authors>
     <owners>Christian</owners>
     <licenseUrl>https://mit-license.org/</licenseUrl>
     <projectUrl>https://christiannunnally.visualstudio.com/Diiagramr/_wiki</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>TODO</description>
+    <description>SDK for developing Diiagramr node libraries.</description>
     <releaseNotes>Alpha release</releaseNotes>
     <copyright>Copyright 2017</copyright>
-    <tags>Taggy mc tagface</tags>
+    <tags>Graphical, Programming, Language, Diiagramr</tags>
     <dependencies>
       <dependency id="Stylet" version="1.1.21.0" />
     </dependencies>

@@ -1,16 +1,11 @@
-using Stylet;
-using StyletIoC;
-using StyletIoC.Internal;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Reflection;
 using DiiagramrAPI.CustomControls;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using Stylet;
+using StyletIoC;
 
 namespace Diiagramr
 {
@@ -27,6 +22,7 @@ namespace Diiagramr
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IPluginWatcher>().To<PluginWatcher>().InSingletonScope();
+            builder.Bind<LibraryManagerScreenViewModel>().To<LibraryManagerScreenViewModel>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
         }
