@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using DiiagramrAPI.CustomControls;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
@@ -24,6 +25,8 @@ namespace DiiagramrIntegrationTest
             builder.Bind<DiagramWellViewModel>().ToSelf();
             builder.Bind<DiagramViewModel>().ToSelf();
             builder.Bind<NodeSelectorViewModel>().ToSelf();
+            builder.Bind<ProjectScreenViewModel>().ToSelf();
+            builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
@@ -40,8 +43,9 @@ namespace DiiagramrIntegrationTest
             nodeProvider.RegisterNode(new DiagramOutputNodeViewModel());
 
             var shell = container.Get<ShellViewModel>();
-            var nodeSelectorViewModel = shell.DiagramWellViewModel.NodeSelectorViewModel;
-            var projectManager = shell.ProjectExplorerViewModel.ProjectManager;
+            var projectScreen = shell.ProjectScreenViewModel;
+            var nodeSelectorViewModel = projectScreen.DiagramWellViewModel.NodeSelectorViewModel;
+            var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
             var inputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramInputNodeViewModel));
             var outputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramOutputNodeViewModel));

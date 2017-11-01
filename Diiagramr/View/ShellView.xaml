@@ -4,15 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Diiagramr" 
+        Title="{Binding WindowTitle}" 
         Height="450" 
         Width="800"
         xmlns:s="https://github.com/canton7/Stylet"
         xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
         d:DataContext="{d:DesignInstance viewModel:ShellViewModel}">
-    <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="btv"/>
-    </Window.Resources>
     <DockPanel>
         <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
             <MenuItem Header="File">
@@ -28,17 +25,7 @@
                 <MenuItem Header="Libraries" Command="{s:Action ManageLibraries}"></MenuItem>
             </MenuItem>
         </Menu>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" MinWidth="175"/>
-                <ColumnDefinition Width="3"/>
-                <ColumnDefinition Width="40*"/>
-            </Grid.ColumnDefinitions>
-            <ContentControl Grid.Column="0" s:View.Model="{Binding ProjectExplorerViewModel}" Margin="2,2,0,1"></ContentControl>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch"/>
-            <ContentControl Grid.Column="2" s:View.Model="{Binding DiagramWellViewModel}" Margin="0,0,2,1"/>
-            <ContentControl Grid.Column="0" Grid.ColumnSpan="3" s:View.Model="{Binding LibraryManagerViewModel}" Visibility="{Binding LibraryManagerViewModel.Visible, Converter={StaticResource btv}}" Margin="2,0,2,1"/>
-        </Grid>
+        <ContentControl s:View.Model="{Binding ActiveItem}"/>
     </DockPanel>
 </Window>
 

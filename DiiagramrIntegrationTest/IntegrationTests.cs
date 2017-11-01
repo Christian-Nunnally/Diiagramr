@@ -1,5 +1,4 @@
-﻿using Diiagramr.View;
-using DiiagramrIntegrationTest.IntegrationHelpers;
+﻿using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using DiiagramrAPI.ViewModel;
@@ -13,17 +12,18 @@ namespace DiiagramrIntegrationTest
         public void LoadSave()
         {
             var shell = IntegrationTestUtilities.SetupShellViewModel();
-            var projExplorer = shell.ProjectExplorerViewModel;
-            var projManager = projExplorer.ProjectManager;
-            var diagramWellViewModel = shell.DiagramWellViewModel;
-            var nodeSelectorViewModel = diagramWellViewModel.NodeSelectorViewModel;
-            var testNode = nodeSelectorViewModel.AvailableNodeViewModels.OfType<TestNode>().First();
+            var projectScreen = shell.ProjectScreenViewModel;
+            var projectExplorer = projectScreen.ProjectExplorerViewModel;
+            var projectManager = projectExplorer.ProjectManager;
+            var diagramWell = projectScreen.DiagramWellViewModel;
+            var nodeSelector = diagramWell.NodeSelectorViewModel;
+            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestNode>().First();
 
             shell.CreateProject();
-            Assert.IsNotNull(projManager.CurrentProject);
+            Assert.IsNotNull(projectManager.CurrentProject);
 
-            projManager.CreateDiagram();
-            Assert.AreEqual(1, projManager.CurrentDiagrams.Count);
+            projectManager.CreateDiagram();
+            Assert.AreEqual(1, projectManager.CurrentDiagrams.Count);
 
             // open diagram
             var diagramViewModel = shell.OpenDiagram();
@@ -58,9 +58,9 @@ namespace DiiagramrIntegrationTest
             Assert.AreEqual(outTermNode1.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
 
             // save
-            projManager.SaveProject();
-            projManager.CloseProject();
-            projManager.LoadProject();
+            projectManager.SaveProject();
+            projectManager.CloseProject();
+            projectManager.LoadProject();
 
             // open diagram
             diagramViewModel = shell.OpenDiagram();
@@ -90,7 +90,7 @@ namespace DiiagramrIntegrationTest
             node1.Y = 12;
             inTermNode2 = inTerm.TerminalModel;
             outTermNode1 = outTerm.TerminalModel;
-            wireViewModel = diagramWellViewModel.ActiveItem.WireViewModels.First();
+            wireViewModel = diagramWell.ActiveItem.WireViewModels.First();
             Assert.AreEqual(inTermNode2.X, node2.X);
             Assert.AreEqual(inTermNode2.Y, node2.Y);
             Assert.AreEqual(inTermNode2.NodeX + inTermNode2.OffsetX, inTermNode2.X);
@@ -105,14 +105,15 @@ namespace DiiagramrIntegrationTest
         public void RunPauseStop()
         {
             var shell = IntegrationTestUtilities.SetupShellViewModel();
-            var projExplorer = shell.ProjectExplorerViewModel;
-            var projManager = projExplorer.ProjectManager;
-            var diagramWellViewModel = shell.DiagramWellViewModel;
-            var nodeSelectorViewModel = diagramWellViewModel.NodeSelectorViewModel;
-            var testNode = nodeSelectorViewModel.AvailableNodeViewModels.OfType<TestNode>().First();
+            var projectScreen = shell.ProjectScreenViewModel;
+            var projectExplorer = projectScreen.ProjectExplorerViewModel;
+            var projectManager = projectExplorer.ProjectManager;
+            var diagramWell = projectScreen.DiagramWellViewModel;
+            var nodeSelector = diagramWell.NodeSelectorViewModel;
+            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestNode>().First();
 
             shell.CreateProject();
-            projManager.CreateDiagram();
+            projectManager.CreateDiagram();
             var diagramViewModel = shell.OpenDiagram();
             var node1 = shell.PlaceNode(testNode);
             var node2 = shell.PlaceNode(testNode);
@@ -122,7 +123,7 @@ namespace DiiagramrIntegrationTest
             shell.WireTerminals(outTerm, inTerm);
 
 
-            var controlViewModel = shell.DiagramWellViewModel.ActiveItem.DiagramControlViewModel;
+            var controlViewModel = diagramWell.ActiveItem.DiagramControlViewModel;
 
             // play 
             outTerm.Data = 5;

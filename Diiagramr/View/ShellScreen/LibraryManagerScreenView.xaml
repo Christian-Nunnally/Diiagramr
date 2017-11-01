@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Diiagramr.View.LibraryManagerView"
+﻿<UserControl x:Class="Diiagramr.View.LibraryManagerScreenView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,8 +6,9 @@
              xmlns:local="clr-namespace:Diiagramr.View"
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+             xmlns:shellScreen="clr-namespace:DiiagramrAPI.ViewModel.ShellScreen;assembly=DiiagramrAPI"
              mc:Ignorable="d"
-             d:DataContext="{d:DesignInstance viewModel:LibraryManagerViewModel}"
+             d:DataContext="{d:DesignInstance shellScreen:LibraryManagerScreenViewModel}"
              d:DesignHeight="300" d:DesignWidth="600">
     <Grid Background="White">
         <Grid.RowDefinitions>

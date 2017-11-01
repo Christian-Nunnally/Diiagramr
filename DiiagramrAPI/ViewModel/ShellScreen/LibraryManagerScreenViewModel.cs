@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Stylet;
+using System.Reflection;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.ViewModel.ShellScreen
 {
-    public class LibraryManagerViewModel : Screen
+    public class LibraryManagerScreenViewModel : Screen
     {
         public bool Visible { get; set; }
 
@@ -22,7 +19,7 @@ namespace DiiagramrAPI.ViewModel
         public ObservableCollection<string> LibraryNames { get; set; }
         public Dictionary<string, string> LibraryNameToPathMap { get; set; }
 
-        public LibraryManagerViewModel()
+        public LibraryManagerScreenViewModel()
         {
             Sources = new BindableCollection<string>();
             LibraryNames = new BindableCollection<string>();
@@ -35,8 +32,11 @@ namespace DiiagramrAPI.ViewModel
             if (string.IsNullOrEmpty(SelectedLibrary)) return;
             if (LibraryNameToPathMap.ContainsKey(SelectedLibrary))
             {
-                string zipPath = "Plugins/" + SelectedLibrary + ".zip";
-                string extractPath = "Plugins/" + SelectedLibrary;
+                var tmpDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\tmp";
+                if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+                string zipPath = "tmp/" + SelectedLibrary + ".zip";
+                string extractPath = "tmp/" + SelectedLibrary;
+                string toPath = "Plugins/" + SelectedLibrary;
                 using (var client = new WebClient())
                 {
                     client.DownloadFile(LibraryNameToPathMap[SelectedLibrary], zipPath);
@@ -44,11 +44,14 @@ namespace DiiagramrAPI.ViewModel
 
                 try
                 {
-                    System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
+                    if (!Directory.Exists(toPath))
+                    {
+                        System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
+                        Directory.Move(extractPath, toPath);
+                    }
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
-                    
                 }
                 File.Delete(zipPath);
             }
@@ -79,7 +82,7 @@ namespace DiiagramrAPI.ViewModel
 
         public void Close()
         {
-            Visible = false;
+            RequestClose();
         }
     }
 }

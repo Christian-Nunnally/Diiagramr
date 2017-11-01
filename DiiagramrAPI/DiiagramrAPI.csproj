@@ -49,10 +49,6 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -88,23 +84,24 @@
     <Compile Include="Service\ProjectFileService.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
-    <Compile Include="ViewModel\DiagramConstants.cs" />
-    <Compile Include="ViewModel\DiagramWellViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\AddNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\IONode.cs" />
-    <Compile Include="ViewModel\Diagram\CoreNode\NumberNodeViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\DiagramControlViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\DiagramViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\InputTerminalViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\OutputTerminalViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\TerminalViewModel.cs" />
-    <Compile Include="ViewModel\Diagram\WireViewModel.cs" />
-    <Compile Include="ViewModel\LibraryManagerViewModel.cs" />
-    <Compile Include="ViewModel\NodeSelectorViewModel.cs" />
-    <Compile Include="ViewModel\ProjectExplorerViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\DiagramConstants.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\DiagramWellViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\AddNodeViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\IONode.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\CoreNode\NumberNodeViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\DiagramControlViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\DiagramViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\InputTerminalViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\OutputTerminalViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\TerminalViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\Diagram\WireViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\LibraryManagerScreenViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\NodeSelectorViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\ProjectExplorerViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\ProjectScreen\ProjectScreenViewModel.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -121,15 +118,15 @@
     <None Include="Tools\Init.ps1" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets" Condition="Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.0.0\build\netstandard1.4\Fody.targets'))" />
-  </Target>
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Fody.2.2.0\build\net452\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.2.0\build\net452\Fody.targets'))" />
+  </Target>
 </Project>

@@ -4,6 +4,8 @@ using System;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -13,6 +15,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         private Mock<IProjectManager> _projectManagerMoq;
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;
         private Mock<ProjectExplorerViewModel> _projectExplorerViewModelMoq;
+        private Mock<ProjectScreenViewModel> _projectScreenViewModelMoq;
+        private Mock<LibraryManagerScreenViewModel> _libraryManagerViewModelMoq;
         private ShellViewModel _shellViewModel;
 
         [TestInitialize]
@@ -23,11 +27,21 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramWellViewModelMoq = MockedViewModelFactories.CreateMoqDiagramWell();
             _projectExplorerViewModelMoq = MockedViewModelFactories.CreateMoqProjectExplorer();
 
+
             IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
             DiagramWellViewModel DiagramWellFactory() => _diagramWellViewModelMoq.Object;
             ProjectExplorerViewModel ProjectExplorerFactory() => _projectExplorerViewModelMoq.Object;
 
-            _shellViewModel = new ShellViewModel(ProjectExplorerFactory, DiagramWellFactory, ProjectManagerFactory);
+            _projectScreenViewModelMoq = new Mock<ProjectScreenViewModel>(
+                (Func<ProjectExplorerViewModel>) ProjectExplorerFactory,
+                (Func<DiagramWellViewModel>) DiagramWellFactory,
+                (Func<IProjectManager>) ProjectManagerFactory);
+            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>();
+
+            ProjectScreenViewModel ScreenViewModelMoqFactory() => _projectScreenViewModelMoq.Object;
+            LibraryManagerScreenViewModel LibraryManagerViewModelMoqFactory() => _libraryManagerViewModelMoq.Object;
+
+            _shellViewModel = new ShellViewModel(ScreenViewModelMoqFactory, LibraryManagerViewModelMoqFactory, ProjectManagerFactory);
         }
 
         [TestMethod]
