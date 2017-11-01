@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.ViewModel.ShellScreen
 {
-    public class LibraryManagerViewModel : Screen
+    public class LibraryManagerScreenViewModel : Screen
     {
         public bool Visible { get; set; }
 
@@ -22,7 +18,7 @@ namespace DiiagramrAPI.ViewModel
         public ObservableCollection<string> LibraryNames { get; set; }
         public Dictionary<string, string> LibraryNameToPathMap { get; set; }
 
-        public LibraryManagerViewModel()
+        public LibraryManagerScreenViewModel()
         {
             Sources = new BindableCollection<string>();
             LibraryNames = new BindableCollection<string>();
@@ -46,9 +42,8 @@ namespace DiiagramrAPI.ViewModel
                 {
                     System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
-                    
                 }
                 File.Delete(zipPath);
             }
@@ -79,7 +74,7 @@ namespace DiiagramrAPI.ViewModel
 
         public void Close()
         {
-            Visible = false;
+            RequestClose();
         }
     }
 }

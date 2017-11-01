@@ -1,5 +1,4 @@
 ﻿using System;
-using Diiagramr.View;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;

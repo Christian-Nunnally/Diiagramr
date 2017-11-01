@@ -1,36 +1,47 @@
 using System;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using Stylet;
 
 namespace DiiagramrAPI.ViewModel
 {
-    public class ShellViewModel : Screen, IRequestClose
+    public class ShellViewModel : Conductor<IScreen>.StackNavigation
     {
         private readonly IProjectManager _projectManager;
 
-        public LibraryManagerViewModel LibraryManagerViewModel{ get; set; }
-        public ProjectExplorerViewModel ProjectExplorerViewModel { get; set; }
-        public DiagramWellViewModel DiagramWellViewModel { get; set; }
+        public LibraryManagerScreenViewModel LibraryManagerScreenViewModel { get; set; }
+        public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
 
         public bool CanSaveProject { get; set; }
-
         public bool CanSaveAsProject { get; set; }
 
-        public ShellViewModel(Func<ProjectExplorerViewModel> projectExplorerViewModelFactory, Func<DiagramWellViewModel> diagramWellViewModelFactory, Func<IProjectManager> projectManagerFactory)
-        {
-            DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
-            ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
-            LibraryManagerViewModel = new LibraryManagerViewModel();
-            _projectManager = projectManagerFactory.Invoke();
+        public string WindowTitle { get; set; } = "Diiagramr";
 
+        public ShellViewModel(
+            Func<ProjectScreenViewModel> projectScreenViewModelFactory,
+            Func<LibraryManagerScreenViewModel> libraryScreenScreenViewModelFactory,
+            Func<IProjectManager> projectManagerFactory)
+        {
+            ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
+            LibraryManagerScreenViewModel = libraryScreenScreenViewModelFactory.Invoke();
+
+            _projectManager = projectManagerFactory.Invoke();
             _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
+            ShowScreen(ProjectScreenViewModel);
+        }
+
+        public void ShowScreen(IScreen screen)
+        {
+            ActiveItem = screen;
         }
 
         private void ProjectManagerOnCurrentProjectChanged()
         {
             CanSaveProject = _projectManager.CurrentProject != null;
             CanSaveAsProject = _projectManager.CurrentProject != null;
+            WindowTitle = "Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : "");
         }
 
         public override void RequestClose(bool? dialogResult = null)
@@ -64,7 +75,10 @@ namespace DiiagramrAPI.ViewModel
         // TODO: Unit test
         public void ManageLibraries()
         {
-            LibraryManagerViewModel.Visible = true;
+            if (ActiveItem == LibraryManagerScreenViewModel)
+                ActiveItem = ProjectScreenViewModel;
+            else
+                ActiveItem = LibraryManagerScreenViewModel;
         }
 
         public void Close()
