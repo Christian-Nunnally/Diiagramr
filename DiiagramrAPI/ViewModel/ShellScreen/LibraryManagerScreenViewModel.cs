@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Xml.Linq;
 using Stylet;
+using System.Reflection;
 
 namespace DiiagramrAPI.ViewModel.ShellScreen
 {
@@ -31,8 +32,11 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             if (string.IsNullOrEmpty(SelectedLibrary)) return;
             if (LibraryNameToPathMap.ContainsKey(SelectedLibrary))
             {
-                string zipPath = "Plugins/" + SelectedLibrary + ".zip";
-                string extractPath = "Plugins/" + SelectedLibrary;
+                var tmpDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\tmp";
+                if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+                string zipPath = "tmp/" + SelectedLibrary + ".zip";
+                string extractPath = "tmp/" + SelectedLibrary;
+                string toPath = "Plugins/" + SelectedLibrary;
                 using (var client = new WebClient())
                 {
                     client.DownloadFile(LibraryNameToPathMap[SelectedLibrary], zipPath);
@@ -40,7 +44,11 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
 
                 try
                 {
-                    System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
+                    if (!Directory.Exists(toPath))
+                    {
+                        System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
+                        Directory.Move(extractPath, toPath);
+                    }
                 }
                 catch (IOException)
                 {
