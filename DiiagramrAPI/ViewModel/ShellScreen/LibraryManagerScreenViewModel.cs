@@ -28,7 +28,7 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
         public bool SourcesVisible { get; set; }
         public bool InvalidSource { get; set; }
 
-        private List<string> uninsalledLibraries = new List<string>();
+        private List<string> uninstalledLibraries = new List<string>();
 
         public LibraryManagerScreenViewModel()
         {
@@ -55,7 +55,7 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             foreach (var directory in Directory.GetDirectories(PluginsDirectory))
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
-                if (uninsalledLibraries.Contains(directoryName)) continue;
+                if (uninstalledLibraries.Contains(directoryName)) continue;
                 InstalledLibraryNames.Add(directoryName);
             }
         }
@@ -70,7 +70,7 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
         public void UninstallSelectedLibrary()
         {
             var file = PluginsDirectory + SelectedInstalledLibrary;
-            uninsalledLibraries.Add(SelectedInstalledLibrary);
+            uninstalledLibraries.Add(SelectedInstalledLibrary);
             //DeleteDirectory(file);
             UpdateInstalledLibraries();
         }
@@ -96,12 +96,18 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             Directory.Delete(targetDir, false);
         }
 
-        public void InstallLibrary(string libraryName, string version)
+        /// <summary>
+        /// Installs a library.
+        /// </summary>
+        /// <param name="libraryName">The name of the library you want to install.  Format "VisualDrop" or "visualdrop" (case insensitive).</param>
+        /// <param name="version">The version of the library you want to install.  Format = "v1.0.0"</param>
+        /// <returns>True if the library was able to be installed, false if otherwise.</returns>
+        public bool InstallLibrary(string libraryName, string version)
         {
             var lowercaseName = libraryName.ToLower() + " - " + version.ToLower();
-            if (uninsalledLibraries.Contains(lowercaseName))
+            if (uninstalledLibraries.Contains(lowercaseName))
             {
-                uninsalledLibraries.Remove(lowercaseName);
+                uninstalledLibraries.Remove(lowercaseName);
             }
 
             if (LibraryNameToPathMap.ContainsKey(lowercaseName))
@@ -128,8 +134,10 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
                 {
                 }
                 File.Delete(zipPath);
+                UpdateInstalledLibraries();
+                return true;
             }
-            UpdateInstalledLibraries();
+            return false;
         }
 
         public void SourceSelectionChanged()
