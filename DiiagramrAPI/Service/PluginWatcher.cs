@@ -36,12 +36,9 @@ namespace DiiagramrAPI.Service
             {
                 var len = Assemblies.Count;
                 GetPluginAssemblies().ForEach(a => {
-                    if (!Assemblies.Contains(a))
-                    {
-                        Assemblies.Add(a);
-                    }
+                    if (!Assemblies.Contains(a)) Assemblies.Add(a);
                 });
-                if (Assemblies.Count != len) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Assembly"));
+                if (len != Assemblies.Count) PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Assembly"));
             };
 
             watch.Created += createdHandler;
@@ -54,7 +51,7 @@ namespace DiiagramrAPI.Service
         {
             var pluginDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
             if (!Directory.Exists(pluginDir)) Directory.CreateDirectory(pluginDir);
-            return Directory.GetFiles(pluginDir, "*.dll").Select(Assembly.LoadFile);
+            return Directory.GetFiles(pluginDir, "*.dll", SearchOption.AllDirectories).Select(Assembly.LoadFile);
         }
     }
 }
