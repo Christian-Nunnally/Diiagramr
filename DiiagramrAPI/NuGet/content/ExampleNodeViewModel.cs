@@ -22,7 +22,7 @@ namespace <YOUR NAMESPACE>
         private void InputTerminalOnDataChanged(int data)
         {
             ExampleValue = data;
-            _outputTerminal.Data = Value;
+            _outputTerminal.Data = ExampleValue;
         }
     }
 }

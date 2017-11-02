@@ -49,7 +49,8 @@
             MouseDown="{s:Action BackgroundMouseDown}">
         <Grid Canvas.Top="{Binding TopPosition}"
               Canvas.Left="{Binding RightPosition}"
-              MouseLeave="{s:Action MouseLeftSelector}">
+              MouseLeave="{s:Action MouseLeftSelector}"
+              Background="Transparent">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
