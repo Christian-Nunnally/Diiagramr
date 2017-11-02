@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>DiiagramrAPI</id>
-    <version>1.0.3-alpha</version>
+    <version>1.0.4</version>
     <authors>Christian</authors>
     <owners>Christian</owners>
     <licenseUrl>https://mit-license.org/</licenseUrl>
@@ -15,5 +15,11 @@
     <dependencies>
       <dependency id="Stylet" version="1.1.21.0" />
     </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="WindowsBase" targetFramework=".NETFramework4.0, .NETFramework4.5, .NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="PresentationFramework" targetFramework=".NETFramework4.0, .NETFramework4.5, .NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="PresentationCore" targetFramework=".NETFramework4.0, .NETFramework4.5, .NETFramework4.5.1" />
+      <frameworkAssembly assemblyName="System.Xaml" targetFramework=".NETFramework4.0, .NETFramework4.5, .NETFramework4.5.1" />
+    </frameworkAssemblies>
   </metadata>
 </package>

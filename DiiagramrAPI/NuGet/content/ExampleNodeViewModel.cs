@@ -5,7 +5,7 @@ namespace <YOUR NAMESPACE>
     public class ExampleNodeViewModel : PluginNode
     {
         private Terminal<int> _inputTerminal;
-        private Terminal<int> _outputTermina;
+        private Terminal<int> _outputTerminal;
 
         public int ExampleValue { get; set; }
 
