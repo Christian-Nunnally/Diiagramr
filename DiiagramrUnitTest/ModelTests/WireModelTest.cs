@@ -75,32 +75,19 @@ namespace DiiagramrUnitTests.ModelTests
             Assert.AreEqual(_outputTerminalMoq.Object, wire.SourceTerminal);
         }
 
-        [TestMethod]
-        public void TestConstructor_DisconnectsSourceTerminal()
-        {
-            new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            _outputTerminalMoq.Verify(m => m.DisconnectWire());
-        }
-
-        [TestMethod]
-        public void TestConstructor_DisconnectsSinkTerminal()
-        {
-            new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            _inputTerminalMoq.Verify(m => m.DisconnectWire());
-        }
 
         [TestMethod]
         public void TestConstructor_SetsSourceTerminalConnectedWireToSelf()
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            _outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+            _outputTerminalMoq.Verify(t => t.ConnectWire(wire));
         }
 
         [TestMethod]
         public void TestConstructor_SetsSinkTerminalConnectedWireToSelf()
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            _inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+            _inputTerminalMoq.Verify(t => t.ConnectWire(wire));
         }
 
         [TestMethod]
@@ -131,8 +118,8 @@ namespace DiiagramrUnitTests.ModelTests
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var outputTerminalMoq = new Mock<TerminalModel>("", typeof(string), Direction.North, TerminalKind.Output, 0);
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
-            outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
+            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
+            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
         }
 
         [TestMethod]
@@ -141,8 +128,8 @@ namespace DiiagramrUnitTests.ModelTests
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(Parent), Direction.North, TerminalKind.Input, 0);
             var outputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Output, 0);
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
-            outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
+            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
         }
 
         [TestMethod]
@@ -151,8 +138,8 @@ namespace DiiagramrUnitTests.ModelTests
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(object), Direction.North, TerminalKind.Input, 0);
             var outputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Output, 0);
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
-            outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire);
+            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
+            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
         }
 
         [TestMethod]
@@ -161,8 +148,8 @@ namespace DiiagramrUnitTests.ModelTests
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Input, 0);
             var outputTerminalMoq = new Mock<TerminalModel>("", typeof(Parent), Direction.North, TerminalKind.Output, 0);
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
-            outputTerminalMoq.VerifySet(m => m.ConnectedWire = wire, Times.Never);
+            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
+            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
         }
 
         [TestMethod]
@@ -188,7 +175,7 @@ namespace DiiagramrUnitTests.ModelTests
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
             wire.DisconnectWire();
-            _outputTerminalMoq.Verify(m => m.DisconnectWire());
+            _outputTerminalMoq.Verify(m => m.DisconnectWire(wire));
         }
 
         [TestMethod]
@@ -196,7 +183,7 @@ namespace DiiagramrUnitTests.ModelTests
         {
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
             wire.DisconnectWire();
-            _inputTerminalMoq.Verify(m => m.DisconnectWire());
+            _inputTerminalMoq.Verify(m => m.DisconnectWire(wire));
         }
 
         [TestMethod]

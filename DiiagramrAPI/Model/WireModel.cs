@@ -28,11 +28,8 @@ namespace DiiagramrAPI.Model
             if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type)
                 if (SourceTerminal.Type != typeof(object)) return;
 
-            SourceTerminal.DisconnectWire();
-            SinkTerminal.DisconnectWire();
-
-            SourceTerminal.ConnectedWire = this;
-            SinkTerminal.ConnectedWire = this;
+            SourceTerminal.ConnectWire(this);
+            SinkTerminal.ConnectWire(this);
             SetupTerminalPropertyChangeNotifications();
             SinkTerminal.Data = SourceTerminal.Data;
             _isActive = true;
@@ -109,9 +106,9 @@ namespace DiiagramrAPI.Model
         {
             SourceTerminal.PropertyChanged -= SourceTerminalOnPropertyChanged;
             SinkTerminal.PropertyChanged -= SinkTerminalOnPropertyChanged;
-            SourceTerminal.ConnectedWire = null;
+            SourceTerminal.DisconnectWire(this);
             SinkTerminal.Data = null;
-            SinkTerminal.ConnectedWire = null;
+            SinkTerminal.DisconnectWire(this);
             SourceTerminal = null;
             SinkTerminal = null;
         }

@@ -20,7 +20,7 @@ namespace DiiagramrUnitTests.ModelTests
             _terminalOut = new TerminalModel("", typeof(int), Direction.East, TerminalKind.Output, 0);
             _terminalIn = new TerminalModel("", typeof(int), Direction.East, TerminalKind.Input, 0);
             _wireMoq = new Mock<WireModel>(_terminalIn, _terminalOut);
-            _terminalOut.ConnectedWire = _wireMoq.Object;
+            _terminalOut.ConnectWire(_wireMoq.Object);
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace DiiagramrUnitTests.ModelTests
             var wireMoq = new Mock<WireModel>(terminalModelInput, terminalModelOutput);
             var semanticsChanged = false;
             terminalModelInput.SemanticsChanged += () => semanticsChanged = true;
-            terminalModelInput.ConnectedWire = wireMoq.Object;
+            terminalModelInput.ConnectWire(wireMoq.Object);
 
             Assert.IsTrue(semanticsChanged);
         }
@@ -40,7 +40,7 @@ namespace DiiagramrUnitTests.ModelTests
         public void TestEnableWire_CallsEnableWire()
         {
             _terminalOut.EnableWire();
-            Assert.IsNotNull(_terminalOut.ConnectedWire);
+            Assert.AreNotEqual(0, _terminalOut.ConnectedWires.Count);
             _wireMoq.Verify(m => m.EnableWire(), Times.Once);
         }
 
@@ -161,9 +161,9 @@ namespace DiiagramrUnitTests.ModelTests
             var terminalModelInput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalModelOutput = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var wireMoq = new Mock<WireModel>(terminalModelInput, terminalModelOutput);
-            terminalModelInput.ConnectedWire = wireMoq.Object;
-            terminalModelInput.DisconnectWire();
-            wireMoq.Verify(model => model.DisconnectWire());
+            terminalModelInput.ConnectWire(wireMoq.Object);
+            terminalModelInput.DisconnectWire(wireMoq.Object);
+            Assert.AreEqual(0, terminalModelInput.ConnectedWires.Count);
         }
     }
 }

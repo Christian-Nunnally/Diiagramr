@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 using DiiagramrAPI.PluginNodeApi;
@@ -20,6 +21,7 @@ namespace DiiagramrAPI.Model
 
         public TerminalModel(string name, Type type, Direction defaultDirection, TerminalKind kind, int index)
         {
+            ConnectedWires = new List<WireModel>();
             PropertyChanged += OnTerminalPropertyChanged;
             TerminalIndex = index;
             Direction = defaultDirection;
@@ -27,6 +29,9 @@ namespace DiiagramrAPI.Model
             Type = type;
             Name = name;
         }
+
+        public Action<WireModel> WireConnected;
+        public Action<WireModel> WireDisconnected;
 
         /// <summary>
         ///     The index of the terminal. The first terminal added to a node gets index 0.
@@ -80,7 +85,7 @@ namespace DiiagramrAPI.Model
         ///     The wire that is connected to this terminal. Null if no wire is connected.
         /// </summary>
         [DataMember]
-        public virtual WireModel ConnectedWire { get; set; }
+        public virtual List<WireModel> ConnectedWires { get; set; }
 
         public Type Type { get; set; }
 
@@ -103,8 +108,6 @@ namespace DiiagramrAPI.Model
                 X = NodeX + OffsetX;
             else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
                 Y = NodeY + OffsetY;
-            else if (e.PropertyName.Equals(nameof(ConnectedWire)))
-                SemanticsChanged?.Invoke();
         }
 
         public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -123,25 +126,52 @@ namespace DiiagramrAPI.Model
             NodeY = node.Y;
         }
 
-        public virtual void DisconnectWire()
+        public virtual void DisconnectWires()
         {
-            ConnectedWire?.DisconnectWire();
+            for (var i = ConnectedWires.Count - 1; i >= 0; i--)
+            {
+                ConnectedWires[i].DisconnectWire();
+            }
+        }
+
+        public virtual void DisconnectWire(WireModel wire)
+        {
+            ConnectedWires.Remove(wire);
+            WireDisconnected?.Invoke(wire);
+            SemanticsChanged?.Invoke();
+        }
+
+        public virtual void ConnectWire(WireModel wire)
+        {
+            if (ConnectedWires.Contains(wire)) return;
+            ConnectedWires.Add(wire);
+            WireConnected?.Invoke(wire);
+            SemanticsChanged?.Invoke();
         }
 
         public virtual void EnableWire()
         {
-            ConnectedWire?.EnableWire();
+            foreach (var connectedWire in ConnectedWires)
+            {
+                connectedWire.EnableWire();
+            }
         }
 
         public virtual void DisableWire()
         {
-            ConnectedWire?.DisableWire();
+            foreach (var connectedWire in ConnectedWires)
+            {
+                connectedWire.DisableWire();
+            }
         }
 
         public virtual void ResetWire()
         {
-            ConnectedWire?.DisableWire();
-            ConnectedWire?.ResetWire();
+            foreach (var connectedWire in ConnectedWires)
+            {
+                connectedWire.DisableWire();
+                connectedWire.ResetWire();
+            }
         }
 
         [OnDeserialized]

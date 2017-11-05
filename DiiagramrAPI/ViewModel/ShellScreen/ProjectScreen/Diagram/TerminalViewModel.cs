@@ -105,7 +105,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public virtual void DisconnectTerminal()
         {
-            TerminalModel.DisconnectWire();
+            TerminalModel.DisconnectWires();
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)

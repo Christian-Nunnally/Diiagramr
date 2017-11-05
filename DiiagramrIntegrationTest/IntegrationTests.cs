@@ -33,29 +33,29 @@ namespace DiiagramrIntegrationTest
             var node2 = shell.PlaceNode(testNode);
 
             // wire nodes
-            var outTerm = node1.OutputTerminalViewModels.First();
-            var inTerm = node2.InputTerminalViewModels.First();
-            var wireViewModel = shell.WireTerminals(outTerm, inTerm);
+            var outputTerm = node1.OutputTerminalViewModels.First();
+            var inputTerm = node2.InputTerminalViewModels.First();
+            var wireViewModel = shell.WireTerminals(outputTerm, inputTerm);
 
             // set output
             node1.InputTerminalViewModels.First().Data = 4;
-            outTerm.Data = 5;
+            outputTerm.Data = 5;
             Assert.AreEqual(((TestNode) node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
 
             // move node2
             node2.X = 16;
             node2.Y = 17;
     
-            var inTermNode2 = node2.InputTerminalViewModels.First().TerminalModel;
-            var outTermNode1 = node1.OutputTerminalViewModels.First().TerminalModel;
-            Assert.AreEqual(inTermNode2.X, node2.X);
-            Assert.AreEqual(inTermNode2.Y, node2.Y);
-            Assert.AreEqual(inTermNode2.NodeX + inTermNode2.OffsetX, inTermNode2.X);
-            Assert.AreEqual(inTermNode2.NodeY + inTermNode2.OffsetY, inTermNode2.Y);
-            Assert.AreEqual(inTermNode2.X + DiagramConstants.NodeBorderWidth, wireViewModel.X1);
-            Assert.AreEqual(inTermNode2.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y1);
-            Assert.AreEqual(outTermNode1.X + DiagramConstants.NodeBorderWidth, wireViewModel.X2);
-            Assert.AreEqual(outTermNode1.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
+            var inputTerminalNode2 = node2.InputTerminalViewModels.First().TerminalModel;
+            var outputTerminalNode1 = node1.OutputTerminalViewModels.First().TerminalModel;
+            Assert.AreEqual(inputTerminalNode2.X, node2.X);
+            Assert.AreEqual(inputTerminalNode2.Y, node2.Y);
+            Assert.AreEqual(inputTerminalNode2.NodeX + inputTerminalNode2.OffsetX, inputTerminalNode2.X);
+            Assert.AreEqual(inputTerminalNode2.NodeY + inputTerminalNode2.OffsetY, inputTerminalNode2.Y);
+            Assert.AreEqual(inputTerminalNode2.X + DiagramConstants.NodeBorderWidth, wireViewModel.X1);
+            Assert.AreEqual(inputTerminalNode2.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y1);
+            Assert.AreEqual(outputTerminalNode1.X + DiagramConstants.NodeBorderWidth, wireViewModel.X2);
+            Assert.AreEqual(outputTerminalNode1.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
 
             // save
             projectManager.SaveProject();
@@ -69,10 +69,10 @@ namespace DiiagramrIntegrationTest
             node2 = diagramViewModel.NodeViewModels[1];
 
             // check wire nodes
-            outTerm = node1.OutputTerminalViewModels.First();
-            inTerm = node2.InputTerminalViewModels.First();
-            Assert.IsNotNull(outTerm.TerminalModel.ConnectedWire);
-            Assert.IsNotNull(inTerm.TerminalModel.ConnectedWire);
+            outputTerm = node1.OutputTerminalViewModels.First();
+            inputTerm = node2.InputTerminalViewModels.First();
+            Assert.AreNotEqual(0, outputTerm.TerminalModel.ConnectedWires.Count);
+            Assert.AreNotEqual(0, inputTerm.TerminalModel.ConnectedWires.Count);
             Assert.AreEqual(5, ((TestNode)node2).InputTerminal.Data);
             Assert.AreEqual(5, ((TestNode)node1).OutputTerminal.Data);
             Assert.AreEqual(6, ((TestNode)node2).OutputTerminal.Data);
@@ -81,24 +81,24 @@ namespace DiiagramrIntegrationTest
             
 
             // change data
-            outTerm.Data = 6;
+            outputTerm.Data = 6;
             Assert.AreEqual(((TestNode)node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
             Assert.AreEqual(((TestNode)node2).InputTerminal.Data + 1, ((TestNode)node2).OutputTerminal.Data);
 
             // change location
             node1.X = 11;
             node1.Y = 12;
-            inTermNode2 = inTerm.TerminalModel;
-            outTermNode1 = outTerm.TerminalModel;
+            inputTerminalNode2 = inputTerm.TerminalModel;
+            outputTerminalNode1 = outputTerm.TerminalModel;
             wireViewModel = diagramWell.ActiveItem.WireViewModels.First();
-            Assert.AreEqual(inTermNode2.X, node2.X);
-            Assert.AreEqual(inTermNode2.Y, node2.Y);
-            Assert.AreEqual(inTermNode2.NodeX + inTermNode2.OffsetX, inTermNode2.X);
-            Assert.AreEqual(inTermNode2.NodeY + inTermNode2.OffsetY, inTermNode2.Y);
-            Assert.AreEqual(inTermNode2.X + DiagramConstants.NodeBorderWidth, wireViewModel.X1);
-            Assert.AreEqual(inTermNode2.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y1);
-            Assert.AreEqual(outTermNode1.X + DiagramConstants.NodeBorderWidth, wireViewModel.X2);
-            Assert.AreEqual(outTermNode1.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
+            Assert.AreEqual(inputTerminalNode2.X, node2.X);
+            Assert.AreEqual(inputTerminalNode2.Y, node2.Y);
+            Assert.AreEqual(inputTerminalNode2.NodeX + inputTerminalNode2.OffsetX, inputTerminalNode2.X);
+            Assert.AreEqual(inputTerminalNode2.NodeY + inputTerminalNode2.OffsetY, inputTerminalNode2.Y);
+            Assert.AreEqual(inputTerminalNode2.X + DiagramConstants.NodeBorderWidth, wireViewModel.X1);
+            Assert.AreEqual(inputTerminalNode2.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y1);
+            Assert.AreEqual(outputTerminalNode1.X + DiagramConstants.NodeBorderWidth, wireViewModel.X2);
+            Assert.AreEqual(outputTerminalNode1.Y + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
         }
 
         [TestMethod]
