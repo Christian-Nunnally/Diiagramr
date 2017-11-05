@@ -39,7 +39,20 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
         private void UpdateInstalledLibraries()
         {
             InstalledLibraryNames.Clear();
-            foreach (var directory in Directory.GetDirectories(PluginsDirectory))
+            string[] directories;
+
+            try
+            {
+                directories = Directory.GetDirectories(PluginsDirectory);
+            }
+            catch (IOException e)
+            {
+                Console.WriteLine("Can't find plugins directory!");
+                Console.WriteLine(e);
+                return;
+            }
+
+            foreach (var directory in directories)
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
                 InstalledLibraryNames.Add(directoryName);

@@ -114,7 +114,7 @@ namespace DiiagramrAPI.Model
 
         public virtual void RemoveTerminal(TerminalModel terminal)
         {
-            terminal.DisconnectWire();
+            terminal.DisconnectWires();
             terminal.SemanticsChanged -= TerminalSematicsChanged;
             PropertyChanged -= terminal.NodePropertyChanged;
             Terminals.Remove(terminal);

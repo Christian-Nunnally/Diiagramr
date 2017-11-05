@@ -106,8 +106,8 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             terminalViewModel.DropObject(droppingTerminalMoq.Object);
 
-            _terminalModelMoq.VerifySet(t => t.ConnectedWire = It.IsAny<WireModel>());
-            droppingTerminalMoq.VerifySet(t => t.ConnectedWire = It.IsAny<WireModel>());
+            _terminalModelMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
+            droppingTerminalMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
         }
 
         [TestMethod]
@@ -133,8 +133,8 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             terminalViewModel.WireToTerminal(droppingTerminalMoq.Object);
 
-            _terminalModelMoq.VerifySet(t => t.ConnectedWire = It.IsAny<WireModel>());
-            droppingTerminalMoq.VerifySet(t => t.ConnectedWire = It.IsAny<WireModel>());
+            _terminalModelMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
+            droppingTerminalMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
         }
 
         [TestMethod]

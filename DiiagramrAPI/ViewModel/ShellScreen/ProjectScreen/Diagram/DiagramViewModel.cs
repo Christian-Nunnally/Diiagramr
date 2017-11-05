@@ -36,11 +36,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     abstractNode.SetTerminalsPropertyChanged();
                     AddNodeViewModel(viewModel);
 
-                    foreach (var terminal in abstractNode.Terminals)
-                    {
-                        if (terminal.ConnectedWire == null) continue;
-                        AddWireViewModel(terminal.ConnectedWire);
-                    }
+                    AddWiresForNode(viewModel);
                 }
         }
 
@@ -91,14 +87,29 @@ namespace DiiagramrAPI.ViewModel.Diagram
         private void AddNodeViewModel(PluginNode viewModel)
         {
             if (!Diagram.Nodes.Contains(viewModel.NodeModel)) throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
-            viewModel.TerminalConnectedStatusChanged += OnTerminalConnectedStatusChanged;
+            viewModel.WireConnectedToTerminal += WireAddedToDiagram;
+            viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
             NodeViewModels.Add(viewModel);
-
-            foreach (var inputTerminal in viewModel.NodeModel.Terminals.Where(t => t.Kind == TerminalKind.Input))
-                if (inputTerminal.ConnectedWire != null)
-                    AddWireViewModel(inputTerminal.ConnectedWire);
+            AddWiresForNode(viewModel);
 
             viewModel.Initialize();
+        }
+
+        private void AddWiresForNode(PluginNode viewModel)
+        {
+            foreach (var inputTerminal in viewModel.NodeModel.Terminals.Where(t => t.Kind == TerminalKind.Input))
+                inputTerminal.ConnectedWires.ForEach(AddWireViewModel);
+        }
+
+        private void WireRemovedFromDiagram(WireModel wireModel)
+        {
+            // Currently handled by wire.disconnected event.
+        }
+
+        private void WireAddedToDiagram(WireModel wireModel)
+        {
+            if (WireViewModels.Any(x => x.WireModel == wireModel)) return;
+            AddWireViewModel(wireModel);
         }
 
         private void ShowTitlesOnTerminalsOfSameType(TerminalModel terminal)
@@ -121,15 +132,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
             NodeViewModels.Remove(viewModel);
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
-        }
-
-        private void OnTerminalConnectedStatusChanged(TerminalModel terminal)
-        {
-            if (terminal.ConnectedWire != null)
-            {
-                if (WireViewModels.Any(x => x.WireModel == terminal.ConnectedWire)) return;
-                AddWireViewModel(terminal.ConnectedWire);
-            }
         }
 
         private void AddWireViewModel(WireModel wire)

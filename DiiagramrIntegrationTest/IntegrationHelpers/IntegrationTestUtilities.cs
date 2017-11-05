@@ -88,10 +88,10 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         {
             var projectScreen = shell.ProjectScreenViewModel;
             sourceTerminal.DropObject(sinkTerminal.TerminalModel);
-            Assert.IsNotNull(sourceTerminal.TerminalModel.ConnectedWire);
-            Assert.IsNotNull(sinkTerminal.TerminalModel.ConnectedWire);
+            Assert.AreNotEqual(0, sourceTerminal.TerminalModel.ConnectedWires.Count);
+            Assert.AreNotEqual(0, sinkTerminal.TerminalModel.ConnectedWires.Count);
             var wireViewModel = projectScreen.DiagramWellViewModel.ActiveItem.WireViewModels.Last();
-            Assert.AreEqual(wireViewModel.WireModel, sourceTerminal.TerminalModel.ConnectedWire);
+            Assert.IsTrue(sourceTerminal.TerminalModel.ConnectedWires.Contains(wireViewModel.WireModel));
             return wireViewModel;
         }
 

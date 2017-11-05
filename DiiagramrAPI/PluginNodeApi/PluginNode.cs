@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -43,7 +42,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual string Name { get; set; } = "Node";
         public virtual NodeModel NodeModel { get; set; }
 
-        public event Action<TerminalModel> TerminalConnectedStatusChanged;
+        public event Action<WireModel> WireConnectedToTerminal;
+        public event Action<WireModel> WireDisconnectedFromTerminal;
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
@@ -60,9 +60,20 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             foreach (var terminal in NodeModel.Terminals)
             {
-                terminal.PropertyChanged += TerminalOnPropertyChanged;
+                terminal.WireConnected += TerminalWireConnected;
+                terminal.WireDisconnected += TerminalWireDisconnected;
                 TerminalViewModels.Add(TerminalViewModel.CreateTerminalViewModel(terminal));
             }
+        }
+
+        private void TerminalWireDisconnected(WireModel wireModel)
+        {
+            WireDisconnectedFromTerminal?.Invoke(wireModel);
+        }
+
+        private void TerminalWireConnected(WireModel wireModel)
+        {
+            WireConnectedToTerminal?.Invoke(wireModel);
         }
 
         public virtual void AddTerminalViewModel(TerminalViewModel terminalViewModel)
@@ -81,20 +92,16 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private void AddTerminal(TerminalModel terminal)
         {
-            terminal.PropertyChanged += TerminalOnPropertyChanged;
+            terminal.WireConnected += TerminalWireConnected;
+            terminal.WireDisconnected += TerminalWireDisconnected;
             NodeModel.AddTerminal(terminal);
         }
 
         private void RemoveTerminal(TerminalModel terminal)
         {
-            terminal.PropertyChanged -= TerminalOnPropertyChanged;
+            terminal.WireConnected += TerminalWireConnected;
+            terminal.WireDisconnected += TerminalWireDisconnected;
             NodeModel.RemoveTerminal(terminal);
-        }
-
-        private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(nameof(TerminalModel.ConnectedWire)))
-                TerminalConnectedStatusChanged?.Invoke((TerminalModel) sender);
         }
 
         protected override void OnPropertyChanged(string propertyName)
