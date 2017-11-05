@@ -7,45 +7,32 @@ using System.Net;
 using System.Xml.Linq;
 using Stylet;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DiiagramrAPI.ViewModel.ShellScreen
 {
     public class LibraryManagerScreenViewModel : Screen
     {
-        private const string PluginsDirectory = "Plugins/";
+        private const string PluginsDirectory = "Plugins\\";
 
         public string SelectedSource { get; set; }
         public string SelectedLibrary { get; set; }
-        public string SelectedInstalledLibrary { get; set; }
 
         public ObservableCollection<string> Sources { get; set; }
-        public ObservableCollection<string> LibraryNames { get; set; }
         public ObservableCollection<string> InstalledLibraryNames { get; set; }
-        public Dictionary<string, string> LibraryNameToPathMap { get; set; }
+        public ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; set; }
 
         public string SourceTextBoxText { get; set; }
 
         public bool SourcesVisible { get; set; }
-        public bool InvalidSource { get; set; }
-
-        private List<string> uninstalledLibraries = new List<string>();
 
         public LibraryManagerScreenViewModel()
         {
             Sources = new BindableCollection<string>();
-            LibraryNames = new BindableCollection<string>();
             InstalledLibraryNames = new BindableCollection<string>();
-            LibraryNameToPathMap = new Dictionary<string, string>();
+            LibraryNameToPathMap = new BindableCollection<LibraryNameToPath>();
 
-            LoadDefaultSource();
-        }
-
-        private void LoadDefaultSource()
-        {
-            Sources.Add("http://diiagramrlibraries.azurewebsites.net/nuget/Packages");
-            SelectedSource = Sources.First();
-            SourceSelectionChanged();
-
+            AddSource("http://diiagramrlibraries.azurewebsites.net/nuget/Packages");
             UpdateInstalledLibraries();
         }
 
@@ -55,7 +42,6 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             foreach (var directory in Directory.GetDirectories(PluginsDirectory))
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
-                if (uninstalledLibraries.Contains(directoryName)) continue;
                 InstalledLibraryNames.Add(directoryName);
             }
         }
@@ -67,116 +53,92 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             InstallLibrary(SelectedLibrary.Split(' ')[0], SelectedLibrary.Split(' ')[2]);
         }
 
-        public void UninstallSelectedLibrary()
-        {
-            var file = PluginsDirectory + SelectedInstalledLibrary;
-            uninstalledLibraries.Add(SelectedInstalledLibrary);
-            //DeleteDirectory(file);
-            UpdateInstalledLibraries();
-        }
-
-        private static void DeleteDirectory(string targetDir)
-        {
-            File.SetAttributes(targetDir, FileAttributes.Normal);
-
-            var files = Directory.GetFiles(targetDir);
-            var dirs = Directory.GetDirectories(targetDir);
-
-            foreach (var file in files)
-            {
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.Delete(file);
-            }
-
-            foreach (var dir in dirs)
-            {
-                DeleteDirectory(dir);
-            }
-
-            Directory.Delete(targetDir, false);
-        }
-
         /// <summary>
         /// Installs a library.
         /// </summary>
         /// <param name="libraryName">The name of the library you want to install.  Format "VisualDrop" or "visualdrop" (case insensitive).</param>
-        /// <param name="version">The version of the library you want to install.  Format = "v1.0.0"</param>
-        /// <returns>True if the library was able to be installed, false if otherwise.</returns>
-        public bool InstallLibrary(string libraryName, string version)
+        /// <param name="libraryVersion">The version of the library you want to install.  Format = "v1.0.0"</param>
+        /// <returns>True if the library was installed, false otherwise.</returns>
+        public bool InstallLibrary(string libraryName, string libraryVersion)
         {
-            var lowercaseName = libraryName.ToLower() + " - " + version.ToLower();
-            if (uninstalledLibraries.Contains(lowercaseName))
-            {
-                uninstalledLibraries.Remove(lowercaseName);
-            }
+            var formattedLibraryName = FormatLibraryName(libraryName, libraryVersion);
+            if (!LibraryPathMapContains(formattedLibraryName)) return false;
 
-            if (LibraryNameToPathMap.ContainsKey(lowercaseName))
-            {
-                var tmpDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\tmp";
-                if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-                var zipPath = "tmp/" + SelectedLibrary + ".zip";
-                var extractPath = "tmp/" + SelectedLibrary;
-                var toPath = PluginsDirectory + SelectedLibrary;
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(LibraryNameToPathMap[lowercaseName], zipPath);
-                }
-
-                try
-                {
-                    if (!Directory.Exists(toPath))
-                    {
-                        System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
-                        Directory.Move(extractPath, toPath);
-                    }
-                }
-                catch (IOException)
-                {
-                }
-                File.Delete(zipPath);
-                UpdateInstalledLibraries();
-                return true;
-            }
-            return false;
-        }
-
-        public void SourceSelectionChanged()
-        {
-            LibraryNames.Clear();
-            LibraryNameToPathMap.Clear();
-            string packages;
-
-            if (!SelectedSource.StartsWith("http://"))
-            {
-                InvalidSource = true;
-                return;
-            }
-
+            var tmpDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\tmp";
+            if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+            var zipPath = "tmp/" + SelectedLibrary + ".zip";
+            var extractPath = "tmp/" + SelectedLibrary;
+            var toPath = PluginsDirectory + SelectedLibrary;
             using (var client = new WebClient())
             {
-                try
+                client.DownloadFile(LibraryPathMapGet(formattedLibraryName), zipPath);
+            }
+
+            try
+            {
+                if (!Directory.Exists(toPath))
                 {
-                    packages = client.DownloadString(SelectedSource);
-                }
-                catch (Exception)
-                {
-                    InvalidSource = true;
-                    return;
+                    System.IO.Compression.ZipFile.ExtractToDirectory(zipPath, extractPath);
+                    Directory.Move(extractPath, toPath);
+                    File.Delete(zipPath);
                 }
             }
-            InvalidSource = false;
-
-            const string searchString = "{http://www.w3.org/2005/Atom}content";
-            foreach (var descendant in XElement.Parse(packages).Descendants(searchString))
+            catch (IOException)
             {
-                var libraryPath = descendant.LastAttribute.Value;
-                var sl = libraryPath.Split('/');
-                var libraryName = sl[sl.Length - 2];
-                var libraryVersion = sl[sl.Length - 1];
-                var libraryString = libraryName + " - " + libraryVersion;
-                if (LibraryNameToPathMap.ContainsKey(libraryString)) continue;
-                LibraryNameToPathMap.Add(libraryString, libraryPath);
-                LibraryNames.Add(libraryString);
+                return false;
+            }
+
+            UpdateInstalledLibraries();
+            return true;
+        }
+
+        public string GetLibraryInstallDirectory(string libraryName, string libraryVersion)
+        {
+            var formattedLibraryName = FormatLibraryName(libraryName, libraryVersion);
+            var libraryInstallDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + PluginsDirectory + formattedLibraryName;
+            if (!Directory.Exists(libraryInstallDirectory)) return "";
+            return libraryInstallDirectory;
+        }
+
+        private void AddSource(string sourceUrl)
+        {
+            if (!sourceUrl.StartsWith("http://")) return;
+            Sources.Add(sourceUrl);
+            Task.Run(() =>
+            {
+                var packagesString = DownloadPackagesStringFromSource(sourceUrl);
+                var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+                AddLibraryPathsToNameToPathMap(libraryPaths);
+            });
+        }
+
+        private void RemoveSource(string sourceUrl)
+        {
+            if (!Sources.Contains(sourceUrl)) return;
+            Sources.Remove(sourceUrl);
+            Task.Run(() =>
+            {
+                var packagesString = DownloadPackagesStringFromSource(sourceUrl);
+                var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+                RemoveLibraryPathsFromNameToPathMap(libraryPaths);
+            });
+        }
+
+        private void AddLibraryPathsToNameToPathMap(IEnumerable<string> libraryPaths)
+        {
+            foreach (var libraryPath in libraryPaths)
+            {
+                var libraryString = GetLibraryNameFromPath(libraryPath);
+                LibraryPathMapAdd(libraryString, libraryPath);
+            }
+        }
+
+        private void RemoveLibraryPathsFromNameToPathMap(IEnumerable<string> libraryPaths)
+        {
+            foreach (var libraryPath in libraryPaths)
+            {
+                var libraryString = GetLibraryNameFromPath(libraryPath);
+                if (LibraryPathMapContains(libraryString)) LibraryPathMapRemove(libraryString);
             }
         }
 
@@ -194,15 +156,87 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
         public void AddSource()
         {
             if (string.IsNullOrEmpty(SourceTextBoxText)) return;
-            Sources.Add(SourceTextBoxText);
+            AddSource(SourceTextBoxText);
             SourceTextBoxText = "";
         }
 
         public void RemoveSelectedSource()
         {
-            if (string.IsNullOrEmpty(SelectedSource)) return;
             if (!Sources.Contains(SelectedSource)) return;
-            Sources.Remove(SelectedSource);
+            RemoveSource(SelectedSource);
+        }
+
+        private bool LibraryPathMapContains(string name)
+        {
+            return LibraryNameToPathMap.Any(p => p.Name == name);
+        }
+
+        private void LibraryPathMapAdd(string name, string path)
+        {
+            if (LibraryPathMapContains(name)) return;
+            var libraryNameToPath = new LibraryNameToPath();
+            libraryNameToPath.Name = name;
+            libraryNameToPath.Path = path;
+            LibraryNameToPathMap.Add(libraryNameToPath);
+        }
+
+        private string LibraryPathMapGet(string name)
+        {
+            return LibraryNameToPathMap.First(p => p.Name == name).Path;
+        }
+
+        private void LibraryPathMapRemove(string name)
+        {
+            if (!LibraryPathMapContains(name)) return;
+            var itemToRemove = LibraryNameToPathMap.First(p => p.Name == name);
+            LibraryNameToPathMap.Remove(itemToRemove);
+        }
+
+        #region Static Helper Methods
+
+        private static string GetLibraryNameFromPath(string libraryPath)
+        {
+            var sl = libraryPath.Split('/');
+            var libraryName = sl[sl.Length - 2];
+            var libraryVersion = sl[sl.Length - 1];
+            return FormatLibraryName(libraryName, libraryVersion);
+        }
+
+        private static string FormatLibraryName(string name, string version) => name.ToLower() + " - " + version.ToLower();
+
+        private static IEnumerable<string> GetLibraryPathsFromPackagesXml(string packagesXml)
+        {
+            const string searchString = "{http://www.w3.org/2005/Atom}content";
+            var xmlElement = XElement.Parse(packagesXml);
+            return xmlElement.Descendants(searchString).Select(descendant => descendant.LastAttribute.Value).ToList();
+        }
+
+        private static string DownloadPackagesStringFromSource(string uriSource)
+        {
+            using (var client = new WebClient())
+            {
+                try
+                {
+                    return client.DownloadString(uriSource);
+                }
+                catch (Exception)
+                {
+                    return "";
+                }
+            }
+        }
+
+        #endregion
+    }
+
+    public class LibraryNameToPath
+    {
+        public string Name;
+        public string Path;
+
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

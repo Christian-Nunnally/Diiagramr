@@ -25,14 +25,14 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <ListBox Margin="10,5,10,0" Grid.Row="2" ItemsSource="{Binding LibraryNames}" SelectedItem="{Binding SelectedLibrary, Mode=TwoWay}"/>
+            <ListBox Margin="10,5,10,0" Grid.Row="2" ItemsSource="{Binding LibraryNameToPathMap}" SelectedItem="{Binding SelectedLibrary, Mode=TwoWay}"/>
             <Label Content="Browse" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1"/>
             <Button Content="Install" Margin="10,5,10,10" Grid.Row="3" Click="{s:Action InstallSelectedLibrary}"/>
             <Label Content="Library Manager" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" Background="LightGray" Grid.ColumnSpan="2"/>
             <Label Content="Installed" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="1" Grid.Column="1"/>
             <Button Content="" Margin="0,1,1,0" Click="{s:Action Close}" Grid.Column="1" Background="IndianRed" HorizontalAlignment="Right" Width="16" Height="16" VerticalAlignment="Top"/>
-            <Button Content="Uninstall" Margin="10,5,10,10" Grid.Row="3" Click="{s:Action UninstallSelectedLibrary}" Grid.Column="1"/>
-            <ListBox Margin="10,5,10,0" Grid.Row="2" ItemsSource="{Binding InstalledLibraryNames}" SelectedItem="{Binding SelectedInstalledLibrary, Mode=TwoWay}" Grid.Column="1"/>
+            <Button Content="Uninstall" Margin="10,5,10,10" Grid.Row="3" Grid.Column="1"/>
+            <ListBox Margin="10,5,10,0" Grid.Row="2" ItemsSource="{Binding InstalledLibraryNames}" Grid.Column="1"/>
             <Button Content="Sources" Margin="10,4,0,3" Grid.Row="1" Click="{s:Action ViewSources}" HorizontalAlignment="Left" Width="53"/>
             <Grid Grid.Row="1" Background="White" Grid.RowSpan="3" Grid.ColumnSpan="2" Margin="0" Visibility="{Binding SourcesVisible, Converter={StaticResource btv}}">
                 <Grid.ColumnDefinitions>
@@ -47,13 +47,11 @@
                 </Grid.RowDefinitions>
 
                 <Label Content="Sources" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2"/>
-                <ListBox Margin="10,6,10,10" Grid.Row="2" ItemsSource="{Binding Sources}" SelectionChanged="{s:Action SourceSelectionChanged}" SelectedItem="{Binding SelectedSource, Mode=TwoWay}" Grid.ColumnSpan="2"/>
+                <ListBox Margin="10,6,10,10" Grid.Row="2" ItemsSource="{Binding Sources}" SelectedItem="{Binding SelectedSource, Mode=TwoWay}" Grid.ColumnSpan="2"/>
                 <Button Content="Add" Grid.Column="1" Click="{s:Action AddSource}" HorizontalAlignment="Left" Margin="7,5,0,0" Grid.Row="1" VerticalAlignment="Top" Width="45" Height="23"/>
                 <Button Content="" Margin="0,2,1,0" Click="{s:Action ViewSources}" Grid.Column="1" Background="IndianRed" HorizontalAlignment="Right" Width="16" Height="16" VerticalAlignment="Top"/>
                 <Button Content="Remove" Margin="0" Click="{s:Action RemoveSelectedSource}" Grid.Row="3" VerticalAlignment="Top" Grid.ColumnSpan="2" HorizontalAlignment="Center" Width="100"/>
-                <Label Content="Invalid Source Selected" Visibility="{Binding InvalidSource, Converter={StaticResource btv}}" Margin="10,0,0,3" Foreground="Red" FontWeight="SemiBold" FontSize="14" Grid.Row="2" HorizontalAlignment="Left" Width="170" Grid.RowSpan="2" Height="28" VerticalAlignment="Bottom"/>
                 <TextBox Height="23" Margin="10,5,0,0" Grid.Row="1" Text="{Binding SourceTextBoxText, Mode=TwoWay}" VerticalAlignment="Top"/>
-
             </Grid>
         </Grid>
     </Border>
