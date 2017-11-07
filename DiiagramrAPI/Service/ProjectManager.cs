@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ShellScreen;
 
 namespace DiiagramrAPI.Service
 {
@@ -13,11 +14,13 @@ namespace DiiagramrAPI.Service
     {
         private readonly IProvideNodes _nodeProvider;
         private readonly IProjectFileService _projectFileService;
+        private readonly LibraryManagerScreenViewModel _libraryManager;
         public IList<DiagramViewModel> DiagramViewModels { get; }
 
-        public ProjectManager(Func<IProjectFileService> projectFileServiceFactory, Func<IProvideNodes> nodeProviderFactory)
+        public ProjectManager(Func<IProjectFileService> projectFileServiceFactory, Func<IProvideNodes> nodeProviderFactory, Func<LibraryManagerScreenViewModel> libraryManager)
         {
             DiagramViewModels = new List<DiagramViewModel>();
+            _libraryManager = libraryManager.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _nodeProvider = nodeProviderFactory.Invoke();
             _nodeProvider.ProjectManager = this;
@@ -56,6 +59,7 @@ namespace DiiagramrAPI.Service
             if (CloseProject())
             {
                 CurrentProject = _projectFileService.LoadProject();
+                DownloadProjectDependencies();
                 IsProjectDirty = false;
                 CurrentProjectChanged?.Invoke();
             }
@@ -110,6 +114,13 @@ namespace DiiagramrAPI.Service
         {
             var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
             DiagramViewModels.Add(diagramViewModel);
+        }
+
+        private void DownloadProjectDependencies()
+        {
+            foreach (var diagram in CurrentProject.Diagrams)
+                foreach (var node in diagram.Nodes)
+                    _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
         }
     }
 }

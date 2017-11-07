@@ -26,8 +26,18 @@ namespace DiiagramrAPI.Model
             Terminals = new List<TerminalModel>();
         }
 
+        public NodeModel(string nodeTypeFullName, DependencyModel dep)
+        {
+            NodeFullName = nodeTypeFullName;
+            Dependency = dep;
+            Terminals = new List<TerminalModel>();
+        }
+
         [DataMember]
         public string NodeFullName { get; set; }
+
+        [DataMember]
+        public DependencyModel Dependency { get; set; }
 
         public virtual PluginNode NodeViewModel
         {

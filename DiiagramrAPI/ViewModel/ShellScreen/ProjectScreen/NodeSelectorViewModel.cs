@@ -63,7 +63,7 @@ namespace DiiagramrAPI.ViewModel
 
         private Library GetOrCreateLibrary(string libraryName)
         {
-            if (LibrariesList.All(l => l.Name != libraryName)) LibrariesList.Add(new Library(libraryName));
+            if (LibrariesList.All(l => l.Name != libraryName)) LibrariesList.Insert(0, new Library(libraryName));
             return LibrariesList.First(l => l.Name == libraryName);
         }
 

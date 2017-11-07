@@ -32,15 +32,15 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-            builder.Bind<IPluginWatcher>().To<PluginWatcher>().InSingletonScope();
+            builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
             var container = builder.BuildContainer();
 
             var nodeProvider = container.Get<IProvideNodes>();
-            nodeProvider.RegisterNode(new TestNode());
-            nodeProvider.RegisterNode(new DiagramInputNodeViewModel());
-            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel());
+            nodeProvider.RegisterNode(new TestNode(), new DependencyModel("", ""));
+            nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
+            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
 
             return container.Get<ShellViewModel>();
         }

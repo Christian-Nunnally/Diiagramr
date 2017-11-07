@@ -10,6 +10,7 @@ using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
+using DiiagramrAPI.Model;
 
 namespace DiiagramrIntegrationTest
 {
@@ -31,16 +32,16 @@ namespace DiiagramrIntegrationTest
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
-            builder.Bind<IPluginWatcher>().To<PluginWatcher>().InSingletonScope();
+            builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
             var container = builder.BuildContainer();
 
             var nodeProvider = container.Get<IProvideNodes>();
-            nodeProvider.RegisterNode(new TestNode());
-            nodeProvider.RegisterNode(new DiagramInputNodeViewModel());
-            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel());
+            nodeProvider.RegisterNode(new TestNode(), new DependencyModel("",""));
+            nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
+            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
 
             var shell = container.Get<ShellViewModel>();
             var projectScreen = shell.ProjectScreenViewModel;

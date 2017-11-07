@@ -8,6 +8,8 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using System.Collections.Generic;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -17,15 +19,18 @@ namespace DiiagramrUnitTests.ServiceTests
         private ProjectManager _projectManager;
         private Mock<IProjectFileService> _projectFileServiceMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
+        private Mock<LibraryManagerScreenViewModel> _libraryManagerMoq;
         private bool _currentProjectChanged;
 
         [TestInitialize]
         public void TestInitialize()
         {
+            var pluginLoader = new Mock<IPluginLoader>();
             _projectFileServiceMoq = new Mock<IProjectFileService>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
+             _libraryManagerMoq = new Mock<LibraryManagerScreenViewModel>((Func<IPluginLoader>)( () => pluginLoader.Object));
             _currentProjectChanged = false;
-            _projectManager = new ProjectManager(() => _projectFileServiceMoq.Object, () => _nodeProviderMoq.Object);
+            _projectManager = new ProjectManager(() => _projectFileServiceMoq.Object, () => _nodeProviderMoq.Object, () => _libraryManagerMoq.Object);
             _projectManager.CurrentProjectChanged += () => _currentProjectChanged = true;
         }
 
@@ -167,6 +172,9 @@ namespace DiiagramrUnitTests.ServiceTests
             var projectMoq = new Mock<ProjectModel>();
             var diagramMoq = new Mock<DiagramModel>();
             var diagrams = new ObservableCollection<DiagramModel>();
+            var nodes = new List<NodeModel>();
+            var dependencyMoq = new Mock<DependencyModel>();
+            diagramMoq.SetupGet(d => d.Nodes).Returns(nodes);
             diagrams.Add(diagramMoq.Object);
             projectMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
             _projectManager.IsProjectDirty = false;

@@ -7,6 +7,8 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using StyletIoC.Internal;
 using System.ComponentModel;
+using DiiagramrAPI.ViewModel.ShellScreen;
+using System.Threading;
 
 namespace DiiagramrAPI.Service
 {
@@ -14,25 +16,19 @@ namespace DiiagramrAPI.Service
     {
         private readonly IList<PluginNode> _availableNodeViewModels = new List<PluginNode>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
-        private IPluginWatcher _pluginWatcher;
-        
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly IDictionary<string, DependencyModel> _dependencyMap = new Dictionary<string, DependencyModel>();
 
-        public NodeProvider(Func<IPluginWatcher> pluginWatcher)
-        {
-            _pluginWatcher = pluginWatcher.Invoke();
-            _pluginWatcher.PropertyChanged += AssembliesOnPropertyChanged;
-            RegisterNodesFromAssemblies();
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public IProjectManager ProjectManager { get; set; }
 
-        public void RegisterNode(PluginNode node)
+        public void RegisterNode(PluginNode node, DependencyModel dependency)
         {
             if (_availableNodeViewModels.Contains(node)) return;
             if (_nodeNameToViewModelMap.ContainsKey(node.GetType().FullName)) return;
             _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
+            _dependencyMap.Add(node.GetType().FullName, dependency);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
@@ -58,28 +54,14 @@ namespace DiiagramrAPI.Service
 
         public PluginNode CreateNodeViewModelFromName(string typeFullName)
         {
-            var node = new NodeModel(typeFullName);
+            if (!_dependencyMap.ContainsKey(typeFullName)) throw new NodeProviderException($"Tried to load node of type '{typeFullName}' but no view model under that name was registered");
+            var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
             return LoadNodeViewModelFromNode(node);
         }
 
         public IEnumerable<PluginNode> GetRegisteredNodes()
         {
             return _availableNodeViewModels.ToArray();
-        }
-
-        private void RegisterNodesFromAssemblies()
-        {
-            foreach (var pluginAssembly in _pluginWatcher.Assemblies)
-                foreach (var exportedType in pluginAssembly.ExportedTypes)
-                    if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
-                    {
-                        RegisterNode((PluginNode)Activator.CreateInstance(exportedType));
-                    }
-        }
-
-        private void AssembliesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            RegisterNodesFromAssemblies();
         }
     }
 

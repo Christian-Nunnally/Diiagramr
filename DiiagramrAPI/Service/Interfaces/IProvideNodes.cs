@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service.Interfaces
     {
         IProjectManager ProjectManager { get; set; }
 
-        void RegisterNode(PluginNode node);
+        void RegisterNode(PluginNode node, DependencyModel dep);
 
         PluginNode LoadNodeViewModelFromNode(NodeModel node);
 

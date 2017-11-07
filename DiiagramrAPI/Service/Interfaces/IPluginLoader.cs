@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -8,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IPluginWatcher : INotifyPropertyChanged
+    public interface IPluginLoader
     {
-        IList<Assembly> Assemblies { get; }
-
-        void PluginAddedWatcher();
+        void AddPluginFromDirectory(string dirPath, DependencyModel dependency);
     }
 }

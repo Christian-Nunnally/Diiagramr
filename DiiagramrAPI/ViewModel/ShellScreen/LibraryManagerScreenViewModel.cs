@@ -8,6 +8,8 @@ using System.Xml.Linq;
 using Stylet;
 using System.Reflection;
 using System.Threading.Tasks;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Model;
 
 namespace DiiagramrAPI.ViewModel.ShellScreen
 {
@@ -26,8 +28,11 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
 
         public bool SourcesVisible { get; set; }
 
-        public LibraryManagerScreenViewModel()
+        private readonly IPluginLoader _pluginLoader;
+
+        public LibraryManagerScreenViewModel(Func<IPluginLoader> pluginLoader)
         {
+            _pluginLoader = pluginLoader.Invoke();
             Sources = new BindableCollection<string>();
             InstalledLibraryNames = new BindableCollection<string>();
             LibraryNameToPathMap = new BindableCollection<LibraryNameToPath>();
@@ -77,11 +82,12 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
             var formattedLibraryName = FormatLibraryName(libraryName, libraryVersion);
             if (!LibraryPathMapContains(formattedLibraryName)) return false;
 
-            var tmpDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\tmp";
+            var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var tmpDir = absPath + "\\tmp";
             if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-            var zipPath = "tmp/" + SelectedLibrary + ".zip";
-            var extractPath = "tmp/" + SelectedLibrary;
-            var toPath = PluginsDirectory + SelectedLibrary;
+            var zipPath = "tmp/" + formattedLibraryName + ".zip";
+            var extractPath = "tmp/" + formattedLibraryName;
+            var toPath = PluginsDirectory + formattedLibraryName;
             using (var client = new WebClient())
             {
                 client.DownloadFile(LibraryPathMapGet(formattedLibraryName), zipPath);
@@ -101,6 +107,7 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
                 return false;
             }
 
+            _pluginLoader.AddPluginFromDirectory(absPath+"/"+toPath, new DependencyModel(libraryName, libraryVersion));
             UpdateInstalledLibraries();
             return true;
         }
