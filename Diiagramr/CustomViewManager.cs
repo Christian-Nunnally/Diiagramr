@@ -5,6 +5,7 @@ using System.Reflection;
 using Diiagramr.View;
 using Diiagramr.View.Diagram;
 using Diiagramr.View.Diagram.CoreNode;
+using Diiagramr.View.ShellScreen;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
@@ -18,41 +19,46 @@ namespace Diiagramr
 {
     public class CustomViewManager : ViewManager
     {
-        private readonly Dictionary<Type, Type> viewModelToViewMapping;
+        private readonly Dictionary<Type, Type> _viewModelToViewMapping = new Dictionary<Type, Type>();
 
         public CustomViewManager(ViewManagerConfig config) : base(config)
         {
+            _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
+            _viewModelToViewMapping.Add(typeof(ProjectScreenViewModel), typeof(ProjectScreenView));
+            _viewModelToViewMapping.Add(typeof(LibraryManagerScreenViewModel), typeof(LibraryManagerScreenView));
+            _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
+            _viewModelToViewMapping.Add(typeof(ProjectExplorerViewModel), typeof(ProjectExplorerView));
+            _viewModelToViewMapping.Add(typeof(NodeSelectorViewModel), typeof(NodeSelectorView));
+            _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));
+            _viewModelToViewMapping.Add(typeof(WireViewModel), typeof(WireView));
+            _viewModelToViewMapping.Add(typeof(TerminalViewModel), typeof(TerminalView));
+            _viewModelToViewMapping.Add(typeof(OutputTerminalViewModel), typeof(OutputTerminalView));
+            _viewModelToViewMapping.Add(typeof(InputTerminalViewModel), typeof(InputTerminalView));
+            _viewModelToViewMapping.Add(typeof(DiagramViewModel), typeof(DiagramView));
+            _viewModelToViewMapping.Add(typeof(DiagramControlViewModel), typeof(DiagramControlView));
+            _viewModelToViewMapping.Add(typeof(NumberNodeViewModel), typeof(NumberNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramOutputNodeViewModel), typeof(DiagramOutputNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramInputNodeViewModel), typeof(DiagramInputNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramCallNodeViewModel), typeof(DiagramCallNodeView));
+            _viewModelToViewMapping.Add(typeof(AddNodeViewModel), typeof(AddNodeView));
         }
 
         protected override Type LocateViewForModel(Type modelType)
         {
-            if (modelType == typeof(ShellViewModel)) return typeof(ShellView);
-            if (modelType == typeof(ProjectScreenViewModel)) return typeof(ProjectScreenView);
-            if (modelType == typeof(LibraryManagerScreenViewModel)) return typeof(LibraryManagerScreenView);
-            if (modelType == typeof(ProjectExplorerViewModel)) return typeof(ProjectExplorerView);
-            if (modelType == typeof(NodeSelectorViewModel)) return typeof(NodeSelectorView);
-            if (modelType == typeof(DiagramWellViewModel)) return typeof(DiagramWellView);
-            if (modelType == typeof(WireViewModel)) return typeof(WireView);
-            if (modelType == typeof(TerminalViewModel)) return typeof(TerminalView);
-            if (modelType == typeof(OutputTerminalViewModel)) return typeof(OutputTerminalView);
-            if (modelType == typeof(InputTerminalViewModel)) return typeof(InputTerminalView);
-            if (modelType == typeof(DiagramViewModel)) return typeof(DiagramView);
-            if (modelType == typeof(DiagramControlViewModel)) return typeof(DiagramControlView);
-            if (modelType == typeof(LibraryManagerScreenViewModel)) return typeof(LibraryManagerScreenView);
-            if (modelType == typeof(NumberNodeViewModel)) return typeof(NumberNodeView);
-            if (modelType == typeof(DiagramOutputNodeViewModel)) return typeof(DiagramOutputNodeView);
-            if (modelType == typeof(DiagramInputNodeViewModel)) return typeof(DiagramInputNodeView);
-            if (modelType == typeof(DiagramCallNodeViewModel)) return typeof(DiagramCallNodeView);
-            if (modelType == typeof(AddNodeViewModel)) return typeof(AddNodeView);
-            if (modelType.IsSubclassOf(typeof(PluginNode)))
-            {
-                var viewModelName = modelType.Name;
-                var viewName = viewModelName.Substring(0, viewModelName.Length - 5);
-                var assembly = Assembly.GetAssembly(modelType);
-                var viewType = assembly.ExportedTypes.First(t => t.Name == viewName);
-                return viewType;
-            }
-            return base.LocateViewForModel(modelType);
+            if (_viewModelToViewMapping.ContainsKey(modelType)) return _viewModelToViewMapping[modelType];
+
+            if (!modelType.IsSubclassOf(typeof(PluginNode))) throw new ViewNotFoundException();
+
+            var viewModelName = modelType.Name;
+            var viewName = viewModelName.Substring(0, viewModelName.Length - 5);
+            var assembly = Assembly.GetAssembly(modelType);
+            var viewType = assembly.ExportedTypes.First(t => t.Name == viewName);
+            _viewModelToViewMapping.Add(modelType, viewType);
+            return viewType;
         }
+    }
+
+    public class ViewNotFoundException : Exception
+    {
     }
 }

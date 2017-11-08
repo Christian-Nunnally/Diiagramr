@@ -12,6 +12,7 @@ namespace DiiagramrAPI.ViewModel
 
         public LibraryManagerScreenViewModel LibraryManagerScreenViewModel { get; set; }
         public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
+        public StartScreenViewModel StartScreenViewModel { get; set; }
 
         public bool CanSaveProject { get; set; }
         public bool CanSaveAsProject { get; set; }
@@ -21,15 +22,18 @@ namespace DiiagramrAPI.ViewModel
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
             Func<LibraryManagerScreenViewModel> libraryScreenScreenViewModelFactory,
+            Func<StartScreenViewModel> startScreenScreenViewModelFactory,
             Func<IProjectManager> projectManagerFactory)
         {
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
             LibraryManagerScreenViewModel = libraryScreenScreenViewModelFactory.Invoke();
+            StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
 
             _projectManager = projectManagerFactory.Invoke();
             _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
             ShowScreen(ProjectScreenViewModel);
+            ShowScreen(StartScreenViewModel);
         }
 
         public void ShowScreen(IScreen screen)
