@@ -103,6 +103,7 @@
     <Compile Include="ViewModel\ShellScreen\ProjectScreen\NodeSelectorViewModel.cs" />
     <Compile Include="ViewModel\ShellScreen\ProjectScreen\ProjectExplorerViewModel.cs" />
     <Compile Include="ViewModel\ShellScreen\ProjectScreen\ProjectScreenViewModel.cs" />
+    <Compile Include="ViewModel\ShellScreen\StartScreenViewModel.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
