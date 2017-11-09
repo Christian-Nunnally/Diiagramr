@@ -27,6 +27,7 @@ namespace DiiagramrAPI.Service
         {
             _nodeProvider = nodeProvider.Invoke();
             RegisterNodeFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new DependencyModel("",""));
+            if (!Directory.Exists(_pluginDirectory)) Directory.CreateDirectory(_pluginDirectory);
             LoadlNonPluginDll();
             GetInstalledPlugins();
         }
