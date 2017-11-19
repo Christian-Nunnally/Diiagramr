@@ -109,7 +109,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                             else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
 
                         if (bannedDirectionForEnd == Direction.West)
-                            if (start.X > end.X) WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
+                            if (start.X > end.X) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                             else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                     }
@@ -129,7 +129,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                             else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
 
                         if (bannedDirectionForEnd == Direction.South)
-                            if (start.Y > end.Y) WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
+                            if (start.Y > end.Y) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                             else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                         return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                     }
@@ -149,7 +149,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                             else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
 
                         if (bannedDirectionForEnd == Direction.West)
-                            if (start.X > end.X) WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
+                            if (start.X > end.X) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                             else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                     }
@@ -169,7 +169,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                             else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
 
                         if (bannedDirectionForEnd == Direction.South)
-                            if (start.Y > end.Y) WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
+                            if (start.Y > end.Y) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                             else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                         return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount);
                     }
