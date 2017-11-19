@@ -89,7 +89,6 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_DiagramViewModelsCleared()
         {
-            _projectManager.IsProjectDirty = false;
             var diagramViewModel = new Mock<DiagramViewModel>(new Mock<DiagramModel>().Object, _nodeProviderMoq.Object).Object;
             _projectManager.DiagramViewModels.Add(diagramViewModel);
             _projectManager.CreateProject();
@@ -177,7 +176,6 @@ namespace DiiagramrUnitTests.ServiceTests
             diagramMoq.SetupGet(d => d.Nodes).Returns(nodes);
             diagrams.Add(diagramMoq.Object);
             projectMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
-            _projectManager.IsProjectDirty = false;
             _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(projectMoq.Object);
 
             _projectManager.LoadProject();
@@ -217,7 +215,6 @@ namespace DiiagramrUnitTests.ServiceTests
         public void CreateDiagramTest_ProjectDirty()
         {
             _projectManager.CreateProject();
-            _projectManager.IsProjectDirty = false;
             _projectManager.CreateDiagram();
             Assert.IsTrue(_projectManager.IsProjectDirty);
         }
@@ -254,7 +251,6 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             var diagramMoq = new Mock<DiagramModel>();
             _projectManager.CreateProject();
-            _projectManager.IsProjectDirty = false;
             _projectManager.CreateDiagram(diagramMoq.Object);
             Assert.IsTrue(_projectManager.IsProjectDirty);
         }
@@ -282,7 +278,6 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
-            _projectManager.IsProjectDirty = false;
             _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
             Assert.IsTrue(_projectManager.IsProjectDirty);
         }

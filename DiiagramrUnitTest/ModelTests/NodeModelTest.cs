@@ -93,6 +93,56 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
+        public void TestPresentationChanged_WidthChanged_PresentationChangedInvoked()
+        {
+            var presentationChanged = false;
+            _node.PresentationChanged += () => presentationChanged = true;
+            _node.Width++;
+
+            Assert.IsTrue(presentationChanged);
+        }
+
+        [TestMethod]
+        public void TestPresentationChanged_HeightChanged_PresentationChangedInvoked()
+        {
+            var presentationChanged = false;
+            _node.PresentationChanged += () => presentationChanged = true;
+            _node.Height++;
+
+            Assert.IsTrue(presentationChanged);
+        }
+
+        [TestMethod]
+        public void TestPresentationChanged_XChanged_PresentationChangedInvoked()
+        {
+            var presentationChanged = false;
+            _node.PresentationChanged += () => presentationChanged = true;
+            _node.X++;
+
+            Assert.IsTrue(presentationChanged);
+        }
+
+        [TestMethod]
+        public void TestPresentationChanged_YChanged_PresentationChangedInvoked()
+        {
+            var presentationChanged = false;
+            _node.PresentationChanged += () => presentationChanged = true;
+            _node.Y++;
+
+            Assert.IsTrue(presentationChanged);
+        }
+
+        [TestMethod]
+        public void TestPresentationChanged_WidthNotChanged_PresentationChangedNotInvoked()
+        {
+            var presentationChanged = false;
+            _node.PresentationChanged += () => presentationChanged = true;
+            _node.Width += 0;
+
+            Assert.IsFalse(presentationChanged);
+        }
+
+        [TestMethod]
         public void TestSemanticsChanged_TerminalAdded_SematicsChangedInvoked()
         {
             var semanticsChanged = false;

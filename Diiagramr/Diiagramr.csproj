@@ -126,9 +126,6 @@
     <Compile Include="CustomViewManager.cs" />
     <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="View\ShellScreen\ProjectScreen\Diagram\PointsToPathConverter.cs" />
-    <Compile Include="View\ShellScreen\ProjectScreen\Diagram\WireView.xaml.cs">
-      <DependentUpon>WireView.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

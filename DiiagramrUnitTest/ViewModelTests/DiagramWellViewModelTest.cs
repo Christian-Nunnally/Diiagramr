@@ -24,16 +24,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestInitialize]
         public void TestInitialize()
         {
-            MockedViewModelFactories.CreateSingletonMoqs();
-            _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
-            _nodeProviderMoq = MockedViewModelFactories.CreateMoqNodeProvider();
-            _nodeSelectorMoq = MockedViewModelFactories.CreateMoqNodeSelectorViewModel();
+            _projectManagerMoq = new Mock<IProjectManager>();
+            _nodeProviderMoq = new Mock<IProvideNodes>();
+            _nodeSelectorMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
 
-            IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
-            IProvideNodes NodeProviderFactory() => _nodeProviderMoq.Object;
-            NodeSelectorViewModel NodeSelectorFactory() => _nodeSelectorMoq.Object;
-
-            _diagramWellViewModel = new DiagramWellViewModel(ProjectManagerFactory, NodeProviderFactory, NodeSelectorFactory);
+            _diagramWellViewModel = new DiagramWellViewModel(() => _projectManagerMoq.Object, () => _nodeProviderMoq.Object, () => _nodeSelectorMoq.Object);
         }
 
         [TestMethod]

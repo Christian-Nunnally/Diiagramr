@@ -33,7 +33,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Height { get; set; }
 
         public bool TitleVisible => IsSelected || MouseOverBorder;
-        public bool IsSelected { get; set; }
+        public virtual bool IsSelected { get; set; }
 
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();

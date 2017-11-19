@@ -20,8 +20,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestInitialize]
         public void TestInitialize()
         {
-            MockedViewModelFactories.CreateSingletonMoqs();
-            _nodeProvidorMoq = MockedViewModelFactories.CreateMoqNodeProvider();
+            _nodeProvidorMoq = new Mock<IProvideNodes>();
             _nodeMoq1 = new Mock<PluginNode>();
             _nodeMoq2 = new Mock<PluginNode>();
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
@@ -39,8 +38,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsNoNode_NoLibrariesInLibraryList()
         {
-            var nodeList = new List<PluginNode>();
-            _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
+            _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(new List<PluginNode>());
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);

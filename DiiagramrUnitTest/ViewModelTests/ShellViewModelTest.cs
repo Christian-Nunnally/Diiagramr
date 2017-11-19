@@ -13,37 +13,43 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class ShellViewModelTest
     {
         private Mock<IProjectManager> _projectManagerMoq;
+        private Mock<IProvideNodes> _nodeProviderMoq;
+        private Mock<IPluginLoader> _pluginLoaderMoq;
+        private Mock<NodeSelectorViewModel> _nodeSelectorViewModelMoq;
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;
         private Mock<ProjectExplorerViewModel> _projectExplorerViewModelMoq;
         private Mock<ProjectScreenViewModel> _projectScreenViewModelMoq;
         private Mock<LibraryManagerScreenViewModel> _libraryManagerViewModelMoq;
-        private Mock<IPluginLoader> _pluginLoaderMoq;
+        private Mock<StartScreenViewModel> _startScreenViewModelMoq;
         private ShellViewModel _shellViewModel;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            MockedViewModelFactories.CreateSingletonMoqs();
-            _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
-            _diagramWellViewModelMoq = MockedViewModelFactories.CreateMoqDiagramWell();
-            _projectExplorerViewModelMoq = MockedViewModelFactories.CreateMoqProjectExplorer();
+            _projectManagerMoq = new Mock<IProjectManager>();
+            _nodeProviderMoq = new Mock<IProvideNodes>();
             _pluginLoaderMoq = new Mock<IPluginLoader>();
-
-
-            IProjectManager ProjectManagerFactory() => _projectManagerMoq.Object;
-            DiagramWellViewModel DiagramWellFactory() => _diagramWellViewModelMoq.Object;
-            ProjectExplorerViewModel ProjectExplorerFactory() => _projectExplorerViewModelMoq.Object;
-
+            _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>(
+                (Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
+            _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>(
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object),
+                (Func<IProvideNodes>)(() => _nodeProviderMoq.Object),
+                (Func<NodeSelectorViewModel>)(() => _nodeSelectorViewModelMoq.Object));
+            _projectExplorerViewModelMoq = new Mock<ProjectExplorerViewModel>(
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _projectScreenViewModelMoq = new Mock<ProjectScreenViewModel>(
-                (Func<ProjectExplorerViewModel>) ProjectExplorerFactory,
-                (Func<DiagramWellViewModel>) DiagramWellFactory,
-                (Func<IProjectManager>) ProjectManagerFactory);
-            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>((Func<IPluginLoader>)( () => _pluginLoaderMoq.Object));
-
-            ProjectScreenViewModel ScreenViewModelMoqFactory() => _projectScreenViewModelMoq.Object;
-            LibraryManagerScreenViewModel LibraryManagerViewModelMoqFactory() => _libraryManagerViewModelMoq.Object;
-
-            _shellViewModel = new ShellViewModel(ScreenViewModelMoqFactory, LibraryManagerViewModelMoqFactory, ProjectManagerFactory);
+                (Func<ProjectExplorerViewModel>)(() => _projectExplorerViewModelMoq.Object),
+                (Func<DiagramWellViewModel>)(() => _diagramWellViewModelMoq.Object),
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
+            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>(
+                (Func<IPluginLoader>)( () => _pluginLoaderMoq.Object));
+            _startScreenViewModelMoq = new Mock<StartScreenViewModel>(
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
+            _shellViewModel = new ShellViewModel(
+                () => _projectScreenViewModelMoq.Object,
+                () => _libraryManagerViewModelMoq.Object,
+                () => _startScreenViewModelMoq.Object,
+                () => _projectManagerMoq.Object);
         }
 
         [TestMethod]

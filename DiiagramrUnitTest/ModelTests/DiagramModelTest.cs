@@ -90,10 +90,23 @@ namespace DiiagramrUnitTests.ModelTests
             _diagram.SemanticsChanged += () => semanticsChanged = true;
             var nodeMoq2 = new Mock<NodeModel>("");
             _diagram.AddNode(nodeMoq2.Object);
-
+            semanticsChanged = false;
             nodeMoq2.Raise(n => n.SemanticsChanged += null);
 
             Assert.IsTrue(semanticsChanged);
+        }
+
+        [TestMethod]
+        public void TestPresentationChanged_NodePresentationChanged_PresentationChangedInvoked()
+        {
+            var presentationChanged = false;
+            _diagram.PresentationChanged += () => presentationChanged = true;
+            var nodeMoq2 = new Mock<NodeModel>("");
+            _diagram.AddNode(nodeMoq2.Object);
+            presentationChanged = false;
+            nodeMoq2.Raise(n => n.PresentationChanged += null);
+
+            Assert.IsTrue(presentationChanged);
         }
 
         [TestMethod]

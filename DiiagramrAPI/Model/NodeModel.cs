@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 using DiiagramrAPI.PluginNodeApi;
-using PropertyChanged;
 
 namespace DiiagramrAPI.Model
 {
     [DataContract]
-    [AddINotifyPropertyChangedInterface]
     public class NodeModel : ModelBase
     {
         [DataMember] public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
+        private double _height;
 
         private PluginNode _nodeViewModel;
+        private double _width;
+        private double _x;
+        private double _y;
 
         private NodeModel()
         {
@@ -51,24 +53,71 @@ namespace DiiagramrAPI.Model
         }
 
         [DataMember]
-        public virtual double X { get; set; }
+        public virtual double X
+        {
+            get => _x;
+            set
+            {
+                if (_x != value) OnModelPropertyChanged(nameof(X));
+                _x = value;
+            }
+        }
 
         [DataMember]
-        public virtual double Y { get; set; }
+        public virtual double Y
+        {
+            get => _y;
+            set
+            {
+                if (_y != value) OnModelPropertyChanged(nameof(Y));
+                _y = value;
+            }
+        }
 
         [DataMember]
-        public double Width { get; set; }
+        public double Width
+        {
+            get => _width;
+            set
+            {
+                if (_width != value) OnModelPropertyChanged(nameof(Width));
+                _width = value;
+            }
+        }
 
         [DataMember]
-        public double Height { get; set; }
+        public double Height
+        {
+            get => _height;
+            set
+            {
+                if (_height != value) OnModelPropertyChanged(nameof(Height));
+                _height = value;
+            }
+        }
 
         [DataMember]
         public List<TerminalModel> Terminals { get; set; }
+
+        protected override void OnModelPropertyChanged(string propertyName = null)
+        {
+            base.OnModelPropertyChanged(propertyName);
+            if (propertyName.Equals(nameof(Width))
+                || propertyName.Equals(nameof(Height))
+                || propertyName.Equals(nameof(X))
+                || propertyName.Equals(nameof(Y)))
+                PresentationChanged?.Invoke();
+        }
 
         /// <summary>
         ///     Notifies listeners when the sematics of this node have changed.
         /// </summary>
         public virtual event Action SemanticsChanged;
+
+        /// <summary>
+        ///     Notifies listeners when the appearance of this diagram have changed.
+        /// </summary>
+        public event Action PresentationChanged;
 
         public virtual void AddTerminal(TerminalModel terminal)
         {
@@ -134,9 +183,7 @@ namespace DiiagramrAPI.Model
         public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
         {
             if (!PersistedVariables.ContainsKey(info.Name))
-            {
                 SetVariable(info.Name, info.GetValue(NodeViewModel));
-            }
         }
     }
 }

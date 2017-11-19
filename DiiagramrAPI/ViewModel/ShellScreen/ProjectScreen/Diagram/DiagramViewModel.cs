@@ -244,10 +244,17 @@ namespace DiiagramrAPI.ViewModel.Diagram
             nodeViewModel.MouseLeft(sender, e);
         }
 
-        public void PreviewLeftMouseDownOnBorder(object sender, MouseButtonEventArgs e)
+        public void PreviewLeftMouseDownOnBorderHandler(object sender, MouseButtonEventArgs e)
         {
-            var abstractNodeViewModel = UnpackNodeViewModelFromSender(sender);
-            abstractNodeViewModel.IsSelected = true;
+            var node = UnpackNodeViewModelFromSender(sender);
+            var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
+            PreviewLeftMouseButtonDownOnBorder(node, controlKeyPressed);
+        }
+
+        public void PreviewLeftMouseButtonDownOnBorder(PluginNode node, bool controlKeyPressed)
+        {
+            if (!controlKeyPressed) UnselectNodes();
+            node.IsSelected = true;
         }
 
         public void RemoveNodePressed()
@@ -274,6 +281,11 @@ namespace DiiagramrAPI.ViewModel.Diagram
         }
 
         public void LeftMouseButtonDown(Point p)
+        {
+            UnselectNodes();
+        }
+
+        private void UnselectNodes()
         {
             NodeViewModels.Where(node => node.IsSelected).ForEach(node => node.IsSelected = false);
         }

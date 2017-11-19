@@ -27,12 +27,18 @@ namespace DiiagramrAPI.Model
         /// </summary>
         public event Action SemanticsChanged;
 
+        /// <summary>
+        ///     Notifies listeners when the appearance of this diagram have changed.
+        /// </summary>
+        public event Action PresentationChanged;
+
         public virtual void AddNode(NodeModel nodeModel)
         {
             if (Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not add a nodeModel twice");
             nodeModel.SemanticsChanged += NodeSematicsChanged;
+            nodeModel.PresentationChanged += NodePresentationChanged;
             Nodes.Add(nodeModel);
-            SemanticsChanged?.Invoke();
+            NodeSematicsChanged();
         }
 
         private void NodeSematicsChanged()
@@ -40,12 +46,18 @@ namespace DiiagramrAPI.Model
             SemanticsChanged?.Invoke();
         }
 
+        private void NodePresentationChanged()
+        {
+            PresentationChanged?.Invoke();
+        }
+
         public virtual void RemoveNode(NodeModel nodeModel)
         {
             if (!Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
             nodeModel.SemanticsChanged -= NodeSematicsChanged;
+            nodeModel.PresentationChanged -= NodePresentationChanged;
             Nodes.Remove(nodeModel);
-            SemanticsChanged?.Invoke();
+            NodeSematicsChanged();
         }
 
         public virtual void Play()

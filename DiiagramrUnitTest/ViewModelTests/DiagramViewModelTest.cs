@@ -17,7 +17,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private DiagramViewModel _diagramViewModel;
         private Mock<DiagramModel> _diagramMoq;
         private Mock<NodeModel> _nodeMoq;
-        private Mock<PluginNode> _abstractNodeViewModelMoq;
+        private Mock<PluginNode> _pluginNodeMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
 
         [TestInitialize]
@@ -59,10 +59,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_abstractNodeViewModelMoq.Object);
+            _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
             _diagramViewModel = new DiagramViewModel(_diagramMoq.Object, _nodeProviderMoq.Object);
         }
 
@@ -91,8 +91,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestLeftMouseButtonDown_NodeSelected_UnselectsNode()
         {
             ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
-            _abstractNodeViewModelMoq.SetupAllProperties();
-            _abstractNodeViewModelMoq.Object.IsSelected = true;
+            _pluginNodeMoq.SetupAllProperties();
+            _pluginNodeMoq.Object.IsSelected = true;
             Assert.AreEqual(1, _diagramViewModel.NodeViewModels.Count(node => node.IsSelected));
 
             _diagramViewModel.LeftMouseButtonDown(new Point(0, 0));
@@ -104,10 +104,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestSetInsertingNodeViewModel_AddsNodeToDiagram()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
             _diagramViewModel.PreviewLeftMouseButtonDown(new Point(0, 0));
 
@@ -118,11 +118,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewRightMouseButtonDown_InsertingNode_InsertingNodeSetToNull()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
-            _abstractNodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
             _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
 
@@ -133,11 +133,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewRightMouseButtonDown_InsertingNode_InsertingNodeRemovedFromDiagram()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
-            _abstractNodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<TerminalViewModel>());
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
             _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
 
@@ -148,10 +148,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestPreviewLeftMouseButtonDown_InsertingNode_InsertingNodeViewModelSetToNull()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
             _diagramViewModel.PreviewLeftMouseButtonDown(new Point(0, 0));
 
@@ -168,37 +168,74 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestMouseMoved_InsertingNode_SetsInsertingNodePosition()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _abstractNodeViewModelMoq.SetupGet(m => m.X).Returns(10);
-            _abstractNodeViewModelMoq.SetupGet(m => m.Y).Returns(10);
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _pluginNodeMoq.SetupGet(m => m.X).Returns(10);
+            _pluginNodeMoq.SetupGet(m => m.Y).Returns(10);
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
             _diagramViewModel.MouseMoved(new Point(5, 5));
 
-            _abstractNodeViewModelMoq.VerifySet(m => m.X = -5);
-            _abstractNodeViewModelMoq.VerifySet(m => m.Y = -5);
+            _pluginNodeMoq.VerifySet(m => m.X = -5);
+            _pluginNodeMoq.VerifySet(m => m.Y = -5);
         }
 
         [TestMethod]
         public void TestMouseMoved_InsertingNode_SetsInsertingNodePositionCenteredOnMouseRespectingZoom()
         {
             _nodeMoq = new Mock<NodeModel>("node");
-            _abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _abstractNodeViewModelMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _abstractNodeViewModelMoq.SetupGet(m => m.X).Returns(10);
-            _abstractNodeViewModelMoq.SetupGet(m => m.Y).Returns(10);
-            _abstractNodeViewModelMoq.SetupGet(m => m.Width).Returns(2);
-            _abstractNodeViewModelMoq.SetupGet(m => m.Height).Returns(2);
+            _pluginNodeMoq.SetupGet(m => m.X).Returns(10);
+            _pluginNodeMoq.SetupGet(m => m.Y).Returns(10);
+            _pluginNodeMoq.SetupGet(m => m.Width).Returns(2);
+            _pluginNodeMoq.SetupGet(m => m.Height).Returns(2);
 
-            _diagramViewModel.InsertingNodeViewModel = _abstractNodeViewModelMoq.Object;
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
             _diagramViewModel.Zoom = 2;
             _diagramViewModel.MouseMoved(new Point(5, 5));
 
-            _abstractNodeViewModelMoq.VerifySet(m => m.X = -8.5);
-            _abstractNodeViewModelMoq.VerifySet(m => m.Y = -8.5);
+            _pluginNodeMoq.VerifySet(m => m.X = -8.5);
+            _pluginNodeMoq.VerifySet(m => m.Y = -8.5);
+        }
+
+        [TestMethod]
+        public void TestPreviewLeftMouseButtonDownOnBorder_SelectsNode()
+        {
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
+
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false);
+
+            _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
+        }
+
+        [TestMethod]
+        public void TestPreviewLeftMouseButtonDownOnBorder_ControlNotPressed_UnselectsPreviouslySelectedNodes()
+        {
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.IsSelected).Returns(true);
+            _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
+
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false);
+
+            _pluginNodeMoq.VerifySet(m => m.IsSelected = false);
+            _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
+        }
+
+        [TestMethod]
+        public void TestPreviewLeftMouseButtonDownOnBorder_ControlPressed_KeepsPreviouslySelectedNodes()
+        {
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.IsSelected).Returns(true);
+            _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
+
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, true);
+
+            _pluginNodeMoq.VerifySet(m => m.IsSelected = false, Times.Never);
+            _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
         }
     }
 }

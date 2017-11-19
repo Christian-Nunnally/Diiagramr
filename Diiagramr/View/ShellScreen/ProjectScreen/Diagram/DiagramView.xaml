@@ -181,7 +181,7 @@
                                                                           Grid.ColumnSpan="2"
                                                                           Grid.RowSpan="2"
                                                                           DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                                          PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorder}"
+                                                                          PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorderHandler}"
                                                                           Template="{StaticResource MoveThumbTemplate}"
                                                                           MouseEnter="{s:Action MouseEntered}"  
                                                                           Drop="{s:Action DropEventHandler}"

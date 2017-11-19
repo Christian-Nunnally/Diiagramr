@@ -1,11 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Stylet;
-using System;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -18,12 +16,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestInitialize]
         public void TestInitialize()
         {
-            MockedViewModelFactories.CreateSingletonMoqs();
-            _projectManagerMoq = MockedViewModelFactories.CreateMoqProjectManager();
-
-            Func<IProjectManager> projectManagerFactory = () => _projectManagerMoq.Object;
-
-            _projectExplorerViewModel = new ProjectExplorerViewModel(projectManagerFactory);
+            _projectManagerMoq = new Mock<IProjectManager>();
+            _projectExplorerViewModel = new ProjectExplorerViewModel(() => _projectManagerMoq.Object);
         }
 
         [TestMethod]

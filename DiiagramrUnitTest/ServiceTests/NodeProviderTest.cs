@@ -1,12 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
-using DiiagramrAPI.Service.Interfaces;
-using System.Reflection;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -15,7 +12,6 @@ namespace DiiagramrUnitTests.ServiceTests
     {
         private NodeProvider _nodeProvider;
         private Mock<PluginNode> _nodeViewModelMoq;
-        private Mock<IPluginLoader> _pluginWatcherMoq;
         private NodeModel _testNode;
 
         [TestInitialize]

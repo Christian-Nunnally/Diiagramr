@@ -29,7 +29,7 @@ namespace DiiagramrAPI.Service
 
         public event Action CurrentProjectChanged;
         public ProjectModel CurrentProject { get; set; }
-        public bool IsProjectDirty { get; set; }
+        public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
 
         public void CreateProject()
@@ -37,7 +37,6 @@ namespace DiiagramrAPI.Service
             if (CloseProject())
             {
                 CurrentProject = new ProjectModel();
-                IsProjectDirty = true;
                 CurrentProjectChanged?.Invoke();
             }
         }
@@ -45,13 +44,13 @@ namespace DiiagramrAPI.Service
         public void SaveProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, false))
-                IsProjectDirty = false;
+                CurrentProject.IsDirty = false;
         }
 
         public void SaveAsProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, true))
-                IsProjectDirty = false;
+                CurrentProject.IsDirty = false;
         }
 
         public void LoadProject()
@@ -60,7 +59,7 @@ namespace DiiagramrAPI.Service
             {
                 CurrentProject = _projectFileService.LoadProject();
                 DownloadProjectDependencies();
-                IsProjectDirty = false;
+                CurrentProject.IsDirty = false;
                 CurrentProjectChanged?.Invoke();
             }
         }
@@ -85,23 +84,19 @@ namespace DiiagramrAPI.Service
 
         public void CreateDiagram(DiagramModel diagramModel)
         {
-            if (CurrentProject == null)
-                throw new NullReferenceException("ProjectModel does not exist");
-            string dName = string.IsNullOrEmpty(diagramModel.Name) ? "diagram" : diagramModel.Name;
-            var dNum = 1;
-            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(dName + dNum)))
-                dNum++;
-            diagramModel.Name = dName + dNum;
-            IsProjectDirty = true;
+            if (CurrentProject == null) throw new NullReferenceException("ProjectModel does not exist");
+            var diagramName = string.IsNullOrEmpty(diagramModel.Name) ? "diagram" : diagramModel.Name;
+            var diagramNumber = 1;
+            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber))) diagramNumber++;
+            diagramModel.Name = diagramName + diagramNumber;
             CreateDiagramViewModel(diagramModel);
-            CurrentProject.Diagrams.Add(diagramModel);
+            CurrentProject.AddDiagram(diagramModel);
         }
 
         public void DeleteDiagram(DiagramModel diagram)
         {
-            CurrentProject.Diagrams.Remove(diagram);
+            CurrentProject.RemoveDiagram(diagram);
             DiagramViewModels.Remove(DiagramViewModels.First(m => m.Diagram == diagram));
-            IsProjectDirty = true;
         }
 
         private void OnCurrentProjectChanged()

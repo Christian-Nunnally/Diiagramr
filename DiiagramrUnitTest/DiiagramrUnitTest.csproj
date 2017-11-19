@@ -86,7 +86,6 @@
     <Compile Include="ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\Diagram\DiagramControlViewModelTest.cs" />
-    <Compile Include="ViewModelTests\MockedViewModelFactories.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTest.cs" />
     <Compile Include="ViewModelTests\ShellViewModelTest.cs" />
     <Compile Include="ServiceTests\ProjectManagerTest.cs" />
