@@ -52,8 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntegrationHelpers\TestFileDialog.cs" />
-    <Compile Include="IntegrationHelpers\TestLoadSave.cs" />
-    <Compile Include="IntegrationHelpers\TestNode.cs" />
+    <Compile Include="IntegrationHelpers\TestIntNode.cs" />
+    <Compile Include="IntegrationHelpers\TestPassthroughNode.cs" />
     <Compile Include="IntegrationHelpers\IntegrationTestUtilities.cs" />
     <Compile Include="IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

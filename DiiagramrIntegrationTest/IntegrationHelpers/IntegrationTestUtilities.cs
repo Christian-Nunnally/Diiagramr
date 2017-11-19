@@ -39,7 +39,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var container = builder.BuildContainer();
 
             var nodeProvider = container.Get<IProvideNodes>();
-            nodeProvider.RegisterNode(new TestNode(), new DependencyModel("", ""));
+            nodeProvider.RegisterNode(new TestPassthroughNode(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
 

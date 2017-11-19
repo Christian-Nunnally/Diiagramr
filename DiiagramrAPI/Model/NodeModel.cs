@@ -117,7 +117,7 @@ namespace DiiagramrAPI.Model
         /// <summary>
         ///     Notifies listeners when the appearance of this diagram have changed.
         /// </summary>
-        public event Action PresentationChanged;
+        public virtual event Action PresentationChanged;
 
         public virtual void AddTerminal(TerminalModel terminal)
         {

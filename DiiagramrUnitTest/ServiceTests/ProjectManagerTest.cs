@@ -42,10 +42,10 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void CreateProjectTest_ProjectDirty()
+        public void CreateProjectTest_ProjectNotDirty()
         {
             _projectManager.CreateProject();
-            Assert.IsTrue(_projectManager.IsProjectDirty);
+            Assert.IsFalse(_projectManager.IsProjectDirty);
         }
 
         [TestMethod]
@@ -108,6 +108,8 @@ namespace DiiagramrUnitTests.ServiceTests
         public void SaveProjectTest_ProjectNotSavedDirty()
         {
             _projectManager.CreateProject();
+            // Change name to dirty project.
+            _projectManager.CurrentProject.Name = "bob";
             _projectFileServiceMoq.Setup(m => m.SaveProject(_projectManager.CurrentProject, false)).Returns(false);
             _projectManager.SaveProject();
             Assert.IsTrue(_projectManager.IsProjectDirty);

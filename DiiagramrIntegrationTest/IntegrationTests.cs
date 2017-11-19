@@ -17,7 +17,7 @@ namespace DiiagramrIntegrationTest
             var projectManager = projectExplorer.ProjectManager;
             var diagramWell = projectScreen.DiagramWellViewModel;
             var nodeSelector = diagramWell.NodeSelectorViewModel;
-            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestNode>().First();
+            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
 
             shell.CreateProject();
             Assert.IsNotNull(projectManager.CurrentProject);
@@ -40,7 +40,7 @@ namespace DiiagramrIntegrationTest
             // set output
             node1.InputTerminalViewModels.First().Data = 4;
             outputTerm.Data = 5;
-            Assert.AreEqual(((TestNode) node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode) node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
 
             // move node2
             node2.X = 16;
@@ -73,17 +73,17 @@ namespace DiiagramrIntegrationTest
             inputTerm = node2.InputTerminalViewModels.First();
             Assert.AreNotEqual(0, outputTerm.TerminalModel.ConnectedWires.Count);
             Assert.AreNotEqual(0, inputTerm.TerminalModel.ConnectedWires.Count);
-            Assert.AreEqual(5, ((TestNode)node2).InputTerminal.Data);
-            Assert.AreEqual(5, ((TestNode)node1).OutputTerminal.Data);
-            Assert.AreEqual(6, ((TestNode)node2).OutputTerminal.Data);
-            Assert.AreEqual(6, ((TestNode)node2).Value);
-            Assert.AreEqual(((TestNode)node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
+            Assert.AreEqual(5, ((TestPassthroughNode)node2).InputTerminal.Data);
+            Assert.AreEqual(5, ((TestPassthroughNode)node1).OutputTerminal.Data);
+            Assert.AreEqual(6, ((TestPassthroughNode)node2).OutputTerminal.Data);
+            Assert.AreEqual(6, ((TestPassthroughNode)node2).Value);
+            Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
             
 
             // change data
             outputTerm.Data = 6;
-            Assert.AreEqual(((TestNode)node1).OutputTerminal.Data, ((TestNode)node2).InputTerminal.Data);
-            Assert.AreEqual(((TestNode)node2).InputTerminal.Data + 1, ((TestNode)node2).OutputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode)node2).InputTerminal.Data + 1, ((TestPassthroughNode)node2).OutputTerminal.Data);
 
             // change location
             node1.X = 11;
@@ -110,7 +110,7 @@ namespace DiiagramrIntegrationTest
             var projectManager = projectExplorer.ProjectManager;
             var diagramWell = projectScreen.DiagramWellViewModel;
             var nodeSelector = diagramWell.NodeSelectorViewModel;
-            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestNode>().First();
+            var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
 
             shell.CreateProject();
             projectManager.CreateDiagram();

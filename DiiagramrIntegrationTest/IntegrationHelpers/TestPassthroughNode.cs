@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.PluginNodeApi;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
-    public class TestNode : PluginNode
+    public class TestPassthroughNode : PluginNode
     {
         public Terminal<int> InputTerminal { get; set; }
-        
+
         public Terminal<int> OutputTerminal { get; set; }
 
         public int Value { get; set; }

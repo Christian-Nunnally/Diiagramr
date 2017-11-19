@@ -26,8 +26,7 @@ namespace DiiagramrAPI.Service
 
         public void Save(ProjectModel project, string name)
         {
-            var settings = new XmlWriterSettings {Indent = true};
-            using (var writer = new FileStream(name, FileMode.OpenOrCreate, FileAccess.ReadWrite))
+            using (var writer = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var w = XmlWriter.Create(writer))
                 {
