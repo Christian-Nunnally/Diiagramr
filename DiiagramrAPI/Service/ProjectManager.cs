@@ -82,21 +82,22 @@ namespace DiiagramrAPI.Service
             CreateDiagram(new DiagramModel());
         }
 
-        public void CreateDiagram(DiagramModel diagramModel)
+        public void CreateDiagram(DiagramModel diagram)
         {
             if (CurrentProject == null) throw new NullReferenceException("ProjectModel does not exist");
-            var diagramName = string.IsNullOrEmpty(diagramModel.Name) ? "diagram" : diagramModel.Name;
+            var diagramName = string.IsNullOrEmpty(diagram.Name) ? "diagram" : diagram.Name;
             var diagramNumber = 1;
             while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber))) diagramNumber++;
-            diagramModel.Name = diagramName + diagramNumber;
-            CreateDiagramViewModel(diagramModel);
-            CurrentProject.AddDiagram(diagramModel);
+            diagram.Name = diagramName + diagramNumber;
+            CreateDiagramViewModel(diagram);
+            CurrentProject.AddDiagram(diagram);
         }
 
         public void DeleteDiagram(DiagramModel diagram)
         {
             CurrentProject.RemoveDiagram(diagram);
-            DiagramViewModels.Remove(DiagramViewModels.First(m => m.Diagram == diagram));
+            var diagramViewModel = DiagramViewModels.FirstOrDefault(m => m.Diagram == diagram);
+            if (diagramViewModel != null) DiagramViewModels.Remove(diagramViewModel);
         }
 
         private void OnCurrentProjectChanged()

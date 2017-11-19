@@ -28,6 +28,7 @@ namespace DiiagramrIntegrationTest
             builder.Bind<NodeSelectorViewModel>().ToSelf();
             builder.Bind<ProjectScreenViewModel>().ToSelf();
             builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
+            builder.Bind<StartScreenViewModel>().ToSelf();
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();

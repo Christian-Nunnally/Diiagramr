@@ -30,10 +30,10 @@ namespace DiiagramrAPI.Model
         public ProjectModel()
         {
             Diagrams = new ObservableCollection<DiagramModel>();
-            Name = "NewProject";
+            _name = "NewProject";
         }
 
-        public void AddDiagram(DiagramModel diagram)
+        public virtual void AddDiagram(DiagramModel diagram)
         {
             if (Diagrams.Contains(diagram)) return;
             Diagrams.Add(diagram);
@@ -41,7 +41,7 @@ namespace DiiagramrAPI.Model
             TriggerProjectChangeWhenDiagramChanges(diagram);
         }
 
-        public void RemoveDiagram(DiagramModel diagram)
+        public virtual void RemoveDiagram(DiagramModel diagram)
         {
             if (!Diagrams.Contains(diagram)) return;
             Diagrams.Remove(diagram);

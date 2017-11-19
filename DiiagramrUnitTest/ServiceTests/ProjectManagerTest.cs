@@ -274,6 +274,26 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
+        public void DeleteDiagramTest_RemoveDiagramOnProjectCalled()
+        {
+            var projectMoq = new Mock<ProjectModel>();
+            projectMoq.SetupGet(p => p.Diagrams).Returns(new ObservableCollection<DiagramModel>());
+            _projectManager.CurrentProject = projectMoq.Object;
+            _projectManager.DeleteDiagram(new DiagramModel());
+            projectMoq.Verify(model => model.RemoveDiagram(It.IsAny<DiagramModel>()));
+        }
+
+        [TestMethod]
+        public void CreateDiagramTest_AddDiagramOnProjectCalled()
+        {
+            var projectMoq = new Mock<ProjectModel>();
+            projectMoq.SetupGet(p => p.Diagrams).Returns(new ObservableCollection<DiagramModel>());
+            _projectManager.CurrentProject = projectMoq.Object;
+            _projectManager.CreateDiagram(new DiagramModel());
+            projectMoq.Verify(model => model.AddDiagram(It.IsAny<DiagramModel>()));
+        }
+
+        [TestMethod]
         public void DeleteDiagramTest_ProjectDirty()
         {
             _projectManager.CreateProject();
