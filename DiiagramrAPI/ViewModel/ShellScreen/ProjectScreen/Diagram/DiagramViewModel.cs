@@ -40,6 +40,9 @@ namespace DiiagramrAPI.ViewModel.Diagram
                 }
         }
 
+        public bool IsSnapGridVisible => InsertingNodeViewModel != null || NodeBeingDragged;
+        public bool NodeBeingDragged { get; set; }
+
         public DiagramControlViewModel DiagramControlViewModel { get; }
 
         public BindableCollection<PluginNode> NodeViewModels { get; set; }
@@ -72,9 +75,9 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public string DropDiagramCallText => $"Drop { DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
 
-        private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (propertyChangedEventArgs.PropertyName.Equals("Name")) NotifyOfPropertyChange(() => Name);
+            if (e.PropertyName.Equals(nameof(Diagram.Name))) NotifyOfPropertyChange(() => Name);
         }
 
         private void AddNode(PluginNode viewModel)
@@ -89,10 +92,22 @@ namespace DiiagramrAPI.ViewModel.Diagram
             if (!Diagram.Nodes.Contains(viewModel.NodeModel)) throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
             viewModel.WireConnectedToTerminal += WireAddedToDiagram;
             viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
+            viewModel.DragStarted += NodeDraggingStarted;
+            viewModel.DragStopped += NodeDraggingStopped;
             NodeViewModels.Add(viewModel);
             AddWiresForNode(viewModel);
 
             viewModel.Initialize();
+        }
+
+        private void NodeDraggingStarted()
+        {
+            NodeBeingDragged = true;
+        }
+
+        private void NodeDraggingStopped()
+        {
+            NodeBeingDragged = false;
         }
 
         private void AddWiresForNode(PluginNode viewModel)
@@ -271,7 +286,22 @@ namespace DiiagramrAPI.ViewModel.Diagram
         public void PreviewLeftMouseButtonDown(Point p)
         {
             if (InsertingNodeViewModel == null) return;
+
+            if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl)) return;
+
+            InsertingNodeViewModel.X = RoundToNearest((int)InsertingNodeViewModel.X, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+            InsertingNodeViewModel.Y = RoundToNearest((int)InsertingNodeViewModel.Y, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+
             InsertingNodeViewModel = null;
+        }
+
+        private static int RoundToNearest(int value, int multiple)
+        {
+            var rem = value % multiple;
+            var result = value - rem;
+                if (rem > (multiple / 2))
+            result += multiple;
+            return result;
         }
 
         public void LeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)

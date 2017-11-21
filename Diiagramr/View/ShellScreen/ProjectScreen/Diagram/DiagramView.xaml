@@ -121,6 +121,20 @@
             <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}"/>
         </Style>
 
+        <VisualBrush 
+            x:Key="DotFillBrush" 
+            TileMode="Tile"
+            Viewport="0,0,40,40" 
+            ViewportUnits="Absolute" 
+            Viewbox="0,0,40,40"
+            ViewboxUnits="Absolute">
+            <VisualBrush.Visual>
+                <Ellipse Fill="#bbbbbb" 
+                         Width="2"
+                         Height="2"/>
+            </VisualBrush.Visual>
+        </VisualBrush>
+
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
 
@@ -135,6 +149,11 @@
                                    PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
                                    MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}">
             <Grid>
+                <Canvas Background="{StaticResource DotFillBrush}"
+                        MinWidth="3002"
+                        MinHeight="3002"
+                        Margin="-3000"
+                        Visibility="{Binding IsSnapGridVisible, Converter={StaticResource Btv}}"/>
                 <!-- Wire Items Control -->
                 <ItemsControl ItemsSource="{Binding WireViewModels}"
                               ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"

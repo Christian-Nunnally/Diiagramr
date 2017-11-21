@@ -6,6 +6,8 @@ namespace DiiagramrAPI.ViewModel
     {
         public const double NodeBorderWidth = 10;
 
+        public const int GridSnapInterval = 40;
+
         public const double TerminalDiameter = 2 * NodeBorderWidth;
 
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);

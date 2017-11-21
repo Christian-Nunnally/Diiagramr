@@ -32,6 +32,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Width { get; set; }
         public virtual double Height { get; set; }
 
+        public bool Dragging { get; set; }
+
         public bool TitleVisible => IsSelected || MouseOverBorder;
         public virtual bool IsSelected { get; set; }
 
@@ -44,6 +46,9 @@ namespace DiiagramrAPI.PluginNodeApi
 
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
+
+        public event Action DragStarted; 
+        public event Action DragStopped;
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
@@ -112,6 +117,11 @@ namespace DiiagramrAPI.PluginNodeApi
             else if (propertyName.Equals(nameof(Y))) NodeModel.Y = Y;
             else if (propertyName.Equals(nameof(Width))) NodeModel.Width = Width;
             else if (propertyName.Equals(nameof(Height))) NodeModel.Height = Height;
+            else if (propertyName.Equals(nameof(Dragging)))
+            {
+                if (Dragging) DragStarted?.Invoke();
+                else DragStopped?.Invoke();
+            }
 
             if (!_pluginNodeSettingCache.ContainsKey(propertyName)) return;
             var changedPropertyInfo = _pluginNodeSettingCache[propertyName];
