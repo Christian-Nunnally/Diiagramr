@@ -18,10 +18,16 @@ namespace DiiagramrAPI.ViewModel.Diagram
         private readonly IProvideNodes _nodeProvider;
         private PluginNode _insertingNodeViewModel;
 
-        public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider)
+        public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, NodeSelectorViewModel nodeSelectorViewModel)
         {
             if (diagram == null) throw new ArgumentNullException(nameof(diagram));
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
+
+            if (nodeSelectorViewModel != null)
+            {
+                NodeSelectorViewModel = nodeSelectorViewModel;
+                NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+            }
 
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
             NodeViewModels = new BindableCollection<PluginNode>();
@@ -39,6 +45,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     AddWiresForNode(viewModel);
                 }
         }
+
+        public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
 
         public bool IsSnapGridVisible => InsertingNodeViewModel != null || NodeBeingDragged;
         public bool NodeBeingDragged { get; set; }
@@ -73,7 +81,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
         public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
         private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
 
-        public string DropDiagramCallText => $"Drop { DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
+        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -108,6 +116,16 @@ namespace DiiagramrAPI.ViewModel.Diagram
         private void NodeDraggingStopped()
         {
             NodeBeingDragged = false;
+        }
+
+        private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName != nameof(NodeSelectorViewModel.SelectedNode)) return;
+            var selectedNode = NodeSelectorViewModel.SelectedNode;
+            if (selectedNode == null) return;
+            InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
+            NodeSelectorViewModel.Visible = false;
+            NodeSelectorViewModel.SelectedNode = null;
         }
 
         private void AddWiresForNode(PluginNode viewModel)
@@ -280,17 +298,19 @@ namespace DiiagramrAPI.ViewModel.Diagram
         public void PreviewLeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
-            PreviewLeftMouseButtonDown(relativeMousePosition);
+            var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
+            PreviewLeftMouseButtonDown(relativeMousePosition, controlKeyPressed);
         }
 
-        public void PreviewLeftMouseButtonDown(Point p)
+        public void PreviewLeftMouseButtonDown(Point p, bool controlKeyPressed = true)
         {
             if (InsertingNodeViewModel == null) return;
 
-            if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl)) return;
-
-            InsertingNodeViewModel.X = RoundToNearest((int)InsertingNodeViewModel.X, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
-            InsertingNodeViewModel.Y = RoundToNearest((int)InsertingNodeViewModel.Y, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+            if (!controlKeyPressed)
+            {
+                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+            }
 
             InsertingNodeViewModel = null;
         }
@@ -299,8 +319,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
         {
             var rem = value % multiple;
             var result = value - rem;
-                if (rem > (multiple / 2))
-            result += multiple;
+            if (rem > multiple / 2)
+                result += multiple;
             return result;
         }
 
@@ -328,9 +348,18 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public void PreviewRightMouseButtonDown(Point p)
         {
-            if (InsertingNodeViewModel == null) return;
-            RemoveNode(InsertingNodeViewModel);
-            InsertingNodeViewModel = null;
+            if (InsertingNodeViewModel == null)
+            {
+                NodeSelectorViewModel.RightPosition = p.X;
+                NodeSelectorViewModel.TopPosition = p.Y;
+                NodeSelectorViewModel.Visible = true;
+            }
+            else
+            {
+                NodeSelectorViewModel.SelectedNode = null;
+                RemoveNode(InsertingNodeViewModel);
+                InsertingNodeViewModel = null;
+            }
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)

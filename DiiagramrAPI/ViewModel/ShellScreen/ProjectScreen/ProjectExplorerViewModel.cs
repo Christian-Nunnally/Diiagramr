@@ -12,19 +12,24 @@ namespace DiiagramrAPI.ViewModel
 {
     public class ProjectExplorerViewModel : Screen
     {
-        public IProjectManager ProjectManager { get; set; }
-
-        public bool IsAddDiagramButtonVisible { get; set; }
-
-        public ProjectModel Project { get; set; }
-
-        public ObservableCollection<DiagramModel> Diagrams { get; set; }
 
         public ProjectExplorerViewModel(Func<IProjectManager> projectManagerFactory)
         {
             ProjectManager = projectManagerFactory.Invoke();
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
         }
+
+        public IProjectManager ProjectManager { get; set; }
+
+        public bool IsAddDiagramButtonVisible { get; set; }
+
+        public ProjectModel Project { get; set; }
+
+        public ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
+
+        public DiagramModel SelectedDiagram { get; set; }
+
+        public bool CanDeleteDiagram => SelectedDiagram != null;
 
         private void ProjectManagerOnCurrentProjectChanged()
         {
@@ -36,30 +41,19 @@ namespace DiiagramrAPI.ViewModel
         public void MouseMoveHandler(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
-            {
                 if (SelectedDiagram != null)
                 {
                     var dataObjectForDiagram = new DataObject(DataFormats.StringFormat, SelectedDiagram);
-                    DragDrop.DoDragDrop((UIElement)sender, dataObjectForDiagram, DragDropEffects.Copy);
+                    DragDrop.DoDragDrop((UIElement) sender, dataObjectForDiagram, DragDropEffects.Copy);
                 }
-            }
         }
 
-        public void DiagramProjectItemMouseDownHandler(object sender, MouseButtonEventArgs e)
+        public void DiagramProjectItemMouseUp()
         {
-            DiagramProjectItemMouseDown(e.ClickCount);
-        }
-
-        public void DiagramProjectItemMouseDown(int clickCount)
-        {
-            if (clickCount == 2)
-            {
-                if (SelectedDiagram != null)
-                {
-                    SelectedDiagram.IsOpen = false;
-                    SelectedDiagram.IsOpen = true;
-                }
-            }
+            foreach (var diagramModel in Diagrams)
+                diagramModel.IsOpen = false;
+            if (SelectedDiagram == null) return;
+            SelectedDiagram.IsOpen = true;
         }
 
         public void CopyDiagram()
@@ -69,14 +63,10 @@ namespace DiiagramrAPI.ViewModel
             ProjectManager.CreateDiagram(diagramCopy);
         }
 
-        public DiagramModel SelectedDiagram { get; set; }
-
         public void CreateDiagram()
         {
             ProjectManager.CreateDiagram();
         }
-
-        public bool CanDeleteDiagram => SelectedDiagram != null;
 
         public void DeleteDiagram()
         {

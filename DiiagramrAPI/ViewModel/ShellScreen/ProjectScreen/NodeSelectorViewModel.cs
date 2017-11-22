@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,7 +12,6 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using PropertyChanged;
 using Stylet;
-using System.ComponentModel;
 
 namespace DiiagramrAPI.ViewModel
 {
@@ -34,6 +34,8 @@ namespace DiiagramrAPI.ViewModel
 
         public PluginNode MousedOverNode { get; set; }
 
+        public bool Visible { get; set; }
+
         public bool NodePreviewVisible => MousedOverNode != null;
 
         public double TopPosition { get; set; }
@@ -43,7 +45,6 @@ namespace DiiagramrAPI.ViewModel
         public double PreviewNodeScaleY { get; set; }
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
-        public event Action ShouldClose;
 
         public void AddNodes()
         {
@@ -71,13 +72,13 @@ namespace DiiagramrAPI.ViewModel
         {
             VisibleNodesList.Clear();
             MousedOverNode = null;
-            ShouldClose?.Invoke();
+            Visible = false;
         }
 
         public void SelectNode()
         {
             SelectedNode = MousedOverNode;
-            ShouldClose?.Invoke();
+            Visible = false;
         }
 
         public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
@@ -135,6 +136,7 @@ namespace DiiagramrAPI.ViewModel
         }
     }
 
+    // TODO: Extract this class into own file
     [AddINotifyPropertyChangedInterface]
     public class Library
     {

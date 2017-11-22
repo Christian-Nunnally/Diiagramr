@@ -12,9 +12,9 @@ namespace DiiagramrUnitTests.ViewModelTests
     [TestClass]
     public class NodeSelectorViewModelTest
     {
-        private Mock<IProvideNodes> _nodeProvidorMoq;
         private Mock<PluginNode> _nodeMoq1;
         private Mock<PluginNode> _nodeMoq2;
+        private Mock<IProvideNodes> _nodeProvidorMoq;
         private NodeSelectorViewModel _nodeSelectorViewModel;
 
         [TestInitialize]
@@ -49,7 +49,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsANode_AddsNodeLibrary()
         {
-            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
+            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
@@ -61,7 +61,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsANode_NodeInAvailableNodesList()
         {
-            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
+            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
@@ -73,7 +73,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsANode_NodeInLibaryNodeList()
         {
-            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
+            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
@@ -85,7 +85,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsAPluginNode_SetupNodeInvokedOnNode()
         {
-            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
+            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
@@ -97,7 +97,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsTwoNodes_AddsOnlyOne()
         {
-            var nodeList = new List<PluginNode> { _nodeMoq1.Object, _nodeMoq2.Object };
+            var nodeList = new List<PluginNode> {_nodeMoq1.Object, _nodeMoq2.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
@@ -125,23 +125,17 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestBackgroundMouseDown_ShouldCloseInvoked()
+        public void TestBackgroundMouseDown_VisibleSetToFalse()
         {
-            var shouldClose = false;
-            _nodeSelectorViewModel.ShouldClose += () => shouldClose = true;
             _nodeSelectorViewModel.BackgroundMouseDown();
-
-            Assert.IsTrue(shouldClose);
+            Assert.IsFalse(_nodeSelectorViewModel.Visible);
         }
 
         [TestMethod]
-        public void TestSelectNode_ShouldCloseInvoked()
+        public void TestSelectNode_VisibleSetToFalse()
         {
-            var shouldClose = false;
-            _nodeSelectorViewModel.ShouldClose += () => shouldClose = true;
             _nodeSelectorViewModel.SelectNode();
-
-            Assert.IsTrue(shouldClose);
+            Assert.IsFalse(_nodeSelectorViewModel.Visible);
         }
 
         [TestMethod]
@@ -168,7 +162,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestShowLibrary_NodeInLibrary_NodeAddedToVisibleNodes()
         {
             var libraryMoq = new Mock<Library>("");
-            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode>{_nodeMoq1.Object});
+            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode> {_nodeMoq1.Object});
             _nodeSelectorViewModel.ShowLibrary(libraryMoq.Object);
 
             Assert.AreEqual(_nodeMoq1.Object, _nodeSelectorViewModel.VisibleNodesList.First());

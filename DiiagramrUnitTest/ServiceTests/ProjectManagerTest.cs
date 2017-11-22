@@ -1,26 +1,29 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ShellScreen;
-using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
     [TestClass]
     public class ProjectManagerTest
     {
-        private ProjectManager _projectManager;
-        private Mock<IProjectFileService> _projectFileServiceMoq;
-        private Mock<IProvideNodes> _nodeProviderMoq;
-        private Mock<LibraryManagerScreenViewModel> _libraryManagerMoq;
         private bool _currentProjectChanged;
+        private Mock<DiagramViewModelFactory> _diagramViewModelFactoryMoq;
+        private Mock<LibraryManagerScreenViewModel> _libraryManagerMoq;
+        private Mock<IProvideNodes> _nodeProviderMoq;
+        private Mock<NodeSelectorViewModel> _nodeSelectorViewModelMoq;
+        private Mock<IProjectFileService> _projectFileServiceMoq;
+        private ProjectManager _projectManager;
 
         [TestInitialize]
         public void TestInitialize()
@@ -28,9 +31,17 @@ namespace DiiagramrUnitTests.ServiceTests
             var pluginLoader = new Mock<IPluginLoader>();
             _projectFileServiceMoq = new Mock<IProjectFileService>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
-             _libraryManagerMoq = new Mock<LibraryManagerScreenViewModel>((Func<IPluginLoader>)( () => pluginLoader.Object));
+            _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
+            _libraryManagerMoq = new Mock<LibraryManagerScreenViewModel>((Func<IPluginLoader>) (() => pluginLoader.Object));
+            _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>) (() => _nodeSelectorViewModelMoq.Object));
             _currentProjectChanged = false;
-            _projectManager = new ProjectManager(() => _projectFileServiceMoq.Object, () => _nodeProviderMoq.Object, () => _libraryManagerMoq.Object);
+
+            _projectManager = new ProjectManager(
+                () => _projectFileServiceMoq.Object,
+                () => _nodeProviderMoq.Object,
+                () => _libraryManagerMoq.Object,
+                () => _diagramViewModelFactoryMoq.Object);
+
             _projectManager.CurrentProjectChanged += () => _currentProjectChanged = true;
         }
 
@@ -89,7 +100,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_DiagramViewModelsCleared()
         {
-            var diagramViewModel = new Mock<DiagramViewModel>(new Mock<DiagramModel>().Object, _nodeProviderMoq.Object).Object;
+            var diagramViewModel = new Mock<DiagramViewModel>(new Mock<DiagramModel>().Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object).Object;
             _projectManager.DiagramViewModels.Add(diagramViewModel);
             _projectManager.CreateProject();
             Assert.AreEqual(0, _projectManager.DiagramViewModels.Count);

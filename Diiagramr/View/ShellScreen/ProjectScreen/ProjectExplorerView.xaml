@@ -1,95 +1,91 @@
-﻿<UserControl x:Class="Diiagramr.View.ProjectExplorerView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d"
-             xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-             d:DataContext="{d:DesignInstance viewModel:ProjectExplorerViewModel}"
-             d:DesignHeight="300" d:DesignWidth="150">
+﻿<UserControl
+    x:Class="Diiagramr.View.ProjectExplorerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    d:DataContext="{d:DesignInstance viewModel:ProjectExplorerViewModel}"
+    d:DesignHeight="300"
+    d:DesignWidth="150"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="btv"/>
+        <BooleanToVisibilityConverter x:Key="btv" />
     </UserControl.Resources>
-    <Border BorderBrush="LightGray" BorderThickness="1" Background="White">
+    <Grid>
         <Grid>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
-                <Border Grid.Row="1" Background="White" Visibility="Hidden" x:Name="ListViewRowHeight" x:FieldModifier="private" />
-            </Grid>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label Content="{Binding Project.Name}"
-                   HorizontalContentAlignment="Center"
-                   VerticalContentAlignment="Center"
-                   FontSize="12"
-                   Background="#ffe9e9e9"
-                   Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}"/>
-                <ListView ItemsSource="{Binding Diagrams}" 
-                      Grid.Row="1" 
-                      BorderThickness="0"
-                      MaxHeight="{Binding ActualHeight, ElementName=ListViewRowHeight}"
-                      SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
-                      MouseMove="{s:Action MouseMoveHandler}"
-                      SelectionMode="Single">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Border Width="Auto" MouseDown="{s:Action DiagramProjectItemMouseDownHandler}">
-                                <Label Content="{Binding Name}">
-                                    <Label.ContextMenu>
-                                        <ContextMenu>
-                                            <MenuItem Header="Copy" Command="{s:Action CopyDiagram}"/>
-                                            <Separator/>
-                                            <MenuItem Header="Delete" Command="{s:Action DeleteDiagram}"/>
-                                        </ContextMenu>
-                                    </Label.ContextMenu>
-                                </Label>
-                            </Border>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                </ListView>
-                <Button Grid.Row="2"
-                    Click="{s:Action CreateDiagram}"
-                    BorderThickness="0"
-                    Background="White"
-                    Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Content" Value="+"/>
-                            <Setter Property="FontSize" Value="18"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Content" Value="Diagram"/>
-                                    <Setter Property="FontSize" Value="12"/>
-                                    <Setter Property="FontWeight" Value="Normal"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+            <Border
+                x:Name="ListViewRowHeight"
+                Grid.Row="0"
+                x:FieldModifier="private"
+                Background="White"
+                Visibility="Hidden" />
         </Grid>
-    </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ListView
+                Grid.Row="0"
+                MaxHeight="{Binding ActualHeight, ElementName=ListViewRowHeight}"
+                Padding="0"
+                BorderThickness="0"
+                ItemsSource="{Binding Diagrams}"
+                MouseMove="{s:Action MouseMoveHandler}"
+                SelectedItem="{Binding SelectedDiagram, Mode=TwoWay}"
+                SelectionMode="Single">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Width="Auto" MouseUp="{s:Action DiagramProjectItemMouseUp}">
+                            <Label Content="{Binding Name}" FontSize="14">
+                                <Label.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Command="{s:Action CopyDiagram}" Header="Copy" />
+                                        <Separator />
+                                        <MenuItem Command="{s:Action DeleteDiagram}" Header="Delete" />
+                                    </ContextMenu>
+                                </Label.ContextMenu>
+                            </Label>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        <Setter Property="Margin" Value="0" />
+                        <Setter Property="BorderThickness" Value="0" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <Button
+                Grid.Row="1"
+                Background="White"
+                BorderThickness="0"
+                Click="{s:Action CreateDiagram}"
+                Visibility="{Binding IsAddDiagramButtonVisible, Converter={StaticResource btv}}">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Content" Value="+" />
+                        <Setter Property="FontSize" Value="18" />
+                        <Setter Property="FontWeight" Value="Bold" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Content" Value="+ Diagram" />
+                                <Setter Property="FontSize" Value="12" />
+                                <Setter Property="FontWeight" Value="Normal" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </Grid>
+    </Grid>
 </UserControl>
-
-
-
-
-
-
-

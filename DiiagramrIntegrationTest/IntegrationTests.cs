@@ -1,7 +1,7 @@
-﻿using DiiagramrIntegrationTest.IntegrationHelpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq;
+﻿using System.Linq;
 using DiiagramrAPI.ViewModel;
+using DiiagramrIntegrationTest.IntegrationHelpers;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiiagramrIntegrationTest
 {
@@ -16,7 +16,7 @@ namespace DiiagramrIntegrationTest
             var projectExplorer = projectScreen.ProjectExplorerViewModel;
             var projectManager = projectExplorer.ProjectManager;
             var diagramWell = projectScreen.DiagramWellViewModel;
-            var nodeSelector = diagramWell.NodeSelectorViewModel;
+            var nodeSelector = (NodeSelectorViewModel) IntegrationTestUtilities.Container.Get(typeof(NodeSelectorViewModel));
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
 
             shell.CreateProject();
@@ -40,12 +40,12 @@ namespace DiiagramrIntegrationTest
             // set output
             node1.InputTerminalViewModels.First().Data = 4;
             outputTerm.Data = 5;
-            Assert.AreEqual(((TestPassthroughNode) node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode) node1).OutputTerminal.Data, ((TestPassthroughNode) node2).InputTerminal.Data);
 
             // move node2
             node2.X = 16;
             node2.Y = 17;
-    
+
             var inputTerminalNode2 = node2.InputTerminalViewModels.First().TerminalModel;
             var outputTerminalNode1 = node1.OutputTerminalViewModels.First().TerminalModel;
             Assert.AreEqual(inputTerminalNode2.X, node2.X);
@@ -73,17 +73,17 @@ namespace DiiagramrIntegrationTest
             inputTerm = node2.InputTerminalViewModels.First();
             Assert.AreNotEqual(0, outputTerm.TerminalModel.ConnectedWires.Count);
             Assert.AreNotEqual(0, inputTerm.TerminalModel.ConnectedWires.Count);
-            Assert.AreEqual(5, ((TestPassthroughNode)node2).InputTerminal.Data);
-            Assert.AreEqual(5, ((TestPassthroughNode)node1).OutputTerminal.Data);
-            Assert.AreEqual(6, ((TestPassthroughNode)node2).OutputTerminal.Data);
-            Assert.AreEqual(6, ((TestPassthroughNode)node2).Value);
-            Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
-            
+            Assert.AreEqual(5, ((TestPassthroughNode) node2).InputTerminal.Data);
+            Assert.AreEqual(5, ((TestPassthroughNode) node1).OutputTerminal.Data);
+            Assert.AreEqual(6, ((TestPassthroughNode) node2).OutputTerminal.Data);
+            Assert.AreEqual(6, ((TestPassthroughNode) node2).Value);
+            Assert.AreEqual(((TestPassthroughNode) node1).OutputTerminal.Data, ((TestPassthroughNode) node2).InputTerminal.Data);
+
 
             // change data
             outputTerm.Data = 6;
-            Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
-            Assert.AreEqual(((TestPassthroughNode)node2).InputTerminal.Data + 1, ((TestPassthroughNode)node2).OutputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode) node1).OutputTerminal.Data, ((TestPassthroughNode) node2).InputTerminal.Data);
+            Assert.AreEqual(((TestPassthroughNode) node2).InputTerminal.Data + 1, ((TestPassthroughNode) node2).OutputTerminal.Data);
 
             // change location
             node1.X = 11;
@@ -109,7 +109,7 @@ namespace DiiagramrIntegrationTest
             var projectExplorer = projectScreen.ProjectExplorerViewModel;
             var projectManager = projectExplorer.ProjectManager;
             var diagramWell = projectScreen.DiagramWellViewModel;
-            var nodeSelector = diagramWell.NodeSelectorViewModel;
+            var nodeSelector = (NodeSelectorViewModel) IntegrationTestUtilities.Container.Get(typeof(NodeSelectorViewModel));
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
 
             shell.CreateProject();

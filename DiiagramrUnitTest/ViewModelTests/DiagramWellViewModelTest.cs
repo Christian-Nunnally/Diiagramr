@@ -1,15 +1,12 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Windows;
 using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -17,18 +14,18 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class DiagramWellViewModelTest
     {
         private DiagramWellViewModel _diagramWellViewModel;
-        private Mock<IProjectManager> _projectManagerMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
         private Mock<NodeSelectorViewModel> _nodeSelectorMoq;
+        private Mock<IProjectManager> _projectManagerMoq;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _projectManagerMoq = new Mock<IProjectManager>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
-            _nodeSelectorMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
+            _nodeSelectorMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
 
-            _diagramWellViewModel = new DiagramWellViewModel(() => _projectManagerMoq.Object, () => _nodeProviderMoq.Object, () => _nodeSelectorMoq.Object);
+            _diagramWellViewModel = new DiagramWellViewModel(() => _projectManagerMoq.Object);
         }
 
         [TestMethod]
@@ -43,7 +40,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagramMoq = new Mock<DiagramModel>();
             diagramMoq.SetupAllProperties();
             diagramMoq.Object.IsOpen = true;
-            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object).Object;
+            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorMoq.Object).Object;
 
             _diagramWellViewModel.CloseActiveDiagram();
 
@@ -65,8 +62,8 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagram = new DiagramModel();
             var project = new ProjectModel();
             var nodeProviderMoq = new Mock<IProvideNodes>();
-            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object);
-            var diagramViewModelList = new List<DiagramViewModel> { diagramViewModelMoq.Object };
+            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object, _nodeSelectorMoq.Object);
+            var diagramViewModelList = new List<DiagramViewModel> {diagramViewModelMoq.Object};
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;
@@ -75,45 +72,6 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
             project.Diagrams.Add(diagram);
             return diagram;
-        }
-
-        [TestMethod]
-        public void TestRightMouseDown_NoDiagramOpen_SetsNodeSelectorsNodeToNull()
-        {
-            _diagramWellViewModel.RightMouseDown(new Point(0,0));
-            _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
-        }
-
-        [TestMethod]
-        public void TestRightMouseDown_DiagramOpenAndNodeNotSelected_SetsNodeSelectorVisibleToTrue()
-        {
-            var diagram = SetupProjectWithSingleDiagram();
-            diagram.IsOpen = true;
-
-            Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
-            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
-            Assert.IsTrue(_diagramWellViewModel.NodeSelectorVisible);
-        }
-
-        [TestMethod]
-        public void TestRightMouseDown_DiagramOpenAndNodeSelected_SetsNodeSelectorSelectedNodeToNull()
-        {
-            var abstractNodeViewModelMoq = new Mock<PluginNode>();
-            _nodeSelectorMoq.SetupGet(m => m.SelectedNode).Returns(abstractNodeViewModelMoq.Object);
-            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
-            var diagram = SetupProjectWithSingleDiagram();
-            diagram.IsOpen = true;
-
-            _diagramWellViewModel.RightMouseDown(new Point(0, 0));
-            _nodeSelectorMoq.VerifySet(m => m.SelectedNode = null);
-        }
-
-        [TestMethod]
-        public void TestLeftMouseDown_NodeSelectorVisibleTrue_SetsNodeSelectorVisibleToFalse()
-        {
-            _diagramWellViewModel.NodeSelectorVisible = true;
-            _diagramWellViewModel.LeftMouseDown();
-            Assert.IsFalse(_diagramWellViewModel.NodeSelectorVisible);
         }
 
         [TestMethod]

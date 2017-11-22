@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
 
@@ -10,7 +7,7 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
 {
     public class StartScreenViewModel : Screen
     {
-        private IProjectManager _projectManager;
+        private readonly IProjectManager _projectManager;
 
         public StartScreenViewModel(Func<IProjectManager> projectManagerFactory)
         {
@@ -20,13 +17,27 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
         public void LoadProject()
         {
             _projectManager.LoadProject();
-            RequestClose();
+            try
+            {
+                RequestClose();
+            }
+            catch (Exception e)
+            {
+            }
         }
 
         public void NewProject()
         {
             _projectManager.CreateProject();
-            RequestClose();
+            _projectManager.CreateDiagram();
+            _projectManager.CurrentDiagrams.First().IsOpen = true;
+            try
+            {
+                RequestClose();
+            }
+            catch (Exception e)
+            {
+            }
         }
     }
 }

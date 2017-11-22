@@ -17,33 +17,45 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
     public static class IntegrationTestUtilities
     {
+        private static IContainer _container;
+
+        public static IContainer Container
+        {
+            get
+            {
+                if (_container != null) return _container;
+                IStyletIoCBuilder builder = new StyletIoCBuilder();
+                builder.Bind<ShellViewModel>().ToSelf();
+                builder.Bind<ProjectExplorerViewModel>().ToSelf();
+                builder.Bind<DiagramWellViewModel>().ToSelf();
+                builder.Bind<DiagramViewModel>().ToSelf();
+                builder.Bind<NodeSelectorViewModel>().ToSelf();
+                builder.Bind<ProjectScreenViewModel>().ToSelf();
+                builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
+                builder.Bind<StartScreenViewModel>().ToSelf();
+                builder.Bind<IDirectoryService>().To<DirectoryService>();
+                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
+                builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
+                builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
+                builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
+                builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
+                builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
+                builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
+                builder.Bind<DiagramViewModelFactory>().ToSelf();
+                _container = builder.BuildContainer();
+                return _container;
+            }
+
+        }
+
         public static ShellViewModel SetupShellViewModel()
         {
-            IStyletIoCBuilder builder = new StyletIoCBuilder();
-            builder.Bind<ShellViewModel>().ToSelf();
-            builder.Bind<ProjectExplorerViewModel>().ToSelf();
-            builder.Bind<DiagramWellViewModel>().ToSelf();
-            builder.Bind<DiagramViewModel>().ToSelf();
-            builder.Bind<NodeSelectorViewModel>().ToSelf();
-            builder.Bind<ProjectScreenViewModel>().ToSelf();
-            builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
-            builder.Bind<StartScreenViewModel>().ToSelf();
-            builder.Bind<IDirectoryService>().To<DirectoryService>();
-            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
-            builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
-            builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
-            builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-            builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
-            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
-            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
-            var container = builder.BuildContainer();
-
-            var nodeProvider = container.Get<IProvideNodes>();
+            var nodeProvider = Container.Get<IProvideNodes>();
             nodeProvider.RegisterNode(new TestPassthroughNode(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
 
-            return container.Get<ShellViewModel>();
+            return Container.Get<ShellViewModel>();
         }
 
         // Opens diagram at index, default to first
@@ -54,7 +66,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             var projectManager = projectExplorer.ProjectManager;
             var diagram = projectManager.CurrentDiagrams[index];
             projectExplorer.SelectedDiagram = diagram;
-            projectExplorer.DiagramProjectItemMouseDown(2);
+            projectExplorer.DiagramProjectItemMouseUp();
             var diagramViewModel = projectManager.DiagramViewModels.First(d => d.Diagram == diagram);
             Assert.AreEqual(diagramViewModel, projectScreen.DiagramWellViewModel.ActiveItem);
             return diagramViewModel;
@@ -66,9 +78,9 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         {
             var projectScreen = shell.ProjectScreenViewModel;
             var diagramWell = projectScreen.DiagramWellViewModel;
-            var nodeSelector = diagramWell.NodeSelectorViewModel;
-            var pt = new Point(ptX, ptY);
             var diagramViewModel = diagramWell.ActiveItem;
+            var nodeSelector = diagramViewModel.NodeSelectorViewModel;
+            var pt = new Point(ptX, ptY);
             Assert.IsNotNull(diagramViewModel, "must have diagram open");
             nodeSelector.MousedOverNode = node;
             nodeSelector.SelectNode();

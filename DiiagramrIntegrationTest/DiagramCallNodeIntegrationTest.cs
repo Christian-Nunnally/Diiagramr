@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using DiiagramrAPI.CustomControls;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
@@ -10,7 +11,6 @@ using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
-using DiiagramrAPI.Model;
 
 namespace DiiagramrIntegrationTest
 {
@@ -40,6 +40,7 @@ namespace DiiagramrIntegrationTest
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
+            builder.Bind<DiagramViewModelFactory>().ToSelf();
             _container = builder.BuildContainer();
 
             var nodeProvider = _container.Get<IProvideNodes>();
@@ -55,7 +56,7 @@ namespace DiiagramrIntegrationTest
         public void TestSimpleWiredInputOutput()
         {
             var projectScreen = _shell.ProjectScreenViewModel;
-            var nodeSelectorViewModel = projectScreen.DiagramWellViewModel.NodeSelectorViewModel;
+            var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
             var inputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramInputNodeViewModel));
@@ -97,24 +98,23 @@ namespace DiiagramrIntegrationTest
         }
 
         /// <summary>
-        /// This test is failing.  It describes a scenario in which diagram call nodes do not work perfectly.
-        /// The scenario is as follows:
-        /// 
+        ///     This test is failing.  It describes a scenario in which diagram call nodes do not work perfectly.
+        ///     The scenario is as follows:
         ///     Diagram1:
-        ///         ConstantNode -> OutputNode
-        /// 
+        ///     ConstantNode -> OutputNode
         ///     Diagram2:
-        ///         Diagram1CallNode -> ValueDisplayNode
-        /// 
-        /// The value diplay node should display the constant value set in the constant node because its value is a plugin node setting,
-        /// but the value is not propagated when the diagram is serialized, meaning the output terminal on the DCN is always set to null.
+        ///     Diagram1CallNode -> ValueDisplayNode
+        ///     The value diplay node should display the constant value set in the constant node because its value is a plugin node
+        ///     setting,
+        ///     but the value is not propagated when the diagram is serialized, meaning the output terminal on the DCN is always
+        ///     set to null.
         /// </summary>
         [TestMethod]
         [Ignore]
         public void TestPluginNodeSettingUpdatesDiagramCallNode()
         {
             var projectScreen = _shell.ProjectScreenViewModel;
-            var nodeSelectorViewModel = projectScreen.DiagramWellViewModel.NodeSelectorViewModel;
+            var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
             var outputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramOutputNodeViewModel));
@@ -129,14 +129,14 @@ namespace DiiagramrIntegrationTest
 
             var diagramCallNode = diagramViewModel2.PlaceDiagramCallNodeFor(diagramViewModel1.Diagram);
             var outputNodeOnDiagram1 = _shell.PlaceNode(outputNode, 0, 0);
-            var testIntNodeOnDiagram1 = (TestIntNode)_shell.PlaceNode(testIntNode, 0, 0);
+            var testIntNodeOnDiagram1 = (TestIntNode) _shell.PlaceNode(testIntNode, 0, 0);
 
             _shell.WireTerminals(testIntNodeOnDiagram1.TerminalViewModels.First(), outputNodeOnDiagram1.TerminalViewModels.First());
 
             _shell.OpenDiagram(1);
-            
+
             var testNodeOutput = _shell.PlaceNode(testPassthroughNode, 0, 0);
-            
+
             _shell.WireTerminals(diagramCallNode.OutputTerminalViewModels.First(), testNodeOutput.InputTerminalViewModels.First());
 
             testIntNodeOnDiagram1.SetValue(4);

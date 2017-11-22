@@ -5,37 +5,43 @@ namespace DiiagramrAPI.ViewModel.Diagram
 {
     public class DiagramControlViewModel : Screen
     {
+
+        public DiagramControlViewModel(DiagramModel diagram)
+        {
+            Diagram = diagram;
+            Play();
+        }
+
         public bool PlayChecked { get; set; }
 
         public bool PauseChecked { get; set; }
 
-        private DiagramModel diagram { get; set; }
+        public bool StopChecked { get; set; }
 
-        public DiagramControlViewModel(DiagramModel dia)
-        {
-            diagram = dia;
-            Play();
-        }
+        private DiagramModel Diagram { get; }
 
         public void Play()
         {
             PauseChecked = false;
+            StopChecked = false;
             PlayChecked = true;
-            diagram.Play();
+            Diagram.Play();
         }
 
         public void Pause()
         {
             PlayChecked = false;
             PauseChecked = true;
-            diagram.Pause();
+            StopChecked = false;
+            Diagram.Pause();
         }
 
         public void Stop()
         {
             PlayChecked = false;
             PauseChecked = false;
-            diagram.Stop();
+            StopChecked = true;
+            Diagram.Stop();
         }
     }
 }

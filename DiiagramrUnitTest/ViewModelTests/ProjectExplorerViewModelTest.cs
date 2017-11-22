@@ -1,17 +1,17 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using Stylet;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using Stylet;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
     [TestClass]
     public class ProjectExplorerViewModelTest
     {
-        private Mock<IProjectManager> _projectManagerMoq;
         private ProjectExplorerViewModel _projectExplorerViewModel;
+        private Mock<IProjectManager> _projectManagerMoq;
 
         [TestInitialize]
         public void TestInitialize()
@@ -44,7 +44,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestDeleteDiagram_CallsDeleteDiagramWithSelectedDiagram()
         {
             var diagram = new DiagramModel();
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<DiagramModel> { diagram });
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<DiagramModel> {diagram});
             _projectExplorerViewModel.SelectedDiagram = diagram;
             _projectExplorerViewModel.DeleteDiagram();
             _projectManagerMoq.Verify(m => m.DeleteDiagram(It.Is<DiagramModel>(d => d == diagram)), Times.Once);
@@ -82,23 +82,12 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestDiagramProjectItemMouseDown_SingleClick_SelectedDiagramNotOpen()
+        public void TestDiagramProjectItemMouseUp_SingleClick_SelectedDiagramOpen()
         {
             var diagramMoq = new Mock<DiagramModel>();
             _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
 
-            _projectExplorerViewModel.DiagramProjectItemMouseDown(1);
-
-            diagramMoq.VerifySet(d => d.IsOpen = true, Times.Never);
-        }
-
-        [TestMethod]
-        public void TestDiagramProjectItemMouseDown_DoubleClick_SelectedDiagramOpen()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
-
-            _projectExplorerViewModel.DiagramProjectItemMouseDown(2);
+            _projectExplorerViewModel.DiagramProjectItemMouseUp();
 
             diagramMoq.VerifySet(d => d.IsOpen = true);
         }

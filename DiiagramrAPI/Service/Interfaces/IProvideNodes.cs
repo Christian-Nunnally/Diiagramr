@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
-using System.ComponentModel;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service.Interfaces
     {
         IProjectManager ProjectManager { get; set; }
 
-        void RegisterNode(PluginNode node, DependencyModel dep);
+        void RegisterNode(PluginNode node, DependencyModel dependency);
 
         PluginNode LoadNodeViewModelFromNode(NodeModel node);
 

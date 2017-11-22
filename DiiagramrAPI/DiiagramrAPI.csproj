@@ -72,6 +72,7 @@
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\DiagramCopier.cs" />
+    <Compile Include="Service\DiagramViewModelFactory.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />

@@ -14,12 +14,12 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         private readonly DiagramCopier _diagramCopier = new DiagramCopier();
 
         private readonly Dictionary<DiagramInputNodeViewModel, Terminal<object>> _inputNodeToTerminal = new Dictionary<DiagramInputNodeViewModel, Terminal<object>>();
-        private readonly Dictionary<DiagramOutputNodeViewModel, Terminal<object>> _outputNodeToTerminal = new Dictionary<DiagramOutputNodeViewModel, Terminal<object>>();
 
         private readonly Dictionary<int, TerminalViewModel> _ioNodeIdToTerminalViewModel = new Dictionary<int, TerminalViewModel>();
+        private readonly Dictionary<DiagramOutputNodeViewModel, Terminal<object>> _outputNodeToTerminal = new Dictionary<DiagramOutputNodeViewModel, Terminal<object>>();
+        private bool _diagramValidated;
 
         private NodeSetup _nodeSetup;
-        private bool _diagramValidated;
 
         public DiagramModel ReferencingDiagramModel { get; private set; }
 
@@ -53,7 +53,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider);
+            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null);
             DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 

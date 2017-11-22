@@ -12,20 +12,27 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectManager : IProjectManager
     {
-        private readonly IProvideNodes _nodeProvider;
-        private readonly IProjectFileService _projectFileService;
+        private readonly DiagramViewModelFactory _diagramViewModelFactory;
         private readonly LibraryManagerScreenViewModel _libraryManager;
-        public IList<DiagramViewModel> DiagramViewModels { get; }
+        private readonly IProjectFileService _projectFileService;
 
-        public ProjectManager(Func<IProjectFileService> projectFileServiceFactory, Func<IProvideNodes> nodeProviderFactory, Func<LibraryManagerScreenViewModel> libraryManager)
+        public ProjectManager(
+            Func<IProjectFileService> projectFileServiceFactory,
+            Func<IProvideNodes> nodeProviderFactory,
+            Func<LibraryManagerScreenViewModel> libraryManagerFactory,
+            Func<DiagramViewModelFactory> diagramViewModelFactoryFactory)
         {
             DiagramViewModels = new List<DiagramViewModel>();
-            _libraryManager = libraryManager.Invoke();
+            _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
-            _nodeProvider = nodeProviderFactory.Invoke();
-            _nodeProvider.ProjectManager = this;
+            var nodeProvider = nodeProviderFactory.Invoke();
+            _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
+            // TODO: Eliminate the need for this...
+            nodeProvider.ProjectManager = this;
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
+
+        public IList<DiagramViewModel> DiagramViewModels { get; }
 
         public event Action CurrentProjectChanged;
         public ProjectModel CurrentProject { get; set; }
@@ -108,7 +115,7 @@ namespace DiiagramrAPI.Service
 
         private void CreateDiagramViewModel(DiagramModel diagram)
         {
-            var diagramViewModel = new DiagramViewModel(diagram, _nodeProvider);
+            var diagramViewModel = _diagramViewModelFactory.CreateDiagramViewModel(diagram);
             DiagramViewModels.Add(diagramViewModel);
         }
 
@@ -116,8 +123,8 @@ namespace DiiagramrAPI.Service
         {
             if (CurrentProject == null) return;
             foreach (var diagram in CurrentProject.Diagrams)
-                foreach (var node in diagram.Nodes)
-                    _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
+            foreach (var node in diagram.Nodes)
+                _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
         }
     }
 }
