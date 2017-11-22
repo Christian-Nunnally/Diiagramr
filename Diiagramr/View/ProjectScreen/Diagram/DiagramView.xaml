@@ -252,9 +252,11 @@
                                                     s:View.Model="{Binding}"
                                                     IsTabStop="False" />
                                             </Border>
+                                            
                                             <Button
                                                 Grid.Row="0"
                                                 Grid.Column="1"
+                                                Margin="1,0,0,1"
                                                 Command="{s:Action RemoveNodePressed}"
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />

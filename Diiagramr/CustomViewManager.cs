@@ -25,7 +25,8 @@ namespace Diiagramr
         {
             _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
             _viewModelToViewMapping.Add(typeof(ProjectScreenViewModel), typeof(ProjectScreenView));
-            _viewModelToViewMapping.Add(typeof(LibraryManagerScreenViewModel), typeof(LibraryManagerScreenView));
+            _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));
+            _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindowViewModel), typeof(LibrarySourceManagerWindowView));
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
             _viewModelToViewMapping.Add(typeof(ProjectExplorerViewModel), typeof(ProjectExplorerView));
             _viewModelToViewMapping.Add(typeof(NodeSelectorViewModel), typeof(NodeSelectorView));

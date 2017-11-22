@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
+using Diiagramr.View.ShellWindow;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.ShellScreen;
 using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
@@ -10,7 +13,7 @@ namespace DiiagramrAPI.ViewModel
     {
         private readonly IProjectManager _projectManager;
 
-        public LibraryManagerScreenViewModel LibraryManagerScreenViewModel { get; set; }
+        public LibraryManagerWindowViewModel LibraryManagerWindowViewModel { get; set; }
         public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
         public StartScreenViewModel StartScreenViewModel { get; set; }
 
@@ -19,14 +22,19 @@ namespace DiiagramrAPI.ViewModel
 
         public string WindowTitle { get; set; } = "Diiagramr";
 
+        public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
+        public AbstractShellWindow ActiveWindow { get; set; }
+
+        public bool IsWindowOpen => ActiveWindow != null;
+
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
-            Func<LibraryManagerScreenViewModel> libraryScreenScreenViewModelFactory,
+            Func<LibraryManagerWindowViewModel> libraryScreenScreenViewModelFactory,
             Func<StartScreenViewModel> startScreenScreenViewModelFactory,
             Func<IProjectManager> projectManagerFactory)
         {
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
-            LibraryManagerScreenViewModel = libraryScreenScreenViewModelFactory.Invoke();
+            LibraryManagerWindowViewModel = libraryScreenScreenViewModelFactory.Invoke();
             StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
 
             _projectManager = projectManagerFactory.Invoke();
@@ -39,6 +47,20 @@ namespace DiiagramrAPI.ViewModel
         public void ShowScreen(IScreen screen)
         {
             ActiveItem = screen;
+        }
+
+        public void OpenWindow(AbstractShellWindow window)
+        {
+            window.OpenWindow += OpenWindow;
+            if (ActiveWindow != null) WindowStack.Push(ActiveWindow);
+            ActiveWindow = window;
+        }
+
+        public void CloseWindow()
+        {
+            ActiveWindow.OpenWindow -= OpenWindow;
+            if (WindowStack.Count > 0) ActiveWindow = WindowStack.Pop();
+            else ActiveWindow = null;
         }
 
         private void ProjectManagerOnCurrentProjectChanged()
@@ -75,14 +97,11 @@ namespace DiiagramrAPI.ViewModel
         {
             _projectManager.SaveAsProject();
         }
-
-        // TODO: Unit test
+        
+        // TODO: Move to some other class.  The other other class should basically be abl to add toolbar buttons.
         public void ManageLibraries()
         {
-            if (ActiveItem == LibraryManagerScreenViewModel)
-                ActiveItem = ProjectScreenViewModel;
-            else
-                ActiveItem = LibraryManagerScreenViewModel;
+            OpenWindow(LibraryManagerWindowViewModel);
         }
 
         public void Close()

@@ -136,7 +136,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         private void WireRemovedFromDiagram(WireModel wireModel)
         {
-            // Currently handled by wire.disconnected event.
+            var wireToRemove = WireViewModels.FirstOrDefault(wire => wire.WireModel == wireModel);
+            if (wireToRemove != null) WireViewModels.Remove(wireToRemove);
         }
 
         private void WireAddedToDiagram(WireModel wireModel)
@@ -171,15 +172,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
         {
             if (WireViewModels.Any(x => x.WireModel == wire)) return;
             var wireViewModel = new WireViewModel(wire);
-            wireViewModel.Disconnected += WireViewModelOnDisconnected;
             WireViewModels.Add(wireViewModel);
             HideAllTerminalLabels();
-        }
-
-        private void WireViewModelOnDisconnected()
-        {
-            var nullWires = WireViewModels.Where(x => x.WireModel.SourceTerminal == null || x.WireModel.SinkTerminal == null).ToArray();
-            WireViewModels.RemoveRange(nullWires);
         }
 
         #region Drag Drop Handlers

@@ -13,7 +13,7 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class ShellViewModelTest
     {
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;
-        private Mock<LibraryManagerScreenViewModel> _libraryManagerViewModelMoq;
+        private Mock<LibraryManagerWindowViewModel> _libraryManagerViewModelMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
         private Mock<NodeSelectorViewModel> _nodeSelectorViewModelMoq;
         private Mock<IPluginLoader> _pluginLoaderMoq;
@@ -38,7 +38,7 @@ namespace DiiagramrUnitTests.ViewModelTests
                 (Func<ProjectExplorerViewModel>) (() => _projectExplorerViewModelMoq.Object),
                 (Func<DiagramWellViewModel>) (() => _diagramWellViewModelMoq.Object),
                 (Func<IProjectManager>) (() => _projectManagerMoq.Object));
-            _libraryManagerViewModelMoq = new Mock<LibraryManagerScreenViewModel>(
+            _libraryManagerViewModelMoq = new Mock<LibraryManagerWindowViewModel>(
                 (Func<IPluginLoader>) (() => _pluginLoaderMoq.Object));
             _startScreenViewModelMoq = new Mock<StartScreenViewModel>(
                 (Func<IProjectManager>) (() => _projectManagerMoq.Object));

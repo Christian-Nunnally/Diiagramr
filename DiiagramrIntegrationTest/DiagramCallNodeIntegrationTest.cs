@@ -30,7 +30,7 @@ namespace DiiagramrIntegrationTest
             builder.Bind<DiagramViewModel>().ToSelf();
             builder.Bind<NodeSelectorViewModel>().ToSelf();
             builder.Bind<ProjectScreenViewModel>().ToSelf();
-            builder.Bind<LibraryManagerScreenViewModel>().ToSelf();
+            builder.Bind<LibraryManagerWindowViewModel>().ToSelf();
             builder.Bind<StartScreenViewModel>().ToSelf();
             builder.Bind<IDirectoryService>().To<DirectoryService>();
             builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();

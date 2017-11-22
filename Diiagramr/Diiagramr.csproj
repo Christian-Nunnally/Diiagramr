@@ -125,7 +125,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CustomViewManager.cs" />
     <Compile Include="Properties\Annotations1.cs" />
-    <Compile Include="View\ShellScreen\ProjectScreen\Diagram\PointsToPathConverter.cs" />
+    <Compile Include="View\ProjectScreen\Diagram\PointsToPathConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -157,67 +157,71 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramOutputNodeView.xaml">
+    <Page Include="View\LibrarySourceManagerWindowView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramInputNodeView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramOutputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\DiagramControlView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\CoreNode\AddNodeView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramInputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\CoreNode\NumberNodeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\CoreNode\DiagramCallNodeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\TerminalView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\DiagramView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\DiagramControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\DiagramWellView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\CoreNode\AddNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProjectScreen\Diagram\CoreNode\NumberNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramCallNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProjectScreen\Diagram\TerminalView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ProjectScreen\Diagram\DiagramView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\InputTerminalView.xaml">
+    <Page Include="View\ProjectScreen\DiagramWellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\LibraryManagerScreenView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\InputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\NodeSelectorView.xaml">
+    <Page Include="View\LibraryManagerWindowView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\OutputTerminalView.xaml">
+    <Page Include="View\ProjectScreen\NodeSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\ProjectExplorerView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\OutputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\ProjectScreenView.xaml">
+    <Page Include="View\ProjectScreen\ProjectExplorerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ShellScreen\StartScreenView.xaml">
+    <Page Include="View\ProjectScreen\ProjectScreenView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\StartScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -225,7 +229,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ShellScreen\ProjectScreen\Diagram\WireView.xaml">
+    <Page Include="View\ProjectScreen\Diagram\WireView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -36,8 +36,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public WireModel WireModel { get; set; }
 
-        public event Action Disconnected;
-
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramConstants.NodeBorderWidth;
@@ -48,7 +46,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
             if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {
                 WireModel.PropertyChanged -= WireOnPropertyChanged;
-                Disconnected?.Invoke();
                 return;
             }
 

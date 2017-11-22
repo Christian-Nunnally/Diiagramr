@@ -16,28 +16,18 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
 
         public void LoadProject()
         {
+            if (Parent == null) return;
+            RequestClose();
             _projectManager.LoadProject();
-            try
-            {
-                RequestClose();
-            }
-            catch (Exception e)
-            {
-            }
         }
 
         public void NewProject()
         {
+            if (Parent == null) return;
+            RequestClose();
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.CurrentDiagrams.First().IsOpen = true;
-            try
-            {
-                RequestClose();
-            }
-            catch (Exception e)
-            {
-            }
         }
     }
 }

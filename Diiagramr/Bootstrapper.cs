@@ -24,7 +24,8 @@ namespace Diiagramr
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
-            builder.Bind<LibraryManagerScreenViewModel>().To<LibraryManagerScreenViewModel>().InSingletonScope();
+            builder.Bind<ILibraryManager>().To<LibraryManager>().InSingletonScope();
+            builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
             var viewManagerConfig = new ViewManagerConfig()

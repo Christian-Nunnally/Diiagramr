@@ -6,20 +6,19 @@ using System.Windows.Forms;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ShellScreen;
 
 namespace DiiagramrAPI.Service
 {
     public class ProjectManager : IProjectManager
     {
         private readonly DiagramViewModelFactory _diagramViewModelFactory;
-        private readonly LibraryManagerScreenViewModel _libraryManager;
+        private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
 
         public ProjectManager(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<IProvideNodes> nodeProviderFactory,
-            Func<LibraryManagerScreenViewModel> libraryManagerFactory,
+            Func<ILibraryManager> libraryManagerFactory,
             Func<DiagramViewModelFactory> diagramViewModelFactoryFactory)
         {
             DiagramViewModels = new List<DiagramViewModel>();

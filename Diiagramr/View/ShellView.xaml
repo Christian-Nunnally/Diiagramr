@@ -1,31 +1,67 @@
-<Window x:Class="Diiagramr.View.ShellView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="{Binding WindowTitle}" 
-        Height="450" 
-        Width="800"
-        xmlns:s="https://github.com/canton7/Stylet"
-        xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-        d:DataContext="{d:DesignInstance viewModel:ShellViewModel}">
+<Window
+    x:Class="Diiagramr.View.ShellView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    Title="{Binding WindowTitle}"
+    Width="800"
+    Height="450"
+    d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
+    mc:Ignorable="d">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="Btv" />
+    </Window.Resources>
     <DockPanel>
-        <Menu DockPanel.Dock="Top" Height="20" VerticalAlignment="Top">
+        <Menu
+            Height="20"
+            VerticalAlignment="Top"
+            DockPanel.Dock="Top">
             <MenuItem Header="File">
-                <MenuItem Header="New" Command="{s:Action CreateProject}"></MenuItem>
-                <MenuItem Header="Open" Command="{s:Action LoadProject}"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Save" Command="{s:Action SaveProject}"></MenuItem>
-                <MenuItem Header="Save As" Command="{s:Action SaveAsProject}"></MenuItem>
-                <Separator></Separator>
-                <MenuItem Header="Close" Command="{s:Action Close}"></MenuItem>
+                <MenuItem Command="{s:Action CreateProject}" Header="New" />
+                <MenuItem Command="{s:Action LoadProject}" Header="Open" />
+                <Separator />
+                <MenuItem Command="{s:Action SaveProject}" Header="Save" />
+                <MenuItem Command="{s:Action SaveAsProject}" Header="Save As" />
+                <Separator />
+                <MenuItem Command="{s:Action Close}" Header="Close" />
             </MenuItem>
             <MenuItem Header="Tools">
-                <MenuItem Header="Libraries" Command="{s:Action ManageLibraries}"></MenuItem>
+                <MenuItem Command="{s:Action ManageLibraries}" Header="Libraries" />
             </MenuItem>
         </Menu>
-        <ContentControl s:View.Model="{Binding ActiveItem}"/>
+        <Grid>
+            <ContentControl s:View.Model="{Binding ActiveItem}" />
+            <Border MouseDown="{s:Action CloseWindow}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
+                <DockPanel
+                    MaxWidth="{Binding ActiveWindow.MaxWidth}"
+                    MaxHeight="{Binding ActiveWindow.MaxHeight}"
+                    Margin="100"
+                    Background="Transparent">
+                    <Label
+                        Height="48"
+                        HorizontalContentAlignment="Center"
+                        VerticalContentAlignment="Top"
+                        Content="{Binding ActiveWindow.Title}"
+                        DockPanel.Dock="Top"
+                        FontSize="24"
+                        IsHitTestVisible="False" />
+                    <ContentControl s:View.Model="{Binding ActiveWindow}" />
+                </DockPanel>
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="Background" Value="#45000000" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseDirectlyOver" Value="True">
+                                <Setter Property="Background" Value="#25000000" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </Grid>
     </DockPanel>
 </Window>
 
