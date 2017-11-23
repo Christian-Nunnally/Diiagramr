@@ -10,6 +10,7 @@
     Width="800"
     Height="450"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
+    Closing="{s:Action WindowClosing}"
     mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />

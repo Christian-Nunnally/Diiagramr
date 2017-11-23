@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 using Diiagramr.View.ShellWindow;
 using DiiagramrAPI.Service.Interfaces;
@@ -29,12 +30,12 @@ namespace DiiagramrAPI.ViewModel
 
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
-            Func<LibraryManagerWindowViewModel> libraryScreenScreenViewModelFactory,
+            Func<LibraryManagerWindowViewModel> libraryManagerWindowViewModelFactory,
             Func<StartScreenViewModel> startScreenScreenViewModelFactory,
             Func<IProjectManager> projectManagerFactory)
         {
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
-            LibraryManagerWindowViewModel = libraryScreenScreenViewModelFactory.Invoke();
+            LibraryManagerWindowViewModel = libraryManagerWindowViewModelFactory.Invoke();
             StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
 
             _projectManager = projectManagerFactory.Invoke();
@@ -106,13 +107,15 @@ namespace DiiagramrAPI.ViewModel
 
         public void Close()
         {
-            RequestClose();
+            if (_projectManager.CloseProject())
+            {
+                ShowScreen(StartScreenViewModel);
+            }
         }
 
-        public void SaveAndClose()
+        public void WindowClosing(object sender, CancelEventArgs e)
         {
-            _projectManager.SaveProject();
-            RequestClose();
+            if (!_projectManager.CloseProject()) e.Cancel = true;
         }
     }
 }

@@ -79,6 +79,8 @@ namespace DiiagramrAPI.Service
                     return false;
                 if (result == DialogResult.Yes)
                     _projectFileService.SaveProject(CurrentProject, false);
+                else if (result == DialogResult.No)
+                    CurrentProject.IsDirty = false;
             }
             return true;
         }

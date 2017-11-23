@@ -1,293 +1,88 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.2">
-  <zoom_level>10</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>270</x>
-      <y>0</y>
-      <w>370</w>
-      <h>100</h>
+      <x>490</x>
+      <y>259</y>
+      <w>259</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>ShellViewModel
 --
-Responsibilities
--- Host for other shell view models
--- Provides commands for creating and saving projects
+- Host for screens, windows, and toolbar commands
 bg=green</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>260</x>
-      <y>370</y>
-      <w>370</w>
-      <h>110</h>
+      <x>798</x>
+      <y>546</y>
+      <w>161</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>DiagramViewModel
 --
-Responsibilities
--- Allows user to edit diagrams
--- Visually displays nodes
--- Visually displays wires
+- Allows user to edit diagrams
+- Visually displays nodes
+- Visually displays wires
 bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>10</x>
-      <y>550</y>
-      <w>370</w>
-      <h>100</h>
+      <x>686</x>
+      <y>665</y>
+      <w>175</w>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>AbstractNodeViewModel
+    <panel_attributes>PluginNode
 --
-Responsibilities
--- Represents a model node
--- Visually displays terminals on node
+- Represents a model node
+- Visually displays terminals on node
 bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>20</x>
-      <y>720</y>
-      <w>370</w>
-      <h>100</h>
+      <x>686</x>
+      <y>777</y>
+      <w>175</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>TerminalViewModel
 --
-Responsibilities
--- Represents a model terminal
--- Allows user to connect to other terminals
+- Represents a model terminal
+- Allows user to connect to other terminals
 bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>450</x>
-      <y>550</y>
-      <w>370</w>
-      <h>100</h>
+      <x>882</x>
+      <y>665</y>
+      <w>154</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>WireViewModel
 --
-Responsibilities
--- Represents a model wire
--- Wire routing logic between terminals
+- Represents a model wire
+- Wire routing logic between terminals
 bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>310</x>
-      <y>90</y>
-      <w>30</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>0</x>
-      <y>190</y>
-      <w>370</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>ProjectExplorerViewModel
---
-Responsibilities
--- Displays project structure to user
--- Allows user to change project and diagram names
-bg=cyan</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>510</x>
-      <y>190</y>
-      <w>370</w>
-      <h>110</h>
-    </coordinates>
-    <panel_attributes>DiagramWellViewModel
---
-Responsibilities
--- Displays open diagrams
--- Allows user to close diagrams
-bg=cyan</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>570</x>
-      <y>90</y>
-      <w>30</w>
-      <h>120</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>570</x>
-      <y>290</y>
-      <w>50</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>310</x>
-      <y>470</y>
-      <w>50</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>170</x>
-      <y>640</y>
-      <w>50</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>560</x>
-      <y>470</y>
-      <w>50</w>
-      <h>100</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-
-m1=0..n</panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1020</x>
-      <y>80</y>
-      <w>360</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>/IProjectManager/
---
-Responsibilities
--- Contains currently open project
--- Allows dependencies to save/load/open/etc. project
--- Provides events for project changes
--- Gives dependencies access to project
-
-bg=orange</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>630</x>
-      <y>80</y>
-      <w>410</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>390.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>870</x>
-      <y>190</y>
-      <w>170</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>150.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>340</x>
-      <y>130</y>
-      <w>700</w>
-      <h>80</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>680.0;10.0;10.0;10.0;10.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1500</x>
-      <y>80</y>
-      <w>360</w>
-      <h>130</h>
-    </coordinates>
-    <panel_attributes>/IProjectFileService/
---
-Responsibilities
--- Serializing projects and saving to disk
--- Deserializing projects from disk
-
-bg=orange</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1370</x>
-      <y>140</y>
-      <w>150</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1500</x>
-      <y>290</y>
-      <w>360</w>
-      <h>80</h>
-    </coordinates>
-    <panel_attributes>/IDirectoryService/
---
-Responsibilities
--- Interacts with system file structure
-
-bg=orange
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>1660</x>
-      <y>200</y>
-      <w>30</w>
-      <h>110</h>
+      <x>539</x>
+      <y>287</y>
+      <w>21</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
@@ -295,44 +90,105 @@ bg=orange
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>990</x>
-      <y>370</y>
-      <w>370</w>
-      <h>110</h>
+      <x>581</x>
+      <y>455</y>
+      <w>203</w>
+      <h>49</h>
     </coordinates>
-    <panel_attributes>NodeSelectorViewModel
+    <panel_attributes>ProjectExplorerViewModel
 --
-Responsibilities
--- Allows user to select and create new nodes
-bg=cyan
-</panel_attributes>
+- Displays list of diagrams
+- Allows user to add/remove/copy diagrams
+bg=cyan</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>798</x>
+      <y>455</y>
+      <w>161</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>DiagramWellViewModel
+--
+- Displays open diagrams
+bg=cyan</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>810</x>
-      <y>290</y>
-      <w>200</w>
-      <h>160</h>
+      <x>714</x>
+      <y>287</y>
+      <w>21</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
-    <additional_attributes>180.0;140.0;10.0;140.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>826</x>
+      <y>497</y>
+      <w>35</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>826</x>
+      <y>616</y>
+      <w>35</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>826</x>
+      <y>728</y>
+      <w>35</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>931</x>
+      <y>616</y>
+      <w>35</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=0..n</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>990</x>
-      <y>550</y>
-      <w>370</w>
-      <h>110</h>
+      <x>1155</x>
+      <y>238</y>
+      <w>252</w>
+      <h>70</h>
     </coordinates>
-    <panel_attributes>IProvideNodes
+    <panel_attributes>/IProjectManager/
 --
-Responsibilities
--- Finds plugin nodes 
--- Stores dictionary of available nodes
--- Factory for new nodes
+- Contains currently open project
+- Allows dependencies to save/load/open/etc. project
+- Provides events for project changes
+- Gives dependencies access to project
 
 bg=orange</panel_attributes>
     <additional_attributes/>
@@ -340,13 +196,365 @@ bg=orange</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1170</x>
-      <y>470</y>
-      <w>30</w>
-      <h>100</h>
+      <x>742</x>
+      <y>280</y>
+      <w>427</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>590.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>931</x>
+      <y>280</y>
+      <w>238</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>320.0;10.0;10.0;10.0;10.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>756</x>
+      <y>280</y>
+      <w>413</w>
+      <h>189</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>570.0;10.0;260.0;10.0;260.0;210.0;10.0;210.0;10.0;250.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1435</x>
+      <y>252</y>
+      <w>182</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>/IProjectFileService/
+--
+- Serializing projects and saving to disk
+- Deserializing projects from disk
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1400</x>
+      <y>266</y>
+      <w>49</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1358</x>
+      <y>343</y>
+      <w>161</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>/IDirectoryService/
+--
+- Interacts with system file structure
+bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1470</x>
+      <y>294</y>
+      <w>21</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>546</y>
+      <w>259</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>NodeSelectorViewModel
+--
+- Allows user to select and create new nodes
+bg=cyan
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>952</x>
+      <y>567</y>
+      <w>112</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>868</x>
+      <y>70</y>
+      <w>259</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>IProvideNodes
+--
+- Finds plugin nodes 
+- Stores dictionary of available nodes
+- Factory for new nodes
+
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1064</x>
+      <y>140</y>
+      <w>133</w>
+      <h>420</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 </panel_attributes>
-    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;510.0;170.0;510.0;170.0;580.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>350</y>
+      <w>175</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>StartScreenViewModel
+--
+- Allow user to load or create a project
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>672</x>
+      <y>350</y>
+      <w>196</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>ProjectScreenViewModel
+--
+- Allows users to work on a project
+bg=yellow</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>714</x>
+      <y>378</y>
+      <w>21</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>826</x>
+      <y>378</y>
+      <w>21</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>644</x>
+      <y>280</y>
+      <w>525</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>730.0;10.0;420.0;10.0;420.0;60.0;10.0;60.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>854</x>
+      <y>728</y>
+      <w>98</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>120.0;10.0;120.0;110.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1533</x>
+      <y>343</y>
+      <w>161</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>/IProjectLoadSave/
+--
+- Serializes project
+bg=orange
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1561</x>
+      <y>294</y>
+      <w>21</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>259</x>
+      <y>350</y>
+      <w>210</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>LibraryManagerWindowViewModel
+--
+- Manages libraries
+bg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>259</x>
+      <y>413</y>
+      <w>210</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>LibrarySourceManagerWindowViewModel
+--
+- Manages libraries sources
+bg=gray</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>357</x>
+      <y>378</y>
+      <w>21</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>357</x>
+      <y>266</y>
+      <w>147</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;120.0;10.0;10.0;190.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>371</y>
+      <w>217</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>/ILibraryManager/
+--
+- Tracks list of repo sources for library plugins
+- Downloads library plugins
+
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>371</y>
+      <w>63</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>210</x>
+      <y>413</y>
+      <w>63</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;70.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>287</y>
+      <w>217</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>/IPluginLoader/
+--
+- Loads the plugins from a directory
+- Should register new nodes with node provider
+
+bg=orange</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>168</x>
+      <y>140</y>
+      <w>798</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>1120.0;10.0;1120.0;90.0;10.0;90.0;10.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>168</x>
+      <y>336</y>
+      <w>21</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
 </diagram>

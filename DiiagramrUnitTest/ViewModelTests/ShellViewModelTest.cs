@@ -13,7 +13,9 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class ShellViewModelTest
     {
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;
+        private Mock<ILibraryManager> _libraryManagerMoq;
         private Mock<LibraryManagerWindowViewModel> _libraryManagerViewModelMoq;
+        private Mock<LibrarySourceManagerWindowViewModel> _librarySourceManagerViewModelMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
         private Mock<NodeSelectorViewModel> _nodeSelectorViewModelMoq;
         private Mock<IPluginLoader> _pluginLoaderMoq;
@@ -29,6 +31,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq = new Mock<IProjectManager>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _pluginLoaderMoq = new Mock<IPluginLoader>();
+            _libraryManagerMoq = new Mock<ILibraryManager>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>(
                 (Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
             _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>((Func<IProjectManager>) (() => _projectManagerMoq.Object));
@@ -38,8 +41,11 @@ namespace DiiagramrUnitTests.ViewModelTests
                 (Func<ProjectExplorerViewModel>) (() => _projectExplorerViewModelMoq.Object),
                 (Func<DiagramWellViewModel>) (() => _diagramWellViewModelMoq.Object),
                 (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+            _librarySourceManagerViewModelMoq = new Mock<LibrarySourceManagerWindowViewModel>(
+                (Func<ILibraryManager>)(() => _libraryManagerMoq.Object));
             _libraryManagerViewModelMoq = new Mock<LibraryManagerWindowViewModel>(
-                (Func<IPluginLoader>) (() => _pluginLoaderMoq.Object));
+                (Func<ILibraryManager>)(() => _libraryManagerMoq.Object),
+                (Func<LibrarySourceManagerWindowViewModel>) (() => _librarySourceManagerViewModelMoq.Object));
             _startScreenViewModelMoq = new Mock<StartScreenViewModel>(
                 (Func<IProjectManager>) (() => _projectManagerMoq.Object));
             _shellViewModel = new ShellViewModel(
@@ -82,20 +88,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             _shellViewModel.SaveAsProject();
             _projectManagerMoq.Verify(m => m.SaveAsProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestSaveAndClose_CallsSaveProject()
-        {
-            _shellViewModel.SaveAndClose();
-            _projectManagerMoq.Verify(m => m.SaveProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestSaveAndClose_CallsCloseProject()
-        {
-            _shellViewModel.SaveAndClose();
-            _projectManagerMoq.Verify(m => m.CloseProject(), Times.Once);
         }
 
         [TestMethod]

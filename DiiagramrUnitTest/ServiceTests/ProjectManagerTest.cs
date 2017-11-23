@@ -32,7 +32,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectFileServiceMoq = new Mock<IProjectFileService>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
-            _libraryManagerMoq = new Mock<ILibraryManager>((Func<IPluginLoader>) (() => pluginLoader.Object));
+            _libraryManagerMoq = new Mock<ILibraryManager>();
             _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>) (() => _nodeSelectorViewModelMoq.Object));
             _currentProjectChanged = false;
 
