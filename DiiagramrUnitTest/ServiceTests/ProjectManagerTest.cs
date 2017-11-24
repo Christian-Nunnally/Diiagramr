@@ -8,6 +8,7 @@ using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using DiiagramrAPI.ViewModel.ShellScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

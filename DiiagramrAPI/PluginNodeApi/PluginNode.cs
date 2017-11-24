@@ -33,6 +33,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Height { get; set; }
 
         public bool Dragging { get; set; }
+        public virtual bool ResizeEnabled { get; set; }
+        public bool ResizerVisible => ResizeEnabled && IsSelected;
 
         public bool TitleVisible => IsSelected || MouseOverBorder;
         public virtual bool IsSelected { get; set; }
@@ -47,7 +49,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
-        public event Action DragStarted; 
+        public event Action DragStarted;
         public event Action DragStopped;
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
@@ -115,8 +117,16 @@ namespace DiiagramrAPI.PluginNodeApi
             if (NodeModel == null) return;
             if (propertyName.Equals(nameof(X))) NodeModel.X = X;
             else if (propertyName.Equals(nameof(Y))) NodeModel.Y = Y;
-            else if (propertyName.Equals(nameof(Width))) NodeModel.Width = Width;
-            else if (propertyName.Equals(nameof(Height))) NodeModel.Height = Height;
+            else if (propertyName.Equals(nameof(Width)))
+            {
+                NodeModel.Width = Width;
+                FixAllTerminals();
+            }
+            else if (propertyName.Equals(nameof(Height)))
+            {
+                NodeModel.Height = Height;
+                FixAllTerminals();
+            }
             else if (propertyName.Equals(nameof(Dragging)))
             {
                 if (Dragging) DragStarted?.Invoke();
@@ -168,6 +178,14 @@ namespace DiiagramrAPI.PluginNodeApi
             base.OnViewLoaded();
             _viewLoadedActions.ForEach(action => action.Invoke());
             _viewLoadedActions.Clear();
+        }
+
+        private void FixAllTerminals()
+        {
+            FixOtherTerminalsOnEdge(Direction.North);
+            FixOtherTerminalsOnEdge(Direction.East);
+            FixOtherTerminalsOnEdge(Direction.South);
+            FixOtherTerminalsOnEdge(Direction.West);
         }
 
         private void FixOtherTerminalsOnEdge(Direction edge)

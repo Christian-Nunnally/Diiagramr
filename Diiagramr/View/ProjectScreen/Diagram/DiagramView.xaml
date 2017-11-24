@@ -5,12 +5,13 @@
     xmlns:customControls="clr-namespace:DiiagramrAPI.CustomControls;assembly=DiiagramrAPI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
+    xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:view="clr-namespace:Diiagramr.View"
     xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-    d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
+    d:DataContext="{d:DesignInstance diagram1:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
     AllowDrop="True"
@@ -23,6 +24,8 @@
     <UserControl.Resources>
         <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
             <Setter Property="Fill" Value="Transparent" />
+            <Setter Property="RadiusX" Value="0.5" />
+            <Setter Property="RadiusY" Value="0.5" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Trigger.EnterActions>
@@ -95,8 +98,8 @@
         </Style>
 
         <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
-            <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode, Mode=TwoWay}" />
-            <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode, Mode=TwoWay}" />
+            <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
+            <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode}" />
             <Setter Property="ContentTemplate">
                 <Setter.Value>
                     <DataTemplate>
@@ -117,16 +120,19 @@
 
         <Style x:Key="SelectionStyle" TargetType="Rectangle">
             <Setter Property="Fill" Value="DodgerBlue" />
+            <Setter Property="RadiusX" Value="0.5" />
+            <Setter Property="RadiusY" Value="0.5" />
             <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeSelectionBorderThickness}" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
 
         <Style x:Key="NodeBorderStyle" TargetType="Border">
             <Setter Property="Background" Value="White" />
+            <Setter Property="CornerRadius" Value="0.5" />
             <Setter Property="BorderBrush" Value="Gray" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Width" Value="{Binding Width}" />
-            <Setter Property="Height" Value="{Binding Height}" />
+            <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
+            <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
             <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}" />
         </Style>
 
@@ -222,6 +228,33 @@
                                                 PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorderHandler}"
                                                 Template="{StaticResource MoveThumbTemplate}" />
 
+                                            <Border
+                                                Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                Width="10"
+                                                Height="10"
+                                                Margin="0,0,5,5"
+                                                HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Background="Transparent"
+                                                BorderThickness="0"
+                                                Visibility="{Binding ResizerVisible, Converter={StaticResource Btv}}">
+                                                <customControls:NodeResizeThumb DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}">
+                                                    <customControls:NodeResizeThumb.Template>
+                                                        <ControlTemplate>
+                                                            <Border
+                                                                Background="Gray"
+                                                                BorderBrush="LightGray"
+                                                                BorderThickness="0.5"
+                                                                CornerRadius="5"
+                                                                Cursor="SizeNWSE" />
+                                                        </ControlTemplate>
+                                                    </customControls:NodeResizeThumb.Template>
+                                                </customControls:NodeResizeThumb>
+                                            </Border>
+
                                             <ItemsControl
                                                 Grid.Row="0"
                                                 Grid.RowSpan="2"
@@ -252,7 +285,7 @@
                                                     s:View.Model="{Binding}"
                                                     IsTabStop="False" />
                                             </Border>
-                                            
+
                                             <Button
                                                 Grid.Row="0"
                                                 Grid.Column="1"

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomControls\IFileDialog.cs" />
+    <Compile Include="CustomControls\NodeResizeThumb.cs" />
     <Compile Include="CustomControls\NodeMoveThumb.cs" />
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />

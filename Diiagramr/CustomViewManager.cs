@@ -12,6 +12,7 @@ using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using Stylet;
 using Diiagramr.View.ShellScreen.ProjectScreen;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using DiiagramrAPI.ViewModel.ShellScreen;
 using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 

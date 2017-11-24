@@ -5,6 +5,7 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 {
@@ -35,7 +36,8 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public override void SetupNode(NodeSetup setup)
         {
-            setup.NodeSize(80, 40);
+            setup.NodeSize(40, 40);
+            setup.EnableResize();
             _nodeSetup = setup;
         }
 
@@ -118,6 +120,17 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             CopyReferencingDiagramAvoidingRecursion();
             RemoveTerminalsForNoLongerExistingIoNodes();
             SyncTerminals();
+
+            AutoSizeNodeToFitTerminals();
+        }
+
+        private void AutoSizeNodeToFitTerminals()
+        {
+            var northTerminalCount = TerminalViewModels.Count(m => m.TerminalModel.Direction == Direction.North);
+            var southTerminalCount = TerminalViewModels.Count(m => m.TerminalModel.Direction == Direction.South);
+            var northSouthMaxTerminals = Math.Max(northTerminalCount, southTerminalCount);
+            var idealWidth = northSouthMaxTerminals * (DiagramConstants.TerminalDiameter + 5) + DiagramConstants.NodeBorderWidth * 2;
+            Width = Math.Max(Width, idealWidth);
         }
 
         private void RemoveTerminalsForNoLongerExistingIoNodes()

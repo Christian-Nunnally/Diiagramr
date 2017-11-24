@@ -14,6 +14,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         {
             setup.NodeSize(40, 40);
             setup.NodeName("Add Node");
+            setup.EnableResize();
             _inputTerminal1 = setup.InputTerminal<int>("Input", Direction.East);
             _inputTerminal2 = setup.InputTerminal<int>("Input", Direction.West);
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);

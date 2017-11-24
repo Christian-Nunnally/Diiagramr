@@ -22,6 +22,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public void TestNodeSize_SetsNodeWidthAndHeight()
         {
             var nodeViewModelMoq = new Mock<PluginNode>();
+            nodeViewModelMoq.SetupGet(n => n.NodeModel).Returns(new Mock<NodeModel>("").Object);
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.NodeSize(30, 40);
 
@@ -37,6 +38,16 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             nodeSetup.NodeName("bob");
 
             nodeViewModelMoq.VerifySet(n => n.Name = "bob");
+        }
+
+        [TestMethod]
+        public void TestEnableResize_SetsResizeEnabledToTrue()
+        {
+            var nodeViewModelMoq = new Mock<PluginNode>();
+            var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
+            nodeSetup.EnableResize();
+
+            nodeViewModelMoq.VerifySet(n => n.ResizeEnabled = true);
         }
 
         [TestMethod]

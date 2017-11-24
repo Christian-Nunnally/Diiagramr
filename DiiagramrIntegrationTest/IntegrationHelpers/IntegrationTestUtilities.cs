@@ -8,6 +8,7 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using DiiagramrAPI.ViewModel.ShellScreen;
 using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

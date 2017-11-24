@@ -29,8 +29,8 @@ namespace DiiagramrAPI.PluginNodeApi
         /// <param name="height">The height of the node.</param>
         public void NodeSize(int width, int height)
         {
-            _nodeViewModel.Width = width;
-            _nodeViewModel.Height = height;
+            if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01) _nodeViewModel.Width = width;
+            if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01) _nodeViewModel.Height = height;
         }
 
         /// <summary>
@@ -40,6 +40,14 @@ namespace DiiagramrAPI.PluginNodeApi
         public void NodeName(string name)
         {
             _nodeViewModel.Name = name;
+        }
+
+        /// <summary>
+        ///     Allows the node to be resized via an adorner that appears when the node is selected.
+        /// </summary>
+        public void EnableResize()
+        {
+            _nodeViewModel.ResizeEnabled = true;
         }
 
         /// <summary>

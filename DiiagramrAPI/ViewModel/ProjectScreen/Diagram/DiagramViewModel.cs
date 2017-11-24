@@ -3,15 +3,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Input;
+using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel.Diagram
+namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
     public class DiagramViewModel : Screen
     {

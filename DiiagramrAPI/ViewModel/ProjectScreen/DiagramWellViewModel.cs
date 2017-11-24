@@ -6,6 +6,7 @@ using System.Linq;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 
 namespace DiiagramrAPI.ViewModel
