@@ -1,14 +1,6 @@
 ﻿using System.Linq;
-using DiiagramrAPI.CustomControls;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.Service;
-using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using DiiagramrAPI.ViewModel.ShellScreen;
-using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
@@ -24,33 +16,8 @@ namespace DiiagramrIntegrationTest
         [TestInitialize]
         public void TestInitialize()
         {
-            IStyletIoCBuilder builder = new StyletIoCBuilder();
-            builder.Bind<ShellViewModel>().ToSelf();
-            builder.Bind<ProjectExplorerViewModel>().ToSelf();
-            builder.Bind<DiagramWellViewModel>().ToSelf();
-            builder.Bind<DiagramViewModel>().ToSelf();
-            builder.Bind<NodeSelectorViewModel>().ToSelf();
-            builder.Bind<ProjectScreenViewModel>().ToSelf();
-            builder.Bind<LibraryManagerWindowViewModel>().ToSelf();
-            builder.Bind<StartScreenViewModel>().ToSelf();
-            builder.Bind<IDirectoryService>().To<DirectoryService>();
-            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
-            builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
-            builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
-            builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
-            builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
-            builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
-            builder.Bind<DiagramViewModelFactory>().ToSelf();
-            _container = builder.BuildContainer();
-
-            var nodeProvider = _container.Get<IProvideNodes>();
-            nodeProvider.RegisterNode(new TestPassthroughNode(), new DependencyModel("", ""));
-            nodeProvider.RegisterNode(new TestIntNode(), new DependencyModel("", ""));
-            nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
-            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
-
-            _shell = _container.Get<ShellViewModel>();
+            _shell = IntegrationTestUtilities.SetupShellViewModel();
+            _container = IntegrationTestUtilities.Container;
         }
 
         [TestMethod]

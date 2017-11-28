@@ -129,7 +129,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             var northTerminalCount = TerminalViewModels.Count(m => m.TerminalModel.Direction == Direction.North);
             var southTerminalCount = TerminalViewModels.Count(m => m.TerminalModel.Direction == Direction.South);
             var northSouthMaxTerminals = Math.Max(northTerminalCount, southTerminalCount);
-            var idealWidth = northSouthMaxTerminals * (DiagramConstants.TerminalDiameter + 5) + DiagramConstants.NodeBorderWidth * 2;
+            var idealWidth = northSouthMaxTerminals * (TerminalViewModel.TerminalDiameter + 5) + DiagramViewModel.NodeBorderWidth * 2;
             Width = Math.Max(Width, idealWidth);
         }
 

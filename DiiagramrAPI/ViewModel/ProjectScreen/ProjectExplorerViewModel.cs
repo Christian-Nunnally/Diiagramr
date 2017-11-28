@@ -40,12 +40,9 @@ namespace DiiagramrAPI.ViewModel
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-                if (SelectedDiagram != null)
-                {
-                    var dataObjectForDiagram = new DataObject(DataFormats.StringFormat, SelectedDiagram);
-                    DragDrop.DoDragDrop((UIElement) sender, dataObjectForDiagram, DragDropEffects.Copy);
-                }
+            if (e.LeftButton != MouseButtonState.Pressed || SelectedDiagram == null) return;
+            var dataObjectForDiagram = new DataObject(DataFormats.StringFormat, SelectedDiagram);
+            DragDrop.DoDragDrop((UIElement) sender, dataObjectForDiagram, DragDropEffects.Copy);
         }
 
         public void DiagramProjectItemMouseUp()

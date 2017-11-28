@@ -50,6 +50,15 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
+        public void TestRegisterNode_RegisterTwoNodeWithSameFullyQualifiedName_OnlyOneNodeReturnedByGetRegisteredNodes()
+        {
+            var otherNodeViewModel = new Mock<PluginNode>();
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", ""));
+            _nodeProvider.RegisterNode(otherNodeViewModel.Object, new DependencyModel("", ""));
+            Assert.AreEqual(1, _nodeProvider.GetRegisteredNodes().Count(m => m == _nodeViewModelMoq.Object));
+        }
+
+        [TestMethod]
         [ExpectedException(typeof(NodeProviderException), "No registered view model for given node.")]
         public void TestLoadNodeViewModelFromNode_ViewModelNotRegistered_ThrowsException()
         {

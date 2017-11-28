@@ -39,7 +39,7 @@ namespace DiiagramrAPI.Model
         public string NodeFullName { get; set; }
 
         [DataMember]
-        public DependencyModel Dependency { get; set; }
+        public virtual DependencyModel Dependency { get; set; }
 
         public virtual PluginNode NodeViewModel
         {

@@ -51,6 +51,12 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
+        public void TestDeleteDiagram_SelectedDiagramNull_NoExceptions()
+        {
+            _projectExplorerViewModel.DeleteDiagram();
+        }
+
+        [TestMethod]
         public void TestProjectChanged_ProjectNull_IsAddDiagramButtonIsFalse()
         {
             _projectManagerMoq.SetupProperty(m => m.CurrentProject);
@@ -90,6 +96,16 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectExplorerViewModel.DiagramProjectItemMouseUp();
 
             diagramMoq.VerifySet(d => d.IsOpen = true);
+        }
+
+        [TestMethod]
+        public void TestDiagramProjectItemMouseUp_DiagramsClosed()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectExplorerViewModel.Diagrams.Add(diagramMoq.Object);
+            _projectExplorerViewModel.DiagramProjectItemMouseUp();
+
+            diagramMoq.VerifySet(d => d.IsOpen = false);
         }
 
         [TestMethod]

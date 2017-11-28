@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 using Castle.Core.Internal;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
@@ -232,6 +233,24 @@ namespace DiiagramrUnitTests.ViewModelTests
             _nodeSelectorViewModel.MouseLeftSelector();
 
             Assert.IsNull(_nodeSelectorViewModel.MousedOverNode);
+        }
+
+        [TestMethod]
+        public void TestLibrarySelect_SetsBackgroundColorToNonWhite()
+        {
+            var library = new Library("");
+            library.Select();
+            var brush = (SolidColorBrush) library.BackgroundBrush;
+            Assert.IsFalse(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
+        }
+
+        [TestMethod]
+        public void TestLibraryUnselect_SetsBackgroundColorToWhite()
+        {
+            var library = new Library("");
+            library.Unselect();
+            var brush = (SolidColorBrush)library.BackgroundBrush;
+            Assert.IsTrue(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
         }
     }
 }

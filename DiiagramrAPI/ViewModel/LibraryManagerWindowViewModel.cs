@@ -1,5 +1,4 @@
 ﻿using System;
-using Diiagramr.View.ShellWindow;
 using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.ViewModel

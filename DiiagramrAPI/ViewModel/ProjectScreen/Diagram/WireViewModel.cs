@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Input;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 
 namespace DiiagramrAPI.ViewModel.Diagram
@@ -19,10 +20,10 @@ namespace DiiagramrAPI.ViewModel.Diagram
             WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += WireOnPropertyChanged;
 
-            X1 = wire.X1 + DiagramConstants.NodeBorderWidth;
-            X2 = wire.X2 + DiagramConstants.NodeBorderWidth;
-            Y1 = wire.Y1 + DiagramConstants.NodeBorderWidth;
-            Y2 = wire.Y2 + DiagramConstants.NodeBorderWidth;
+            X1 = wire.X1 + DiagramViewModel.NodeBorderWidth;
+            X2 = wire.X2 + DiagramViewModel.NodeBorderWidth;
+            Y1 = wire.Y1 + DiagramViewModel.NodeBorderWidth;
+            Y2 = wire.Y2 + DiagramViewModel.NodeBorderWidth;
 
             ConfigureWirePoints();
         }
@@ -38,10 +39,10 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.X2))) X2 = WireModel.X2 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.Y1))) Y1 = WireModel.Y1 + DiagramConstants.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.Y2))) Y2 = WireModel.Y2 + DiagramConstants.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramViewModel.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.X2))) X2 = WireModel.X2 + DiagramViewModel.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.Y1))) Y1 = WireModel.Y1 + DiagramViewModel.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.Y2))) Y2 = WireModel.Y2 + DiagramViewModel.NodeBorderWidth;
 
             if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {

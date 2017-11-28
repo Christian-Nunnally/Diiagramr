@@ -83,6 +83,7 @@
     <Compile Include="ServiceTests\NodeProviderTest.cs" />
     <Compile Include="ServiceTests\ProjectFileServiceTest.cs" />
     <Compile Include="ServiceTests\DiagramCopierTest.cs" />
+    <Compile Include="ServiceTests\LibraryManagerTest.cs" />
     <Compile Include="ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\Diagram\DiagramControlViewModelTest.cs" />
@@ -92,6 +93,8 @@
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\TerminalViewModelTest.cs" />
+    <Compile Include="ViewModelTests\Window\LibrarySourceManagerWindowViewModelTest.cs" />
+    <Compile Include="ViewModelTests\Window\LibraryManagerWindowViewModelTest.cs" />
     <Compile Include="ViewModelTests\WireViewModelTest.cs" />
     <Compile Include="ViewModelTests\NodeSelectorViewModelTest.cs" />
   </ItemGroup>
@@ -108,6 +111,7 @@
   <ItemGroup>
     <EmbeddedResource Include="..\Diiagramr\Properties\Resources.resx">
       <Link>Resources.resx</Link>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <Choose>

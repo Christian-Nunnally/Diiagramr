@@ -6,6 +6,7 @@
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
              xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+             xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
              mc:Ignorable="d" 
              d:DataContext="{d:DesignInstance viewModel:NodeSelectorViewModel}"
              d:DesignWidth="800"
@@ -31,7 +32,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Width" Value="{Binding MousedOverNode.Width}"/>
             <Setter Property="Height" Value="{Binding MousedOverNode.Height}"/>
-            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}"/>
+            <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeBorderThickness}"/>
         </Style>
 
         <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">

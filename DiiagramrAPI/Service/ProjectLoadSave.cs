@@ -17,16 +17,15 @@ namespace DiiagramrAPI.Service
 
         public ProjectModel Open(string fileName)
         {
-            Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            
-            var project = (ProjectModel) _serializer.ReadObject(stream);
-            stream.Close();
-            return project;
+            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            {
+                return (ProjectModel) _serializer.ReadObject(stream);
+            }
         }
 
-        public void Save(ProjectModel project, string name)
+        public void Save(ProjectModel project, string fileName)
         {
-            using (var writer = new FileStream(name, FileMode.Create, FileAccess.ReadWrite))
+            using (var writer = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var w = XmlWriter.Create(writer))
                 {

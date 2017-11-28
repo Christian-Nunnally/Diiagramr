@@ -20,6 +20,7 @@ namespace DiiagramrAPI.Service
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // TODO: Remove this.
         public IProjectManager ProjectManager { get; set; }
 
         public void RegisterNode(PluginNode node, DependencyModel dependency)
@@ -32,6 +33,7 @@ namespace DiiagramrAPI.Service
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
+        // TODO: Refactor this to  handle diagram call nodes better
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
             if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");

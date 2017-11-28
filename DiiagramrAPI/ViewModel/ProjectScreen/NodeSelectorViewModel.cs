@@ -10,6 +10,7 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using PropertyChanged;
 using Stylet;
 
@@ -108,8 +109,8 @@ namespace DiiagramrAPI.ViewModel
             const int workingHeight = 100;
 
             MousedOverNode = VisibleNodesList.First(m => m.Name == node.Name);
-            var totalNodeWidth = MousedOverNode.Width + DiagramConstants.NodeBorderWidth * 2;
-            var totalNodeHeight = MousedOverNode.Height + DiagramConstants.NodeBorderWidth * 2;
+            var totalNodeWidth = MousedOverNode.Width + DiagramViewModel.NodeBorderWidth * 2;
+            var totalNodeHeight = MousedOverNode.Height + DiagramViewModel.NodeBorderWidth * 2;
             PreviewNodeScaleX = workingWidth / totalNodeWidth;
             PreviewNodeScaleY = workingHeight / totalNodeHeight;
 
@@ -135,8 +136,7 @@ namespace DiiagramrAPI.ViewModel
             AddNodes();
         }
     }
-
-    // TODO: Extract this class into own file
+    
     [AddINotifyPropertyChangedInterface]
     public class Library
     {

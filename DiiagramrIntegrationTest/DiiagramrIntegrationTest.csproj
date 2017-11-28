@@ -55,7 +55,8 @@
     <Compile Include="IntegrationHelpers\TestIntNode.cs" />
     <Compile Include="IntegrationHelpers\TestPassthroughNode.cs" />
     <Compile Include="IntegrationHelpers\IntegrationTestUtilities.cs" />
-    <Compile Include="IntegrationTests.cs" />
+    <Compile Include="ExecutionTest.cs" />
+    <Compile Include="LoadSaveTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DiagramCallNodeIntegrationTest.cs" />
   </ItemGroup>

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
@@ -42,14 +43,11 @@ namespace DiiagramrAPI.Service
             _openFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
             _openFileDialog.FileName = "";
 
-            if (_openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                var project = _loadSave.Open(_openFileDialog.FileName);
-                SetComponentsFromPath(project, _openFileDialog.FileName);
-                return project;
-            }
+            if (_openFileDialog.ShowDialog() != DialogResult.OK) return null;
 
-            return null;
+            var project = _loadSave.Open(_openFileDialog.FileName);
+            SetProjectNameFromPath(project, _openFileDialog.FileName);
+            return project;
         }
 
         public DialogResult ConfirmProjectClose()
@@ -71,7 +69,7 @@ namespace DiiagramrAPI.Service
             if (_saveFileDialog.ShowDialog() != DialogResult.OK) return false;
 
             SerializeAndSave(project, _saveFileDialog.FileName);
-            SetComponentsFromPath(project, _saveFileDialog.FileName);
+            SetProjectNameFromPath(project, _saveFileDialog.FileName);
             return true;
         }
 
@@ -80,12 +78,12 @@ namespace DiiagramrAPI.Service
             _loadSave.Save(project, name);
         }
 
-        private void SetComponentsFromPath(ProjectModel project, string path)
+        private void SetProjectNameFromPath(ProjectModel project, string path)
         {
-            var lastBackslashIndex = path.LastIndexOf("\\");
+            var lastBackslashIndex = path.LastIndexOf("\\", StringComparison.Ordinal);
             if (lastBackslashIndex == -1) return;
             ProjectDirectory = path.Substring(0, lastBackslashIndex);
-            var lastPeriod = path.LastIndexOf(".");
+            var lastPeriod = path.LastIndexOf(".", StringComparison.Ordinal);
             project.Name = path.Substring(lastBackslashIndex + 1, lastPeriod - lastBackslashIndex - 1);
         }
     }

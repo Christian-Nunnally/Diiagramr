@@ -4,14 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customControls="clr-namespace:DiiagramrAPI.CustomControls;assembly=DiiagramrAPI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
-    xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
+    xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:view="clr-namespace:Diiagramr.View"
     xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-    d:DataContext="{d:DesignInstance diagram1:DiagramViewModel}"
+    d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
     AllowDrop="True"
@@ -114,15 +113,15 @@
             <Setter Property="Background" Value="IndianRed" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Margin" Value="0" />
-            <Setter Property="Width" Value="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
-            <Setter Property="Height" Value="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
+            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
+            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
         </Style>
 
         <Style x:Key="SelectionStyle" TargetType="Rectangle">
             <Setter Property="Fill" Value="DodgerBlue" />
             <Setter Property="RadiusX" Value="0.5" />
             <Setter Property="RadiusY" Value="0.5" />
-            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeSelectionBorderThickness}" />
+            <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
 
@@ -133,7 +132,7 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
             <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
-            <Setter Property="Margin" Value="{x:Static viewModel:DiagramConstants.NodeBorderThickness}" />
+            <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeBorderThickness}" />
         </Style>
 
         <VisualBrush
@@ -189,10 +188,10 @@
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
-                                                <ColumnDefinition MaxWidth="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
+                                                <ColumnDefinition MaxWidth="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
-                                                <RowDefinition MaxHeight="{x:Static viewModel:DiagramConstants.NodeBorderWidth}" />
+                                                <RowDefinition MaxHeight="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                                 <RowDefinition Height="*" />
                                             </Grid.RowDefinitions>
 

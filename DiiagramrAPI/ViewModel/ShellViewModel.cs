@@ -2,10 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
-using Diiagramr.View.ShellWindow;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ShellScreen;
-using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using Stylet;
 
 namespace DiiagramrAPI.ViewModel
@@ -60,8 +59,7 @@ namespace DiiagramrAPI.ViewModel
         public void CloseWindow()
         {
             ActiveWindow.OpenWindow -= OpenWindow;
-            if (WindowStack.Count > 0) ActiveWindow = WindowStack.Pop();
-            else ActiveWindow = null;
+            ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
         }
 
         private void ProjectManagerOnCurrentProjectChanged()

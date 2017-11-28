@@ -123,10 +123,9 @@ namespace DiiagramrAPI.Service
 
         private void DownloadProjectDependencies()
         {
-            if (CurrentProject == null) return;
             foreach (var diagram in CurrentProject.Diagrams)
-            foreach (var node in diagram.Nodes)
-                _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
+                foreach (var node in diagram.Nodes)
+                    _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
         }
     }
 }

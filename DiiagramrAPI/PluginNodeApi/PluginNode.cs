@@ -8,6 +8,7 @@ using System.Windows.Input;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 
 namespace DiiagramrAPI.PluginNodeApi

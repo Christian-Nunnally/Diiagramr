@@ -2,6 +2,7 @@
 using System.Linq;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.PluginNodeApi
 {

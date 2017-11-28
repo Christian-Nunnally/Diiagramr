@@ -1,5 +1,4 @@
 ﻿using System;
-using Diiagramr.View.ShellWindow;
 using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.ViewModel
@@ -11,7 +10,7 @@ namespace DiiagramrAPI.ViewModel
             LibraryManager = libraryManagerFactory.Invoke();
         }
 
-        public ILibraryManager LibraryManager { get; set; }
+        public ILibraryManager LibraryManager { get; }
         public string SelectedSource { get; set; }
         public string SourceTextBoxText { get; set; }
 

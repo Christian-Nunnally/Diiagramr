@@ -8,9 +8,9 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using DiiagramrAPI.ViewModel.ShellScreen;
-using DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
 
@@ -36,6 +36,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<StartScreenViewModel>().ToSelf();
                 builder.Bind<IDirectoryService>().To<DirectoryService>();
                 builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
+                builder.Bind<ILibraryManager>().To<LibraryManager>();
+                builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();
                 builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
                 builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
                 builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
@@ -46,13 +48,13 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 _container = builder.BuildContainer();
                 return _container;
             }
-
         }
 
         public static ShellViewModel SetupShellViewModel()
         {
             var nodeProvider = Container.Get<IProvideNodes>();
             nodeProvider.RegisterNode(new TestPassthroughNode(), new DependencyModel("", ""));
+            nodeProvider.RegisterNode(new TestIntNode(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", ""));
             nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", ""));
 
@@ -87,13 +89,13 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             nodeSelector.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
             diagramViewModel.MouseMoved(pt);
-            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
-            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Height / 2, diagramViewModel.InsertingNodeViewModel.Y);
+            Assert.AreEqual(ptX - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
+            Assert.AreEqual(ptY - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Height / 2, diagramViewModel.InsertingNodeViewModel.Y);
             diagramViewModel.PreviewLeftMouseButtonDown(pt);
             diagramViewModel.LeftMouseButtonDown(pt);
             var placedNode = diagramViewModel.NodeViewModels.Last();
-            Assert.AreEqual(ptX - DiagramConstants.NodeBorderWidth - placedNode.Width / 2, placedNode.X);
-            Assert.AreEqual(ptY - DiagramConstants.NodeBorderWidth - placedNode.Height / 2, placedNode.Y);
+            Assert.AreEqual(ptX - DiagramViewModel.NodeBorderWidth - placedNode.Width / 2, placedNode.X);
+            Assert.AreEqual(ptY - DiagramViewModel.NodeBorderWidth - placedNode.Height / 2, placedNode.Y);
             return placedNode;
         }
 

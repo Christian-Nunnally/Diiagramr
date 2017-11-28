@@ -26,9 +26,9 @@ namespace DiiagramrAPI.Service
             UpdateInstalledLibraries();
         }
 
-        public ObservableCollection<string> Sources { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> InstalledLibraryNames { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; set; } = new ObservableCollection<LibraryNameToPath>();
+        public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> InstalledLibraryNames { get; } = new ObservableCollection<string>();
+        public ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; } = new ObservableCollection<LibraryNameToPath>();
 
         public bool AddSource(string sourceUrl)
         {

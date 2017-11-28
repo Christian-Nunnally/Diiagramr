@@ -1,5 +1,6 @@
 ﻿using System;
 using DiiagramrAPI.Model;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.ViewModel.Diagram
 {

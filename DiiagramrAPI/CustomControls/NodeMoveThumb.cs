@@ -2,7 +2,7 @@
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.CustomControls
 {
@@ -22,15 +22,15 @@ namespace DiiagramrAPI.CustomControls
 
             if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl)) return;
 
-            node.X = RoundToNearest((int)node.X, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
-            node.Y = RoundToNearest((int)node.Y, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+            node.X = RoundToNearest((int) node.X, DiagramViewModel.GridSnapInterval) - DiagramViewModel.NodeBorderWidth + 1;
+            node.Y = RoundToNearest((int) node.Y, DiagramViewModel.GridSnapInterval) - DiagramViewModel.NodeBorderWidth + 1;
         }
 
         private static int RoundToNearest(int value, int multiple)
         {
             var rem = value % multiple;
             var result = value - rem;
-            if (rem > (multiple / 2))
+            if (rem > multiple / 2)
                 result += multiple;
             return result;
         }

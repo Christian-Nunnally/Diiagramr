@@ -4,12 +4,16 @@ using System.Windows;
 using System.Windows.Input;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.ViewModel.Diagram;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel.Diagram
+namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
     public class TerminalViewModel : Screen
     {
+        public static CornerRadius TerminalCornerRadius = new CornerRadius(2);
+        public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
+
         private object _data;
 
         public TerminalViewModel(TerminalModel terminal)

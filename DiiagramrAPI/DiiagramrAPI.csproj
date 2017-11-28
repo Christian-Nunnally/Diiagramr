@@ -91,7 +91,6 @@
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="ViewModel\AbstractShellWindow.cs" />
     <Compile Include="ViewModel\LibrarySourceManagerWindowViewModel.cs" />
-    <Compile Include="ViewModel\ProjectScreen\DiagramConstants.cs" />
     <Compile Include="ViewModel\ProjectScreen\DiagramWellViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\AddNodeViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\DiagramCallNodeViewModel.cs" />

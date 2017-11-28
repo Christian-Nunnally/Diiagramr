@@ -18,6 +18,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
     public class DiagramViewModel : Screen
     {
+        public const double NodeBorderWidth = 10;
+        public const int GridSnapInterval = 40;
+        public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
+        public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
+
         private readonly IProvideNodes _nodeProvider;
         private PluginNode _insertingNodeViewModel;
 
@@ -39,12 +44,12 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
             if (diagram.Nodes != null)
-                foreach (var abstractNode in diagram.Nodes)
+                foreach (var nodeModel in diagram.Nodes)
                 {
-                    var viewModel = nodeProvider.LoadNodeViewModelFromNode(abstractNode);
-                    abstractNode.SetTerminalsPropertyChanged();
-                    AddNodeViewModel(viewModel);
+                    var viewModel = nodeProvider.LoadNodeViewModelFromNode(nodeModel);
+                    nodeModel.SetTerminalsPropertyChanged();
 
+                    AddNodeViewModel(viewModel);
                     AddWiresForNode(viewModel);
                 }
         }
@@ -305,8 +310,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (!controlKeyPressed)
             {
-                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
-                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, DiagramConstants.GridSnapInterval) - DiagramConstants.NodeBorderWidth + 1;
+                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, DiagramViewModel.GridSnapInterval) - DiagramViewModel.NodeBorderWidth + 1;
+                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, DiagramViewModel.GridSnapInterval) - DiagramViewModel.NodeBorderWidth + 1;
             }
 
             InsertingNodeViewModel = null;
@@ -369,8 +374,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void MouseMoved(Point mouseLocation)
         {
             if (InsertingNodeViewModel == null) return;
-            InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - DiagramConstants.NodeBorderWidth;
-            InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - DiagramConstants.NodeBorderWidth;
+            InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - DiagramViewModel.NodeBorderWidth;
+            InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - DiagramViewModel.NodeBorderWidth;
         }
 
         #endregion

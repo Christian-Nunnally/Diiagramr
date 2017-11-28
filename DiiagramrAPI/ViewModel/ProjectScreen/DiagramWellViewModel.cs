@@ -5,11 +5,10 @@ using System.ComponentModel;
 using System.Linq;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.ViewModel.ProjectScreen
 {
     public class DiagramWellViewModel : Conductor<DiagramViewModel>.Collection.OneActive
     {
@@ -115,19 +114,9 @@ namespace DiiagramrAPI.ViewModel
                     CloseActiveDiagram();
                     return;
                 }
-                ReopenActiveDiagram();
                 if (oldActiveItem != diagramViewModelSender)
                     ActiveItem = oldActiveItem;
             }
-        }
-
-        private void ReopenActiveDiagram()
-        {
-            var activeDiagram = ActiveItem;
-            var indexOfActive = Items.IndexOf(ActiveItem);
-            ActiveItem.RequestClose();
-            Items.Insert(indexOfActive, activeDiagram);
-            ActiveItem = activeDiagram;
         }
 
         public void CloseActiveDiagram()

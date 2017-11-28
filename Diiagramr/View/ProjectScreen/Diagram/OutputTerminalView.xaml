@@ -1,31 +1,34 @@
-﻿<UserControl x:Class="Diiagramr.View.Diagram.OutputTerminalView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
-             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-             mc:Ignorable="d"
-             Width="{x:Static viewModel:DiagramConstants.TerminalDiameter}" 
-             Height="{x:Static viewModel:DiagramConstants.TerminalDiameter}"
-             d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}">
+﻿<UserControl
+    x:Class="Diiagramr.View.Diagram.OutputTerminalView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
+    xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
+    Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
+    d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}"
+    mc:Ignorable="d">
     <Grid RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
-            <RotateTransform Angle="{Binding TerminalRotation}"></RotateTransform>
+            <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
-        <Label Content="{Binding Name}" 
-               Foreground="Transparent" 
-               FontFamily="Verdana" 
-               FontSize="2"
-               Grid.RowSpan="2" 
-               HorizontalContentAlignment="Center" 
-               IsHitTestVisible="False"
-               RenderTransformOrigin="0.5, 0">
+        <Label
+            Grid.RowSpan="2"
+            HorizontalContentAlignment="Center"
+            Content="{Binding Name}"
+            FontFamily="Verdana"
+            FontSize="2"
+            Foreground="Transparent"
+            IsHitTestVisible="False"
+            RenderTransformOrigin="0.5, 0">
             <Label.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleX="4.5" ScaleY="4.5"></ScaleTransform>
-                    <TranslateTransform X="0" Y="-35"/>
+                    <ScaleTransform ScaleX="4.5" ScaleY="4.5" />
+                    <TranslateTransform X="0" Y="-35" />
                 </TransformGroup>
 
             </Label.RenderTransform>
@@ -36,18 +39,20 @@
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.05"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="#F667" />
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="#F667"
+                                            Duration="0:0:0.05" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
                             <DataTrigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.25"
-                                                                    Storyboard.TargetProperty="Foreground.Color"
-                                                                    To="Transparent" />
+                                        <ColorAnimation
+                                            Storyboard.TargetProperty="Foreground.Color"
+                                            To="Transparent"
+                                            Duration="0:0:0.25" />
                                     </Storyboard>
                                 </BeginStoryboard>
                             </DataTrigger.ExitActions>
@@ -56,16 +61,17 @@
                 </Style>
             </Label.Style>
         </Label>
-        <Border AllowDrop="True"
-                Drop="{s:Action DropEventHandler}"
-                MouseMove="{s:Action MouseMove}"
-                MouseDown="{s:Action TerminalMouseDown}"
-                MouseEnter="{s:Action MouseEntered}"
-                MouseLeave="{s:Action MouseLeft}"
-                CornerRadius="{x:Static viewModel:DiagramConstants.TerminalCornerRadius}">
+        <Border
+            AllowDrop="True"
+            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
+            Drop="{s:Action DropEventHandler}"
+            MouseDown="{s:Action TerminalMouseDown}"
+            MouseEnter="{s:Action MouseEntered}"
+            MouseLeave="{s:Action MouseLeft}"
+            MouseMove="{s:Action MouseMove}">
             <Border.Style>
                 <Style>
-                    <Setter Property="Border.Background" Value="#f888"/>
+                    <Setter Property="Border.Background" Value="#f888" />
                     <Style.Triggers>
                         <Trigger Property="Border.IsMouseOver" Value="True">
                             <Setter Property="Border.Background" Value="RoyalBlue" />
@@ -73,7 +79,17 @@
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <Line HorizontalAlignment="Center" IsHitTestVisible="False" StrokeStartLineCap="Triangle" StrokeEndLineCap="Flat" StrokeThickness="6" Stroke="#f555" Y1="5" Y2="7" Margin="10,0,0,0" Width="10"></Line>
+            <Line
+                Width="10"
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center"
+                IsHitTestVisible="False"
+                Stroke="#f555"
+                StrokeEndLineCap="Flat"
+                StrokeStartLineCap="Triangle"
+                StrokeThickness="6"
+                Y1="5"
+                Y2="7" />
         </Border>
     </Grid>
 </UserControl>

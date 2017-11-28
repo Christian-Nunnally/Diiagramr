@@ -4,9 +4,9 @@ namespace DiiagramrAPI.Service.Interfaces
 {
     public interface ILibraryManager
     {
-        ObservableCollection<string> Sources { get; set; }
-        ObservableCollection<string> InstalledLibraryNames { get; set; }
-        ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; set; }
+        ObservableCollection<string> Sources { get; }
+        ObservableCollection<string> InstalledLibraryNames { get; }
+        ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; }
 
         bool AddSource(string sourceUrl);
 

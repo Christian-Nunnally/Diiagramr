@@ -3,6 +3,7 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -38,10 +39,10 @@ namespace DiiagramrUnitTests.ViewModelTests
             wireMoq.SetupGet(m => m.Y2).Returns(4);
             var wireViewModel = new WireViewModel(wireMoq.Object);
 
-            Assert.AreEqual(wireMoq.Object.X1 + DiagramConstants.NodeBorderWidth, wireViewModel.X1);
-            Assert.AreEqual(wireMoq.Object.Y1 + DiagramConstants.NodeBorderWidth, wireViewModel.Y1);
-            Assert.AreEqual(wireMoq.Object.X2 + DiagramConstants.NodeBorderWidth, wireViewModel.X2);
-            Assert.AreEqual(wireMoq.Object.Y2 + DiagramConstants.NodeBorderWidth, wireViewModel.Y2);
+            Assert.AreEqual(wireMoq.Object.X1 + DiagramViewModel.NodeBorderWidth, wireViewModel.X1);
+            Assert.AreEqual(wireMoq.Object.Y1 + DiagramViewModel.NodeBorderWidth, wireViewModel.Y1);
+            Assert.AreEqual(wireMoq.Object.X2 + DiagramViewModel.NodeBorderWidth, wireViewModel.X2);
+            Assert.AreEqual(wireMoq.Object.Y2 + DiagramViewModel.NodeBorderWidth, wireViewModel.Y2);
         }
 
         [TestMethod]

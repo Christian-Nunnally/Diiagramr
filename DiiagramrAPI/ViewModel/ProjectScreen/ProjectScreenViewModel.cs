@@ -2,7 +2,7 @@
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel.ShellScreen.ProjectScreen
+namespace DiiagramrAPI.ViewModel.ProjectScreen
 {
     public class ProjectScreenViewModel : Screen
     {

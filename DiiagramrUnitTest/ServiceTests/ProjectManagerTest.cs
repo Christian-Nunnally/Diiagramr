@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
@@ -128,6 +129,26 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
+        public void SaveAsProjectTest_ProjectSavedNotDirty()
+        {
+            _projectManager.CreateProject();
+            _projectFileServiceMoq.Setup(m => m.SaveProject(_projectManager.CurrentProject, true)).Returns(true);
+            _projectManager.SaveAsProject();
+            Assert.IsFalse(_projectManager.IsProjectDirty);
+        }
+
+        [TestMethod]
+        public void SaveAsProjectTest_ProjectNotSavedDirty()
+        {
+            _projectManager.CreateProject();
+            // Change name to dirty project.
+            _projectManager.CurrentProject.Name = "bob";
+            _projectFileServiceMoq.Setup(m => m.SaveProject(_projectManager.CurrentProject, true)).Returns(false);
+            _projectManager.SaveAsProject();
+            Assert.IsTrue(_projectManager.IsProjectDirty);
+        }
+
+        [TestMethod]
         public void LoadProjectTest_CurrentProjectSet()
         {
             _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
@@ -164,6 +185,31 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectManager.CurrentProject.Name = "testProj";
             _projectManager.LoadProject();
             Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
+        }
+
+        [TestMethod]
+        public void LoadProjectTest_InstallsNodeDependencies()
+        {
+            var projectModelMoq = new Mock<ProjectModel>();
+            var diagramModelMoq = new Mock<DiagramModel>();
+            var nodeModelMoq = new Mock<NodeModel>("");
+            var diagrams = new ObservableCollection<DiagramModel> {diagramModelMoq.Object};
+            var nodes = new List<NodeModel> {nodeModelMoq.Object};
+            var dependencyModelMoq = new Mock<DependencyModel>("", "");
+            var pluginNodeMoq = new Mock<PluginNode>();
+            const string libraryName = "testLibName";
+            const string libraryVersion = "1.0.0";
+            dependencyModelMoq.SetupGet(d => d.LibraryName).Returns(libraryName);
+            dependencyModelMoq.SetupGet(d => d.LibraryVersion).Returns(libraryVersion);
+            nodeModelMoq.SetupGet(n => n.Dependency).Returns(dependencyModelMoq.Object);
+            projectModelMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
+            diagramModelMoq.SetupGet(d => d.Nodes).Returns(nodes);
+            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(projectModelMoq.Object);
+            _nodeProviderMoq.Setup(p => p.LoadNodeViewModelFromNode(nodeModelMoq.Object)).Returns(pluginNodeMoq.Object);
+            pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(nodeModelMoq.Object);
+
+            _projectManager.LoadProject();
+            _libraryManagerMoq.Verify(l => l.InstallLibrary(libraryName, libraryVersion));
         }
 
         [TestMethod]
