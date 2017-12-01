@@ -15,7 +15,6 @@ namespace DiiagramrAPI.PluginNodeApi
 {
     public abstract class PluginNode : Screen
     {
-        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
         private readonly List<Action> _viewLoadedActions = new List<Action>();
@@ -24,6 +23,8 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
         }
+
+        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
 
         private bool MouseOverBorder { get; set; }
 
@@ -116,8 +117,14 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             base.OnPropertyChanged(propertyName);
             if (NodeModel == null) return;
-            if (propertyName.Equals(nameof(X))) NodeModel.X = X;
-            else if (propertyName.Equals(nameof(Y))) NodeModel.Y = Y;
+            if (propertyName.Equals(nameof(X)))
+            {
+                NodeModel.X = X;
+            }
+            else if (propertyName.Equals(nameof(Y)))
+            {
+                NodeModel.Y = Y;
+            }
             else if (propertyName.Equals(nameof(Width)))
             {
                 NodeModel.Width = Width;

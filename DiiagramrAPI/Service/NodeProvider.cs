@@ -20,8 +20,10 @@ namespace DiiagramrAPI.Service
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        // TODO: Remove this.
-        public IProjectManager ProjectManager { get; set; }
+        public NodeProvider()
+        {
+            DiagramCallNodeViewModel.NodeProvider = this;
+        }
 
         public void RegisterNode(PluginNode node, DependencyModel dependency)
         {
@@ -33,19 +35,12 @@ namespace DiiagramrAPI.Service
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
-        // TODO: Refactor this to  handle diagram call nodes better
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
             if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
             if (!(Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) is PluginNode viewModel)) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
 
             viewModel.InitializeWithNode(node);
-            if (viewModel is DiagramCallNodeViewModel diagramCallNode)
-            {
-                if (ProjectManager == null) throw new InvalidOperationException("Diagram call nodes can not be created without being able to resolve the diagram");
-                diagramCallNode.NodeProvider = this;
-                diagramCallNode.SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(m => m.Name == diagramCallNode.DiagramName));
-            }
 
             viewModel.X = node.X;
             viewModel.Y = node.Y;

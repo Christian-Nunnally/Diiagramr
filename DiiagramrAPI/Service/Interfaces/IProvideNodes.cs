@@ -7,8 +7,6 @@ namespace DiiagramrAPI.Service.Interfaces
 {
     public interface IProvideNodes : INotifyPropertyChanged
     {
-        IProjectManager ProjectManager { get; set; }
-
         void RegisterNode(PluginNode node, DependencyModel dependency);
 
         PluginNode LoadNodeViewModelFromNode(NodeModel node);

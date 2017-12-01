@@ -12,6 +12,9 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     public class DiagramCallNodeViewModel : PluginNode
     {
         private static readonly List<string> DiagramsCopiedDuringCallNodeCreation = new List<string>();
+        public static IProjectManager ProjectManager { private get; set; }
+        public static IProvideNodes NodeProvider { private get; set; }
+
         private readonly DiagramCopier _diagramCopier = new DiagramCopier();
 
         private readonly Dictionary<DiagramInputNodeViewModel, Terminal<object>> _inputNodeToTerminal = new Dictionary<DiagramInputNodeViewModel, Terminal<object>>();
@@ -26,7 +29,6 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         private DiagramModel InternalDiagramModel { get; set; }
         private DiagramViewModel InternalDiagramViewModel { get; set; }
-        public IProvideNodes NodeProvider { private get; set; }
 
         [PluginNodeSetting]
         public bool BrokenDueToRecursion { get; set; }
@@ -34,11 +36,23 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         [PluginNodeSetting]
         public string DiagramName { get; set; }
 
+        public static DiagramCallNodeViewModel CreateDiagramCallNode(DiagramModel diagram)
+        {
+            var diagramNode = new DiagramCallNodeViewModel();
+            var nodeModel = new NodeModel(typeof(DiagramCallNodeViewModel).FullName);
+            diagramNode.InitializeWithNode(nodeModel);
+            diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
+            return diagramNode;
+        }
+
         public override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
             setup.EnableResize();
             _nodeSetup = setup;
+
+            if (ProjectManager == null) throw new NullReferenceException("Diagram call nodes need access to the project manager in order to resolve diagrams.");
+            if (!string.IsNullOrEmpty(DiagramName)) SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(d => d.Name.Equals(DiagramName)));
         }
 
         public void SetReferencingDiagramModelIfNotBroken(DiagramModel referencingDiagramModel)

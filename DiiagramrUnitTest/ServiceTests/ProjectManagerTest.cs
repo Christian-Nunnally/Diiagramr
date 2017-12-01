@@ -8,9 +8,7 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using DiiagramrAPI.ViewModel.ShellScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -30,7 +28,6 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestInitialize]
         public void TestInitialize()
         {
-            var pluginLoader = new Mock<IPluginLoader>();
             _projectFileServiceMoq = new Mock<IProjectFileService>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
@@ -40,7 +37,6 @@ namespace DiiagramrUnitTests.ServiceTests
 
             _projectManager = new ProjectManager(
                 () => _projectFileServiceMoq.Object,
-                () => _nodeProviderMoq.Object,
                 () => _libraryManagerMoq.Object,
                 () => _diagramViewModelFactoryMoq.Object);
 
@@ -232,7 +228,6 @@ namespace DiiagramrUnitTests.ServiceTests
             var diagramMoq = new Mock<DiagramModel>();
             var diagrams = new ObservableCollection<DiagramModel>();
             var nodes = new List<NodeModel>();
-            var dependencyMoq = new Mock<DependencyModel>();
             diagramMoq.SetupGet(d => d.Nodes).Returns(nodes);
             diagrams.Add(diagramMoq.Object);
             projectMoq.SetupGet(p => p.Diagrams).Returns(diagrams);

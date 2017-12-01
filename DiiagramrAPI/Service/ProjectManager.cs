@@ -4,8 +4,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.Service
@@ -18,17 +19,14 @@ namespace DiiagramrAPI.Service
 
         public ProjectManager(
             Func<IProjectFileService> projectFileServiceFactory,
-            Func<IProvideNodes> nodeProviderFactory,
             Func<ILibraryManager> libraryManagerFactory,
             Func<DiagramViewModelFactory> diagramViewModelFactoryFactory)
         {
             DiagramViewModels = new List<DiagramViewModel>();
             _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
-            var nodeProvider = nodeProviderFactory.Invoke();
             _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
-            // TODO: Eliminate the need for this...
-            nodeProvider.ProjectManager = this;
+            DiagramCallNodeViewModel.ProjectManager = this;
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
@@ -124,7 +122,8 @@ namespace DiiagramrAPI.Service
         private void DownloadProjectDependencies()
         {
             foreach (var diagram in CurrentProject.Diagrams)
-                foreach (var node in diagram.Nodes)
+            foreach (var node in diagram.Nodes)
+                if (node.Dependency != null)
                     _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
         }
     }

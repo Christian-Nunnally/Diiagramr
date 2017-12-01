@@ -235,11 +235,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void DiagramDragEnter(DiagramModel diagram)
         {
-            var diagramNode = new DiagramCallNodeViewModel();
-            diagramNode.InitializeWithNode(new NodeModel(typeof(DiagramCallNodeViewModel).FullName));
-            diagramNode.NodeProvider = _nodeProvider;
-            diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
-            DraggingDiagramCallNode = diagramNode;
+            DraggingDiagramCallNode = DiagramCallNodeViewModel.CreateDiagramCallNode(diagram);
         }
 
         public void DragLeave(object sender, DragEventArgs e)
