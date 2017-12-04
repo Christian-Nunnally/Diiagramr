@@ -92,7 +92,9 @@
     <Compile Include="ServiceTests\ProjectManagerTest.cs" />
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
+    <Compile Include="ViewModelTests\StartScreenViewModelTest.cs" />
     <Compile Include="ViewModelTests\TerminalViewModelTest.cs" />
+    <Compile Include="ViewModelTests\ProjectScreenViewModelTest.cs" />
     <Compile Include="ViewModelTests\Window\LibrarySourceManagerWindowViewModelTest.cs" />
     <Compile Include="ViewModelTests\Window\LibraryManagerWindowViewModelTest.cs" />
     <Compile Include="ViewModelTests\WireViewModelTest.cs" />

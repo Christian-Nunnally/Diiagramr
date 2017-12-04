@@ -203,7 +203,6 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public void HandlePreviewMouseDoubleClick()
         {
-            ReferencingDiagramModel.IsOpen = false;
             ReferencingDiagramModel.IsOpen = true;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Input;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel.Diagram;
@@ -76,6 +77,15 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
+        public void TestChangingRealTerminalDirection_DirectionSetToWest_TerminalRotationSetTo270()
+        {
+            var realTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
+            var terminalViewModel = new TerminalViewModel(realTerminal);
+            realTerminal.Direction = Direction.West;
+            Assert.AreEqual(270, terminalViewModel.TerminalRotation);
+        }
+
+        [TestMethod]
         public void TestSetData_TerminalDataSet()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
@@ -109,6 +119,13 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _terminalModelMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
             droppingTerminalMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
+        }
+
+        [TestMethod]
+        public void TestDropObject_DroppingNonTerminal_DoesNothing()
+        {
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
+            terminalViewModel.DropObject(new object());
         }
 
         [TestMethod]
@@ -182,6 +199,14 @@ namespace DiiagramrUnitTests.ViewModelTests
             Assert.IsTrue(terminalViewModel.TitleVisible);
             terminalViewModel.ShowLabelIfCompatibleType(typeof(string));
             Assert.IsFalse(terminalViewModel.TitleVisible);
+        }
+
+        [TestMethod]
+        public void TestDisconnectTerminal_CallsDisconnectWiresOnModel()
+        {
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
+            terminalViewModel.DisconnectTerminal();
+            _terminalModelMoq.Verify(t => t.DisconnectWires());
         }
     }
 }

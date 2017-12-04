@@ -17,7 +17,7 @@ namespace DiiagramrAPI.Model
         public virtual bool IsOpen { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [DataMember]
         public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();

@@ -7,7 +7,6 @@
     xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}"
@@ -21,14 +20,14 @@
             HorizontalContentAlignment="Center"
             Content="{Binding Name}"
             FontFamily="Verdana"
-            FontSize="2"
+            FontSize="1"
             Foreground="Transparent"
             IsHitTestVisible="False"
             RenderTransformOrigin="0.5, 0">
             <Label.RenderTransform>
                 <TransformGroup>
-                    <ScaleTransform ScaleX="4.5" ScaleY="4.5" />
-                    <TranslateTransform X="0" Y="-35" />
+                    <ScaleTransform ScaleX="10" ScaleY="10" />
+                    <TranslateTransform X="0" Y="-68" />
                 </TransformGroup>
 
             </Label.RenderTransform>

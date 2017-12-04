@@ -3,7 +3,6 @@ using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.ShellScreen;
 using Stylet;
 using StyletIoC;
 using System;

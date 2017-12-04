@@ -14,7 +14,6 @@ using Stylet;
 using Diiagramr.View.ShellScreen.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using DiiagramrAPI.ViewModel.ShellScreen;
 
 namespace Diiagramr
 {

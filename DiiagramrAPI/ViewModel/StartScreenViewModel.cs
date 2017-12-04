@@ -3,7 +3,7 @@ using System.Linq;
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel.ShellScreen
+namespace DiiagramrAPI.ViewModel
 {
     public class StartScreenViewModel : Screen
     {
@@ -16,15 +16,13 @@ namespace DiiagramrAPI.ViewModel.ShellScreen
 
         public void LoadProject()
         {
-            if (Parent == null) return;
-            RequestClose();
+            if (Parent != null) RequestClose();
             _projectManager.LoadProject();
         }
 
         public void NewProject()
         {
-            if (Parent == null) return;
-            RequestClose();
+            if (Parent != null) RequestClose();
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.CurrentDiagrams.First().IsOpen = true;

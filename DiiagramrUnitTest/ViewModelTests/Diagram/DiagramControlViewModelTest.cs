@@ -33,6 +33,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Diagram
             _diagramControlViewModel.Play();
             Assert.IsTrue(_diagramControlViewModel.PlayChecked);
             Assert.IsFalse(_diagramControlViewModel.PauseChecked);
+            Assert.IsFalse(_diagramControlViewModel.StopChecked);
         }
 
         [TestMethod]
@@ -49,6 +50,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Diagram
             _diagramControlViewModel.Pause();
             Assert.IsTrue(_diagramControlViewModel.PauseChecked);
             Assert.IsFalse(_diagramControlViewModel.PlayChecked);
+            Assert.IsFalse(_diagramControlViewModel.StopChecked);
         }
 
         [TestMethod]
@@ -66,6 +68,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Diagram
             _diagramControlViewModel.Stop();
             Assert.IsFalse(_diagramControlViewModel.PlayChecked);
             Assert.IsFalse(_diagramControlViewModel.PauseChecked);
+            Assert.IsTrue(_diagramControlViewModel.StopChecked);
         }
 
         [TestMethod]

@@ -6,7 +6,7 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -44,6 +44,12 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestConstructor_CorrectArguments_DiagramIsNotNull()
         {
             Assert.IsNotNull(_diagramViewModel.Diagram);
+        }
+
+        [TestMethod]
+        public void TestConstructor_SetsDiagramControlViewModel()
+        {
+            Assert.IsNotNull(_diagramViewModel.DiagramControlViewModel);
         }
 
         [TestMethod]
@@ -102,6 +108,23 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramViewModel.LeftMouseButtonDown(new Point(0, 0));
 
             Assert.AreEqual(0, _diagramViewModel.NodeViewModels.Count(node => node.IsSelected));
+        }
+
+        [TestMethod]
+        public void TestRemoveNodePressed_NodeNotSelected_DoesNotRemoveNode()
+        {
+            ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
+            _diagramViewModel.RemoveNodePressed();
+            Assert.AreEqual(1, _diagramViewModel.NodeViewModels.Count);
+        }
+
+        [TestMethod]
+        public void TestRemoveNodePressed_NodeSelected_RemovesNode()
+        {
+            ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
+            _pluginNodeMoq.SetupGet(n => n.IsSelected).Returns(true);
+            _diagramViewModel.RemoveNodePressed();
+            Assert.AreEqual(0, _diagramViewModel.NodeViewModels.Count);
         }
 
         [TestMethod]
@@ -240,6 +263,58 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _pluginNodeMoq.VerifySet(m => m.IsSelected = false, Times.Never);
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
+        }
+
+        [TestMethod]
+        public void TestIsDraggingDiagramCallNode_DraggingDiagramCallNodeIsNull_ReturnsFalse()
+        {
+            Assert.IsFalse(_diagramViewModel.IsDraggingDiagramCallNode);
+        }
+
+        [TestMethod]
+        public void TestIsDraggingDiagramCallNode_DiagramDraggedIn_ReturnsTrue()
+        {
+            DiagramCallNodeViewModel.ProjectManager = new Mock<IProjectManager>().Object;
+            _diagramViewModel.DiagramDragEnter(_diagramMoq.Object);
+            Assert.IsTrue(_diagramViewModel.IsDraggingDiagramCallNode);
+        }
+
+        [TestMethod]
+        public void TestDropDiagramCallText_DiagramDraggedIn_UsesDroppedDiagramNameInText()
+        {
+            DiagramCallNodeViewModel.ProjectManager = new Mock<IProjectManager>().Object;
+            var otherDiagramMoq = new Mock<DiagramModel>();
+            otherDiagramMoq.SetupGet(d => d.Name).Returns("ddd");
+            _diagramViewModel.DiagramDragEnter(otherDiagramMoq.Object);
+            Assert.IsTrue(_diagramViewModel.DropDiagramCallText.Contains("ddd"));
+        }
+
+        [TestMethod]
+        public void TestIsSnapGridVisible_InsertingNodeViewModelNotNull_ReturnsTrue()
+        {
+            _nodeMoq = new Mock<NodeModel>("node");
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
+
+            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
+            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
+            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
+        }
+
+        [TestMethod]
+        public void TestIsSnapGridVisible_NodeBeingDraggedTrue_ReturnsTrue()
+        {
+            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
+            _diagramViewModel.NodeBeingDragged = true;
+            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
+        }
+
+        [TestMethod]
+        public void TestDroppedDiagramCallNode_NoDraggingDiagramCallNode_InsertingNodeViewModelNull()
+        {
+            _diagramViewModel.DroppedDiagramCallNode(null, null);
+            Assert.IsNull(_diagramViewModel.InsertingNodeViewModel);
         }
     }
 }

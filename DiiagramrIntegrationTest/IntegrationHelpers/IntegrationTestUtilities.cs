@@ -10,7 +10,6 @@ using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using DiiagramrAPI.ViewModel.ShellScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
 
@@ -37,6 +36,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<IDirectoryService>().To<DirectoryService>();
                 builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
                 builder.Bind<ILibraryManager>().To<LibraryManager>();
+                builder.Bind<IFetchWebResource>().To<WebResourceFetcher>();
                 builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();
                 builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
                 builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();

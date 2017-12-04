@@ -148,8 +148,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
         {
             if (terminal.Kind == TerminalKind.Input) return new InputTerminalViewModel(terminal);
-            if (terminal.Kind == TerminalKind.Output) return new OutputTerminalViewModel(terminal);
-            return null;
+            return new OutputTerminalViewModel(terminal);
         }
     }
 }

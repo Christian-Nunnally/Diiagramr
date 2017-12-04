@@ -8,8 +8,6 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:view="clr-namespace:Diiagramr.View"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
     d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
@@ -200,15 +198,15 @@
                                                 HorizontalContentAlignment="Center"
                                                 Content="{Binding Name}"
                                                 FontFamily="Verdana"
-                                                FontSize="3"
+                                                FontSize="1"
                                                 Foreground="LightSlateGray"
                                                 IsHitTestVisible="False"
                                                 RenderTransformOrigin="0.5, 0"
                                                 Style="{StaticResource NodeLabelStyle}">
                                                 <Label.RenderTransform>
                                                     <TransformGroup>
-                                                        <ScaleTransform ScaleX="5" ScaleY="5" />
-                                                        <TranslateTransform X="5" Y="-44" />
+                                                        <ScaleTransform ScaleX="15" ScaleY="15" />
+                                                        <TranslateTransform X="5" Y="-98" />
                                                     </TransformGroup>
                                                 </Label.RenderTransform>
                                             </Label>

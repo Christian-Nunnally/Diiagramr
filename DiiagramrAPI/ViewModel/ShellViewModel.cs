@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.ProjectScreen;
-using DiiagramrAPI.ViewModel.ShellScreen;
 using Stylet;
 
 namespace DiiagramrAPI.ViewModel

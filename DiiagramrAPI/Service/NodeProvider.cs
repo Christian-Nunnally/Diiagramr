@@ -7,7 +7,6 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using StyletIoC.Internal;
 using System.ComponentModel;
-using DiiagramrAPI.ViewModel.ShellScreen;
 using System.Threading;
 
 namespace DiiagramrAPI.Service
