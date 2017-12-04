@@ -191,12 +191,12 @@ namespace DiiagramrUnitTests.ServiceTests
             var nodeModelMoq = new Mock<NodeModel>("");
             var diagrams = new ObservableCollection<DiagramModel> {diagramModelMoq.Object};
             var nodes = new List<NodeModel> {nodeModelMoq.Object};
-            var dependencyModelMoq = new Mock<DependencyModel>("", "");
+            var dependencyModelMoq = new Mock<DependencyModel>("", 0);
             var pluginNodeMoq = new Mock<PluginNode>();
             const string libraryName = "testLibName";
-            const string libraryVersion = "1.0.0";
+            const int libraryVersion = 1;
             dependencyModelMoq.SetupGet(d => d.LibraryName).Returns(libraryName);
-            dependencyModelMoq.SetupGet(d => d.LibraryVersion).Returns(libraryVersion);
+            dependencyModelMoq.SetupGet(d => d.MajorLibraryVersion).Returns(libraryVersion);
             nodeModelMoq.SetupGet(n => n.Dependency).Returns(dependencyModelMoq.Object);
             projectModelMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
             diagramModelMoq.SetupGet(d => d.Nodes).Returns(nodes);

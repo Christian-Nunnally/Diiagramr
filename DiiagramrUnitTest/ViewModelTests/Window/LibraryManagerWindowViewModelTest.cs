@@ -38,7 +38,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             Assert.IsTrue(string.IsNullOrEmpty(_libraryManagerWindowViewModel.SelectedLibrary));
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             _libraryManagerWindowViewModel.SelectedLibrary = "a 1.0v";
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             _libraryManagerWindowViewModel.SelectedLibrary = "a - 1.0";
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary("a", "1.0"), Times.Once);
+            _libraryManagerMoq.Verify(m => m.InstallLibrary("a", 1), Times.Once);
         }
 
         [TestMethod]

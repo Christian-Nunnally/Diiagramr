@@ -8,6 +8,7 @@ namespace DiiagramrAPI.ViewModel
         public LibrarySourceManagerWindowViewModel(Func<ILibraryManager> libraryManagerFactory)
         {
             LibraryManager = libraryManagerFactory.Invoke();
+            LibraryManager.AddSource("http://diiagramrlibraries.azurewebsites.net/nuget/Packages");
         }
 
         public ILibraryManager LibraryManager { get; }

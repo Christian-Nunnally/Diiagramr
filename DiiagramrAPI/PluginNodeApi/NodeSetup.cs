@@ -32,6 +32,8 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01) _nodeViewModel.Width = width;
             if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01) _nodeViewModel.Height = height;
+            _nodeViewModel.MinimumHeight = height;
+            _nodeViewModel.MinimumWidth = width;
         }
 
         /// <summary>

@@ -77,6 +77,7 @@
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
+    <Compile Include="Service\Interfaces\IFetchWebResource.cs" />
     <Compile Include="Service\Interfaces\ILibraryManager.cs" />
     <Compile Include="Service\Interfaces\IPluginLoader.cs" />
     <Compile Include="Service\Interfaces\IProjectFileService.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Service\ProjectFileService.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
+    <Compile Include="Service\WebResourceFetcher.cs" />
     <Compile Include="ViewModel\AbstractShellWindow.cs" />
     <Compile Include="ViewModel\LibrarySourceManagerWindowViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\DiagramWellViewModel.cs" />

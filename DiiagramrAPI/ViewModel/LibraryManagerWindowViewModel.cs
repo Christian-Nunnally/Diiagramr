@@ -5,7 +5,7 @@ namespace DiiagramrAPI.ViewModel
 {
     public class LibraryManagerWindowViewModel : AbstractShellWindow
     {
-        private LibrarySourceManagerWindowViewModel _librarySourceManagerViewModel;
+        private readonly LibrarySourceManagerWindowViewModel _librarySourceManagerViewModel;
         public ILibraryManager LibraryManager { get; set; }
 
         public LibraryManagerWindowViewModel(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerWindowViewModel> librarySourceManagerWindowViewModelFactory)
@@ -29,7 +29,8 @@ namespace DiiagramrAPI.ViewModel
         {
             if (string.IsNullOrEmpty(SelectedLibrary)) return;
             if (SelectedLibrary.Split(' ').Length != 3) return;
-            LibraryManager.InstallLibrary(SelectedLibrary.Split(' ')[0], SelectedLibrary.Split(' ')[2]);
+            var selectedLibraryMajorVersion = int.Parse(SelectedLibrary.Split(' ')[2].Substring(0, 1));
+            LibraryManager.InstallLibrary(SelectedLibrary.Split(' ')[0], selectedLibraryMajorVersion);
         }
     }
 }

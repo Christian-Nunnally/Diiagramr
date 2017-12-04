@@ -1,25 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.Serialization;
 
 namespace DiiagramrAPI.Model
 {
     [DataContract]
     public class DependencyModel
     {
+
+        public DependencyModel(string libraryName, int majorLibraryVersion)
+        {
+            LibraryName = libraryName;
+            MajorLibraryVersion = majorLibraryVersion;
+        }
+
         [DataMember]
         public virtual string LibraryName { get; private set; }
 
         [DataMember]
-        public virtual string LibraryVersion { get; private set; }
-
-        public DependencyModel(string libraryName, string libraryVersion)
-        {
-            LibraryName = libraryName;
-            LibraryVersion = libraryVersion;
-        }
+        public virtual int MajorLibraryVersion { get; private set; }
     }
 }

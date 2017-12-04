@@ -32,7 +32,9 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Y { get; set; }
 
         public virtual double Width { get; set; }
+        public virtual double MinimumWidth { get; set; }
         public virtual double Height { get; set; }
+        public virtual double MinimumHeight { get; set; }
 
         public bool Dragging { get; set; }
         public virtual bool ResizeEnabled { get; set; }
@@ -127,11 +129,13 @@ namespace DiiagramrAPI.PluginNodeApi
             }
             else if (propertyName.Equals(nameof(Width)))
             {
+                if (Width < MinimumWidth) Width = MinimumWidth;
                 NodeModel.Width = Width;
                 FixAllTerminals();
             }
             else if (propertyName.Equals(nameof(Height)))
             {
+                if (Height < MinimumHeight) Height = MinimumHeight;
                 NodeModel.Height = Height;
                 FixAllTerminals();
             }

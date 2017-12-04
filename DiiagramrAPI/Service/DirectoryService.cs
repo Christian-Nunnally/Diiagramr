@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using DiiagramrAPI.Service.Interfaces;
 
@@ -17,9 +18,40 @@ namespace DiiagramrAPI.Service
             Directory.CreateDirectory(path);
         }
 
-        public IList<string> GetDirectories(string path)
+        public IEnumerable<string> GetDirectories(string path)
         {
-            return Directory.GetDirectories(path).ToList();
+            try
+            {
+                return Directory.GetDirectories(path).ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        public IEnumerable<string> GetFiles(string path, string searchPattern, SearchOption searchOption)
+        {
+            try
+            {
+                return Directory.GetFiles(path, searchPattern, searchOption).ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        public IEnumerable<string> GetFiles(string path, string searchPattern)
+        {
+            try
+            {
+                return Directory.GetFiles(path, searchPattern).ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
         }
 
         public void Move(string fromPath, string toPath)
@@ -29,12 +61,35 @@ namespace DiiagramrAPI.Service
 
         public bool Exists(string path)
         {
-            return Directory.Exists(path);
+            try
+            {
+                return Directory.Exists(path);
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public void Delete(string path, bool recursive)
         {
-            Directory.Delete(path, recursive);
+            if (path.Contains('.')) File.Delete(path);
+            else Directory.Delete(path, recursive);
         }
-    }
+
+        public void ExtractToDirectory(string from, string to)
+        {
+            ZipFile.ExtractToDirectory(from, to);
+        }
+
+        public string GetDirectoryName(string path)
+        {
+            return Path.GetDirectoryName(path);
+        }
+
+        public string ReadAllText(string path)
+        {
+            return File.ReadAllText(path);
+        }
+    } 
 }

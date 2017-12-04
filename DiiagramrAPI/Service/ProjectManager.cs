@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
@@ -63,9 +62,10 @@ namespace DiiagramrAPI.Service
             if (CloseProject())
             {
                 CurrentProject = _projectFileService.LoadProject();
+                CurrentProjectChanged?.Invoke();
+                if (CurrentProject == null) return;
                 DownloadProjectDependencies();
                 CurrentProject.IsDirty = false;
-                CurrentProjectChanged?.Invoke();
             }
         }
 
@@ -124,7 +124,7 @@ namespace DiiagramrAPI.Service
             foreach (var diagram in CurrentProject.Diagrams)
             foreach (var node in diagram.Nodes)
                 if (node.Dependency != null)
-                    _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.LibraryVersion);
+                    _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.MajorLibraryVersion);
         }
     }
 }

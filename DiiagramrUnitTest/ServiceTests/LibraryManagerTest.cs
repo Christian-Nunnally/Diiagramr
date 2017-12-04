@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
+﻿using System.Linq;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,27 +10,27 @@ namespace DiiagramrUnitTests.ServiceTests
     public class LibraryManagerTest
     {
         private Mock<IPluginLoader> _pluginLoaderMoq;
+        private Mock<IDirectoryService> _directoryServiceMoq;
+        private Mock<IFetchWebResource> _webResourceFetcherMoq;
         private LibraryManager _libraryManager;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _pluginLoaderMoq = new Mock<IPluginLoader>();
-            _libraryManager = new LibraryManager(() => _pluginLoaderMoq.Object);
+            _directoryServiceMoq = new Mock<IDirectoryService>();
+            _webResourceFetcherMoq = new Mock<IFetchWebResource>();
+            _libraryManager = new LibraryManager(
+                () => _pluginLoaderMoq.Object,
+                () => _directoryServiceMoq.Object,
+                () => _webResourceFetcherMoq.Object);
         }
 
         [TestMethod]
-        public void TestConstructor_DefaultSourceAdded()
+        public void TestNodeLibraryToString_ReturnsProperlyFormattedLibraryName()
         {
-            Assert.AreEqual("http://diiagramrlibraries.azurewebsites.net/nuget/Packages", _libraryManager.Sources.First());
-        }
-
-        [TestMethod]
-        public void TestLibraryNameToPathToString_ReturnsLibraryName()
-        {
-            var libraryNameToPath = new LibraryNameToPath();
-            libraryNameToPath.Name = "test";
-            Assert.AreEqual("test", libraryNameToPath.ToString());
+            var libraryNameToPath = new NodeLibrary("test", "", 1, 0, 0);
+            Assert.AreEqual("test - 1.0.0", libraryNameToPath.ToString());
         }
 
         [TestMethod]

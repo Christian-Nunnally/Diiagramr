@@ -10,9 +10,9 @@ namespace DiiagramrAPI.Model
     public class NodeModel : ModelBase
     {
         [DataMember] public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
-        private double _height;
 
         private PluginNode _nodeViewModel;
+        private double _height;
         private double _width;
         private double _x;
         private double _y;

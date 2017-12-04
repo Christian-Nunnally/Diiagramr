@@ -270,6 +270,10 @@
       <Project>{27b53540-1ffb-490c-9db1-d829179869ea}</Project>
       <Name>DiiagramrAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DiiagramrUnitTest\DiiagramrUnitTest.csproj">
+      <Project>{4684600E-834A-43C6-A421-22F0EF0DBB09}</Project>
+      <Name>DiiagramrUnitTest</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\startscreenclear.png" />

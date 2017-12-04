@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -16,30 +13,35 @@ namespace DiiagramrAPI.Service
     public class LibraryManager : ILibraryManager
     {
         private const string PluginsDirectory = "Plugins\\";
+        private readonly IDirectoryService _directoryService;
         private readonly IPluginLoader _pluginLoader;
+        private readonly IFetchWebResource _webResourceFetcher;
 
-        public LibraryManager(Func<IPluginLoader> pluginLoaderFactory)
+        public LibraryManager(
+            Func<IPluginLoader> pluginLoaderFactory,
+            Func<IDirectoryService> directoryServiceFactory,
+            Func<IFetchWebResource> webResourceFetcher)
         {
             _pluginLoader = pluginLoaderFactory.Invoke();
-
-            AddSource("http://diiagramrlibraries.azurewebsites.net/nuget/Packages");
+            _directoryService = directoryServiceFactory.Invoke();
+            _webResourceFetcher = webResourceFetcher.Invoke();
+            
             UpdateInstalledLibraries();
         }
 
         public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
         public ObservableCollection<string> InstalledLibraryNames { get; } = new ObservableCollection<string>();
-        public ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; } = new ObservableCollection<LibraryNameToPath>();
+        public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
 
         public bool AddSource(string sourceUrl)
         {
             if (!sourceUrl.StartsWith("http://")) return false;
             Sources.Add(sourceUrl);
-            Task.Run(() =>
-            {
-                var packagesString = DownloadPackagesStringFromSource(sourceUrl);
-                var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
-                AddLibraryPathsToNameToPathMap(libraryPaths);
-            });
+
+            var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
+            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+            AddToAvailableLibrariesFromPaths(libraryPaths);
+
             return true;
         }
 
@@ -47,110 +49,93 @@ namespace DiiagramrAPI.Service
         {
             if (!Sources.Contains(sourceUrl)) return false;
             Sources.Remove(sourceUrl);
-            Task.Run(() =>
-            {
-                var packagesString = DownloadPackagesStringFromSource(sourceUrl);
-                var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
-                RemoveLibraryPathsFromNameToPathMap(libraryPaths);
-            });
+
+            var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
+            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+            RemoveFromAvailableLibrariesFromPaths(libraryPaths);
+
             return true;
         }
 
-        public bool InstallLibrary(string libraryName, string libraryVersion)
+        public bool InstallLibrary(string libraryName, int majorLibraryVersion)
         {
-            var formattedLibraryName = FormatLibraryName(libraryName, libraryVersion);
-            if (!LibraryPathMapContains(formattedLibraryName)) return false;
+            if (!TryGetLibraryWithNameAndMajorVersion(libraryName, majorLibraryVersion, out var library)) return false;
 
-            var absPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var absPath = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var tmpDir = absPath + "\\tmp";
-            if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-            var zipPath = "tmp/" + formattedLibraryName + ".zip";
-            var extractPath = "tmp/" + formattedLibraryName;
-            var toPath = PluginsDirectory + formattedLibraryName;
-            using (var client = new WebClient())
+
+            if (_directoryService.Exists(tmpDir)) _directoryService.CreateDirectory(tmpDir);
+            var zipPath = "tmp/" + library + ".zip";
+            var extractPath = "tmp/" + library;
+            var toPath = PluginsDirectory + library;
+
+            Task.Run(() => _webResourceFetcher.DownloadFileAsync(library.DownloadPath, zipPath)).Wait();
+
+            if (!_directoryService.Exists(toPath))
             {
-                client.DownloadFile(LibraryPathMapGet(formattedLibraryName), zipPath);
+                _directoryService.ExtractToDirectory(zipPath, extractPath);
+                _directoryService.Move(extractPath, toPath);
+                _directoryService.Delete(zipPath, false);
             }
 
-            try
-            {
-                if (!Directory.Exists(toPath))
-                {
-                    ZipFile.ExtractToDirectory(zipPath, extractPath);
-                    Directory.Move(extractPath, toPath);
-                    File.Delete(zipPath);
-                }
-            }
-            catch (IOException)
-            {
-                return false;
-            }
-
-            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, new DependencyModel(libraryName, libraryVersion));
+            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, new DependencyModel(libraryName, majorLibraryVersion));
             UpdateInstalledLibraries();
             return true;
         }
 
-        private void RemoveLibraryPathsFromNameToPathMap(IEnumerable<string> libraryPaths)
+        private void RemoveFromAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
         {
             foreach (var libraryPath in libraryPaths)
             {
-                var libraryString = GetLibraryNameFromPath(libraryPath);
-                if (LibraryPathMapContains(libraryString)) LibraryPathMapRemove(libraryString);
+                var library = CreateLibraryFromPath(libraryPath);
+                if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
+                {
+                    AvailableLibraries.Remove(otherLibrary);
+                }
             }
         }
 
-        private void AddLibraryPathsToNameToPathMap(IEnumerable<string> libraryPaths)
+        private void AddToAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
         {
             foreach (var libraryPath in libraryPaths)
             {
-                var libraryString = GetLibraryNameFromPath(libraryPath);
-                LibraryPathMapAdd(libraryString, libraryPath);
+                var library = CreateLibraryFromPath(libraryPath);
+                AddLibraryToAvailableIfNewest(library);
             }
         }
 
-        private void LibraryPathMapAdd(string name, string path)
+        private void AddLibraryToAvailableIfNewest(NodeLibrary library)
         {
-            if (LibraryPathMapContains(name)) return;
-            var libraryNameToPath = new LibraryNameToPath();
-            libraryNameToPath.Name = name;
-            libraryNameToPath.Path = path;
-            LibraryNameToPathMap.Add(libraryNameToPath);
+            if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
+            {
+                if (!library.IsNewerVersionThan(otherLibrary)) return;
+                AvailableLibraries.Remove(otherLibrary);
+                AvailableLibraries.Add(library);
+            }
+            else
+            {
+                AvailableLibraries.Add(library);
+            }
         }
 
-        private bool LibraryPathMapContains(string name)
+        private bool TryGetLibraryWithNameAndMajorVersion(NodeLibrary library, out NodeLibrary otherLibrary)
         {
-            return LibraryNameToPathMap.Any(p => p.Name == name);
+            return TryGetLibraryWithNameAndMajorVersion(library.Name, library.MajorVersion, out otherLibrary);
         }
 
-        private string LibraryPathMapGet(string name)
+        private bool TryGetLibraryWithNameAndMajorVersion(string libraryName, int majorVersion, out NodeLibrary otherLibrary)
         {
-            return LibraryNameToPathMap.First(p => p.Name == name).Path;
-        }
-
-        private void LibraryPathMapRemove(string name)
-        {
-            if (!LibraryPathMapContains(name)) return;
-            var itemToRemove = LibraryNameToPathMap.First(p => p.Name == name);
-            LibraryNameToPathMap.Remove(itemToRemove);
+            bool SameName(NodeLibrary l) => l.Name == libraryName;
+            bool SameMajorVersion(NodeLibrary l) => l.MajorVersion == majorVersion;
+            otherLibrary = AvailableLibraries.FirstOrDefault(l => SameName(l) && SameMajorVersion(l));
+            return otherLibrary != null;
         }
 
         private void UpdateInstalledLibraries()
         {
             InstalledLibraryNames.Clear();
-            string[] directories;
 
-            try
-            {
-                directories = Directory.GetDirectories(PluginsDirectory);
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("Can't find plugins directory!");
-                Console.WriteLine(e);
-                return;
-            }
-
+            var directories = _directoryService.GetDirectories(PluginsDirectory);
             foreach (var directory in directories)
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
@@ -160,15 +145,17 @@ namespace DiiagramrAPI.Service
 
         #region Static Helper Methods
 
-        private static string GetLibraryNameFromPath(string libraryPath)
+        private static NodeLibrary CreateLibraryFromPath(string libraryPath)
         {
-            var sl = libraryPath.Split('/');
-            var libraryName = sl[sl.Length - 2];
-            var libraryVersion = sl[sl.Length - 1];
-            return FormatLibraryName(libraryName, libraryVersion);
+            var splitPath = libraryPath.Split('/');
+            var libraryName = splitPath[splitPath.Length - 2];
+            var libraryVersion = splitPath[splitPath.Length - 1];
+            var splitVersion = libraryVersion.Split('.');
+            var majorVersion = int.Parse(splitVersion[0]);
+            var minorVersion = int.Parse(splitVersion[1]);
+            var patch = int.Parse(splitVersion[2]);
+            return new NodeLibrary(libraryName, libraryPath, majorVersion, minorVersion, patch);
         }
-
-        private static string FormatLibraryName(string name, string version) => name.ToLower() + " - " + version.ToLower();
 
         private static IEnumerable<string> GetLibraryPathsFromPackagesXml(string packagesXml)
         {
@@ -177,33 +164,36 @@ namespace DiiagramrAPI.Service
             return xmlElement.Descendants(searchString).Select(descendant => descendant.LastAttribute.Value).ToList();
         }
 
-        private static string DownloadPackagesStringFromSource(string uriSource)
-        {
-            using (var client = new WebClient())
-            {
-                try
-                {
-                    return client.DownloadString(uriSource);
-                }
-                catch (Exception)
-                {
-                    return "";
-                }
-            }
-        }
-
         #endregion
 
     }
 
-    public class LibraryNameToPath
+    public class NodeLibrary
     {
-        public string Name;
-        public string Path;
+        public int MajorVersion { get; }
+        public int MinorVersion { get; }
+        public int Patch { get; }
+        public string Name { get; }
+        public string DownloadPath { get; }
+
+        public NodeLibrary(string name, string downloadPath, int majorVersion, int minorVersion, int patch)
+        {
+            Name = name;
+            DownloadPath = downloadPath;
+            MajorVersion = majorVersion;
+            MinorVersion = minorVersion;
+            Patch = patch;
+        }
 
         public override string ToString()
         {
-            return Name;
+            return $"{Name} - {MajorVersion}.{MinorVersion}.{Patch}";
+        }
+
+        public bool IsNewerVersionThan(NodeLibrary otherLibrary)
+        {
+            if (otherLibrary.MinorVersion < MinorVersion) return true;
+            return otherLibrary.Patch < Patch;
         }
     }
 }

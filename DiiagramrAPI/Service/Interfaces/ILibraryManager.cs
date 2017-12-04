@@ -6,12 +6,12 @@ namespace DiiagramrAPI.Service.Interfaces
     {
         ObservableCollection<string> Sources { get; }
         ObservableCollection<string> InstalledLibraryNames { get; }
-        ObservableCollection<LibraryNameToPath> LibraryNameToPathMap { get; }
+        ObservableCollection<NodeLibrary> AvailableLibraries { get; }
 
         bool AddSource(string sourceUrl);
 
         bool RemoveSource(string sourceUrl);
 
-        bool InstallLibrary(string libraryName, string libraryVersion);
+        bool InstallLibrary(string libraryName, int majorLibraryVersion);
     }
 }

@@ -64,6 +64,7 @@ namespace DiiagramrAPI.ViewModel
 
         private void ProjectManagerOnCurrentProjectChanged()
         {
+            if (_projectManager.CurrentProject == null) ShowScreen(StartScreenViewModel);
             CanSaveProject = _projectManager.CurrentProject != null;
             CanSaveAsProject = _projectManager.CurrentProject != null;
             WindowTitle = "Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : "");
