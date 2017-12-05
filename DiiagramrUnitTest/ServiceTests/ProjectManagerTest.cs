@@ -191,13 +191,13 @@ namespace DiiagramrUnitTests.ServiceTests
             var nodeModelMoq = new Mock<NodeModel>("");
             var diagrams = new ObservableCollection<DiagramModel> {diagramModelMoq.Object};
             var nodes = new List<NodeModel> {nodeModelMoq.Object};
-            var dependencyModelMoq = new Mock<DependencyModel>("", 0);
+            var NodeLibraryMoq = new Mock<NodeLibrary>();
             var pluginNodeMoq = new Mock<PluginNode>();
             const string libraryName = "testLibName";
             const int libraryVersion = 1;
-            dependencyModelMoq.SetupGet(d => d.LibraryName).Returns(libraryName);
-            dependencyModelMoq.SetupGet(d => d.MajorLibraryVersion).Returns(libraryVersion);
-            nodeModelMoq.SetupGet(n => n.Dependency).Returns(dependencyModelMoq.Object);
+            NodeLibraryMoq.SetupGet(d => d.Name).Returns(libraryName);
+            NodeLibraryMoq.SetupGet(d => d.MajorVersion).Returns(libraryVersion);
+            nodeModelMoq.SetupGet(n => n.Dependency).Returns(NodeLibraryMoq.Object);
             projectModelMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
             diagramModelMoq.SetupGet(d => d.Nodes).Returns(nodes);
             _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(projectModelMoq.Object);
@@ -205,7 +205,7 @@ namespace DiiagramrUnitTests.ServiceTests
             pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(nodeModelMoq.Object);
 
             _projectManager.LoadProject();
-            _libraryManagerMoq.Verify(l => l.InstallLibrary(libraryName, libraryVersion));
+            _libraryManagerMoq.Verify(l => l.InstallLatestVersionOfLibrary(NodeLibraryMoq.Object));
         }
 
         [TestMethod]

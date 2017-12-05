@@ -1,4 +1,5 @@
 ﻿using System;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -38,7 +39,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             Assert.IsTrue(string.IsNullOrEmpty(_libraryManagerWindowViewModel.SelectedLibrary));
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibrary(It.IsAny<NodeLibrary>()), Times.Never);
         }
 
         [TestMethod]
@@ -46,7 +47,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             _libraryManagerWindowViewModel.SelectedLibrary = "a 1.0v";
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary(It.IsAny<string>(), It.IsAny<int>()), Times.Never);
+            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibrary(It.IsAny<NodeLibrary>()), Times.Never);
         }
 
         [TestMethod]
@@ -54,7 +55,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         {
             _libraryManagerWindowViewModel.SelectedLibrary = "a - 1.0";
             _libraryManagerWindowViewModel.InstallSelectedLibrary();
-            _libraryManagerMoq.Verify(m => m.InstallLibrary("a", 1), Times.Once);
+            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibrary(It.IsAny<NodeLibrary>()), Times.Once);
         }
 
         [TestMethod]

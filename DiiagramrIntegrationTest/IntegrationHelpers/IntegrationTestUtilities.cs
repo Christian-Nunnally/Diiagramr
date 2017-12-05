@@ -53,10 +53,10 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         public static ShellViewModel SetupShellViewModel()
         {
             var nodeProvider = Container.Get<IProvideNodes>();
-            nodeProvider.RegisterNode(new TestPassthroughNode(), new DependencyModel("", 0));
-            nodeProvider.RegisterNode(new TestIntNode(), new DependencyModel("", 0));
-            nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new DependencyModel("", 0));
-            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new DependencyModel("", 0));
+            nodeProvider.RegisterNode(new TestPassthroughNode(), new NodeLibrary());
+            nodeProvider.RegisterNode(new TestIntNode(), new NodeLibrary());
+            nodeProvider.RegisterNode(new DiagramInputNodeViewModel(), new NodeLibrary());
+            nodeProvider.RegisterNode(new DiagramOutputNodeViewModel(), new NodeLibrary());
 
             return Container.Get<ShellViewModel>();
         }

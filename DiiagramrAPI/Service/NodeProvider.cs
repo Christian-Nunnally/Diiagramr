@@ -5,9 +5,7 @@ using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using StyletIoC.Internal;
 using System.ComponentModel;
-using System.Threading;
 
 namespace DiiagramrAPI.Service
 {
@@ -15,7 +13,7 @@ namespace DiiagramrAPI.Service
     {
         private readonly IList<PluginNode> _availableNodeViewModels = new List<PluginNode>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
-        private readonly IDictionary<string, DependencyModel> _dependencyMap = new Dictionary<string, DependencyModel>();
+        private readonly IDictionary<string, NodeLibrary> _dependencyMap = new Dictionary<string, NodeLibrary>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -24,12 +22,14 @@ namespace DiiagramrAPI.Service
             DiagramCallNodeViewModel.NodeProvider = this;
         }
 
-        public void RegisterNode(PluginNode node, DependencyModel dependency)
+        public void RegisterNode(PluginNode node, NodeLibrary dependency)
         {
             if (_availableNodeViewModels.Contains(node)) return;
             if (_nodeNameToViewModelMap.ContainsKey(node.GetType().FullName)) return;
             _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
             _availableNodeViewModels.Add(node);
+
+            if (_dependencyMap.ContainsKey(node.GetType().FullName)) throw new InvalidOperationException("Node added twice");
             _dependencyMap.Add(node.GetType().FullName, dependency);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }

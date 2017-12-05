@@ -24,16 +24,16 @@ namespace DiiagramrAPI.Service
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
-            RegisterPluginNodesFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new DependencyModel("", 0));
+            RegisterPluginNodesFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new NodeLibrary());
             if (!_directoryService.Exists(_pluginDirectory)) _directoryService.CreateDirectory(_pluginDirectory);
             LoadNonPluginDll();
             GetInstalledPlugins();
         }
 
-        public void AddPluginFromDirectory(string dirPath, DependencyModel dependency)
+        public void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
         {
             foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
-                RegisterPluginNodesFromAssembly(pluginAssembly, dependency);
+                RegisterPluginNodesFromAssembly(pluginAssembly, libraryDependency);
         }
 
         private IEnumerable<Assembly> GetPluginAssemblies(string directory)
@@ -44,31 +44,31 @@ namespace DiiagramrAPI.Service
         private void GetInstalledPlugins()
         {
             var directories = _directoryService.GetDirectories(_pluginDirectory);
-            directories.ForEach(d => AddPluginFromDirectory(d, CreateDependencyFromNuspec(d)));
+            directories.ForEach(d => AddPluginFromDirectory(d, CreateLibraryDescriptionFromNuspec(d)));
         }
 
-        private DependencyModel CreateDependencyFromNuspec(string directory)
+        private NodeLibrary CreateLibraryDescriptionFromNuspec(string directory)
         {
             var nuspec = _directoryService.ReadAllText(_directoryService.GetFiles(directory, "*.nuspec").First());
             const string nameSearchString = "{http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd}id";
             const string versionSearchString = "{http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd}version";
             var xmlElement = XElement.Parse(nuspec);
             var libraryName = xmlElement.Descendants(nameSearchString).First().Value;
-            var libraryVersion = int.Parse(xmlElement.Descendants(versionSearchString).First().Value.Substring(0, 1));
-            return new DependencyModel(libraryName, libraryVersion);
+            var libraryMajorVersion = int.Parse(xmlElement.Descendants(versionSearchString).First().Value.Substring(0, 1));
+            return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
         }
 
-        private void RegisterPluginNodesFromAssembly(Assembly assembly, DependencyModel dependency)
+        private void RegisterPluginNodesFromAssembly(Assembly assembly, NodeLibrary libraryDependency)
         {
             foreach (var exportedType in assembly.ExportedTypes)
                 if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
-                    _nodeProvider.RegisterNode((PluginNode) Activator.CreateInstance(exportedType), dependency);
+                    _nodeProvider.RegisterNode((PluginNode) Activator.CreateInstance(exportedType), libraryDependency);
         }
 
         private void LoadNonPluginDll()
         {
             var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
-            dlls.ForEach(dll => RegisterPluginNodesFromAssembly(dll, new DependencyModel("", 0)));
+            dlls.ForEach(dll => RegisterPluginNodesFromAssembly(dll, new NodeLibrary()));
         }
     }
 }

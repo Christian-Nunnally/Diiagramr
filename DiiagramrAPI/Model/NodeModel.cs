@@ -28,7 +28,7 @@ namespace DiiagramrAPI.Model
             Terminals = new List<TerminalModel>();
         }
 
-        public NodeModel(string nodeTypeFullName, DependencyModel dependency)
+        public NodeModel(string nodeTypeFullName, NodeLibrary dependency)
         {
             NodeFullName = nodeTypeFullName;
             Dependency = dependency;
@@ -39,7 +39,7 @@ namespace DiiagramrAPI.Model
         public string NodeFullName { get; set; }
 
         [DataMember]
-        public virtual DependencyModel Dependency { get; set; }
+        public virtual NodeLibrary Dependency { get; set; }
 
         public virtual PluginNode NodeViewModel
         {

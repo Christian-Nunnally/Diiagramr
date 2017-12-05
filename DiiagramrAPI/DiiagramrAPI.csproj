@@ -59,14 +59,13 @@
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />
     <Compile Include="CustomControls\ZoomBorder.cs" />
-    <Compile Include="Model\DependencyModel.cs" />
     <Compile Include="Model\DiagramModel.cs" />
+    <Compile Include="Model\NodeLibrary.cs" />
     <Compile Include="Model\ModelBase.cs" />
     <Compile Include="Model\NodeModel.cs" />
     <Compile Include="Model\ProjectModel.cs" />
     <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\WireModel.cs" />
-    <Compile Include="NuGet\content\ExampleNodeViewModel.cs" />
     <Compile Include="PluginNodeApi\Direction.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
@@ -123,15 +122,11 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Content Include="NuGet\lib\DiiagramrAPI.dll" />
+    <Folder Include="NuGet\content\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="NuGet\content\ExampleNodeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <Content Include="NuGet\lib\DiiagramrAPI.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

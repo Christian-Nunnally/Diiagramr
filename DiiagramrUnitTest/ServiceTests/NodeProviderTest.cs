@@ -37,15 +37,15 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestRegisterNode_RegisterNode_NodeReturnedByGetRegisteredNodes()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             Assert.IsTrue(_nodeProvider.GetRegisteredNodes().Contains(_nodeViewModelMoq.Object));
         }
 
         [TestMethod]
         public void TestRegisterNode_RegisterNodeTwice_OnlyOneNodeReturnedByGetRegisteredNodes()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             Assert.AreEqual(1, _nodeProvider.GetRegisteredNodes().Count(m => m == _nodeViewModelMoq.Object));
         }
 
@@ -53,8 +53,8 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestRegisterNode_RegisterTwoNodeWithSameFullyQualifiedName_OnlyOneNodeReturnedByGetRegisteredNodes()
         {
             var otherNodeViewModel = new Mock<PluginNode>();
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
-            _nodeProvider.RegisterNode(otherNodeViewModel.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
+            _nodeProvider.RegisterNode(otherNodeViewModel.Object, new NodeLibrary());
             Assert.AreEqual(1, _nodeProvider.GetRegisteredNodes().Count(m => m == _nodeViewModelMoq.Object));
         }
 
@@ -68,7 +68,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ReturnsNewViewModel()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -79,7 +79,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_NodesViewModelSet()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -90,7 +90,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ViewModelsNodeSet()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -103,7 +103,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _testNode.X = 10;
             _testNode.Y = 11;
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -117,7 +117,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _testNode.Width = 10;
             _testNode.Height = 11;
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -129,7 +129,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestLoadNodeViewModelFromNode_ViewModelPositionChanges_UpdatesModelPosition()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _testNode.NodeFullName = _nodeViewModelMoq.Object.GetType().FullName;
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
@@ -150,7 +150,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestCreateNodeViewModelFromName_ViewModelRegistered_ReturnsNewViewModel()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
@@ -160,7 +160,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestCreateNodeViewModelFromName_ViewModelRegistered_NodesViewModelSet()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
@@ -170,7 +170,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestCreateNodeViewModelFromName_ViewModelRegistered_ViewModelsNodeSet()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
@@ -180,7 +180,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestCreateNodeViewModelFromName_ViewModelPositionChanges_UpdatesModelPosition()
         {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new DependencyModel("", 0));
+            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
             nodeViewModel.X++;

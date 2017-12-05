@@ -57,14 +57,14 @@ namespace DiiagramrAPI.Service
             return true;
         }
 
-        public bool InstallLibrary(string libraryName, int majorLibraryVersion)
+        public bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription)
         {
-            if (!TryGetLibraryWithNameAndMajorVersion(libraryName, majorLibraryVersion, out var library)) return false;
+            if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library)) return false;
 
             var absPath = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var tmpDir = absPath + "\\tmp";
 
-            if (_directoryService.Exists(tmpDir)) _directoryService.CreateDirectory(tmpDir);
+            if (!_directoryService.Exists(tmpDir)) _directoryService.CreateDirectory(tmpDir);
             var zipPath = "tmp/" + library + ".zip";
             var extractPath = "tmp/" + library;
             var toPath = PluginsDirectory + library;
@@ -78,7 +78,7 @@ namespace DiiagramrAPI.Service
                 _directoryService.Delete(zipPath, false);
             }
 
-            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, new DependencyModel(libraryName, majorLibraryVersion));
+            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
             UpdateInstalledLibraries();
             return true;
         }
@@ -120,13 +120,10 @@ namespace DiiagramrAPI.Service
 
         private bool TryGetLibraryWithNameAndMajorVersion(NodeLibrary library, out NodeLibrary otherLibrary)
         {
-            return TryGetLibraryWithNameAndMajorVersion(library.Name, library.MajorVersion, out otherLibrary);
-        }
-
-        private bool TryGetLibraryWithNameAndMajorVersion(string libraryName, int majorVersion, out NodeLibrary otherLibrary)
-        {
-            bool SameName(NodeLibrary l) => l.Name == libraryName;
-            bool SameMajorVersion(NodeLibrary l) => l.MajorVersion == majorVersion;
+            otherLibrary = null;
+            if (library.Name == null) return false;
+            bool SameName(NodeLibrary l) => l.Name == library.Name.ToLower();
+            bool SameMajorVersion(NodeLibrary l) => l.MajorVersion == library.MajorVersion;
             otherLibrary = AvailableLibraries.FirstOrDefault(l => SameName(l) && SameMajorVersion(l));
             return otherLibrary != null;
         }
@@ -165,35 +162,5 @@ namespace DiiagramrAPI.Service
         }
 
         #endregion
-
-    }
-
-    public class NodeLibrary
-    {
-        public int MajorVersion { get; }
-        public int MinorVersion { get; }
-        public int Patch { get; }
-        public string Name { get; }
-        public string DownloadPath { get; }
-
-        public NodeLibrary(string name, string downloadPath, int majorVersion, int minorVersion, int patch)
-        {
-            Name = name;
-            DownloadPath = downloadPath;
-            MajorVersion = majorVersion;
-            MinorVersion = minorVersion;
-            Patch = patch;
-        }
-
-        public override string ToString()
-        {
-            return $"{Name} - {MajorVersion}.{MinorVersion}.{Patch}";
-        }
-
-        public bool IsNewerVersionThan(NodeLibrary otherLibrary)
-        {
-            if (otherLibrary.MinorVersion < MinorVersion) return true;
-            return otherLibrary.Patch < Patch;
-        }
     }
 }

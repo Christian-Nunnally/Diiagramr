@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using DiiagramrAPI.Model;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
@@ -12,6 +13,6 @@ namespace DiiagramrAPI.Service.Interfaces
 
         bool RemoveSource(string sourceUrl);
 
-        bool InstallLibrary(string libraryName, int majorLibraryVersion);
+        bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription);
     }
 }

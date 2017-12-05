@@ -43,6 +43,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public bool TitleVisible => IsSelected || MouseOverBorder;
         public virtual bool IsSelected { get; set; }
 
+        private bool IsSetup { get; set; }
+
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
         public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels => TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
@@ -61,6 +63,9 @@ namespace DiiagramrAPI.PluginNodeApi
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
+            if (IsSetup) return;
+            IsSetup = true;
+
             NodeModel = nodeModel;
             NodeModel.NodeViewModel = this;
 

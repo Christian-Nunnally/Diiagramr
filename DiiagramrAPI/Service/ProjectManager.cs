@@ -62,9 +62,9 @@ namespace DiiagramrAPI.Service
             if (CloseProject())
             {
                 CurrentProject = _projectFileService.LoadProject();
-                CurrentProjectChanged?.Invoke();
                 if (CurrentProject == null) return;
                 DownloadProjectDependencies();
+                CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
             }
         }
@@ -124,7 +124,7 @@ namespace DiiagramrAPI.Service
             foreach (var diagram in CurrentProject.Diagrams)
                 foreach (var node in diagram.Nodes)
                     if (node.Dependency != null)
-                        _libraryManager.InstallLibrary(node.Dependency.LibraryName, node.Dependency.MajorLibraryVersion);
+                        _libraryManager.InstallLatestVersionOfLibrary(node.Dependency);
         }
     }
 }
