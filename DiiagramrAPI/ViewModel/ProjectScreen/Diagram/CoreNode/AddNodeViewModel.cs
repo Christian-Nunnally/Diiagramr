@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
 
 namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 {
@@ -15,6 +16,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             setup.NodeSize(40, 40);
             setup.NodeName("Add Node");
             setup.EnableResize();
+            setup.RegisterDynamicTerminalMethod("add", Action);
             _inputTerminal1 = setup.InputTerminal<int>("Input", Direction.East);
             _inputTerminal2 = setup.InputTerminal<int>("Input", Direction.West);
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
@@ -23,10 +25,26 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             _inputTerminal2.DataChanged += InputTerminalOnDataChanged;
         }
 
+        private void Action(object o)
+        {
+            if (o != null) InputTerminalOnDataChanged((int)o);
+        }
+
         private void InputTerminalOnDataChanged(int data)
         {
             Value = _inputTerminal1.Data + _inputTerminal2.Data;
+
+            foreach (var dynamicTerminal in DynamicTerminalViewModels)
+            {
+                Value += (int)(dynamicTerminal.Data ?? 0);
+            }
+
             _outputTerminal.Data = Value;
+        }
+
+        public void AddTerminal()
+        {
+            CreateDynamicTerminal("input", typeof(int), Direction.North, TerminalKind.Input, "add");
         }
     }
 }

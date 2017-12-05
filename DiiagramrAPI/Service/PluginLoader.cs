@@ -24,16 +24,16 @@ namespace DiiagramrAPI.Service
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
-            RegisterNodeFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new DependencyModel("", 0));
+            RegisterPluginNodesFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new DependencyModel("", 0));
             if (!_directoryService.Exists(_pluginDirectory)) _directoryService.CreateDirectory(_pluginDirectory);
-            LoadlNonPluginDll();
+            LoadNonPluginDll();
             GetInstalledPlugins();
         }
 
         public void AddPluginFromDirectory(string dirPath, DependencyModel dependency)
         {
             foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
-                RegisterNodeFromAssembly(pluginAssembly, dependency);
+                RegisterPluginNodesFromAssembly(pluginAssembly, dependency);
         }
 
         private IEnumerable<Assembly> GetPluginAssemblies(string directory)
@@ -58,17 +58,17 @@ namespace DiiagramrAPI.Service
             return new DependencyModel(libraryName, libraryVersion);
         }
 
-        private void RegisterNodeFromAssembly(Assembly assembly, DependencyModel dependency)
+        private void RegisterPluginNodesFromAssembly(Assembly assembly, DependencyModel dependency)
         {
             foreach (var exportedType in assembly.ExportedTypes)
                 if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
                     _nodeProvider.RegisterNode((PluginNode) Activator.CreateInstance(exportedType), dependency);
         }
 
-        private void LoadlNonPluginDll()
+        private void LoadNonPluginDll()
         {
             var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
-            dlls.ForEach(dll => RegisterNodeFromAssembly(dll, new DependencyModel("", 0)));
+            dlls.ForEach(dll => RegisterPluginNodesFromAssembly(dll, new DependencyModel("", 0)));
         }
     }
 }

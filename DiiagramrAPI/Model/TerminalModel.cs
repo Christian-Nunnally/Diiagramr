@@ -81,6 +81,9 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public TerminalKind Kind { get; set; }
 
+        [DataMember]
+        public string MethodKey { get; set; }
+
         /// <summary>
         ///     The wire that is connected to this terminal. Null if no wire is connected.
         /// </summary>

@@ -28,10 +28,10 @@ namespace DiiagramrAPI.Model
             Terminals = new List<TerminalModel>();
         }
 
-        public NodeModel(string nodeTypeFullName, DependencyModel dep)
+        public NodeModel(string nodeTypeFullName, DependencyModel dependency)
         {
             NodeFullName = nodeTypeFullName;
-            Dependency = dep;
+            Dependency = dependency;
             Terminals = new List<TerminalModel>();
         }
 

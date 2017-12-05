@@ -44,6 +44,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual bool IsSelected { get; set; }
 
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
+        public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels => TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
 
@@ -56,6 +57,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public event Action DragStarted;
         public event Action DragStopped;
 
+        public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
+
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
             NodeModel = nodeModel;
@@ -65,11 +68,34 @@ namespace DiiagramrAPI.PluginNodeApi
 
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
+            SetupDynamicTerminals();
+        }
+
+        private void SetupDynamicTerminals()
+        {
+            var dynamicTerminals = NodeModel.Terminals.Where(t => !string.IsNullOrEmpty(t.MethodKey)).ToArray();
+            foreach (var dynamicTerminal in dynamicTerminals)
+            {
+                var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(dynamicTerminal);
+                dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[dynamicTerminal.MethodKey];
+                AddTerminalViewModel(dynamicTerminalViewModel);
+            }
+        }
+
+        public void CreateDynamicTerminal(string name, Type type, Direction direction, TerminalKind kind, string methodKey)
+        {
+            if (!DynamicTerminalMethods.ContainsKey(methodKey)) throw new InvalidOperationException($"Must call RegisterDynamicTerminalMethod for the key '{methodKey}' before using it to create a dynamic terminal");
+            var terminalModel = new TerminalModel(name, type, direction, kind, 10000);
+            terminalModel.MethodKey = methodKey;
+            var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
+            dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[methodKey];
+            AddTerminalViewModel(dynamicTerminalViewModel);
         }
 
         private void LoadTerminalViewModels()
         {
-            foreach (var terminal in NodeModel.Terminals)
+            var nondynamicTerminals = NodeModel.Terminals.Where(t => string.IsNullOrEmpty(t.MethodKey)).ToArray();
+            foreach (var terminal in nondynamicTerminals)
             {
                 terminal.WireConnected += TerminalWireConnected;
                 terminal.WireDisconnected += TerminalWireDisconnected;

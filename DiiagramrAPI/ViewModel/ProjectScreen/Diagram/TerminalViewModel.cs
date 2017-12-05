@@ -27,6 +27,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public virtual TerminalModel TerminalModel { get; }
 
+        public Action<object> DataChanged;
+
         public string Name { get; set; }
 
         public virtual bool TitleVisible { get; set; }
@@ -40,6 +42,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             {
                 _data = value;
                 TerminalModel.Data = value;
+                DataChanged?.Invoke(Data);
             }
         }
 
@@ -60,7 +63,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
                 SetTerminalRotationBasedOnDirection();
             else if (e.PropertyName.Equals(nameof(DiiagramrAPI.Model.TerminalModel.Data)))
+            {
                 Data = TerminalModel.Data;
+            }
         }
 
         private void SetTerminalRotationBasedOnDirection()

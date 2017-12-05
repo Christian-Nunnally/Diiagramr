@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.PluginNodeApi
@@ -100,11 +99,15 @@ namespace DiiagramrAPI.PluginNodeApi
             return terminalViewModel;
         }
 
-
         public Terminal<T> CreateClientTerminal<T>(TerminalViewModel terminalViewModel)
         {
             if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel)) throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
             return new Terminal<T>(terminalViewModel);
+        }
+
+        public void RegisterDynamicTerminalMethod(string key, Action<object> action)
+        {
+            _nodeViewModel.DynamicTerminalMethods.Add(key, action);
         }
     }
 }

@@ -66,6 +66,7 @@
     <Compile Include="Model\ProjectModel.cs" />
     <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\WireModel.cs" />
+    <Compile Include="NuGet\content\ExampleNodeViewModel.cs" />
     <Compile Include="PluginNodeApi\Direction.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
@@ -114,17 +115,23 @@
     <Compile Include="ViewModel\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuGet\tools\CreateNode.psm1" />
+    <None Include="NuGet\tools\init.ps1" />
+    <None Include="NuGet\tools\PublishLibrary.psm1" />
     <None Include="packages.config" />
-    <None Include="Tools\PublishNuGet.psm1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="NuGet\" />
+    <Content Include="NuGet\lib\DiiagramrAPI.dll" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Tools\Init.ps1" />
+    <Page Include="NuGet\content\ExampleNodeView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
