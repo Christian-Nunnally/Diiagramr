@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 
@@ -24,6 +25,12 @@ namespace DiiagramrAPI.ViewModel
         public void ViewSources()
         {
             OpenOtherWindow(_librarySourceManagerViewModel);
+        }
+
+        protected override void OnViewLoaded()
+        {
+            base.OnViewLoaded();
+            LibraryManager.LoadSources();
         }
 
         public void InstallSelectedLibrary()

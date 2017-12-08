@@ -2,6 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.AccessControl;
 using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.Service
@@ -15,7 +16,9 @@ namespace DiiagramrAPI.Service
 
         public void CreateDirectory(string path)
         {
-            Directory.CreateDirectory(path);
+            var directorySecurity = new DirectorySecurity();
+            directorySecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
+            Directory.CreateDirectory(path, directorySecurity);
         }
 
         public IEnumerable<string> GetDirectories(string path)

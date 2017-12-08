@@ -14,5 +14,7 @@ namespace DiiagramrAPI.Service.Interfaces
         bool RemoveSource(string sourceUrl);
 
         bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription);
+
+        void LoadSources();
     }
 }

@@ -15,7 +15,9 @@ namespace DiiagramrAPI.Service
         private const string PluginsDirectory = "Plugins\\";
         private readonly IDirectoryService _directoryService;
         private readonly IPluginLoader _pluginLoader;
-        private readonly IFetchWebResource _webResourceFetcher;
+        private readonly IFetchWebResource _webResourceFetcher; 
+        private bool _shouldSourcesBeLoaded = false;
+        private bool _sourcesLoaded = false;
 
         public LibraryManager(
             Func<IPluginLoader> pluginLoaderFactory,
@@ -37,12 +39,22 @@ namespace DiiagramrAPI.Service
         {
             if (!sourceUrl.StartsWith("http://")) return false;
             Sources.Add(sourceUrl);
+            return true;
+        }
 
+        public void LoadSources()
+        {
+            _shouldSourcesBeLoaded = true;
+            if (_sourcesLoaded) return;
+            Sources.ForEach(LoadSource);
+        }
+
+        private void LoadSource(string sourceUrl)
+        {
+            if (!_shouldSourcesBeLoaded) return;
             var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
             AddToAvailableLibrariesFromPaths(libraryPaths);
-
-            return true;
         }
 
         public bool RemoveSource(string sourceUrl)
@@ -59,6 +71,9 @@ namespace DiiagramrAPI.Service
 
         public bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription)
         {
+            if (InstalledLibraryNames.Any(s => s == libraryDescription.ToString())) return true;
+            LoadSources();
+
             if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library)) return false;
 
             var absPath = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
