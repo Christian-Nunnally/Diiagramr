@@ -35,8 +35,7 @@ function Create-Node {
 	"             xmlns:mc=`"http://schemas.openxmlformats.org/markup-compatibility/2006`"" >> $viewFile
 	"             xmlns:d=`"http://schemas.microsoft.com/expression/blend/2008`"" >> $viewFile
 	"             xmlns:s=`"https://github.com/canton7/Stylet`"" >> $viewFile
-	"             xmlns:x=`"http://schemas.microsoft.com/winfx/2006/xaml`"" >> $viewFile
-	"             xmlns:x=`"d:DataContext=`"{d:DesignInstance " + $viewModelClassName + "}`"" >> $viewFile
+	"             d:DataContext=`"{d:DesignInstance " + $viewModelClassName + "}`"" >> $viewFile
 	"             d:DesignHeight=`"40`"" >> $viewFile
 	"             d:DesignWidth=`"40`"" >> $viewFile
 	"             mc:Ignorable=`"d`">" >> $viewFile
