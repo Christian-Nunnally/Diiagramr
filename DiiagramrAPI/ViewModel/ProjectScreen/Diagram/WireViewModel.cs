@@ -12,8 +12,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
 {
     public class WireViewModel : Screen
     {
-        private const double UTurnLength = 50.0;
-        private const double WireDistanceOutOfTerminal = 25.0;
+        private const double UTurnLength = 80.0;
+        private const double WireDistanceOutOfTerminal = 20.0;
 
         public WireViewModel(WireModel wire)
         {

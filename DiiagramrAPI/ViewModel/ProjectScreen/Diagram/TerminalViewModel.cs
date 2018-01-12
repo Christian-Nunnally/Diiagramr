@@ -62,7 +62,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
                 SetTerminalRotationBasedOnDirection();
-            else if (e.PropertyName.Equals(nameof(DiiagramrAPI.Model.TerminalModel.Data)))
+            else if (e.PropertyName.Equals(nameof(Model.TerminalModel.Data)))
             {
                 Data = TerminalModel.Data;
             }

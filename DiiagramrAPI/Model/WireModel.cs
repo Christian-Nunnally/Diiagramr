@@ -31,7 +31,7 @@ namespace DiiagramrAPI.Model
             SourceTerminal.ConnectWire(this);
             SinkTerminal.ConnectWire(this);
             SetupTerminalPropertyChangeNotifications();
-            SinkTerminal.Data = SourceTerminal.Data;
+            SinkTerminal.Data = SourceTerminal.Data; 
             _isActive = true;
         }
 
@@ -75,7 +75,10 @@ namespace DiiagramrAPI.Model
             if (e.PropertyName.Equals(nameof(TerminalModel.X))) X2 = source.X;
             else if (e.PropertyName.Equals(nameof(TerminalModel.Y))) Y2 = source.Y;
             else if (!_isActive) return;
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Data))) SinkTerminal.Data = source.Data;
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
+            {
+                SinkTerminal.Data = source.Data;
+            }
         }
 
         private void SinkTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)

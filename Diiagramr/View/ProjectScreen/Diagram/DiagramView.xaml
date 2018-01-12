@@ -136,9 +136,9 @@
         <VisualBrush
             x:Key="DotFillBrush"
             TileMode="Tile"
-            Viewbox="0,0,40,40"
+            Viewbox="0,0,20,20"
             ViewboxUnits="Absolute"
-            Viewport="0,0,40,40"
+            Viewport="0,0,20,20"
             ViewportUnits="Absolute">
             <VisualBrush.Visual>
                 <Ellipse

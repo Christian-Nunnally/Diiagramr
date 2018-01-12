@@ -16,6 +16,8 @@ namespace DiiagramrAPI.Service
         private readonly IProvideNodes _nodeProvider;
         private readonly IDirectoryService _directoryService;
         private readonly string _pluginDirectory;
+        private List<Type> _serializeableTypes = new List<Type>();
+        private static List<Assembly> _loadedAssemblies = new List<Assembly>();
 
         public PluginLoader(
             Func<IProvideNodes> nodeProviderFactory,
@@ -30,10 +32,21 @@ namespace DiiagramrAPI.Service
             GetInstalledPlugins();
         }
 
+        public IEnumerable<Type> SerializeableTypes
+        {
+            get => _serializeableTypes;
+            set => _serializeableTypes = value.ToList();
+        }
+
+        public static Assembly AssemblyResolver(AssemblyName assemblyName)
+        {
+            return _loadedAssemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
+        }
+
         public void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
         {
             foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
-                RegisterPluginNodesFromAssembly(pluginAssembly, libraryDependency);
+                LoadAssembly(pluginAssembly, libraryDependency);
         }
 
         private IEnumerable<Assembly> GetPluginAssemblies(string directory)
@@ -58,6 +71,24 @@ namespace DiiagramrAPI.Service
             return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
         }
 
+        private void LoadAssembly(Assembly assembly, NodeLibrary nodeLibrary)
+        {
+            RegisterPluginNodesFromAssembly(assembly, nodeLibrary);
+            LoadSerializeableTypesFromAssembly(assembly);
+            _loadedAssemblies.Add(assembly);
+        }
+
+        private void LoadSerializeableTypesFromAssembly(Assembly assembly)
+        {
+            foreach (var exportedType in assembly.ExportedTypes)
+            {
+                if ((exportedType.Attributes & TypeAttributes.Serializable) != 0)
+                {
+                    _serializeableTypes.Add(exportedType);
+                }
+            }
+        }
+
         private void RegisterPluginNodesFromAssembly(Assembly assembly, NodeLibrary libraryDependency)
         {
             foreach (var exportedType in assembly.ExportedTypes)
@@ -68,7 +99,7 @@ namespace DiiagramrAPI.Service
         private void LoadNonPluginDll()
         {
             var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
-            dlls.ForEach(dll => RegisterPluginNodesFromAssembly(dll, new NodeLibrary()));
+            dlls.ForEach(dll => LoadAssembly(dll, new NodeLibrary()));
         }
     }
 }

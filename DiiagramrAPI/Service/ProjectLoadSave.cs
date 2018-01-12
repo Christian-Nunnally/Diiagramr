@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
 using DiiagramrAPI.Model;
@@ -8,28 +9,30 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectLoadSave : IProjectLoadSave
     {
-        private readonly DataContractSerializer _serializer;
+        private IPluginLoader _pluginLoader;
 
-        public ProjectLoadSave()
+        public ProjectLoadSave(Func<IPluginLoader> pluginLoaderFactory)
         {
-            _serializer = new DataContractSerializer(typeof(ProjectModel));
+            _pluginLoader = pluginLoaderFactory.Invoke();
         }
 
         public ProjectModel Open(string fileName)
         {
+            var serializer = new DataContractSerializer(typeof(ProjectModel), _pluginLoader.SerializeableTypes);
             using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                return (ProjectModel) _serializer.ReadObject(stream);
+                return (ProjectModel) serializer.ReadObject(stream);
             }
         }
 
         public void Save(ProjectModel project, string fileName)
         {
+            var serializer = new DataContractSerializer(typeof(ProjectModel), _pluginLoader.SerializeableTypes);
             using (var writer = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var w = XmlWriter.Create(writer))
                 {
-                    _serializer.WriteObject(w, project);
+                    serializer.WriteObject(w, project);
                 }
             }
         }

@@ -236,28 +236,31 @@ namespace DiiagramrAPI.PluginNodeApi
             var otherNodesInDirection = TerminalViewModels.Where(t => t.TerminalModel.Direction == edge).ToArray();
             var inc = 1 / (otherNodesInDirection.Length + 1.0f);
             for (var i = 0; i < otherNodesInDirection.Length; i++)
-                DropTerminalOnEdge(otherNodesInDirection[i], edge, inc * (i + 1));
+                DropTerminalOnEdge(otherNodesInDirection[i], edge, inc * (i + 1.0f));
         }
 
         private void DropTerminalOnEdge(TerminalViewModel terminal, Direction edge, float precentAlongEdge)
         {
+            var extraSpace = 7;
+            var widerWidth = Width + extraSpace * 2;
+            var tallerHeight = Height + extraSpace * 2;
             switch (edge)
             {
                 case Direction.North:
-                    terminal.XRelativeToNode = Width * precentAlongEdge;
+                    terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
                     terminal.YRelativeToNode = 0;
                     break;
                 case Direction.East:
                     terminal.XRelativeToNode = Width;
-                    terminal.YRelativeToNode = Height * precentAlongEdge;
+                    terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
                     break;
                 case Direction.South:
-                    terminal.XRelativeToNode = Width * precentAlongEdge;
+                    terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
                     terminal.YRelativeToNode = Height;
                     break;
                 case Direction.West:
                     terminal.XRelativeToNode = 0;
-                    terminal.YRelativeToNode = Height * precentAlongEdge;
+                    terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
                     break;
             }
         }
