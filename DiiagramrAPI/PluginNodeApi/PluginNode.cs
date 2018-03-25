@@ -118,6 +118,11 @@ namespace DiiagramrAPI.PluginNodeApi
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
             SetupDynamicTerminals();
+
+            X = nodeModel.X;
+            Y = nodeModel.Y;
+            if (nodeModel.Width > 1) Width = nodeModel.Width;
+            if (nodeModel.Height > 1) Height = nodeModel.Height;
         }
 
         private void SetupDynamicTerminals()

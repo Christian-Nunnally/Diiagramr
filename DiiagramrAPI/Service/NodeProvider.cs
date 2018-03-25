@@ -11,48 +11,62 @@ namespace DiiagramrAPI.Service
 {
     public class NodeProvider : IProvideNodes
     {
-        private readonly IList<PluginNode> _availableNodeViewModels = new List<PluginNode>();
-        private readonly IDictionary<string, Type> _nodeNameToViewModelMap = new Dictionary<string, Type>();
-        private readonly IDictionary<string, NodeLibrary> _dependencyMap = new Dictionary<string, NodeLibrary>();
+        private readonly IList<PluginNode> _availableNodeViewModels;
+        private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
+        private readonly IDictionary<string, NodeLibrary> _dependencyMap;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NodeProvider()
         {
+            // Todo: Code smell
             DiagramCallNodeViewModel.NodeProvider = this;
+
+            _availableNodeViewModels = new List<PluginNode>();
+            _nodeNameToViewModelMap = new Dictionary<string, Type>();
+            _dependencyMap = new Dictionary<string, NodeLibrary>();
         }
 
         public void RegisterNode(PluginNode node, NodeLibrary dependency)
         {
+            var fullName = node.GetType().FullName ?? "";
             if (_availableNodeViewModels.Contains(node)) return;
-            if (_nodeNameToViewModelMap.ContainsKey(node.GetType().FullName)) return;
-            _nodeNameToViewModelMap.Add(node.GetType().FullName, node.GetType());
-            _availableNodeViewModels.Add(node);
+            if (_nodeNameToViewModelMap.ContainsKey(fullName)) return;
+            if (_dependencyMap.ContainsKey(fullName)) throw new ProviderException("Node registered twice");
 
-            if (_dependencyMap.ContainsKey(node.GetType().FullName)) throw new InvalidOperationException("Node added twice");
-            _dependencyMap.Add(node.GetType().FullName, dependency);
+            _nodeNameToViewModelMap.Add(fullName, node.GetType());
+            _availableNodeViewModels.Add(node);
+            _dependencyMap.Add(fullName, dependency);
+
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
-            if (!_nodeNameToViewModelMap.ContainsKey(node.NodeFullName)) throw new NodeProviderException($"Tried to load node of type '{node.NodeFullName}' but no view model under that name was registered");
-            if (!(Activator.CreateInstance(_nodeNameToViewModelMap[node.NodeFullName]) is PluginNode viewModel)) throw new NodeProviderException($"Error creating a view model for node of type '{node.NodeFullName}'");
-
+            var fullName = node.NodeTypeFullName;
+            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
+                throw NoViewModelException(fullName);
             viewModel.InitializeWithNode(node);
-
-            viewModel.X = node.X;
-            viewModel.Y = node.Y;
-            viewModel.Width = node.Width != 0 ? node.Width : viewModel.Width;
-            viewModel.Height = node.Height != 0 ? node.Height : viewModel.Height;
             return viewModel;
+        }
+
+        private Type GetViewModelTypeFromName(string fullNodeTypeName)
+        {
+            if (_nodeNameToViewModelMap.ContainsKey(fullNodeTypeName))
+                return _nodeNameToViewModelMap[fullNodeTypeName];
+            throw NoViewModelException(fullNodeTypeName);
         }
 
         public PluginNode CreateNodeViewModelFromName(string typeFullName)
         {
-            if (!_dependencyMap.ContainsKey(typeFullName)) throw new NodeProviderException($"Tried to load node of type '{typeFullName}' but no view model under that name was registered");
+            if (!_dependencyMap.ContainsKey(typeFullName)) NoViewModelException(typeFullName);
             var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
             return LoadNodeViewModelFromNode(node);
+        }
+
+        private static Exception NoViewModelException(string typeFullName)
+        {
+            return new ProviderException($"Tried to load unregistered view model '{typeFullName}'");
         }
 
         public IEnumerable<PluginNode> GetRegisteredNodes()
@@ -61,8 +75,8 @@ namespace DiiagramrAPI.Service
         }
     }
 
-    public class NodeProviderException : Exception
+    public class ProviderException : Exception
     {
-        public NodeProviderException(string message) : base(message) { }
+        public ProviderException(string message) : base($"Node Provider Exception: {message}") { }
     }
 }

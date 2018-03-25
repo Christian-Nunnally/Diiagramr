@@ -34,10 +34,10 @@ namespace DiiagramrUnitTests.ServiceTests
             var copier = new DiagramCopier();
             var diagram = new DiagramModel();
             var node = new NodeModel("Node");
-            node.NodeFullName = "test";
+            node.NodeTypeFullName = "test";
             diagram.AddNode(node);
             var copiedDiagram = copier.Copy(diagram);
-            Assert.AreEqual(diagram.Nodes.First().NodeFullName, copiedDiagram.Nodes.First().NodeFullName);
+            Assert.AreEqual(diagram.Nodes.First().NodeTypeFullName, copiedDiagram.Nodes.First().NodeTypeFullName);
         }
     }
 }

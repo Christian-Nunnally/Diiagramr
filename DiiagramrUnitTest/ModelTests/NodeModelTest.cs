@@ -29,7 +29,7 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestConstructor_NodeTypeSetToName()
         {
-            Assert.AreEqual("name", _node.NodeFullName);
+            Assert.AreEqual("name", _node.NodeTypeFullName);
         }
 
         [TestMethod]

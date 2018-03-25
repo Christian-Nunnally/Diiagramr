@@ -299,7 +299,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (altKeyPressed)
             {
-                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.NodeFullName);
+                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.NodeTypeFullName);
                 return;
             }
             if (!controlKeyPressed) UnselectNodes();

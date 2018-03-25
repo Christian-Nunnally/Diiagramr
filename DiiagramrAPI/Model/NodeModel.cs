@@ -9,13 +9,8 @@ namespace DiiagramrAPI.Model
     [DataContract]
     public class NodeModel : ModelBase
     {
-        [DataMember] public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
-
-        private PluginNode _nodeViewModel;
-        private double _height;
-        private double _width;
-        private double _x;
-        private double _y;
+        [DataMember]
+        public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
         private NodeModel()
         {
@@ -24,89 +19,15 @@ namespace DiiagramrAPI.Model
 
         public NodeModel(string nodeTypeFullName)
         {
-            NodeFullName = nodeTypeFullName;
+            NodeTypeFullName = nodeTypeFullName;
             Terminals = new List<TerminalModel>();
         }
 
         public NodeModel(string nodeTypeFullName, NodeLibrary dependency)
         {
-            NodeFullName = nodeTypeFullName;
+            NodeTypeFullName = nodeTypeFullName;
             Dependency = dependency;
             Terminals = new List<TerminalModel>();
-        }
-
-        [DataMember]
-        public string NodeFullName { get; set; }
-
-        [DataMember]
-        public virtual NodeLibrary Dependency { get; set; }
-
-        public virtual PluginNode NodeViewModel
-        {
-            get => _nodeViewModel;
-            set
-            {
-                _nodeViewModel = value;
-                _nodeViewModel.InitializePluginNodeSettings();
-                NodeFullName = _nodeViewModel.GetType().FullName;
-            }
-        }
-
-        [DataMember]
-        public virtual double X
-        {
-            get => _x;
-            set
-            {
-                if (_x != value) OnModelPropertyChanged(nameof(X));
-                _x = value;
-            }
-        }
-
-        [DataMember]
-        public virtual double Y
-        {
-            get => _y;
-            set
-            {
-                if (_y != value) OnModelPropertyChanged(nameof(Y));
-                _y = value;
-            }
-        }
-
-        [DataMember]
-        public double Width
-        {
-            get => _width;
-            set
-            {
-                if (_width != value) OnModelPropertyChanged(nameof(Width));
-                _width = value;
-            }
-        }
-
-        [DataMember]
-        public double Height
-        {
-            get => _height;
-            set
-            {
-                if (_height != value) OnModelPropertyChanged(nameof(Height));
-                _height = value;
-            }
-        }
-
-        [DataMember]
-        public List<TerminalModel> Terminals { get; set; }
-
-        protected override void OnModelPropertyChanged(string propertyName = null)
-        {
-            base.OnModelPropertyChanged(propertyName);
-            if (propertyName.Equals(nameof(Width))
-                || propertyName.Equals(nameof(Height))
-                || propertyName.Equals(nameof(X))
-                || propertyName.Equals(nameof(Y)))
-                PresentationChanged?.Invoke();
         }
 
         /// <summary>
@@ -115,9 +36,53 @@ namespace DiiagramrAPI.Model
         public virtual event Action SemanticsChanged;
 
         /// <summary>
-        ///     Notifies listeners when the appearance of this diagram have changed.
+        ///     Notifies listeners when the appearance of this node have changed.
         /// </summary>
         public virtual event Action PresentationChanged;
+
+        [DataMember]
+        public List<TerminalModel> Terminals { get; set; }
+
+        [DataMember]
+        public string NodeTypeFullName { get; set; }
+
+        [DataMember]
+        public virtual NodeLibrary Dependency { get; set; }
+
+        [DataMember]
+        public virtual double X { get; set; }
+
+        [DataMember]
+        public virtual double Y { get; set; }
+
+        [DataMember]
+        public double Width { get; set; }
+
+        [DataMember]
+        public double Height { get; set; }
+
+        private PluginNode _nodeViewModel;
+
+        public virtual PluginNode NodeViewModel
+        {
+            get => _nodeViewModel;
+            set
+            {
+                _nodeViewModel = value;
+                _nodeViewModel.InitializePluginNodeSettings();
+                NodeTypeFullName = _nodeViewModel.GetType().FullName;
+            }
+        }
+
+        protected override void OnModelPropertyChanged(string propertyName = null)
+        {
+            base.OnModelPropertyChanged(propertyName);
+            if (nameof(Width) == propertyName
+                    || nameof(Height) == propertyName
+                    || nameof(X) == propertyName
+                    || nameof(Y) == propertyName)
+                PresentationChanged?.Invoke();
+        }
 
         public virtual void AddTerminal(TerminalModel terminal)
         {
