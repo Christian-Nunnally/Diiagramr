@@ -30,7 +30,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.Setup(d => d.AddNode(It.IsAny<NodeModel>())).Verifiable();
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
-            _diagramViewModel = new DiagramViewModel(_diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object);
+            _diagramViewModel = new DiagramViewModel(_diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object);
         }
 
         [TestMethod]
@@ -56,14 +56,14 @@ namespace DiiagramrUnitTests.ViewModelTests
         [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a diagram")]
         public void TestConstructor_NullDiagram_ThrowsArgumentNullException()
         {
-            new DiagramViewModel(null, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object);
+            new DiagramViewModel(null, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a node provider")]
         public void TestConstructor_NullNodeProvider_ThrowsArgumentNullException()
         {
-            new DiagramViewModel(_diagramMoq.Object, null, _nodeSelectorViewModelMoq.Object);
+            new DiagramViewModel(_diagramMoq.Object, null, null, _nodeSelectorViewModelMoq.Object);
         }
 
         private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
@@ -73,7 +73,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> {_nodeMoq.Object});
             _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
-            _diagramViewModel = new DiagramViewModel(_diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object);
+            _diagramViewModel = new DiagramViewModel(_diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object);
         }
 
         [TestMethod]
@@ -234,7 +234,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq = new Mock<PluginNode>();
             _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
 
-            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false);
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false, false);
 
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
         }
@@ -246,7 +246,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(m => m.IsSelected).Returns(true);
             _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
 
-            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false);
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, false, false);
 
             _pluginNodeMoq.VerifySet(m => m.IsSelected = false);
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
@@ -259,10 +259,23 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(m => m.IsSelected).Returns(true);
             _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
 
-            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, true);
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, true, false);
 
             _pluginNodeMoq.VerifySet(m => m.IsSelected = false, Times.Never);
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
+        }
+
+        [TestMethod]
+        public void TestPreviewLeftMouseButtonDownOnBorder_AltPressed_SetsInsertingNodeViewModel()
+        {
+            _nodeMoq = new Mock<NodeModel>("node");
+            _pluginNodeMoq = new Mock<PluginNode>();
+            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
+            _diagramViewModel.NodeViewModels.Add(_pluginNodeMoq.Object);
+
+            _diagramViewModel.PreviewLeftMouseButtonDownOnBorder(_pluginNodeMoq.Object, true, true);
+
+            _nodeProviderMoq.Verify(p => p.CreateNodeViewModelFromName(It.IsAny<string>()));
         }
 
         [TestMethod]

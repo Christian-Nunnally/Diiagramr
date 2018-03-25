@@ -167,38 +167,46 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestMouseEntered_TitleVisibleSetToTrue()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            Assert.IsFalse(terminalViewModel.TitleVisible);
+            Assert.IsFalse(terminalViewModel.MouseWithin);
             terminalViewModel.MouseEntered(null, null);
-            Assert.IsTrue(terminalViewModel.TitleVisible);
+            Assert.IsTrue(terminalViewModel.MouseWithin);
         }
 
         [TestMethod]
         public void TestMouseLeft_TitleVisibleSetToFalse()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.TitleVisible = true;
-            Assert.IsTrue(terminalViewModel.TitleVisible);
+            terminalViewModel.MouseWithin = true;
+            Assert.IsTrue(terminalViewModel.MouseWithin);
             terminalViewModel.MouseLeft(null, null);
-            Assert.IsFalse(terminalViewModel.TitleVisible);
+            Assert.IsFalse(terminalViewModel.MouseWithin);
+        }
+
+        [TestMethod]
+        public void TestTerminalLeftMouseDown_SetsIsSelectedToTrue()
+        {
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
+            terminalViewModel.TerminalLeftMouseDown();
+            Assert.IsTrue(terminalViewModel.IsSelected);
         }
 
         [TestMethod]
         public void TestShowLabelIfCompatibleType_TypesCompatible_TitleVisibleSetToTrue()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            Assert.IsFalse(terminalViewModel.TitleVisible);
-            terminalViewModel.ShowLabelIfCompatibleType(typeof(int));
-            Assert.IsTrue(terminalViewModel.TitleVisible);
+            Assert.IsFalse(terminalViewModel.MouseWithin);
+            terminalViewModel.ShowHighlightIfCompatibleType(typeof(int));
+            Assert.IsTrue(terminalViewModel.MouseWithin);
         }
 
         [TestMethod]
         public void TestShowLabelIfCompatibleType_TypesNotCompatible_TitleVisibleSetToFalse()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.TitleVisible = true;
-            Assert.IsTrue(terminalViewModel.TitleVisible);
-            terminalViewModel.ShowLabelIfCompatibleType(typeof(string));
-            Assert.IsFalse(terminalViewModel.TitleVisible);
+            terminalViewModel.MouseWithin = true;
+            Assert.IsTrue(terminalViewModel.MouseWithin);
+            terminalViewModel.ShowHighlightIfCompatibleType(typeof(string));
+            Assert.IsFalse(terminalViewModel.MouseWithin);
         }
 
         [TestMethod]
@@ -207,6 +215,18 @@ namespace DiiagramrUnitTests.ViewModelTests
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
             terminalViewModel.DisconnectTerminal();
             _terminalModelMoq.Verify(t => t.DisconnectWires());
+        }
+
+        [TestMethod]
+        public void TestIsSelectedChanged_IsSelectedSetToTrue_OtherTerminalGetsUnselected()
+        {
+            var terminalViewModel1 = new TerminalViewModel(_terminalModelMoq.Object);
+            var terminalViewModel2 = new TerminalViewModel(_terminalModelMoq.Object);
+
+            terminalViewModel1.IsSelected = true;
+            terminalViewModel2.IsSelected = true;
+
+            Assert.IsFalse(terminalViewModel1.IsSelected);
         }
     }
 }

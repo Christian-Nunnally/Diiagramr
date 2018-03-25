@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Forms;
+using System.Windows.Media;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using Stylet;
 
@@ -35,6 +37,7 @@ namespace DiiagramrAPI.ViewModel
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
             LibraryManagerWindowViewModel = libraryManagerWindowViewModelFactory.Invoke();
             StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
+            StartScreenViewModel.LoadCanceled += () => ShowScreen(StartScreenViewModel);
 
             _projectManager = projectManagerFactory.Invoke();
             _projectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
@@ -90,11 +93,13 @@ namespace DiiagramrAPI.ViewModel
         public void SaveProject()
         {
             _projectManager.SaveProject();
+            WindowTitle = "Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : "");
         }
 
         public void SaveAsProject()
         {
             _projectManager.SaveAsProject();
+            WindowTitle = "Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : "");
         }
         
         // TODO: Move to some other class.  The other other class should basically be abl to add toolbar buttons.

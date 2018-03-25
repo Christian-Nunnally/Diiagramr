@@ -25,6 +25,7 @@ namespace Diiagramr
             builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
             builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
             builder.Bind<ILibraryManager>().To<LibraryManager>().InSingletonScope();
+            builder.Bind<ColorTheme>().To<ColorTheme>().InSingletonScope();
             builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");

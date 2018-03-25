@@ -83,9 +83,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.HideAllTerminalLabels();
+            testPluginNode.UnHighlightAllTerminals();
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = false);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = false);
         }
 
         [TestMethod]
@@ -97,9 +97,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(int));
+            testPluginNode.HighlightOutputTerminalsOfType(typeof(int));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true);
         }
 
         [TestMethod]
@@ -111,9 +111,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(string));
+            testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
         }
 
         [TestMethod]
@@ -125,9 +125,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowOutputTerminalLabelsOfType(typeof(string));
+            testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
         }
 
         [TestMethod]
@@ -139,9 +139,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowInputTerminalLabelsOfType(typeof(int));
+            testPluginNode.HighlightInputTerminalsOfType(typeof(int));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true);
         }
 
         [TestMethod]
@@ -153,9 +153,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowInputTerminalLabelsOfType(typeof(string));
+            testPluginNode.HighlightInputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
         }
 
         [TestMethod]
@@ -167,9 +167,9 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.ShowInputTerminalLabelsOfType(typeof(string));
+            testPluginNode.HighlightInputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.TitleVisible = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
         }
 
         [TestMethod]
@@ -265,6 +265,20 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             testPluginNode.RemoveTerminalViewModel(terminalViewModelMoq.Object);
 
             nodeMoq.Verify(n => n.RemoveTerminal(terminalMoq.Object));
+        }
+
+        [TestMethod] public void TestSelected_SelectedSetTrue_TerminalSelectedSetToFalse()
+        {
+            var testPluginNode = new TestPluginNode();
+            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
+            var terminalViewModelMoq = new Mock<OutputTerminalViewModel>(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            var nodeMoq = new Mock<NodeModel>("");
+            testPluginNode.NodeModel = nodeMoq.Object;
+            testPluginNode.AddTerminalViewModel(terminalViewModelMoq.Object);
+
+            testPluginNode.IsSelected = true;
+            terminalViewModelMoq.VerifySet(m => m.IsSelected = false);
         }
     }
 

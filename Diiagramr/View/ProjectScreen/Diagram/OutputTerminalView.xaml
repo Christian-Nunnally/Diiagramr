@@ -11,6 +11,9 @@
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}"
     mc:Ignorable="d">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Btv" />
+    </UserControl.Resources>
     <Grid RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
@@ -34,7 +37,7 @@
             <Label.Style>
                 <Style TargetType="{x:Type Label}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding TitleVisible}" Value="True">
+                        <DataTrigger Binding="{Binding MouseWithin}" Value="True">
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
@@ -64,31 +67,48 @@
             AllowDrop="True"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
             Drop="{s:Action DropEventHandler}"
-            MouseDown="{s:Action TerminalMouseDown}"
             MouseEnter="{s:Action MouseEntered}"
             MouseLeave="{s:Action MouseLeft}"
+            MouseLeftButtonDown="{s:Action TerminalLeftMouseDownHandler}"
             MouseMove="{s:Action MouseMove}">
             <Border.Style>
                 <Style>
-                    <Setter Property="Border.Background" Value="#f888" />
+                    <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
                     <Style.Triggers>
                         <Trigger Property="Border.IsMouseOver" Value="True">
-                            <Setter Property="Border.Background" Value="RoyalBlue" />
+                            <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
-            <Line
-                Width="10"
-                Margin="10,0,0,0"
-                HorizontalAlignment="Center"
-                IsHitTestVisible="False"
-                Stroke="#f555"
-                StrokeEndLineCap="Flat"
-                StrokeStartLineCap="Triangle"
-                StrokeThickness="6"
-                Y1="5"
-                Y2="7" />
         </Border>
+        <Border
+            Background="DeepSkyBlue"
+            BorderThickness="1"
+            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            IsHitTestVisible="False"
+            Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
+        <Line
+            Width="10"
+            Margin="10,1,0,0"
+            HorizontalAlignment="Center"
+            IsHitTestVisible="False"
+            Stroke="#101010"
+            StrokeEndLineCap="Flat"
+            StrokeStartLineCap="Triangle"
+            StrokeThickness="6"
+            Y1="5"
+            Y2="7" />
+        <Border
+            BorderBrush="#101010"
+            BorderThickness="1"
+            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            IsHitTestVisible="False" />
+        <Border
+            BorderBrush="DeepSkyBlue"
+            BorderThickness="1"
+            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            IsHitTestVisible="False"
+            Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
     </Grid>
 </UserControl>

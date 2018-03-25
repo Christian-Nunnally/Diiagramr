@@ -11,6 +11,7 @@
     Height="450"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
+    BorderBrush="ForestGreen"
     mc:Ignorable="d">
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />

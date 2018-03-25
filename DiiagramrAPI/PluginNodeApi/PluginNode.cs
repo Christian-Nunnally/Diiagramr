@@ -28,20 +28,62 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private bool MouseOverBorder { get; set; }
 
+        public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
+
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
 
-        public virtual double Width { get; set; }
-        public virtual double MinimumWidth { get; set; }
-        public virtual double Height { get; set; }
+        public virtual double Height
+        {
+            get => NodeModel.Height;
+            set
+            {
+                NodeModel.Height = value;
+                if (Height < MinimumHeight) Height = MinimumHeight;
+                FixAllTerminals();
+            }
+        }
+
+        private void SetUTurnLimitForTerminals()
+        {
+            TerminalViewModels.ForEach(t => t.CalculateUTurnLimitForTerminalSoThatWiresAvoidTheNodes(Width, Height));
+        }
+
+        public virtual double Width
+        {
+            get => NodeModel.Width;
+            set
+            {
+                NodeModel.Width = value;
+                if (Width < MinimumWidth) Width = MinimumWidth;
+                FixAllTerminals();
+            }
+        }
+
         public virtual double MinimumHeight { get; set; }
+        public virtual double MinimumWidth { get; set; }
 
         public bool Dragging { get; set; }
         public virtual bool ResizeEnabled { get; set; }
         public bool ResizerVisible => ResizeEnabled && IsSelected;
 
         public bool TitleVisible => IsSelected || MouseOverBorder;
-        public virtual bool IsSelected { get; set; }
+
+        public virtual bool IsSelected
+        {
+            get { return _isSelected; }
+            set
+            {
+                if (value)
+                {
+                    foreach (var terminalViewModel in TerminalViewModels)
+                    {
+                        terminalViewModel.IsSelected = false;
+                    }
+                }
+                _isSelected = value;
+            }
+        }
 
         private bool IsSetup { get; set; }
 
@@ -60,6 +102,8 @@ namespace DiiagramrAPI.PluginNodeApi
         public event Action DragStopped;
 
         public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
+        private bool _isSelected;
+        private double _height;
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
@@ -123,6 +167,8 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels.Add(terminalViewModel);
             AddTerminal(terminalViewModel.TerminalModel);
             DropAndArrangeTerminal(terminalViewModel, terminalViewModel.TerminalModel.Direction);
+            terminalViewModel.WiringModeChanged += TerminalWiringEventHandler;
+            terminalViewModel.CalculateUTurnLimitForTerminalSoThatWiresAvoidTheNodes(Width, Height);
         }
 
         public virtual void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)
@@ -130,6 +176,12 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels.Remove(terminalViewModel);
             RemoveTerminal(terminalViewModel.TerminalModel);
             FixOtherTerminalsOnEdge(terminalViewModel.TerminalModel.Direction);
+            terminalViewModel.WiringModeChanged -= TerminalWiringEventHandler;
+        }
+
+        private void TerminalWiringEventHandler(TerminalViewModel terminalViewModel, bool enabled)
+        {
+            TerminalWiringModeChanged?.Invoke(terminalViewModel, enabled);
         }
 
         private void AddTerminal(TerminalModel terminal)
@@ -214,6 +266,7 @@ namespace DiiagramrAPI.PluginNodeApi
             DropTerminalOnEdge(terminal, edge, 0.50f);
             FixOtherTerminalsOnEdge(oldEdge);
             FixOtherTerminalsOnEdge(edge);
+            SetUTurnLimitForTerminals();
         }
 
         protected override void OnViewLoaded()
@@ -229,17 +282,22 @@ namespace DiiagramrAPI.PluginNodeApi
             FixOtherTerminalsOnEdge(Direction.East);
             FixOtherTerminalsOnEdge(Direction.South);
             FixOtherTerminalsOnEdge(Direction.West);
+
+            SetUTurnLimitForTerminals();
         }
 
         private void FixOtherTerminalsOnEdge(Direction edge)
         {
-            var otherNodesInDirection = TerminalViewModels.Where(t => t.TerminalModel.Direction == edge).ToArray();
-            var inc = 1 / (otherNodesInDirection.Length + 1.0f);
-            for (var i = 0; i < otherNodesInDirection.Length; i++)
-                DropTerminalOnEdge(otherNodesInDirection[i], edge, inc * (i + 1.0f));
+            var otherTerminalsInDirection = TerminalViewModels.Where(t => t.TerminalModel.Direction == edge).ToArray();
+            var inc = 1 / (otherTerminalsInDirection.Length + 1.0f);
+            for (var i = 0; i < otherTerminalsInDirection.Length; i++)
+            {
+                DropTerminalOnEdge(otherTerminalsInDirection[i], edge, inc * (i + 1.0f));
+                otherTerminalsInDirection[i].EdgeIndex = i;
+            }
         }
 
-        private void DropTerminalOnEdge(TerminalViewModel terminal, Direction edge, float precentAlongEdge)
+        private void DropTerminalOnEdge(TerminalViewModel terminal, Direction edge, double precentAlongEdge)
         {
             var extraSpace = 7;
             var widerWidth = Width + extraSpace * 2;
@@ -284,19 +342,22 @@ namespace DiiagramrAPI.PluginNodeApi
             MouseOverBorder = false;
         }
 
-        public void ShowInputTerminalLabelsOfType(Type type)
+        public void HighlightInputTerminalsOfType(Type type)
         {
-            InputTerminalViewModels.ForEach(terminal => terminal.ShowLabelIfCompatibleType(type));
+            InputTerminalViewModels.ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
         }
 
-        public void ShowOutputTerminalLabelsOfType(Type type)
+        public void HighlightOutputTerminalsOfType(Type type)
         {
-            OutputTerminalViewModels.ForEach(terminal => terminal.ShowLabelIfCompatibleType(type));
+            OutputTerminalViewModels.ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
         }
 
-        public void HideAllTerminalLabels()
+        public void UnHighlightAllTerminals()
         {
-            TerminalViewModels.ForEach(terminal => terminal.TitleVisible = false);
+            TerminalViewModels.ForEach(terminal =>
+            {
+                terminal.HighlightVisible = false;
+            });
         }
 
         public virtual void InitializePluginNodeSettings()
@@ -319,6 +380,15 @@ namespace DiiagramrAPI.PluginNodeApi
         /// </summary>
         public virtual void SetupNode(NodeSetup setup)
         {
+        }
+
+        public void UnselectTerminals()
+        {
+            TerminalViewModels.ForEach(terminal =>
+            {
+                terminal.IsSelected = false;
+                terminal.HighlightVisible = false;
+            });
         }
     }
 }

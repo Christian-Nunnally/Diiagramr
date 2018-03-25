@@ -13,33 +13,16 @@
     </UserControl.Resources>
     
     <Path Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
-              StrokeThickness="3"
+              StrokeThickness="4"
               StrokeLineJoin="Miter" 
               StrokeMiterLimit="1"
               MouseDown="{s:Action WireMouseDown}">
         <Path.Style>
             <Style TargetType="{x:Type Path}">
-                <Setter Property="Stroke" Value="#555555"/>
+                <Setter Property="Stroke" Value="{Binding LineColorBrush}"/>
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Trigger.EnterActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Duration="0:0:0.05"
-                                                                    Storyboard.TargetProperty="Stroke.Color"
-                                                                    To="#883333" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.EnterActions>
-                        <Trigger.ExitActions>
-                            <BeginStoryboard>
-                                <Storyboard>
-                                    <ColorAnimation Duration="0:0:0.1"
-                                                                    Storyboard.TargetProperty="Stroke.Color"
-                                                                    To="#555555" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </Trigger.ExitActions>
+                        <Setter Property="Stroke" Value="#883333"/>
                     </Trigger>
                 </Style.Triggers>
             </Style>

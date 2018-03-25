@@ -69,7 +69,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null);
+            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null, null);
             DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 

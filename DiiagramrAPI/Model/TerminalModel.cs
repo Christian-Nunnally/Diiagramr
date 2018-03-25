@@ -107,6 +107,12 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public virtual object Data { get; set; }
 
+        public double TerminalUpWireMinimumLength { get; set; }
+        public double TerminalDownWireMinimumLength { get; set; }
+        public double TerminalLeftWireMinimumLength { get; set; }
+        public double TerminalRightWireMinimumLength { get; set; }
+        public int EdgeIndex { get; set; }
+
         private Type TypeResolver(Assembly assembly, string name, bool ignore) => assembly == null ? Type.GetType(name, false, ignore) : assembly.GetType(name, false, ignore);
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)

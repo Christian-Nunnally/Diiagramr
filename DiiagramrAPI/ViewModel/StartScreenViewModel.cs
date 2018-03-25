@@ -18,6 +18,7 @@ namespace DiiagramrAPI.ViewModel
         {
             if (Parent != null) RequestClose();
             _projectManager.LoadProject();
+            if (_projectManager.CurrentProject == null) LoadCanceled?.Invoke();
         }
 
         public void NewProject()
@@ -27,5 +28,7 @@ namespace DiiagramrAPI.ViewModel
             _projectManager.CreateDiagram();
             _projectManager.CurrentDiagrams.First().IsOpen = true;
         }
+
+        public event Action LoadCanceled;
     }
 }

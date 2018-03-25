@@ -106,27 +106,28 @@
             </Setter>
         </Style>
 
-        <Style x:Key="DeleteNodeButtonStyle" TargetType="Button">
-            <Setter Property="Content" Value="" />
+        <Style x:Key="DeleteNodeButtonStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="IndianRed" />
             <Setter Property="Background" Value="IndianRed" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Margin" Value="0" />
-            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
-            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="Margin" Value="2,0,0,2" />
+            <!--            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
+            <!--            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
         </Style>
 
-        <Style x:Key="SelectionStyle" TargetType="Rectangle">
-            <Setter Property="Fill" Value="DodgerBlue" />
-            <Setter Property="RadiusX" Value="0.5" />
-            <Setter Property="RadiusY" Value="0.5" />
+        <Style x:Key="SelectionStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="DodgerBlue" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="BorderThickness" Value="2" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
 
         <Style x:Key="NodeBorderStyle" TargetType="Border">
             <Setter Property="Background" Value="White" />
-            <Setter Property="CornerRadius" Value="0.5" />
-            <Setter Property="BorderBrush" Value="Gray" />
+            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="BorderBrush" Value="#555" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
             <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
@@ -136,9 +137,9 @@
         <VisualBrush
             x:Key="DotFillBrush"
             TileMode="Tile"
-            Viewbox="0,0,20,20"
+            Viewbox="0,0,30,30"
             ViewboxUnits="Absolute"
-            Viewport="0,0,20,20"
+            Viewport="0,0,30,30"
             ViewportUnits="Absolute">
             <VisualBrush.Visual>
                 <Ellipse
@@ -149,13 +150,21 @@
         </VisualBrush>
 
         <BooleanToVisibilityConverter x:Key="Btv" />
+
+        <Style x:Key="NodeBorderExtenderStyle" TargetType="Rectangle">
+            <Setter Property="Fill" Value="#444" />
+            <Setter Property="RadiusX" Value="1" />
+            <Setter Property="RadiusY" Value="1" />
+            <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
     </UserControl.Resources>
 
     <Grid>
         <customControls:ZoomBorder
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="White"
+            Background="#fefffe"
             MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}"
             PanX="{Binding PanX, Mode=OneWayToSource}"
             PanY="{Binding PanY, Mode=OneWayToSource}"
@@ -166,7 +175,7 @@
                 <Canvas
                     MinWidth="3002"
                     MinHeight="3002"
-                    Margin="-3000"
+                    Margin="-3015"
                     Background="{StaticResource DotFillBrush}"
                     Visibility="{Binding IsSnapGridVisible, Converter={StaticResource Btv}}" />
                 <!--  Wire Items Control  -->
@@ -232,7 +241,7 @@
                                                 Grid.ColumnSpan="2"
                                                 Width="10"
                                                 Height="10"
-                                                Margin="0,0,5,5"
+                                                Margin="0,0,7.5,7.5"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
                                                 Background="Transparent"
@@ -266,8 +275,7 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
-                                                Style="{StaticResource SelectionStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+                                                Style="{StaticResource NodeBorderExtenderStyle}" />
 
                                             <Border
                                                 Grid.Row="0"
@@ -283,11 +291,18 @@
                                                     IsTabStop="False" />
                                             </Border>
 
-                                            <Button
+                                            <Border
+                                                Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                Style="{StaticResource SelectionStyle}"
+                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+
+                                            <Border
                                                 Grid.Row="0"
                                                 Grid.Column="1"
-                                                Margin="1,0,0,1"
-                                                Command="{s:Action RemoveNodePressed}"
+                                                MouseDown="{s:Action RemoveNodePressed}"
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
                                         </Grid>
