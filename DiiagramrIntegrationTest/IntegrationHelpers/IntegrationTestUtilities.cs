@@ -45,6 +45,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
                 builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
                 builder.Bind<DiagramViewModelFactory>().ToSelf();
+                builder.Bind<ColorTheme>().ToSelf();
                 _container = builder.BuildContainer();
                 return _container;
             }

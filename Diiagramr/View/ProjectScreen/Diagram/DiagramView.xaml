@@ -21,8 +21,8 @@
     <UserControl.Resources>
         <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
             <Setter Property="Fill" Value="Transparent" />
-            <Setter Property="RadiusX" Value="0.5" />
-            <Setter Property="RadiusY" Value="0.5" />
+            <Setter Property="RadiusX" Value="3" />
+            <Setter Property="RadiusY" Value="3" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Trigger.EnterActions>
@@ -30,7 +30,7 @@
                             <Storyboard>
                                 <ColorAnimation
                                     Storyboard.TargetProperty="Fill.Color"
-                                    To="LightGray"
+                                    To="LightBlue"
                                     Duration="0:0:0.01" />
                             </Storyboard>
                         </BeginStoryboard>
@@ -107,13 +107,21 @@
         </Style>
 
         <Style x:Key="DeleteNodeButtonStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="IndianRed" />
             <Setter Property="Background" Value="IndianRed" />
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
             <Setter Property="Margin" Value="2,0,0,2" />
             <!--            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
             <!--            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
+        </Style>
+
+        <Style x:Key="NodeHelpButtonStyle" TargetType="Border">
+            <Setter Property="Background" Value="#4585fa" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Margin" Value="0,2,2,0" />
+            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidthMinus1}" />
+            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidthMinus1}" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
         </Style>
 
         <Style x:Key="SelectionStyle" TargetType="Border">
@@ -152,9 +160,9 @@
         <BooleanToVisibilityConverter x:Key="Btv" />
 
         <Style x:Key="NodeBorderExtenderStyle" TargetType="Rectangle">
-            <Setter Property="Fill" Value="#444" />
-            <Setter Property="RadiusX" Value="1" />
-            <Setter Property="RadiusY" Value="1" />
+            <Setter Property="Fill" Value="#555" />
+            <Setter Property="RadiusX" Value="2" />
+            <Setter Property="RadiusY" Value="2" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
             <Setter Property="IsHitTestVisible" Value="False" />
         </Style>
@@ -194,16 +202,18 @@
                                     <DataTemplate DataType="{x:Type pluginNodeApi:PluginNode}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
+                                                <!--                                                <ColumnDefinition MaxWidth="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition MaxWidth="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition MaxHeight="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                                 <RowDefinition Height="*" />
+                                                <!--                                                <RowDefinition MaxHeight="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
                                             </Grid.RowDefinitions>
 
                                             <Label
-                                                Grid.RowSpan="2"
+                                                Grid.RowSpan="3"
                                                 HorizontalContentAlignment="Center"
                                                 Content="{Binding Name}"
                                                 FontFamily="Verdana"
@@ -239,8 +249,8 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
-                                                Width="10"
-                                                Height="10"
+                                                Width="15"
+                                                Height="15"
                                                 Margin="0,0,7.5,7.5"
                                                 HorizontalAlignment="Right"
                                                 VerticalAlignment="Bottom"
@@ -251,10 +261,10 @@
                                                     <customControls:NodeResizeThumb.Template>
                                                         <ControlTemplate>
                                                             <Border
-                                                                Background="Gray"
-                                                                BorderBrush="LightGray"
-                                                                BorderThickness="0.5"
-                                                                CornerRadius="5"
+                                                                Background="#666"
+                                                                BorderBrush="#333"
+                                                                BorderThickness="0"
+                                                                CornerRadius="7.5"
                                                                 Cursor="SizeNWSE" />
                                                         </ControlTemplate>
                                                     </customControls:NodeResizeThumb.Template>
@@ -304,7 +314,34 @@
                                                 Grid.Column="1"
                                                 MouseDown="{s:Action RemoveNodePressed}"
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
+                                                <Label
+                                                    Padding="0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Content="x"
+                                                    FontFamily="Verdana"
+                                                    FontSize="7"
+                                                    Margin="0,0,0,1"
+                                                    Foreground="#202020" />
+                                            </Border>
+
+                                            <Border
+                                                Grid.Row="1"
+                                                Grid.Column="0"
+                                                MouseDown="{s:Action NodeHelpPressed}"
+                                                Style="{StaticResource NodeHelpButtonStyle}"
+                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
+                                                <Label
+                                                    Padding="0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Content="?"
+                                                    FontFamily="Verdana"
+                                                    FontSize="7"
+                                                    Foreground="#202020" />
+                                            </Border>
+
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>

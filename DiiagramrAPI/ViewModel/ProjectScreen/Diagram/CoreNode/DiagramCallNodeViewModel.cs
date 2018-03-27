@@ -45,7 +45,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             return diagramNode;
         }
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
             setup.EnableResize();

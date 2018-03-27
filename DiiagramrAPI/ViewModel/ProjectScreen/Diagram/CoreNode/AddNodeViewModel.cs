@@ -11,7 +11,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public int Value { get; set; }
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(120, 120);
             setup.NodeName("Add Node");

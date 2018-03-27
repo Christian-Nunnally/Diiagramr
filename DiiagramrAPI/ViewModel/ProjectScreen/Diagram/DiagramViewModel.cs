@@ -18,6 +18,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
     {
         private readonly ColorTheme _colorTheme;
         public const double NodeBorderWidth = 15.0;
+        public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
+        
         public const double GridSnapInterval = 30.0;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
@@ -108,6 +110,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void PluginNodeOnWiringModeChanged(TerminalViewModel terminalViewModel, bool enabled)
         {
             UnHighlightAllTerminals();
+            UnselectNodes();
             if (enabled) HighlightTerminalsOfSameType(terminalViewModel.TerminalModel);
         }
 
@@ -311,6 +314,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
         }
 
+        public void NodeHelpPressed()
+        {
+            //todo
+        }
+
         public void PreviewLeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
@@ -325,8 +333,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (!controlKeyPressed)
             {
-                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, GridSnapInterval) - NodeBorderWidth + 1;
-                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, GridSnapInterval) - NodeBorderWidth + 1;
+                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, GridSnapInterval);
+                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, GridSnapInterval);
             }
 
             InsertingNodeViewModel = null;

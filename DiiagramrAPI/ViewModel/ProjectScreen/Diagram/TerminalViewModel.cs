@@ -26,6 +26,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             set
             {
                 _colorTheme = value;
+                if (_colorTheme == null) return;
                 foreach (var action in ActionsToTakeWhenColorThemeIsLoaded)
                 {
                     action.Invoke();
@@ -35,7 +36,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
 
-        public static List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
+        private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
         private static ColorTheme _colorTheme;
 
         public double TerminalUpWireMinimumLength
@@ -189,7 +190,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             }
         }
 
-        public void CalculateUTurnLimitForTerminalSoThatWiresAvoidTheNodes(double nodeWidth, double nodeHeight)
+        public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
         {
             const double marginFromEdgeOfNode = DiagramViewModel.NodeBorderWidth + 10;
             var offsetX = TerminalModel.OffsetX;
@@ -260,10 +261,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (terminal == null) return false;
             if (terminal.Kind == TerminalModel.Kind) return false;
-            if (terminal.ConnectedWires.Intersect(TerminalModel.ConnectedWires).Any())
-            {
+            if (terminal.ConnectedWires != null && terminal.ConnectedWires
+                .Any(connectedWire => TerminalModel.ConnectedWires.Contains(connectedWire)))
                 return false;
-            }
             new WireModel(TerminalModel, terminal);
             return true;
         }

@@ -49,20 +49,59 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public virtual NodeLibrary Dependency { get; set; }
 
+        private double _x;
         [DataMember]
-        public virtual double X { get; set; }
+        public virtual double X
+        {
+            get => _x;
+            set
+            {
+                if (Math.Abs(_x - value) < 0.001) return;
+                _x = value;
+                PresentationChanged?.Invoke();
+            }
+        }
 
+        private double _y;
         [DataMember]
-        public virtual double Y { get; set; }
+        public virtual double Y
+        {
+            get => _y;
+            set
+            {
+                if (Math.Abs(_y - value) < 0.001) return;
+                _y = value;
+                PresentationChanged?.Invoke();
+            }
+        }
 
+        private double _width;
         [DataMember]
-        public double Width { get; set; }
+        public virtual double Width
+        {
+            get => _width;
+            set
+            {
+                if (Math.Abs(_width - value) < 0.001) return;
+                _width = value; 
+                PresentationChanged?.Invoke();
+            }
+        }
 
+        private double _height;
         [DataMember]
-        public double Height { get; set; }
+        public virtual double Height
+        {
+            get => _height;
+            set
+            {
+                if (Math.Abs(_height - value) < 0.001) return;
+                _height = value;
+                PresentationChanged?.Invoke();
+            }
+        }
 
         private PluginNode _nodeViewModel;
-
         public virtual PluginNode NodeViewModel
         {
             get => _nodeViewModel;

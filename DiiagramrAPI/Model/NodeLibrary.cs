@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Model
     public class NodeLibrary
     {
         [DataMember]
-        public int MajorVersion { get; set; }
+        public virtual int MajorVersion { get; set; }
 
         [DataMember]
         public int MinorVersion { get; set; }
@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Model
         public int Patch { get; set; }
 
         [DataMember]
-        public string Name { get; set; }
+        public virtual string Name { get; set; }
 
         [DataMember]
         public string DownloadPath { get; set; }

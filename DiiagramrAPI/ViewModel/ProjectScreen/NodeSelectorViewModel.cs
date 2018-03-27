@@ -57,8 +57,9 @@ namespace DiiagramrAPI.ViewModel
                 var library = GetOrCreateLibrary(libraryName);
                 if (library.Nodes.Any(n => n.Equals(nodeViewModel))) continue;
                 library.Nodes.Add(nodeViewModel);
-                
-                nodeViewModel.InitializeWithNode(new NodeModel(""));
+
+                var nodeModel = new NodeModel("");
+                nodeViewModel.InitializeWithNode(nodeModel);
             }
         }
 

@@ -15,11 +15,11 @@ namespace DiiagramrAPI.ViewModel.Diagram
     public class WireViewModel : Screen
     {
         private const double WireDistanceOutOfTerminal = 25.0;
-        private const double WireEdgeIndexSpacing = 5.0;
+        private const double WireEdgeIndexSpacing = 0.0;
 
         public ColorTheme ColorTheme
         {
-            get => _colorTheme;
+            private get => _colorTheme;
             set
             {
                 _colorTheme = value;
@@ -55,12 +55,12 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public Point[] Points { get; set; }
 
-        public double X1 { get; set; }
-        public double X2 { get; set; }
-        public double Y1 { get; set; }
-        public double Y2 { get; set; }
+        public double X1 { get; private set; }
+        public double X2 { get; private set; }
+        public double Y1 { get; private set; }
+        public double Y2 { get; private set; }
 
-        public WireModel WireModel { get; set; }
+        public WireModel WireModel { get; private set; }
 
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -111,7 +111,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
             Points = points.ToArray();
         }
 
-        private Direction GetBannedDirectionFromPoints(Point start, Point end)
+        private static Direction GetBannedDirectionFromPoints(Point start, Point end)
         {
             if (Math.Abs(start.X - end.X) > Math.Abs(start.Y - end.Y))
             {

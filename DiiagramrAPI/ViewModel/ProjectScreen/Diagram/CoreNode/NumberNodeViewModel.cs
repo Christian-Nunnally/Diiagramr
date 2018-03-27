@@ -9,7 +9,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         [PluginNodeSetting]
         public int Value { get; set; }
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
             setup.NodeName("Number Node");

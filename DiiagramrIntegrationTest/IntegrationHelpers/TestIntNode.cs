@@ -9,7 +9,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         [PluginNodeSetting]
         public int Value { get; set; }
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             OutputTerminal = setup.OutputTerminal<int>("testOut", Direction.East);
         }

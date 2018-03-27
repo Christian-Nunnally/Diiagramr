@@ -18,17 +18,18 @@ namespace DiiagramrAPI.PluginNodeApi
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
         private readonly List<Action> _viewLoadedActions = new List<Action>();
+        public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
 
         public PluginNode()
         {
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
         }
 
-        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
-
-        private bool MouseOverBorder { get; set; }
-
         public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
+        public event Action<WireModel> WireConnectedToTerminal;
+        public event Action<WireModel> WireDisconnectedFromTerminal;
+        public event Action DragStarted;
+        public event Action DragStopped;
 
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
@@ -39,14 +40,9 @@ namespace DiiagramrAPI.PluginNodeApi
             set
             {
                 NodeModel.Height = value;
-                if (Height < MinimumHeight) Height = MinimumHeight;
+                if (Height < MinimumHeight - 0.05) Height = MinimumHeight;
                 FixAllTerminals();
             }
-        }
-
-        private void SetUTurnLimitForTerminals()
-        {
-            TerminalViewModels.ForEach(t => t.CalculateUTurnLimitForTerminalSoThatWiresAvoidTheNodes(Width, Height));
         }
 
         public virtual double Width
@@ -55,7 +51,7 @@ namespace DiiagramrAPI.PluginNodeApi
             set
             {
                 NodeModel.Width = value;
-                if (Width < MinimumWidth) Width = MinimumWidth;
+                if (Width < MinimumWidth - 0.05) Width = MinimumWidth;
                 FixAllTerminals();
             }
         }
@@ -63,52 +59,44 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double MinimumHeight { get; set; }
         public virtual double MinimumWidth { get; set; }
 
-        public bool Dragging { get; set; }
+        public virtual bool Dragging { get; set; }
         public virtual bool ResizeEnabled { get; set; }
-        public bool ResizerVisible => ResizeEnabled && IsSelected;
+        public virtual bool ResizerVisible => ResizeEnabled && IsSelected;
+        public virtual bool TitleVisible => IsSelected || MouseOverBorder;
 
-        public bool TitleVisible => IsSelected || MouseOverBorder;
+        private bool _isSelected;
 
         public virtual bool IsSelected
         {
-            get { return _isSelected; }
+            get => _isSelected;
             set
             {
-                if (value)
-                {
-                    foreach (var terminalViewModel in TerminalViewModels)
-                    {
-                        terminalViewModel.IsSelected = false;
-                    }
-                }
+                if (value) TerminalViewModels.ForEach(t => t.IsSelected = false);
                 _isSelected = value;
             }
         }
 
-        private bool IsSetup { get; set; }
-
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
-        public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels => TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
-        public IEnumerable<InputTerminalViewModel> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminalViewModel>();
-        public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminalViewModel>();
+        public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels =>
+            TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
+        public IEnumerable<InputTerminalViewModel> InputTerminalViewModels =>
+            TerminalViewModels.OfType<InputTerminalViewModel>();
+        public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels =>
+            TerminalViewModels.OfType<OutputTerminalViewModel>();
 
         public virtual string Name { get; set; } = "Node";
+
         public virtual NodeModel NodeModel { get; set; }
 
-        public event Action<WireModel> WireConnectedToTerminal;
-        public event Action<WireModel> WireDisconnectedFromTerminal;
-
-        public event Action DragStarted;
-        public event Action DragStopped;
-
-        public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
-        private bool _isSelected;
-        private double _height;
+        private bool IsInitialized { get; set; }
+        private bool MouseOverBorder { get; set; }
+        private IEnumerable<PropertyInfo> PluginNodeSettings => 
+            GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
-            if (IsSetup) return;
-            IsSetup = true;
+            if (IsInitialized) return;
+            IsInitialized = true;
 
             NodeModel = nodeModel;
             NodeModel.NodeViewModel = this;
@@ -117,17 +105,23 @@ namespace DiiagramrAPI.PluginNodeApi
 
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
-            SetupDynamicTerminals();
-
-            X = nodeModel.X;
-            Y = nodeModel.Y;
-            if (nodeModel.Width > 1) Width = nodeModel.Width;
-            if (nodeModel.Height > 1) Height = nodeModel.Height;
+            InitializeDynamicTerminals();
+            InitializeWidthAndHeight();
         }
 
-        private void SetupDynamicTerminals()
+        private void InitializeWidthAndHeight()
         {
-            var dynamicTerminals = NodeModel.Terminals.Where(t => !string.IsNullOrEmpty(t.MethodKey)).ToArray();
+            X = NodeModel.X;
+            Y = NodeModel.Y;
+            if (NodeModel.Width > 1) Width = NodeModel.Width;
+            if (NodeModel.Height > 1) Height = NodeModel.Height;
+        }
+
+        private void InitializeDynamicTerminals()
+        {
+            var dynamicTerminals = NodeModel.Terminals
+                .Where(t => !string.IsNullOrEmpty(t.MethodKey)).ToArray();
+
             foreach (var dynamicTerminal in dynamicTerminals)
             {
                 var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(dynamicTerminal);
@@ -136,9 +130,9 @@ namespace DiiagramrAPI.PluginNodeApi
             }
         }
 
-        public void CreateDynamicTerminal(string name, Type type, Direction direction, TerminalKind kind, string methodKey)
+        protected void CreateDynamicTerminal(string name, Type type, Direction direction, TerminalKind kind, string methodKey)
         {
-            if (!DynamicTerminalMethods.ContainsKey(methodKey)) throw new InvalidOperationException($"Must call RegisterDynamicTerminalMethod for the key '{methodKey}' before using it to create a dynamic terminal");
+            if (!DynamicTerminalMethods.ContainsKey(methodKey)) throw DynamicTerminalExpection(methodKey);
             var terminalModel = new TerminalModel(name, type, direction, kind, 10000);
             terminalModel.MethodKey = methodKey;
             var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
@@ -148,7 +142,9 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private void LoadTerminalViewModels()
         {
-            var nondynamicTerminals = NodeModel.Terminals.Where(t => string.IsNullOrEmpty(t.MethodKey)).ToArray();
+            var nondynamicTerminals = NodeModel.Terminals
+                .Where(t => string.IsNullOrEmpty(t.MethodKey)).ToArray();
+
             foreach (var terminal in nondynamicTerminals)
             {
                 terminal.WireConnected += TerminalWireConnected;
@@ -173,7 +169,7 @@ namespace DiiagramrAPI.PluginNodeApi
             AddTerminal(terminalViewModel.TerminalModel);
             DropAndArrangeTerminal(terminalViewModel, terminalViewModel.TerminalModel.Direction);
             terminalViewModel.WiringModeChanged += TerminalWiringEventHandler;
-            terminalViewModel.CalculateUTurnLimitForTerminalSoThatWiresAvoidTheNodes(Width, Height);
+            terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
         }
 
         public virtual void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)
@@ -274,13 +270,6 @@ namespace DiiagramrAPI.PluginNodeApi
             SetUTurnLimitForTerminals();
         }
 
-        protected override void OnViewLoaded()
-        {
-            base.OnViewLoaded();
-            _viewLoadedActions.ForEach(action => action.Invoke());
-            _viewLoadedActions.Clear();
-        }
-
         private void FixAllTerminals()
         {
             FixOtherTerminalsOnEdge(Direction.North);
@@ -291,9 +280,16 @@ namespace DiiagramrAPI.PluginNodeApi
             SetUTurnLimitForTerminals();
         }
 
+        private void SetUTurnLimitForTerminals()
+        {
+            TerminalViewModels.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
+        }
+
         private void FixOtherTerminalsOnEdge(Direction edge)
         {
-            var otherTerminalsInDirection = TerminalViewModels.Where(t => t.TerminalModel.Direction == edge).ToArray();
+            var otherTerminalsInDirection = TerminalViewModels
+                .Where(t => t.TerminalModel.Direction == edge).ToArray();
+
             var inc = 1 / (otherTerminalsInDirection.Length + 1.0f);
             for (var i = 0; i < otherTerminalsInDirection.Length; i++)
             {
@@ -304,7 +300,7 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private void DropTerminalOnEdge(TerminalViewModel terminal, Direction edge, double precentAlongEdge)
         {
-            var extraSpace = 7;
+            const int extraSpace = 7;
             var widerWidth = Width + extraSpace * 2;
             var tallerHeight = Height + extraSpace * 2;
             switch (edge)
@@ -337,6 +333,13 @@ namespace DiiagramrAPI.PluginNodeApi
             return closestEastWestDistance < closestNorthSouthDistance ? closestEastWest : closestNorthSouth;
         }
 
+        protected override void OnViewLoaded()
+        {
+            base.OnViewLoaded();
+            _viewLoadedActions.ForEach(action => action.Invoke());
+            _viewLoadedActions.Clear();
+        }
+
         public void MouseEntered(object sender, MouseEventArgs mouseEventArgs)
         {
             MouseOverBorder = true;
@@ -359,10 +362,7 @@ namespace DiiagramrAPI.PluginNodeApi
 
         public void UnHighlightAllTerminals()
         {
-            TerminalViewModels.ForEach(terminal =>
-            {
-                terminal.HighlightVisible = false;
-            });
+            TerminalViewModels.ForEach(t => t.HighlightVisible = false);
         }
 
         public virtual void InitializePluginNodeSettings()
@@ -381,9 +381,10 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         /// <summary>
-        ///     All node customization such as turning on/off features and setting node geometry happens here.
+        ///     All node customization such as turning on/off features 
+        ///     and setting node geometry happens here.
         /// </summary>
-        public virtual void SetupNode(NodeSetup setup)
+        protected virtual void SetupNode(NodeSetup setup)
         {
         }
 
@@ -394,6 +395,12 @@ namespace DiiagramrAPI.PluginNodeApi
                 terminal.IsSelected = false;
                 terminal.HighlightVisible = false;
             });
+        }
+
+        private static Exception DynamicTerminalExpection(string methodKey)
+        {
+            var errorString = $"RegisterDynamicTerminalMethod never received key '{methodKey}'.";
+            return new InvalidOperationException(errorString);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     {
         public Terminal<object> OutputTerminal;
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Input");

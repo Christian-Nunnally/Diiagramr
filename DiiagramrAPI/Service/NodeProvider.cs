@@ -59,7 +59,7 @@ namespace DiiagramrAPI.Service
 
         public PluginNode CreateNodeViewModelFromName(string typeFullName)
         {
-            if (!_dependencyMap.ContainsKey(typeFullName)) NoViewModelException(typeFullName);
+            if (!_dependencyMap.ContainsKey(typeFullName)) throw NoViewModelException(typeFullName);
             var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
             return LoadNodeViewModelFromNode(node);
         }

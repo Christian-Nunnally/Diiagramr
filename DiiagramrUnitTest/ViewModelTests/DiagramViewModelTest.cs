@@ -204,8 +204,8 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _diagramViewModel.MouseMoved(new Point(5, 5));
 
-            _pluginNodeMoq.VerifySet(m => m.X = -5);
-            _pluginNodeMoq.VerifySet(m => m.Y = -5);
+            _pluginNodeMoq.VerifySet(m => m.X = -10);
+            _pluginNodeMoq.VerifySet(m => m.Y = -10);
         }
 
         [TestMethod]
@@ -224,8 +224,8 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramViewModel.Zoom = 2;
             _diagramViewModel.MouseMoved(new Point(5, 5));
 
-            _pluginNodeMoq.VerifySet(m => m.X = -8.5);
-            _pluginNodeMoq.VerifySet(m => m.Y = -8.5);
+            _pluginNodeMoq.VerifySet(m => m.X = -13.5);
+            _pluginNodeMoq.VerifySet(m => m.Y = -13.5);
         }
 
         [TestMethod]

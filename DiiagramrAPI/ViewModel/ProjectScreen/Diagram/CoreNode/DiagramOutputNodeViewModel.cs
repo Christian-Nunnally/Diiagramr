@@ -8,7 +8,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public event TerminalDataChangedDelegate<object> DataChanged;
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Output");

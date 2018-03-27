@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectLoadSave : IProjectLoadSave
     {
-        private IPluginLoader _pluginLoader;
+        private readonly IPluginLoader _pluginLoader;
 
         public ProjectLoadSave(Func<IPluginLoader> pluginLoaderFactory)
         {
@@ -32,7 +32,13 @@ namespace DiiagramrAPI.Service
             {
                 using (var w = XmlWriter.Create(writer))
                 {
-                    serializer.WriteObject(w, project);
+                    try
+                    {
+                        serializer.WriteObject(w, project);
+                    }
+                    catch (System.Xml.XmlException e)
+                    {
+                    }
                 }
             }
         }

@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using Castle.Core.Internal;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
@@ -84,7 +86,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsAPluginNode_SetupNodeInvokedOnNode()
+        public void TestConstructor_ProviderReturnsAPluginNode_InitializeWithNodeInvokedOnNode()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
@@ -92,7 +94,7 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             new NodeSelectorViewModel(NodeProvidorFactory);
 
-            _nodeMoq1.Verify(n => n.SetupNode(It.IsAny<NodeSetup>()));
+            _nodeMoq1.Verify(n => n.InitializeWithNode(It.IsAny<NodeModel>()));
         }
 
         [TestMethod]

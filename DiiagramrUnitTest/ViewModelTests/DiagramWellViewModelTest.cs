@@ -42,7 +42,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagramMoq = new Mock<DiagramModel>();
             diagramMoq.SetupAllProperties();
             diagramMoq.Object.IsOpen = true;
-            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorMoq.Object).Object;
+            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorMoq.Object).Object;
 
             _diagramWellViewModel.CloseActiveDiagram();
 
@@ -64,7 +64,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagram = new DiagramModel();
             var project = new ProjectModel();
             var nodeProviderMoq = new Mock<IProvideNodes>();
-            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object, _nodeSelectorMoq.Object);
+            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object, null, _nodeSelectorMoq.Object);
             var diagramViewModelList = new List<DiagramViewModel> {diagramViewModelMoq.Object};
 
             _projectManagerMoq.SetupAllProperties();

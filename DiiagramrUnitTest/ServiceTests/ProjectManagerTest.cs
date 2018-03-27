@@ -32,7 +32,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
             _libraryManagerMoq = new Mock<ILibraryManager>();
-            _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>) (() => _nodeSelectorViewModelMoq.Object));
+            _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>) (() => _nodeSelectorViewModelMoq.Object), null);
             _currentProjectChanged = false;
 
             _projectManager = new ProjectManager(
@@ -98,7 +98,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_DiagramViewModelsCleared()
         {
-            var diagramViewModel = new Mock<DiagramViewModel>(new Mock<DiagramModel>().Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object).Object;
+            var diagramViewModel = new Mock<DiagramViewModel>(new Mock<DiagramModel>().Object, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object).Object;
             _projectManager.DiagramViewModels.Add(diagramViewModel);
             _projectManager.CreateProject();
             Assert.AreEqual(0, _projectManager.DiagramViewModels.Count);

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
@@ -73,7 +74,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         }
 
         [TestMethod]
-        public void TestHideAllTerminalLabels_SetsTitleVisibleToFalseOnTerminalViewModels()
+        public void TestUnHighlightAllTerminals_SetsHighlightToFalseOnTerminalViewModels()
         {
             var nodeMoq = new Mock<NodeModel>("");
             var testPluginNode = new TestPluginNode();
@@ -85,7 +86,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.UnHighlightAllTerminals();
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = false);
+            terminalViewModelMoq.VerifySet(model => model.HighlightVisible = false);
         }
 
         [TestMethod]
@@ -99,11 +100,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(int));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true);
+            terminalViewModelMoq.Verify(model => model.ShowHighlightIfCompatibleType(It.IsAny<Type>()));
         }
 
         [TestMethod]
-        public void TestShowOutputTerminalLabelsOfType_TerminalTypeNotCompatible_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        public void TestHighlightOutputTerminalsOfType_TerminalTypeNotCompatible_DoesNotSetHighlightVisibleTrueOnTerminalViewModel()
         {
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
@@ -113,11 +114,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.HighlightVisible = true, Times.Never);
         }
 
         [TestMethod]
-        public void TestShowOutputTerminalLabelsOfType_TerminalTypeCompatibleButInput_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        public void TestHighlightOutputTerminalsOfType_TerminalTypeCompatibleButInput_DoesNotSetHighlightVisibleToOnTerminalViewModel()
         {
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
@@ -127,11 +128,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.HighlightVisible = true, Times.Never);
         }
 
         [TestMethod]
-        public void TestShowInputTerminalLabelsOfType_TerminalTypeCompatible_SetsTitleVisibleToOnTerminalViewModel()
+        public void TestHighlightInputTerminalsOfType_TerminalTypeCompatible_SetsHighlightVisibleTrueOnTerminalViewModel()
         {
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
@@ -141,11 +142,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(int));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true);
+            terminalViewModelMoq.Verify(model => model.ShowHighlightIfCompatibleType(It.IsAny<Type>()));
         }
 
         [TestMethod]
-        public void TestShowInputTerminalLabelsOfType_TerminalTypeNotCompatible_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        public void TestHighlightInputTerminalsOfType_TerminalTypeNotCompatible_DoesNotSetHighlightVisibleTrueOnTerminalViewModel()
         {
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
@@ -155,11 +156,11 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.HighlightVisible = true, Times.Never);
         }
 
         [TestMethod]
-        public void TestShowInputTerminalLabelsOfType_TerminalTypeCompatibleButOutput_DoesNotSetTitleVisibleToOnTerminalViewModel()
+        public void TestHighlightInputTerminalsOfType_TerminalTypeCompatibleButOutput_DoesNotSetHighlightVisibleToTrueOnTerminalViewModel()
         {
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
@@ -169,7 +170,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(string));
 
-            terminalViewModelMoq.VerifySet(model => model.MouseWithin = true, Times.Never);
+            terminalViewModelMoq.VerifySet(model => model.HighlightVisible = true, Times.Never);
         }
 
         [TestMethod]
@@ -309,7 +310,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             }
         }
 
-        public override void SetupNode(NodeSetup setup)
+        protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(40, 40);
         }

@@ -13,20 +13,21 @@ namespace DiiagramrAPI.Service
         private readonly Dictionary<Type, Color> _wireColorToTypeMap = new Dictionary<Type, Color>();
         private readonly Dictionary<Type, Color> _terminalColorToTypeMap = new Dictionary<Type, Color>();
 
-        private Color _defaultColor = Color.FromRgb(100, 100, 100);
+        private readonly Color _defaultColor = Color.FromRgb(100, 100, 100);
 
         public ColorTheme()
         {
-            RegisterWireColorForType(typeof(int), Color.FromRgb(73, 151, 120));
-            RegisterWireColorForType(typeof(byte[]), Color.FromRgb(221, 173, 107));
-            RegisterWireColorForType(typeof(string), Color.FromRgb(199, 97, 126));
-            RegisterWireColorForType(typeof(object), Color.FromRgb(155, 155, 155));
-
+            RegisterWireColorForType(typeof(int), Color.FromArgb(200, 39, 116, 85));
+            RegisterWireColorForType(typeof(byte[]), Color.FromArgb(200, 170, 122, 57));
+            RegisterWireColorForType(typeof(string), Color.FromArgb(200, 153, 51, 80));
+            RegisterWireColorForType(typeof(object), Color.FromArgb(200, 155, 155, 155));
 
             RegisterTerminalColorForType(typeof(int), Color.FromRgb(39, 116, 85));
             RegisterTerminalColorForType(typeof(byte[]), Color.FromRgb(170, 122, 57));
             RegisterTerminalColorForType(typeof(string), Color.FromRgb(153, 51, 80));
             RegisterTerminalColorForType(typeof(object), Color.FromRgb(155, 155, 155));
+
+            NodeBorderOnMouseOverColor = Colors.LightBlue;
         }
 
         public Color GetWireColorForType(Type type)
@@ -48,5 +49,7 @@ namespace DiiagramrAPI.Service
         {
             if (!_terminalColorToTypeMap.ContainsKey(type)) _terminalColorToTypeMap.Add(type, color);
         }
+
+        public Color NodeBorderOnMouseOverColor { get; set; }
     }
 }

@@ -110,18 +110,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestDropObject_DroppingOppositeTerminalModel_ConnectedWireSetBetweenTerminals()
-        {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            var droppingTerminalMoq = new Mock<TerminalModel>(string.Empty, typeof(int), Direction.North, TerminalKind.Output, 0);
-
-            terminalViewModel.DropObject(droppingTerminalMoq.Object);
-
-            _terminalModelMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
-            droppingTerminalMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
-        }
-
-        [TestMethod]
         public void TestDropObject_DroppingNonTerminal_DoesNothing()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
@@ -191,22 +179,22 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestShowLabelIfCompatibleType_TypesCompatible_TitleVisibleSetToTrue()
+        public void TestShowHighlightIfCompatibleType_TypesCompatible_HighlightVisibleSetToTrue()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            Assert.IsFalse(terminalViewModel.MouseWithin);
+            Assert.IsFalse(terminalViewModel.HighlightVisible);
             terminalViewModel.ShowHighlightIfCompatibleType(typeof(int));
-            Assert.IsTrue(terminalViewModel.MouseWithin);
+            Assert.IsTrue(terminalViewModel.HighlightVisible);
         }
 
         [TestMethod]
-        public void TestShowLabelIfCompatibleType_TypesNotCompatible_TitleVisibleSetToFalse()
+        public void TestShowHighlightIfCompatibleType_TypesNotCompatible_HighlightVisibleFalse()
         {
             var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.MouseWithin = true;
-            Assert.IsTrue(terminalViewModel.MouseWithin);
+            terminalViewModel.HighlightVisible = true;
+            Assert.IsTrue(terminalViewModel.HighlightVisible);
             terminalViewModel.ShowHighlightIfCompatibleType(typeof(string));
-            Assert.IsFalse(terminalViewModel.MouseWithin);
+            Assert.IsFalse(terminalViewModel.HighlightVisible);
         }
 
         [TestMethod]
