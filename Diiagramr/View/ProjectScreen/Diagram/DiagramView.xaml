@@ -316,13 +316,13 @@
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
                                                 <Label
+                                                    Margin="0,0,0,1"
                                                     Padding="0"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     Content="x"
                                                     FontFamily="Verdana"
                                                     FontSize="7"
-                                                    Margin="0,0,0,1"
                                                     Foreground="#202020" />
                                             </Border>
 

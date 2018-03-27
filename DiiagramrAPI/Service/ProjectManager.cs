@@ -42,6 +42,7 @@ namespace DiiagramrAPI.Service
             {
                 CurrentProject = new ProjectModel();
                 CurrentProjectChanged?.Invoke();
+                CurrentProject.IsDirty = false;
             }
         }
 

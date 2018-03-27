@@ -29,7 +29,7 @@ namespace DiiagramrIntegrationTest
             var diagramWell = projectScreen.DiagramWellViewModel;
             var nodeSelector = (NodeSelectorViewModel)_container.Get(typeof(NodeSelectorViewModel));
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
-
+            projectManager.CurrentProject.IsDirty = false;
             _shell.CreateProject();
             Assert.IsNotNull(projectManager.CurrentProject);
 
