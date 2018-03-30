@@ -1,38 +1,83 @@
-﻿<UserControl x:Class="Diiagramr.View.ShellScreen.StartScreenView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Diiagramr.View.ShellScreen"
-             xmlns:s="https://github.com/canton7/Stylet"
-             xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
-             mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance viewModel:StartScreenViewModel}"
-             d:DesignHeight="300" d:DesignWidth="300">
+﻿<UserControl
+    x:Class="Diiagramr.View.ShellScreen.StartScreenView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Diiagramr.View.ShellScreen"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    d:DataContext="{d:DesignInstance viewModel:StartScreenViewModel}"
+    d:DesignHeight="300"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
     <UserControl.Resources>
-        <Style TargetType="{x:Type Rectangle}" x:Key="RectangleMouseOverStyle">
-            <Setter Property="Fill" Value="Transparent" />
+        <Style x:Key="RectangleMouseOverStyle" TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="Transparent" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Fill" Value="#eeeeee">
-                    </Setter>
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="Background.Color"
+                                    To="#cccccc"
+                                    Duration="0:0:0.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="Background.Color"
+                                    To="Transparent"
+                                    Duration="0:0:0.3" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Grid Background="White">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-        <Rectangle Grid.Column="0" Style="{StaticResource RectangleMouseOverStyle}" MouseDown="{s:Action NewProject}"/>
-        <Rectangle Grid.Column="1" Style="{StaticResource RectangleMouseOverStyle}" MouseDown="{s:Action LoadProject}"/>
-        <Image Grid.Column="0" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="None" Source="/Diiagramr;component/Resources/new.png"/>
-        <Image Grid.Column="1" IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="None" Source="/Diiagramr;component/Resources/load.png"/>
-        <Image Grid.Column="0" 
-               Grid.ColumnSpan="2"
-               IsHitTestVisible="False" 
-               Source="/Diiagramr;component/Resources/startscreenclear.png" 
-               Stretch="None"/>
+        <Border
+            Grid.Column="0"
+            MouseDown="{s:Action NewProject}"
+            Style="{StaticResource RectangleMouseOverStyle}"
+            
+            MouseEnter="{s:Action NewProjectButtonMouseEntered}"
+            MouseLeave="{s:Action NewProjectButtonMouseLeft}"/>
+        <Border
+            Grid.Column="1"
+            MouseDown="{s:Action LoadProject}"
+            Style="{StaticResource RectangleMouseOverStyle}"
+            
+            MouseEnter="{s:Action LoadProjectButtonMouseEntered}"
+            MouseLeave="{s:Action LoadProjectButtonMouseLeft}"/>
+        <Image
+            Grid.Column="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsHitTestVisible="False"
+            Source="{Binding NewButtonImageSource}"
+            Stretch="None" />
+        <Image
+            Grid.Column="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsHitTestVisible="False"
+            Source="{Binding LoadButtonImageSource}"
+            Stretch="None" />
+        <Image
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            IsHitTestVisible="False"
+            Source="/Diiagramr;component/Resources/startscreenclear.png"
+            Stretch="None" />
     </Grid>
 </UserControl>

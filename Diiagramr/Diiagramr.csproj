@@ -71,7 +71,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -291,6 +291,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\load.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\newHover.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\loadHover.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
