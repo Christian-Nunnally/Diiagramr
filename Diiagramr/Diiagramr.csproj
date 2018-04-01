@@ -31,8 +31,10 @@
     <InstallUrl>https://diiagramr.blob.core.windows.net/diiagramrinstall/</InstallUrl>
     <ProductName>Diiagramr</ProductName>
     <PublisherName>Diiagramr</PublisherName>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>0.3.0.%2a</ApplicationVersion>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>0.3.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
