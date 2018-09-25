@@ -42,6 +42,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(DiagramInputNodeViewModel), typeof(DiagramInputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramCallNodeViewModel), typeof(DiagramCallNodeView));
             _viewModelToViewMapping.Add(typeof(AddNodeViewModel), typeof(AddNodeView));
+            _viewModelToViewMapping.Add(typeof(PointNodeViewModel), typeof(PointNodeView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

@@ -34,9 +34,8 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PropertyChanged, Version=2.1.4.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.1.4\lib\netstandard1.0\PropertyChanged.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="PropertyChanged, Version=2.5.11.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.11\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
     <Reference Include="Stylet, Version=1.1.21.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Stylet.1.1.21\lib\net45\Stylet.dll</HintPath>
@@ -100,6 +99,7 @@
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\DiagramInputNodeViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\DiagramOutputNodeViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\IONode.cs" />
+    <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\PointNodeViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\NumberNodeViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\DiagramControlViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\DiagramViewModel.cs" />
@@ -134,11 +134,11 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Fody.2.2.0\build\net452\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" />
+  <Import Project="..\packages\Fody.3.2.4\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.4\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.2.0\build\net452\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.2.4\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.4\build\Fody.targets'))" />
   </Target>
 </Project>

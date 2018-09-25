@@ -36,7 +36,7 @@ namespace DiiagramrAPI.Service
                     {
                         serializer.WriteObject(w, project);
                     }
-                    catch (System.Xml.XmlException e)
+                    catch (XmlException)
                     {
                     }
                 }
