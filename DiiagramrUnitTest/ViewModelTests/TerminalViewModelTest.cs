@@ -1,11 +1,9 @@
-﻿using System;
-using System.Windows.Input;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -88,24 +86,30 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestSetData_TerminalDataSet()
         {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.Data = 5;
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object)
+            {
+                Data = 5
+            };
             _terminalModelMoq.VerifySet(t => t.Data = 5);
         }
 
         [TestMethod]
         public void TestSetXRelativeToNode_TerminalXOffsetSet()
         {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.XRelativeToNode = 5;
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object)
+            {
+                XRelativeToNode = 5
+            };
             _terminalModelMoq.VerifySet(t => t.OffsetX = 5);
         }
 
         [TestMethod]
         public void TestSetYRelativeToNode_TerminalYOffsetSet()
         {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.YRelativeToNode = 6;
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object)
+            {
+                YRelativeToNode = 6
+            };
             _terminalModelMoq.VerifySet(t => t.OffsetY = 6);
         }
 
@@ -163,8 +167,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestMouseLeft_TitleVisibleSetToFalse()
         {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.MouseWithin = true;
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object)
+            {
+                MouseWithin = true
+            };
             Assert.IsTrue(terminalViewModel.MouseWithin);
             terminalViewModel.MouseLeft(null, null);
             Assert.IsFalse(terminalViewModel.MouseWithin);
@@ -190,8 +196,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestShowHighlightIfCompatibleType_TypesNotCompatible_HighlightVisibleFalse()
         {
-            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object);
-            terminalViewModel.HighlightVisible = true;
+            var terminalViewModel = new TerminalViewModel(_terminalModelMoq.Object)
+            {
+                HighlightVisible = true
+            };
             Assert.IsTrue(terminalViewModel.HighlightVisible);
             terminalViewModel.ShowHighlightIfCompatibleType(typeof(string));
             Assert.IsFalse(terminalViewModel.HighlightVisible);

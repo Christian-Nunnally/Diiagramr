@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.ViewModel;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
+using System.Linq;
 
 namespace DiiagramrIntegrationTest
 {

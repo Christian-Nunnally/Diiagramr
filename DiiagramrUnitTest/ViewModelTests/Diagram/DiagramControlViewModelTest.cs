@@ -1,5 +1,4 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -1,7 +1,5 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 
 namespace DiiagramrUnitTests.ModelTests
 {

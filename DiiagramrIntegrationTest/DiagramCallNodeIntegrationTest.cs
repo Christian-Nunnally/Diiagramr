@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
+using System.Linq;
 
 namespace DiiagramrIntegrationTest
 {
@@ -24,7 +24,7 @@ namespace DiiagramrIntegrationTest
         public void TestSimpleWiredInputOutput()
         {
             var projectScreen = _shell.ProjectScreenViewModel;
-            var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
+            var nodeSelectorViewModel = (NodeSelectorViewModel)_container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
             nodeSelectorViewModel.Visible = true;
@@ -83,7 +83,7 @@ namespace DiiagramrIntegrationTest
         public void TestPluginNodeSettingUpdatesDiagramCallNode()
         {
             var projectScreen = _shell.ProjectScreenViewModel;
-            var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
+            var nodeSelectorViewModel = (NodeSelectorViewModel)_container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
             nodeSelectorViewModel.Visible = true;
@@ -99,7 +99,7 @@ namespace DiiagramrIntegrationTest
 
             var diagramCallNode = diagramViewModel2.PlaceDiagramCallNodeFor(diagramViewModel1.Diagram);
             var outputNodeOnDiagram1 = _shell.PlaceNode(outputNode, 0, 0);
-            var testIntNodeOnDiagram1 = (TestIntNode) _shell.PlaceNode(testIntNode, 0, 0);
+            var testIntNodeOnDiagram1 = (TestIntNode)_shell.PlaceNode(testIntNode, 0, 0);
 
             _shell.WireTerminals(testIntNodeOnDiagram1.TerminalViewModels.First(), outputNodeOnDiagram1.TerminalViewModels.First());
 

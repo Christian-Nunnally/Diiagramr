@@ -1,9 +1,9 @@
-﻿using System;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -20,9 +20,9 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             _projectManagerMoq = new Mock<IProjectManager>();
             _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>(
-                (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _projectExplorerViewModelMoq = new Mock<ProjectExplorerViewModel>(
-                (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _projectScreenViewModel = new ProjectScreenViewModel(
                 () => _projectExplorerViewModelMoq.Object,
                 () => _diagramWellViewModelMoq.Object,

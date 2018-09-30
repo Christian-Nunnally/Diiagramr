@@ -44,7 +44,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestDeleteDiagram_CallsDeleteDiagramWithSelectedDiagram()
         {
             var diagram = new DiagramModel();
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<DiagramModel> {diagram});
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(new BindableCollection<DiagramModel> { diagram });
             _projectExplorerViewModel.SelectedDiagram = diagram;
             _projectExplorerViewModel.DeleteDiagram();
             _projectManagerMoq.Verify(m => m.DeleteDiagram(It.Is<DiagramModel>(d => d == diagram)), Times.Once);

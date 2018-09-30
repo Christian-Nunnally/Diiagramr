@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -12,8 +12,10 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestCopy_CopyEmptyDiagram_CopiedDiagramIsDifferent()
         {
             var copier = new DiagramCopier();
-            var diagram = new DiagramModel();
-            diagram.Name = "d";
+            var diagram = new DiagramModel
+            {
+                Name = "d"
+            };
             var copiedDiagram = copier.Copy(diagram);
             Assert.AreNotEqual(diagram, copiedDiagram);
         }
@@ -22,8 +24,10 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestCopy_CopyEmptyDiagram_NameCopied()
         {
             var copier = new DiagramCopier();
-            var diagram = new DiagramModel();
-            diagram.Name = "d";
+            var diagram = new DiagramModel
+            {
+                Name = "d"
+            };
             var copiedDiagram = copier.Copy(diagram);
             Assert.AreEqual(diagram.Name, copiedDiagram.Name);
         }
@@ -33,8 +37,10 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             var copier = new DiagramCopier();
             var diagram = new DiagramModel();
-            var node = new NodeModel("Node");
-            node.NodeTypeFullName = "test";
+            var node = new NodeModel("Node")
+            {
+                NodeTypeFullName = "test"
+            };
             diagram.AddNode(node);
             var copiedDiagram = copier.Copy(diagram);
             Assert.AreEqual(diagram.Nodes.First().NodeTypeFullName, copiedDiagram.Nodes.First().NodeTypeFullName);

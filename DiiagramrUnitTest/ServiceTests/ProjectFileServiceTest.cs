@@ -1,11 +1,11 @@
-﻿using System.Windows.Forms;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Windows.Forms;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -34,8 +34,10 @@ namespace DiiagramrUnitTests.ServiceTests
                 _directoryServiceMoq.Object,
                 _testDialogMoq.Object,
                 _testDialogMoq.Object,
-                _projectLoadSaveMoq.Object);
-            _projectFileService.ProjectDirectory = Directory;
+                _projectLoadSaveMoq.Object)
+            {
+                ProjectDirectory = Directory
+            };
         }
 
         [TestMethod]
@@ -55,8 +57,10 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void SaveProjectTest_SetsInitialFileName()
         {
-            var project = new ProjectModel();
-            project.Name = "testProj";
+            var project = new ProjectModel
+            {
+                Name = "testProj"
+            };
             _projectFileService.SaveProject(project, true);
             Assert.AreEqual(project.Name, _testDialogMoq.Object.FileName);
         }
@@ -69,7 +73,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _testDialogMoq.SetupGet(d => d.FileName).Returns(fakeFileName);
             _testDialogMoq.Setup(f => f.ShowDialog()).Returns(DialogResult.OK);
             _projectFileService.SaveProject(_projectMoq.Object, true);
-            
+
             _projectLoadSaveMoq.Verify(l => l.Save(_projectMoq.Object, fakeFileName));
         }
 
@@ -78,7 +82,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _projectMoq.SetupGet(p => p.Name).Returns("Project");
             _projectFileService.SaveProject(_projectMoq.Object, false);
-            
+
             _projectLoadSaveMoq.Verify(p => p.Save(_projectMoq.Object, It.Is<string>(s => s.EndsWith(".xml"))));
         }
 

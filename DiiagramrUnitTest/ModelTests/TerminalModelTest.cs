@@ -1,12 +1,12 @@
-﻿using System.ComponentModel;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.ComponentModel;
 
 namespace DiiagramrUnitTests.ModelTests
 {
-    
+
     [TestClass]
     public class TerminalModelTest
     {
@@ -122,36 +122,44 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestOnTerminalPropertyChanged_NodeXChanged_TerminalXSetToOffsetXPlusNodeX()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            terminalModel.OffsetX = 2;
-            terminalModel.NodeX = 1;
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0)
+            {
+                OffsetX = 2,
+                NodeX = 1
+            };
             Assert.AreEqual(terminalModel.NodeX + terminalModel.OffsetX, terminalModel.X);
         }
 
         [TestMethod]
         public void TestOnTerminalPropertyChanged_OffsetXChanged_TerminalXSetToOffsetXPlusNodeX()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            terminalModel.NodeX = 6;
-            terminalModel.OffsetX = 4;
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0)
+            {
+                NodeX = 6,
+                OffsetX = 4
+            };
             Assert.AreEqual(terminalModel.NodeX + terminalModel.OffsetX, terminalModel.X);
         }
 
         [TestMethod]
         public void TestOnTerminalPropertyChanged_NodeYChanged_TerminalYSetToOffsetYPlusNodeX()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            terminalModel.OffsetY = 2;
-            terminalModel.NodeY = 1;
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0)
+            {
+                OffsetY = 2,
+                NodeY = 1
+            };
             Assert.AreEqual(terminalModel.NodeY + terminalModel.OffsetY, terminalModel.Y);
         }
 
         [TestMethod]
         public void TestOnTerminalPropertyChanged_OffsetYChanged_TerminalXSetToOffsetXPlusNodeX()
         {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            terminalModel.NodeY = 6;
-            terminalModel.OffsetY = 4;
+            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0)
+            {
+                NodeY = 6,
+                OffsetY = 4
+            };
             Assert.AreEqual(terminalModel.NodeY + terminalModel.OffsetY, terminalModel.Y);
         }
 

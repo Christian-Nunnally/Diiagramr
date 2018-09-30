@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Windows;
-using DiiagramrAPI.CustomControls;
+﻿using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
@@ -12,6 +10,8 @@ using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using StyletIoC;
+using System.Linq;
+using System.Windows;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
@@ -23,7 +23,11 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         {
             get
             {
-                if (_container != null) return _container;
+                if (_container != null)
+                {
+                    return _container;
+                }
+
                 IStyletIoCBuilder builder = new StyletIoCBuilder();
                 builder.Bind<ShellViewModel>().ToSelf();
                 builder.Bind<ProjectExplorerViewModel>().ToSelf();

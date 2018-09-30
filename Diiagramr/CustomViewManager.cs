@@ -1,19 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using Diiagramr.View;
 using Diiagramr.View.Diagram;
 using Diiagramr.View.Diagram.CoreNode;
 using Diiagramr.View.ShellScreen;
+using Diiagramr.View.ShellScreen.ProjectScreen;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using Stylet;
-using Diiagramr.View.ShellScreen.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using Stylet;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Diiagramr
 {
@@ -46,9 +46,15 @@ namespace Diiagramr
 
         protected override Type LocateViewForModel(Type modelType)
         {
-            if (_viewModelToViewMapping.ContainsKey(modelType)) return _viewModelToViewMapping[modelType];
+            if (_viewModelToViewMapping.ContainsKey(modelType))
+            {
+                return _viewModelToViewMapping[modelType];
+            }
 
-            if (!modelType.IsSubclassOf(typeof(PluginNode))) throw new ViewNotFoundException();
+            if (!modelType.IsSubclassOf(typeof(PluginNode)))
+            {
+                throw new ViewNotFoundException();
+            }
 
             var viewModelName = modelType.Name;
             var viewName = viewModelName.Substring(0, viewModelName.Length - 5);

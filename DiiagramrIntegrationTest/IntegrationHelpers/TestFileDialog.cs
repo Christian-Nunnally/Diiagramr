@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using DiiagramrAPI.CustomControls;
+﻿using DiiagramrAPI.CustomControls;
+using System.Windows.Forms;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
@@ -10,7 +10,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 
         public string FileName
         {
-            get { return "testProj"; }
+            get => "testProj";
             set { }
         }
 

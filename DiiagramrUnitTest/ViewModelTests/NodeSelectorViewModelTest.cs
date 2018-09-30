@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Media;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Windows.Media;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -52,7 +51,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestVisible_ProviderReturnsANode_LazilyAddsNodeLibrary()
         {
-            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
+            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
@@ -66,7 +65,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestVisible_ProviderReturnsANode_NodeInAvailableNodesListLazily()
         {
-            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
+            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
@@ -79,7 +78,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsANode_NodeInLibaryNodeListLazily()
         {
-            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
+            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
@@ -93,7 +92,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestVisible_ProviderReturnsAPluginNode_InitializeWithNodeInvokedOnNodeLazily()
         {
-            var nodeList = new List<PluginNode> {_nodeMoq1.Object};
+            var nodeList = new List<PluginNode> { _nodeMoq1.Object };
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
@@ -107,7 +106,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestVisible_ProviderReturnsTwoNodes_AddsOnlyOneLazily()
         {
-            var nodeList = new List<PluginNode> {_nodeMoq1.Object, _nodeMoq2.Object};
+            var nodeList = new List<PluginNode> { _nodeMoq1.Object, _nodeMoq2.Object };
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
@@ -175,7 +174,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestShowLibrary_NodeInLibrary_NodeAddedToVisibleNodes()
         {
             var libraryMoq = new Mock<Library>("");
-            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode> {_nodeMoq1.Object});
+            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode> { _nodeMoq1.Object });
             _nodeSelectorViewModel.ShowLibrary(libraryMoq.Object);
 
             Assert.AreEqual(_nodeMoq1.Object, _nodeSelectorViewModel.VisibleNodesList.First());
@@ -252,7 +251,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             var library = new Library("");
             library.Select();
-            var brush = (SolidColorBrush) library.BackgroundBrush;
+            var brush = (SolidColorBrush)library.BackgroundBrush;
             Assert.IsFalse(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
         }
 

@@ -1,9 +1,8 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace DiiagramrUnitTests.PluginNodeApiTests
 {

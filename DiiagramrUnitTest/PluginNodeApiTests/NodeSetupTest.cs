@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
 
 namespace DiiagramrUnitTests.PluginNodeApiTests
 {

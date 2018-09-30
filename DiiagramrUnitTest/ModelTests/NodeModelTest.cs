@@ -1,9 +1,9 @@
-﻿using System.ComponentModel;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.ComponentModel;
 
 namespace DiiagramrUnitTests.ModelTests
 {

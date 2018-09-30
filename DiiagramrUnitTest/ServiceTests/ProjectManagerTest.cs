@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Forms;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
@@ -11,6 +6,11 @@ using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -30,9 +30,9 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _projectFileServiceMoq = new Mock<IProjectFileService>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
-            _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
+            _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
             _libraryManagerMoq = new Mock<ILibraryManager>();
-            _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>) (() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>) (() => _nodeSelectorViewModelMoq.Object), null);
+            _diagramViewModelFactoryMoq = new Mock<DiagramViewModelFactory>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object), (Func<NodeSelectorViewModel>)(() => _nodeSelectorViewModelMoq.Object), null);
             _currentProjectChanged = false;
 
             _projectManager = new ProjectManager(
@@ -189,8 +189,8 @@ namespace DiiagramrUnitTests.ServiceTests
             var projectModelMoq = new Mock<ProjectModel>();
             var diagramModelMoq = new Mock<DiagramModel>();
             var nodeModelMoq = new Mock<NodeModel>("");
-            var diagrams = new ObservableCollection<DiagramModel> {diagramModelMoq.Object};
-            var nodes = new List<NodeModel> {nodeModelMoq.Object};
+            var diagrams = new ObservableCollection<DiagramModel> { diagramModelMoq.Object };
+            var nodes = new List<NodeModel> { nodeModelMoq.Object };
             var NodeLibraryMoq = new Mock<NodeLibrary>();
             var pluginNodeMoq = new Mock<PluginNode>();
             const string libraryName = "testLibName";

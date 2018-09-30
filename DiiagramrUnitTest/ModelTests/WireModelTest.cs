@@ -1,8 +1,8 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 
 namespace DiiagramrUnitTests.ModelTests
 {
@@ -96,7 +96,7 @@ namespace DiiagramrUnitTests.ModelTests
             _inputTerminalMoq.SetupGet(m => m.X).Returns(5);
             _inputTerminalMoq.SetupGet(m => m.Y).Returns(6);
             var wire = new WireModel(_outputTerminalMoq.Object, _inputTerminalMoq.Object);
-            
+
             Assert.AreEqual(5, wire.X1);
             Assert.AreEqual(6, wire.Y1);
         }

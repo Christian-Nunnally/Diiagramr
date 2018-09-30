@@ -1,10 +1,10 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -32,21 +32,21 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginLoaderMoq = new Mock<IPluginLoader>();
             _libraryManagerMoq = new Mock<ILibraryManager>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>(
-                (Func<IProvideNodes>) (() => _nodeProviderMoq.Object));
-            _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>((Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
+            _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>((Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _projectExplorerViewModelMoq = new Mock<ProjectExplorerViewModel>(
-                (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _projectScreenViewModelMoq = new Mock<ProjectScreenViewModel>(
-                (Func<ProjectExplorerViewModel>) (() => _projectExplorerViewModelMoq.Object),
-                (Func<DiagramWellViewModel>) (() => _diagramWellViewModelMoq.Object),
-                (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<ProjectExplorerViewModel>)(() => _projectExplorerViewModelMoq.Object),
+                (Func<DiagramWellViewModel>)(() => _diagramWellViewModelMoq.Object),
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _librarySourceManagerViewModelMoq = new Mock<LibrarySourceManagerWindowViewModel>(
                 (Func<ILibraryManager>)(() => _libraryManagerMoq.Object));
             _libraryManagerViewModelMoq = new Mock<LibraryManagerWindowViewModel>(
                 (Func<ILibraryManager>)(() => _libraryManagerMoq.Object),
-                (Func<LibrarySourceManagerWindowViewModel>) (() => _librarySourceManagerViewModelMoq.Object));
+                (Func<LibrarySourceManagerWindowViewModel>)(() => _librarySourceManagerViewModelMoq.Object));
             _startScreenViewModelMoq = new Mock<StartScreenViewModel>(
-                (Func<IProjectManager>) (() => _projectManagerMoq.Object));
+                (Func<IProjectManager>)(() => _projectManagerMoq.Object));
             _shellViewModel = new ShellViewModel(
                 () => _projectScreenViewModelMoq.Object,
                 () => _libraryManagerViewModelMoq.Object,

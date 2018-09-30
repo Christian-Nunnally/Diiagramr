@@ -12,8 +12,16 @@ namespace Diiagramr.View.Diagram
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var points = (Point[])value;
-            if (points == null) return new List<LineSegment>();
-            if (points.Length <= 0) return null;
+            if (points == null)
+            {
+                return new List<LineSegment>();
+            }
+
+            if (points.Length <= 0)
+            {
+                return null;
+            }
+
             var start = points[0];
             var segments = new List<LineSegment>();
             for (var i = 1; i < points.Length; i++)

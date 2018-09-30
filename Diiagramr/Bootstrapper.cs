@@ -1,4 +1,3 @@
-using System.Reflection;
 using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
@@ -7,6 +6,7 @@ using Stylet;
 using StyletIoC;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace Diiagramr
 {

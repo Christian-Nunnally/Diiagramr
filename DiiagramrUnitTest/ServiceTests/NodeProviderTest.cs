@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System.Linq;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -18,12 +18,16 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestInitialize()
         {
             _nodeProvider = new NodeProvider();
-            _nodeViewModelMoq = new Mock<PluginNode>();
-            _nodeViewModelMoq.CallBase = false;
+            _nodeViewModelMoq = new Mock<PluginNode>
+            {
+                CallBase = false
+            };
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
             _nodeViewModelMoq.SetupGet(m => m.Name).Returns("TestNodeViewModel");
-            _testNode = new NodeModel("");
-            _testNode.NodeTypeFullName = "TestNodeViewModel";
+            _testNode = new NodeModel("")
+            {
+                NodeTypeFullName = "TestNodeViewModel"
+            };
         }
 
         [Ignore]
