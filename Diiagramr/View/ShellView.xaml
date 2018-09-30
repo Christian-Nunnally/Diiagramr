@@ -23,7 +23,7 @@
             DockPanel.Dock="Top">
             <MenuItem Header="File">
                 <MenuItem Command="{s:Action CreateProject}" Header="New" />
-                <MenuItem Command="{s:Action LoadProject}" Header="Open" />
+                <MenuItem Command="{s:Action LoadProjectButtonHandler}" Header="Open" />
                 <Separator />
                 <MenuItem Command="{s:Action SaveProject}" Header="Save" />
                 <MenuItem Command="{s:Action SaveAsProject}" Header="Save As" />

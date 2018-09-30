@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using DiiagramrAPI.Model;
@@ -19,6 +20,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
+
+        public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
 
         public static ColorTheme ColorTheme
         {
@@ -123,6 +126,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public event Action<TerminalViewModel, bool> WiringModeChanged;
 
         private bool _isSelected;
+        private Adorner _adorner;
 
         public string Name { get; set; }
 
@@ -229,14 +233,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void MouseMove(object sender, MouseEventArgs e)
         {
-//            var uiElement = (UIElement) sender;
-//            var dataObjectModel = new DataObject(DataFormats.StringFormat, TerminalModel);
-//            var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
-//            if (e.LeftButton == MouseButtonState.Pressed)
-//                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-//                    DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
-//                else
-//                    DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
+            //            var uiElement = (UIElement) sender;
+            //            var dataObjectModel = new DataObject(DataFormats.StringFormat, TerminalModel);
+            //            var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
+            //            if (e.LeftButton == MouseButtonState.Pressed)
+            //                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            //                    DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
+            //                else
+            //                    DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
             e.Handled = true;
         }
 
@@ -286,12 +290,19 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void MouseEntered(object sender, MouseEventArgs e)
         {
+            if (View != null)
+            {
+                View.Focusable = true;
+                View.IsEnabled = true;
+                View?.Focus();
+            }
             MouseWithin = true;
         }
 
         public void MouseLeft(object sender, MouseEventArgs e)
         {
             MouseWithin = false;
+            Adorner = null;
         }
 
         public virtual void ShowHighlightIfCompatibleType(Type type)
@@ -303,6 +314,57 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (terminal.Kind == TerminalKind.Input) return new InputTerminalViewModel(terminal);
             return new OutputTerminalViewModel(terminal);
+        }
+
+        public Adorner Adorner
+        {
+            get => _adorner;
+            set
+            {
+                if (value == null && _adorner != null)
+                {
+                    RemoveAllAdornersFromTerminal();
+                }
+                else if (value != null)
+                {
+                    AdornerLayer.GetAdornerLayer(View).Add(value);
+                }
+                _adorner = value;
+            }
+        }
+
+        private void RemoveAllAdornersFromTerminal()
+        {
+            var adornerLayer = AdornerLayer.GetAdornerLayer(View);
+            Adorner[] toRemoveArray = adornerLayer.GetAdorners(View);
+            if (toRemoveArray != null)
+            {
+                for (int x = 0; x < toRemoveArray.Length; x++)
+                {
+                    adornerLayer.Remove(toRemoveArray[x]);
+                }
+            }
+        }
+
+        public void KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                Adorner = new TerminalDataProbeAdorner(View, this);
+            }
+        }
+
+        public void KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                Adorner = null;
+            }
+        }
+
+        public void LostFocus()
+        {
+            Adorner = null;
         }
     }
 }

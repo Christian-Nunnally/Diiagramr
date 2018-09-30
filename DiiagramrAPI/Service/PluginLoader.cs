@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
+using System.Threading.Tasks;
+using System.ComponentModel;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
@@ -23,6 +25,7 @@ namespace DiiagramrAPI.Service
             Func<IProvideNodes> nodeProviderFactory,
             Func<IDirectoryService> directoryServiceFactory)
         {
+
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
@@ -93,7 +96,7 @@ namespace DiiagramrAPI.Service
         {
             foreach (var exportedType in assembly.ExportedTypes)
                 if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
-                    _nodeProvider.RegisterNode((PluginNode) Activator.CreateInstance(exportedType), libraryDependency);
+                    _nodeProvider.RegisterNode((PluginNode)Activator.CreateInstance(exportedType), libraryDependency);
         }
 
         private void LoadNonPluginDll()

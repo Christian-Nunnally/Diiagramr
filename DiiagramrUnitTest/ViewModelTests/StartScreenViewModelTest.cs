@@ -24,7 +24,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestLoadProject_CallsLoadProjectOnProjectManager()
         {
             _startScreenViewModel.LoadProject();
-            _projectManagerMoq.Verify(m => m.LoadProject());
+            _projectManagerMoq.Verify(m => m.LoadProject(false));
         }
 
         [TestMethod]

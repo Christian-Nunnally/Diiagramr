@@ -10,7 +10,10 @@
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:OutputTerminalViewModel}"
-    mc:Ignorable="d">
+    LostFocus="{s:Action LostFocus}"
+    mc:Ignorable="d"
+    KeyDown="{s:Action KeyDown}"
+    KeyUp="{s:Action KeyUp}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>

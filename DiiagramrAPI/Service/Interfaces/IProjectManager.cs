@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Service.Interfaces
 
         void SaveAsProject();
 
-        void LoadProject();
+        void LoadProject(bool autoOpenDiagram = false);
 
         bool CloseProject();
 

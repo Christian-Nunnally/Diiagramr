@@ -105,6 +105,7 @@
     <Compile Include="ViewModel\ProjectScreen\Diagram\DiagramViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\InputTerminalViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\OutputTerminalViewModel.cs" />
+    <Compile Include="ViewModel\ProjectScreen\Diagram\TerminalDataProbeAdorner.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\TerminalViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\WireViewModel.cs" />
     <Compile Include="ViewModel\LibraryManagerWindowViewModel.cs" />

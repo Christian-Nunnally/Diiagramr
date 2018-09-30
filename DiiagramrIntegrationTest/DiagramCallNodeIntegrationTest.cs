@@ -27,6 +27,7 @@ namespace DiiagramrIntegrationTest
             var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
+            nodeSelectorViewModel.Visible = true;
             var inputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramInputNodeViewModel));
             var outputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramOutputNodeViewModel));
             var testNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(TestPassthroughNode));
@@ -85,6 +86,7 @@ namespace DiiagramrIntegrationTest
             var nodeSelectorViewModel = (NodeSelectorViewModel) _container.Get(typeof(NodeSelectorViewModel));
             var projectManager = projectScreen.ProjectExplorerViewModel.ProjectManager;
 
+            nodeSelectorViewModel.Visible = true;
             var outputNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(DiagramOutputNodeViewModel));
             var testPassthroughNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(TestPassthroughNode));
             var testIntNode = nodeSelectorViewModel.AvailableNodeViewModels.First(n => n.GetType() == typeof(TestIntNode));

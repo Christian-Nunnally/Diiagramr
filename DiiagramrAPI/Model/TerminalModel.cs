@@ -86,6 +86,8 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string MethodKey { get; set; }
 
+        public bool ShouldSerializeData { get; set; } = true;
+
         /// <summary>
         ///     The wire that is connected to this terminal. Null if no wire is connected.
         /// </summary>

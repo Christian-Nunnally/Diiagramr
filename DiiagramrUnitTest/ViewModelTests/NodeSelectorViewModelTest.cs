@@ -50,60 +50,70 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsANode_AddsNodeLibrary()
+        public void TestVisible_ProviderReturnsANode_LazilyAddsNodeLibrary()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
-
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            Assert.AreEqual(0, nodeSelectorViewModel.LibrariesList.Count);
+
+            nodeSelectorViewModel.Visible = true;
 
             Assert.AreEqual(1, nodeSelectorViewModel.LibrariesList.Count);
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsANode_NodeInAvailableNodesList()
+        public void TestVisible_ProviderReturnsANode_NodeInAvailableNodesListLazily()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
-
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            Assert.IsNull(nodeSelectorViewModel.AvailableNodeViewModels.FirstOrDefault());
 
+            nodeSelectorViewModel.Visible = true;
             Assert.AreEqual(_nodeMoq1.Object, nodeSelectorViewModel.AvailableNodeViewModels.First());
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsANode_NodeInLibaryNodeList()
+        public void TestConstructor_ProviderReturnsANode_NodeInLibaryNodeListLazily()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
-
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            Assert.IsNull(nodeSelectorViewModel.LibrariesList.FirstOrDefault()?.Nodes?.FirstOrDefault());
+
+            nodeSelectorViewModel.Visible = true;
 
             Assert.AreEqual(_nodeMoq1.Object, nodeSelectorViewModel.LibrariesList.First().Nodes.First());
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsAPluginNode_InitializeWithNodeInvokedOnNode()
+        public void TestVisible_ProviderReturnsAPluginNode_InitializeWithNodeInvokedOnNodeLazily()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
-            new NodeSelectorViewModel(NodeProvidorFactory);
+            var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            _nodeMoq1.Verify(n => n.InitializeWithNode(It.IsAny<NodeModel>()), Times.Never);
+            nodeSelectorViewModel.Visible = true;
 
             _nodeMoq1.Verify(n => n.InitializeWithNode(It.IsAny<NodeModel>()));
         }
 
         [TestMethod]
-        public void TestConstructor_ProviderReturnsTwoNodes_AddsOnlyOne()
+        public void TestVisible_ProviderReturnsTwoNodes_AddsOnlyOneLazily()
         {
             var nodeList = new List<PluginNode> {_nodeMoq1.Object, _nodeMoq2.Object};
             _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(nodeList);
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
             var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            Assert.AreEqual(0, nodeSelectorViewModel.LibrariesList.Count);
+
+            nodeSelectorViewModel.Visible = true;
 
             Assert.AreEqual(1, nodeSelectorViewModel.LibrariesList.Count);
         }

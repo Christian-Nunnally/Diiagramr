@@ -58,7 +58,12 @@ namespace DiiagramrAPI.Service
                 CurrentProject.IsDirty = false;
         }
 
-        public void LoadProject()
+        public void LoadProjectButtonHandler()
+        {
+            LoadProject(autoOpenDiagram: true);
+        }
+
+        public void LoadProject(bool autoOpenDiagram = false)
         {
             if (CloseProject())
             {
@@ -67,6 +72,7 @@ namespace DiiagramrAPI.Service
                 DownloadProjectDependencies();
                 CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
+                if (autoOpenDiagram && CurrentDiagrams.Any()) CurrentDiagrams.First().IsOpen = true;
             }
         }
 

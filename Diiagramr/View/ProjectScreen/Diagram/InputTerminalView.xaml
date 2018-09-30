@@ -10,7 +10,10 @@
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:InputTerminalViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    LostFocus="{s:Action LostFocus}"
+    KeyDown="{s:Action KeyDown}"
+    KeyUp="{s:Action KeyUp}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
@@ -18,6 +21,7 @@
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
+        <Label Content="Blah" Visibility="{Binding IsIntType, Converter={StaticResource Btv}}" HorizontalContentAlignment="Center" VerticalAlignment="Center"></Label>
         <Label
             HorizontalContentAlignment="Center"
             Content="{Binding Name}"
@@ -31,7 +35,6 @@
                     <ScaleTransform ScaleX="10" ScaleY="10" />
                     <TranslateTransform X="0" Y="-68" />
                 </TransformGroup>
-
             </Label.RenderTransform>
             <Label.Style>
                 <Style TargetType="{x:Type Label}">
@@ -109,5 +112,22 @@
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
             IsHitTestVisible="False"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+        <TextBox
+            RenderTransformOrigin="0.5 0"
+            HorizontalContentAlignment="Center"
+            VerticalContentAlignment="Center"
+            FontSize="10"
+            FontFamily="Consolas"
+            Height="20"
+            KeyDown="{s:Action IntTextBoxKeyDown}"
+            GotFocus="{s:Action TextBox_GotFocus}"
+            Text="{Binding IntTextBoxText, Mode=TwoWay}"
+            Visibility="{Binding IsIntTextBoxVisible, Converter={StaticResource Btv}}">
+            <TextBox.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform X="0" Y="-46" />
+                </TransformGroup>
+            </TextBox.RenderTransform>
+        </TextBox>
     </Grid>
 </UserControl>

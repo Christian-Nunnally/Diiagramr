@@ -28,9 +28,10 @@ namespace DiiagramrIntegrationTest
             var projectManager = projectExplorer.ProjectManager;
             var diagramWell = projectScreen.DiagramWellViewModel;
             var nodeSelector = (NodeSelectorViewModel)_container.Get(typeof(NodeSelectorViewModel));
+            nodeSelector.Visible = true;
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
-            projectManager.CurrentProject.IsDirty = false;
             _shell.CreateProject();
+            projectManager.CurrentProject.IsDirty = false;
             Assert.IsNotNull(projectManager.CurrentProject);
 
             projectManager.CreateDiagram();

@@ -72,7 +72,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestLoadProject_CallsLoadProject()
         {
             _shellViewModel.LoadProject();
-            _projectManagerMoq.Verify(m => m.LoadProject(), Times.Once);
+            _projectManagerMoq.Verify(m => m.LoadProject(false), Times.Once);
         }
 
         [TestMethod]

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Threading.Tasks;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
@@ -18,13 +19,12 @@ namespace DiiagramrAPI.ViewModel
 {
     public class NodeSelectorViewModel : Screen
     {
-        private readonly IProvideNodes _nodeProvider;
+        private IProvideNodes _nodeProvider;
 
         public NodeSelectorViewModel(Func<IProvideNodes> nodeProvider)
         {
             _nodeProvider = nodeProvider.Invoke();
             _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
-            AddNodes();
         }
 
         public virtual PluginNode SelectedNode { get; set; }
@@ -35,7 +35,19 @@ namespace DiiagramrAPI.ViewModel
 
         public PluginNode MousedOverNode { get; set; }
 
-        public bool Visible { get; set; }
+        public bool Visible
+        {
+            get => _visible;
+            set
+            {
+                _visible = value;
+                if (_visible && !nodesAdded)
+                {
+                    nodesAdded = true;
+                    AddNodes();
+                }
+            }
+        }
 
         public bool NodePreviewVisible => MousedOverNode != null;
 
@@ -46,6 +58,9 @@ namespace DiiagramrAPI.ViewModel
         public double PreviewNodeScaleY { get; set; }
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
+
+        private bool nodesAdded = false;
+        private bool _visible;
 
         public void AddNodes()
         {
@@ -84,13 +99,18 @@ namespace DiiagramrAPI.ViewModel
 
         public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border) sender).DataContext is Library library)) return;
+            if (!(((Border)sender).DataContext is Library library)) return;
+            if (!library.NodesLoaded)
+            {
+                library.NodesLoaded = true;
+
+            }
             ShowLibrary(library);
         }
 
         public void NodeMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border) sender).DataContext is PluginNode node)) return;
+            if (!(((Border)sender).DataContext is PluginNode node)) return;
             PreviewNode(node);
         }
 
@@ -136,7 +156,7 @@ namespace DiiagramrAPI.ViewModel
             AddNodes();
         }
     }
-    
+
     [AddINotifyPropertyChangedInterface]
     public class Library
     {
@@ -149,6 +169,7 @@ namespace DiiagramrAPI.ViewModel
         public virtual List<PluginNode> Nodes { get; }
         public string Name { get; }
         public Brush BackgroundBrush { get; private set; }
+        public bool NodesLoaded { get; set; }
 
         public virtual void Select()
         {
