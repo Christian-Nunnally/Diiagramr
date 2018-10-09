@@ -1,9 +1,9 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.Service
 {
@@ -21,7 +21,7 @@ namespace DiiagramrAPI.Service
             var serializer = new DataContractSerializer(typeof(ProjectModel), _pluginLoader.SerializeableTypes);
             using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                return (ProjectModel) serializer.ReadObject(stream);
+                return (ProjectModel)serializer.ReadObject(stream);
             }
         }
 
@@ -36,8 +36,9 @@ namespace DiiagramrAPI.Service
                     {
                         serializer.WriteObject(w, project);
                     }
-                    catch (System.Xml.XmlException)
+                    catch (System.Xml.XmlException e)
                     {
+                        Console.WriteLine(e.InnerException.Message);
                     }
                 }
             }

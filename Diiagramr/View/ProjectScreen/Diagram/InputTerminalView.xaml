@@ -13,7 +13,8 @@
     mc:Ignorable="d"
     LostFocus="{s:Action LostFocus}"
     KeyDown="{s:Action KeyDown}"
-    KeyUp="{s:Action KeyUp}">
+    KeyUp="{s:Action KeyUp}"
+    MouseDoubleClick="{s:Action TerminalDoubleClicked}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
@@ -119,10 +120,11 @@
             FontSize="10"
             FontFamily="Consolas"
             Height="20"
-            KeyDown="{s:Action IntTextBoxKeyDown}"
-            GotFocus="{s:Action TextBox_GotFocus}"
-            Text="{Binding IntTextBoxText, Mode=TwoWay}"
-            Visibility="{Binding IsIntTextBoxVisible, Converter={StaticResource Btv}}">
+            IsVisibleChanged="{s:Action DirectEditTextBoxVisibiliyChanged}"
+            KeyDown="{s:Action DirectEditTextBoxKeyDown}"
+            GotFocus="{s:Action DirectEditTextBoxGotFocus}"
+            Text="{Binding DirectEditTextBoxText, Mode=TwoWay}"
+            Visibility="{Binding IsDirectEditTextBoxVisible, Converter={StaticResource Btv}}">
             <TextBox.RenderTransform>
                 <TransformGroup>
                     <TranslateTransform X="0" Y="-46" />

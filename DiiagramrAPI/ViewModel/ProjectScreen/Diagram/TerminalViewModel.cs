@@ -1,4 +1,9 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Service;
+using DiiagramrAPI.ViewModel.Diagram;
+using Stylet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -6,11 +11,6 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.Service;
-using DiiagramrAPI.ViewModel.Diagram;
-using Stylet;
 
 namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
@@ -25,11 +25,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public static ColorTheme ColorTheme
         {
-            get { return _colorTheme; }
+            get => _colorTheme;
             set
             {
                 _colorTheme = value;
-                if (_colorTheme == null) return;
+                if (_colorTheme == null)
+                {
+                    return;
+                }
+
                 foreach (var action in ActionsToTakeWhenColorThemeIsLoaded)
                 {
                     action.Invoke();
@@ -92,7 +96,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                     }
                 }
 
-                if (SelectedTerminal != null) SelectedTerminal.IsSelected = false;
+                if (SelectedTerminal != null)
+                {
+                    SelectedTerminal.IsSelected = false;
+                }
+
                 SelectedTerminal = _isSelected ? this : null;
             }
         }
@@ -168,7 +176,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
+            {
                 SetTerminalRotationBasedOnDirection();
+            }
             else if (e.PropertyName.Equals(nameof(Model.TerminalModel.Data)))
             {
                 Data = TerminalModel.Data;
@@ -252,7 +262,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public virtual void DropObject(object o)
         {
-            if (!(o is TerminalModel terminal)) return;
+            if (!(o is TerminalModel terminal))
+            {
+                return;
+            }
+
             WireToTerminal(terminal);
         }
 
@@ -263,11 +277,22 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public virtual bool WireToTerminal(TerminalModel terminal)
         {
-            if (terminal == null) return false;
-            if (terminal.Kind == TerminalModel.Kind) return false;
+            if (terminal == null)
+            {
+                return false;
+            }
+
+            if (terminal.Kind == TerminalModel.Kind)
+            {
+                return false;
+            }
+
             if (terminal.ConnectedWires != null && terminal.ConnectedWires
                 .Any(connectedWire => TerminalModel.ConnectedWires.Contains(connectedWire)))
+            {
                 return false;
+            }
+
             new WireModel(TerminalModel, terminal);
             return true;
         }
@@ -312,7 +337,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
         {
-            if (terminal.Kind == TerminalKind.Input) return new InputTerminalViewModel(terminal);
+            if (terminal.Kind == TerminalKind.Input)
+            {
+                return new InputTerminalViewModel(terminal);
+            }
+
             return new OutputTerminalViewModel(terminal);
         }
 

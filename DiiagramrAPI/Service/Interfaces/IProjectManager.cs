@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
@@ -33,5 +33,7 @@ namespace DiiagramrAPI.Service.Interfaces
         void CreateDiagram(DiagramModel diagram);
 
         void DeleteDiagram(DiagramModel diagram);
+
+        IEnumerable<Type> GetSerializeableTypes();
     }
 }

@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
-using DiiagramrAPI.ViewModel.Diagram;
 
 namespace DiiagramrAPI.Service
 {
@@ -18,13 +14,17 @@ namespace DiiagramrAPI.Service
         public ColorTheme()
         {
             RegisterWireColorForType(typeof(int), Color.FromArgb(200, 39, 116, 85));
+            RegisterWireColorForType(typeof(float), Color.FromArgb(200, 45, 110, 100));
             RegisterWireColorForType(typeof(byte[]), Color.FromArgb(200, 170, 122, 57));
             RegisterWireColorForType(typeof(string), Color.FromArgb(200, 153, 51, 80));
+            RegisterWireColorForType(typeof(bool), Color.FromArgb(200, 200, 51, 80));
             RegisterWireColorForType(typeof(object), Color.FromArgb(200, 155, 155, 155));
 
             RegisterTerminalColorForType(typeof(int), Color.FromRgb(39, 116, 85));
+            RegisterTerminalColorForType(typeof(float), Color.FromRgb(45, 110, 100));
             RegisterTerminalColorForType(typeof(byte[]), Color.FromRgb(170, 122, 57));
             RegisterTerminalColorForType(typeof(string), Color.FromRgb(153, 51, 80));
+            RegisterTerminalColorForType(typeof(bool), Color.FromRgb(200, 51, 80));
             RegisterTerminalColorForType(typeof(object), Color.FromRgb(155, 155, 155));
 
             NodeBorderOnMouseOverColor = Colors.LightBlue;
@@ -37,7 +37,10 @@ namespace DiiagramrAPI.Service
 
         public void RegisterWireColorForType(Type type, Color color)
         {
-            if (!_wireColorToTypeMap.ContainsKey(type)) _wireColorToTypeMap.Add(type, color);
+            if (!_wireColorToTypeMap.ContainsKey(type))
+            {
+                _wireColorToTypeMap.Add(type, color);
+            }
         }
 
         public Color GetTerminalColorForType(Type type)
@@ -47,7 +50,10 @@ namespace DiiagramrAPI.Service
 
         public void RegisterTerminalColorForType(Type type, Color color)
         {
-            if (!_terminalColorToTypeMap.ContainsKey(type)) _terminalColorToTypeMap.Add(type, color);
+            if (!_terminalColorToTypeMap.ContainsKey(type))
+            {
+                _terminalColorToTypeMap.Add(type, color);
+            }
         }
 
         public Color NodeBorderOnMouseOverColor { get; set; }

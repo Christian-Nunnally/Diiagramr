@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Threading.Tasks;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
@@ -14,6 +6,13 @@ using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using PropertyChanged;
 using Stylet;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DiiagramrAPI.ViewModel
 {
@@ -66,11 +65,24 @@ namespace DiiagramrAPI.ViewModel
         {
             foreach (var nodeViewModel in _nodeProvider.GetRegisteredNodes())
             {
-                if (nodeViewModel is DiagramCallNodeViewModel) continue;
+                if (nodeViewModel is DiagramCallNodeViewModel)
+                {
+                    continue;
+                }
+
+                if (IsHiddenFromSelector(nodeViewModel))
+                {
+                    continue;
+                }
+
                 var fullTypeName = nodeViewModel.GetType().FullName;
                 var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
                 var library = GetOrCreateLibrary(libraryName);
-                if (library.Nodes.Any(n => n.Equals(nodeViewModel))) continue;
+                if (library.Nodes.Any(n => n.Equals(nodeViewModel)))
+                {
+                    continue;
+                }
+
                 library.Nodes.Add(nodeViewModel);
 
                 var nodeModel = new NodeModel("");
@@ -78,9 +90,18 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
+        private bool IsHiddenFromSelector(PluginNode nodeViewModel)
+        {
+            return nodeViewModel.GetType().IsDefined(typeof(HideFromNodeSelector), false);
+        }
+
         private Library GetOrCreateLibrary(string libraryName)
         {
-            if (LibrariesList.All(l => l.Name != libraryName)) LibrariesList.Insert(0, new Library(libraryName));
+            if (LibrariesList.All(l => l.Name != libraryName))
+            {
+                LibrariesList.Insert(0, new Library(libraryName));
+            }
+
             return LibrariesList.First(l => l.Name == libraryName);
         }
 
@@ -99,7 +120,11 @@ namespace DiiagramrAPI.ViewModel
 
         public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border)sender).DataContext is Library library)) return;
+            if (!(((Border)sender).DataContext is Library library))
+            {
+                return;
+            }
+
             if (!library.NodesLoaded)
             {
                 library.NodesLoaded = true;
@@ -110,7 +135,11 @@ namespace DiiagramrAPI.ViewModel
 
         public void NodeMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border)sender).DataContext is PluginNode node)) return;
+            if (!(((Border)sender).DataContext is PluginNode node))
+            {
+                return;
+            }
+
             PreviewNode(node);
         }
 

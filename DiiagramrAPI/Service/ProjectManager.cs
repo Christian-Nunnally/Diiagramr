@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.Service
 {
@@ -49,13 +49,17 @@ namespace DiiagramrAPI.Service
         public void SaveProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, false))
+            {
                 CurrentProject.IsDirty = false;
+            }
         }
 
         public void SaveAsProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, true))
+            {
                 CurrentProject.IsDirty = false;
+            }
         }
 
         public void LoadProjectButtonHandler()
@@ -68,11 +72,18 @@ namespace DiiagramrAPI.Service
             if (CloseProject())
             {
                 CurrentProject = _projectFileService.LoadProject();
-                if (CurrentProject == null) return;
+                if (CurrentProject == null)
+                {
+                    return;
+                }
+
                 DownloadProjectDependencies();
                 CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
-                if (autoOpenDiagram && CurrentDiagrams.Any()) CurrentDiagrams.First().IsOpen = true;
+                if (autoOpenDiagram && CurrentDiagrams.Any())
+                {
+                    CurrentDiagrams.First().IsOpen = true;
+                }
             }
         }
 
@@ -82,11 +93,18 @@ namespace DiiagramrAPI.Service
             {
                 var result = _projectFileService.ConfirmProjectClose();
                 if (result == DialogResult.Cancel)
+                {
                     return false;
+                }
+
                 if (result == DialogResult.Yes)
+                {
                     _projectFileService.SaveProject(CurrentProject, false);
+                }
                 else if (result == DialogResult.No)
+                {
                     CurrentProject.IsDirty = false;
+                }
             }
             return true;
         }
@@ -98,10 +116,18 @@ namespace DiiagramrAPI.Service
 
         public void CreateDiagram(DiagramModel diagram)
         {
-            if (CurrentProject == null) throw new NullReferenceException("ProjectModel does not exist");
+            if (CurrentProject == null)
+            {
+                throw new NullReferenceException("ProjectModel does not exist");
+            }
+
             var diagramName = string.IsNullOrEmpty(diagram.Name) ? "diagram" : diagram.Name;
             var diagramNumber = 1;
-            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber))) diagramNumber++;
+            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber)))
+            {
+                diagramNumber++;
+            }
+
             diagram.Name = diagramName + diagramNumber;
             CreateDiagramViewModel(diagram);
             CurrentProject.AddDiagram(diagram);
@@ -111,7 +137,10 @@ namespace DiiagramrAPI.Service
         {
             CurrentProject.RemoveDiagram(diagram);
             var diagramViewModel = DiagramViewModels.FirstOrDefault(m => m.Diagram == diagram);
-            if (diagramViewModel != null) DiagramViewModels.Remove(diagramViewModel);
+            if (diagramViewModel != null)
+            {
+                DiagramViewModels.Remove(diagramViewModel);
+            }
         }
 
         private void OnCurrentProjectChanged()
@@ -129,9 +158,20 @@ namespace DiiagramrAPI.Service
         private void DownloadProjectDependencies()
         {
             foreach (var diagram in CurrentProject.Diagrams)
+            {
                 foreach (var node in diagram.Nodes)
+                {
                     if (node.Dependency != null)
+                    {
                         _libraryManager.InstallLatestVersionOfLibrary(node.Dependency);
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<Type> GetSerializeableTypes()
+        {
+            return _libraryManager.GetSerializeableTypes();
         }
     }
 }

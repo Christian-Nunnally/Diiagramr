@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.Service
 {
@@ -15,9 +15,9 @@ namespace DiiagramrAPI.Service
         private const string PluginsDirectory = "Plugins\\";
         private readonly IDirectoryService _directoryService;
         private readonly IPluginLoader _pluginLoader;
-        private readonly IFetchWebResource _webResourceFetcher; 
+        private readonly IFetchWebResource _webResourceFetcher;
         private bool _shouldSourcesBeLoaded = false;
-        private bool _sourcesLoaded = false;
+        private readonly bool _sourcesLoaded = false;
 
         public LibraryManager(
             Func<IPluginLoader> pluginLoaderFactory,
@@ -27,7 +27,7 @@ namespace DiiagramrAPI.Service
             _pluginLoader = pluginLoaderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _webResourceFetcher = webResourceFetcher.Invoke();
-            
+
             UpdateInstalledLibraries();
         }
 
@@ -37,21 +37,38 @@ namespace DiiagramrAPI.Service
 
         public bool AddSource(string sourceUrl)
         {
-            if (!sourceUrl.StartsWith("http://")) return false;
+            if (!sourceUrl.StartsWith("http://"))
+            {
+                return false;
+            }
+
             Sources.Add(sourceUrl);
             return true;
+        }
+
+        public IEnumerable<Type> GetSerializeableTypes()
+        {
+            return _pluginLoader.SerializeableTypes;
         }
 
         public void LoadSources()
         {
             _shouldSourcesBeLoaded = true;
-            if (_sourcesLoaded) return;
+            if (_sourcesLoaded)
+            {
+                return;
+            }
+
             Sources.ForEach(LoadSource);
         }
 
         private void LoadSource(string sourceUrl)
         {
-            if (!_shouldSourcesBeLoaded) return;
+            if (!_shouldSourcesBeLoaded)
+            {
+                return;
+            }
+
             var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
             AddToAvailableLibrariesFromPaths(libraryPaths);
@@ -59,7 +76,11 @@ namespace DiiagramrAPI.Service
 
         public bool RemoveSource(string sourceUrl)
         {
-            if (!Sources.Contains(sourceUrl)) return false;
+            if (!Sources.Contains(sourceUrl))
+            {
+                return false;
+            }
+
             Sources.Remove(sourceUrl);
 
             var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
@@ -71,15 +92,26 @@ namespace DiiagramrAPI.Service
 
         public bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription)
         {
-            if (InstalledLibraryNames.Any(s => s == libraryDescription.ToString())) return true;
+            if (InstalledLibraryNames.Any(s => s == libraryDescription.ToString()))
+            {
+                return true;
+            }
+
             LoadSources();
 
-            if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library)) return false;
+            if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library))
+            {
+                return false;
+            }
 
             var absPath = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             var tmpDir = absPath + "\\tmp";
 
-            if (!_directoryService.Exists(tmpDir)) _directoryService.CreateDirectory(tmpDir);
+            if (!_directoryService.Exists(tmpDir))
+            {
+                _directoryService.CreateDirectory(tmpDir);
+            }
+
             var zipPath = "tmp/" + library + ".zip";
             var extractPath = "tmp/" + library;
             var toPath = PluginsDirectory + library;
@@ -123,7 +155,11 @@ namespace DiiagramrAPI.Service
         {
             if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
             {
-                if (!library.IsNewerVersionThan(otherLibrary)) return;
+                if (!library.IsNewerVersionThan(otherLibrary))
+                {
+                    return;
+                }
+
                 AvailableLibraries.Remove(otherLibrary);
                 AvailableLibraries.Add(library);
             }
@@ -136,7 +172,11 @@ namespace DiiagramrAPI.Service
         private bool TryGetLibraryWithNameAndMajorVersion(NodeLibrary library, out NodeLibrary otherLibrary)
         {
             otherLibrary = null;
-            if (library.Name == null) return false;
+            if (library.Name == null)
+            {
+                return false;
+            }
+
             bool SameName(NodeLibrary l) => l.Name == library.Name.ToLower();
             bool SameMajorVersion(NodeLibrary l) => l.MajorVersion == library.MajorVersion;
             otherLibrary = AvailableLibraries.FirstOrDefault(l => SameName(l) && SameMajorVersion(l));

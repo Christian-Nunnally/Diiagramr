@@ -1,5 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
@@ -16,5 +18,7 @@ namespace DiiagramrAPI.Service.Interfaces
         bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription);
 
         void LoadSources();
+
+        IEnumerable<Type> GetSerializeableTypes();
     }
 }

@@ -69,6 +69,7 @@
     <Compile Include="PluginNodeApi\Direction.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
+    <Compile Include="PluginNodeApi\HideFromNodeSelector.cs" />
     <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

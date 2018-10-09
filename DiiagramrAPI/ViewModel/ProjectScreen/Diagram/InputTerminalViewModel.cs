@@ -1,32 +1,56 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 
 namespace DiiagramrAPI.ViewModel.Diagram
 {
     public class InputTerminalViewModel : TerminalViewModel
     {
-        private string _intTextBoxText = "0";
+        private string _directEditTextBoxText = "0";
 
         public bool IsIntType => TerminalModel.Type == typeof(int);
-        public bool IsIntTextBoxVisible => IsIntType && IsSelected && !IsConnected;
+        public bool IsFloatType => TerminalModel.Type == typeof(float);
+        public bool IsStringType => TerminalModel.Type == typeof(string);
+        public bool IsCharType => TerminalModel.Type == typeof(char);
+        public bool IsBoolType => TerminalModel.Type == typeof(bool);
+        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
+        public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
 
-        public string IntTextBoxText
+        public string DirectEditTextBoxText
         {
-            get => _intTextBoxText;
+            get => _directEditTextBoxText;
             set
             {
-                if (int.TryParse(value, out int outInt))
+                if (IsIntType)
                 {
-                    _intTextBoxText = value;
-                    if (IsIntType)
+                    if (int.TryParse(value, out int parseResult))
                     {
-                        Data = outInt;
+                        _directEditTextBoxText = value;
+                        Data = parseResult;
+                    }
+                }
+                else if (IsFloatType)
+                {
+                    if (float.TryParse(value, out float parseResult))
+                    {
+                        _directEditTextBoxText = value;
+                        Data = parseResult;
+                    }
+                }
+                else if (IsStringType)
+                {
+                    _directEditTextBoxText = value;
+                    Data = value;
+                }
+                else if (IsCharType)
+                {
+                    if (char.TryParse(value, out char parseResult))
+                    {
+                        _directEditTextBoxText = value;
+                        Data = parseResult;
                     }
                 }
             }
@@ -34,34 +58,63 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         public InputTerminalViewModel(TerminalModel inputTerminal) : base(inputTerminal)
         {
-            if (inputTerminal.Kind != TerminalKind.Input) throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
+            if (inputTerminal.Kind != TerminalKind.Input)
+            {
+                throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
+            }
         }
 
         public sealed override bool WireToTerminal(TerminalModel terminal)
         {
-            if (terminal.Kind != TerminalKind.Output) return false;
+            if (terminal.Kind != TerminalKind.Output)
+            {
+                return false;
+            }
+
             return base.WireToTerminal(terminal);
         }
 
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
-            if (propertyName.Equals(nameof(IsSelected))) OnPropertyChanged(nameof(IsIntTextBoxVisible));
+            if (propertyName.Equals(nameof(IsSelected)))
+            {
+                OnPropertyChanged(nameof(IsDirectEditTextBoxVisible));
+            }
         }
 
-        public void IntTextBoxKeyDown(object sender, KeyEventArgs e)
+        public void DirectEditTextBoxKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter) IsSelected = false;
+            if (e.Key == Key.Enter)
+            {
+                IsSelected = false;
+            }
         }
 
-        public void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        public void DirectEditTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            TextBox tb = (TextBox)e.OriginalSource;
-            tb.Dispatcher.BeginInvoke(
+            TextBox inputTextBox = (TextBox)e.OriginalSource;
+            DirectEditTextBoxText = Data?.ToString();
+            inputTextBox.Dispatcher.BeginInvoke(
                 new Action(delegate
                 {
-                    tb.SelectAll();
-                }), System.Windows.Threading.DispatcherPriority.ContextIdle);
+                    inputTextBox.SelectAll();
+                }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
+        public void DirectEditTextBoxVisibiliyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            TextBox inputTextBox = (TextBox)sender;
+
+            DirectEditTextBoxText = Data?.ToString();
+        }
+
+        public void TerminalDoubleClicked()
+        {
+            if (IsBoolType)
+            {
+                Data = !(bool)(Data ?? false);
+            }
         }
     }
 }
