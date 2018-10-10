@@ -87,16 +87,16 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public double Zoom { get; set; }
 
-        public string Name => Diagram.Name;
+        public string Name => Diagram.DiagramName;
 
         public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
         private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
 
-        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
+        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.DiagramName ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Diagram.Name))) NotifyOfPropertyChange(() => Name);
+            if (e.PropertyName.Equals(nameof(Diagram.DiagramName))) NotifyOfPropertyChange(() => Name);
         }
 
         private void AddNode(PluginNode viewModel)

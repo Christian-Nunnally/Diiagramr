@@ -11,13 +11,17 @@ namespace DiiagramrAPI.Model
     {
         public DiagramModel()
         {
-            Name = "";
+            DiagramName = "";
         }
 
         public virtual bool IsOpen { get; set; }
 
+        public bool NameEditMode { get; set; } = false;
+
+        public bool NotNameEditMode => !NameEditMode;
+
         [DataMember]
-        public virtual string Name { get; set; }
+        public virtual string DiagramName { get; set; }
 
         [DataMember]
         public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();

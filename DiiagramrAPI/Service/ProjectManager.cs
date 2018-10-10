@@ -121,14 +121,14 @@ namespace DiiagramrAPI.Service
                 throw new NullReferenceException("ProjectModel does not exist");
             }
 
-            var diagramName = string.IsNullOrEmpty(diagram.Name) ? "diagram" : diagram.Name;
+            var diagramName = string.IsNullOrEmpty(diagram.DiagramName) ? "diagram" : diagram.DiagramName;
             var diagramNumber = 1;
-            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber)))
+            while (CurrentProject.Diagrams.Any(x => x.DiagramName.Equals(diagramName + diagramNumber)))
             {
                 diagramNumber++;
             }
 
-            diagram.Name = diagramName + diagramNumber;
+            diagram.DiagramName = diagramName + diagramNumber;
             CreateDiagramViewModel(diagram);
             CurrentProject.AddDiagram(diagram);
         }

@@ -90,9 +90,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
         private void OpenDiagram(DiagramModel diagram)
         {
             if (diagram == null) return;
-            if (Items.Any(x => x.Name == diagram.Name))
+            if (Items.Any(x => x.Name == diagram.DiagramName))
             {
-                ActiveItem = Items.First(x => x.Name == diagram.Name);
+                ActiveItem = Items.First(x => x.Name == diagram.DiagramName);
                 return;
             }
             var diagramViewModel = _projectManager.DiagramViewModels.First(m => m.Diagram == diagram);

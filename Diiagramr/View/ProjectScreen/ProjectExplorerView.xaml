@@ -44,15 +44,32 @@
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Width="Auto" MouseUp="{s:Action DiagramProjectItemMouseUp}">
-                            <Label Content="{Binding Name}" FontSize="14">
-                                <Label.ContextMenu>
-                                    <ContextMenu>
-                                        <MenuItem Command="{s:Action CopyDiagram}" Header="Copy" />
-                                        <Separator />
-                                        <MenuItem Command="{s:Action DeleteDiagram}" Header="Delete" />
-                                    </ContextMenu>
-                                </Label.ContextMenu>
-                            </Label>
+                            <Grid>
+                                <TextBox Text="{Binding DiagramName, Mode=TwoWay}" 
+                                         FontSize="14"
+                                         Height="25"
+                                         FocusVisualStyle="{x:Null}"
+                                         LostFocus="{s:Action EditNameTetBoxFocusLost}"
+                                         IsVisibleChanged="{s:Action EditNameTextBoxIsVisibleChanged}"
+                                         PreviewMouseDown="{s:Action PreviewMouseDown}"
+                                         KeyDown="{s:Action EditNameTextBoxKeyDown}"
+                                         VerticalContentAlignment="Center"
+                                         Visibility="{Binding NameEditMode, Converter={StaticResource btv}}"/>
+                                <Label Content="{Binding DiagramName}" 
+                                       FontSize="14"
+                                       FocusVisualStyle="{x:Null}"
+                                       Visibility="{Binding NotNameEditMode, Converter={StaticResource btv}}">
+                                    <Label.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{s:Action RenameDiagram}" Header="Rename" />
+                                            <Separator />
+                                            <MenuItem Command="{s:Action CopyDiagram}" Header="Copy" />
+                                            <Separator />
+                                            <MenuItem Command="{s:Action DeleteDiagram}" Header="Delete" />
+                                        </ContextMenu>
+                                    </Label.ContextMenu>
+                                </Label>
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
