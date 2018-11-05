@@ -14,13 +14,13 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestCopy_CopyEmptyDiagram_CopiedDiagramIsDifferent()
         {
             var projectManagerMoq = new Mock<IProjectManager>();
-            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
             var copier = new DiagramCopier(projectManagerMoq.Object);
             var diagram = new DiagramModel
             {
-                Name = "d"
+                DiagramName = "d"
             };
             var copiedDiagram = copier.Copy(diagram);
+            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
             Assert.AreNotEqual(diagram, copiedDiagram);
         }
 
@@ -28,21 +28,20 @@ namespace DiiagramrUnitTests.ServiceTests
         public void TestCopy_CopyEmptyDiagram_NameCopied()
         {
             var projectManagerMoq = new Mock<IProjectManager>();
-            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
             var copier = new DiagramCopier(projectManagerMoq.Object);
             var diagram = new DiagramModel
             {
-                Name = "d"
+                DiagramName = "d"
             };
             var copiedDiagram = copier.Copy(diagram);
-            Assert.AreEqual(diagram.Name, copiedDiagram.Name);
+            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
+            Assert.AreEqual(diagram.DiagramName, copiedDiagram.DiagramName);
         }
 
         [TestMethod]
         public void TestCopy_CopyDiagramWithOneNode_NodeCopiedWithFullName()
         {
             var projectManagerMoq = new Mock<IProjectManager>();
-            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
             var copier = new DiagramCopier(projectManagerMoq.Object);
             var diagram = new DiagramModel();
             var node = new NodeModel("Node")
@@ -51,6 +50,7 @@ namespace DiiagramrUnitTests.ServiceTests
             };
             diagram.AddNode(node);
             var copiedDiagram = copier.Copy(diagram);
+            projectManagerMoq.Verify(x => x.GetSerializeableTypes(), Times.Once);
             Assert.AreEqual(diagram.Nodes.First().NodeTypeFullName, copiedDiagram.Nodes.First().NodeTypeFullName);
         }
     }

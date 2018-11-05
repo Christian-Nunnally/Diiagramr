@@ -5,6 +5,7 @@ using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
@@ -82,7 +83,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             if (!string.IsNullOrEmpty(DiagramName))
             {
-                SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(d => d.Name.Equals(DiagramName)));
+                SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(d => d.DiagramName.Equals(DiagramName)));
             }
         }
 
@@ -94,7 +95,17 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             }
 
             ReferencingDiagramModel = referencingDiagramModel;
-            DiagramName = ReferencingDiagramModel.Name;
+            referencingDiagramModel.PropertyChanged += ReferencingDiagramModelPropertyChanged;
+            DiagramName = ReferencingDiagramModel.DiagramName;
+        }
+
+        private void ReferencingDiagramModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(DiagramName)))
+            {
+                DiagramName = ReferencingDiagramModel.DiagramName;
+                Name = DiagramName + " Call";
+            }
         }
 
         private void CopyReferencingDiagramAvoidingRecursion()
@@ -104,15 +115,15 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
                 throw new DiagramCallRecursionException();
             }
 
-            if (DiagramsCopiedDuringCallNodeCreation.Contains(ReferencingDiagramModel.Name))
+            if (DiagramsCopiedDuringCallNodeCreation.Contains(ReferencingDiagramModel.DiagramName))
             {
                 throw new DiagramCallRecursionException();
             }
 
-            DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
+            DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.DiagramName);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
             InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null, null);
-            DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
+            DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.DiagramName);
         }
 
         private void InitializeDiagramCopier(IProjectManager projectManager)
@@ -244,6 +255,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             {
                 BrokenDueToRecursion = true;
                 ReferencingDiagramModel = null;
+                ReferencingDiagramModel.PropertyChanged -= ReferencingDiagramModelPropertyChanged;
                 return;
             }
 
@@ -255,7 +267,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             }
 
             ReferencingDiagramModel.SemanticsChanged += DiagramModelOnSemanticsChanged;
-            DiagramName = ReferencingDiagramModel.Name;
+            DiagramName = ReferencingDiagramModel.DiagramName;
             _nodeSetup.NodeName(DiagramName + " Call");
             SyncTerminals();
         }

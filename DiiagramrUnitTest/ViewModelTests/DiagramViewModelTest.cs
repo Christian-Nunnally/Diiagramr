@@ -297,7 +297,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             DiagramCallNodeViewModel.ProjectManager = new Mock<IProjectManager>().Object;
             var otherDiagramMoq = new Mock<DiagramModel>();
-            otherDiagramMoq.SetupGet(d => d.Name).Returns("ddd");
+            otherDiagramMoq.SetupGet(d => d.DiagramName).Returns("ddd");
             _diagramViewModel.DiagramDragEnter(otherDiagramMoq.Object);
             Assert.IsTrue(_diagramViewModel.DropDiagramCallText.Contains("ddd"));
         }
