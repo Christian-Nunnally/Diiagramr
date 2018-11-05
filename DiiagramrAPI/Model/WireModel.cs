@@ -1,7 +1,7 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.ComponentModel;
 using System.Runtime.Serialization;
-using PropertyChanged;
 
 namespace DiiagramrAPI.Model
 {
@@ -9,6 +9,8 @@ namespace DiiagramrAPI.Model
     [AddINotifyPropertyChangedInterface]
     public class WireModel : ModelBase
     {
+        [IgnoreDataMember]
+        public bool UserWiredFromInput { get; }
 
         private bool _isActive;
 
@@ -18,21 +20,39 @@ namespace DiiagramrAPI.Model
 
         public WireModel(TerminalModel terminal1, TerminalModel terminal2)
         {
-            if (terminal1 == null) throw new ArgumentNullException(nameof(terminal1));
-            if (terminal2 == null) throw new ArgumentNullException(nameof(terminal2));
-            if (terminal1.Kind == terminal2.Kind) throw new ArgumentException("Wires require one input terminal and one output terminal");
+            if (terminal1 == null)
+            {
+                throw new ArgumentNullException(nameof(terminal1));
+            }
+
+            if (terminal2 == null)
+            {
+                throw new ArgumentNullException(nameof(terminal2));
+            }
+
+            if (terminal1.Kind == terminal2.Kind)
+            {
+                throw new ArgumentException("Wires require one input terminal and one output terminal");
+            }
 
             SinkTerminal = terminal1.Kind == TerminalKind.Input ? terminal1 : terminal2;
             SourceTerminal = terminal1.Kind == TerminalKind.Output ? terminal1 : terminal2;
 
             if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type)
-                if (SourceTerminal.Type != typeof(object)) return;
+            {
+                if (SourceTerminal.Type != typeof(object))
+                {
+                    return;
+                }
+            }
 
             SourceTerminal.ConnectWire(this);
             SinkTerminal.ConnectWire(this);
             SetupTerminalPropertyChangeNotifications();
-            SinkTerminal.Data = SourceTerminal.Data; 
+            SinkTerminal.Data = SourceTerminal.Data;
             _isActive = true;
+
+            UserWiredFromInput = terminal1 == SourceTerminal;
         }
 
         [DataMember]
@@ -71,10 +91,19 @@ namespace DiiagramrAPI.Model
 
         private void SourceTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var source = (TerminalModel) sender;
-            if (e.PropertyName.Equals(nameof(TerminalModel.X))) X2 = source.X;
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Y))) Y2 = source.Y;
-            else if (!_isActive) return;
+            var source = (TerminalModel)sender;
+            if (e.PropertyName.Equals(nameof(TerminalModel.X)))
+            {
+                X2 = source.X;
+            }
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Y)))
+            {
+                Y2 = source.Y;
+            }
+            else if (!_isActive)
+            {
+                return;
+            }
             else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
             {
                 SinkTerminal.Data = source.Data;
@@ -83,9 +112,15 @@ namespace DiiagramrAPI.Model
 
         private void SinkTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var sink = (TerminalModel) sender;
-            if (e.PropertyName.Equals(nameof(TerminalModel.X))) X1 = sink.X;
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Y))) Y1 = sink.Y;
+            var sink = (TerminalModel)sender;
+            if (e.PropertyName.Equals(nameof(TerminalModel.X)))
+            {
+                X1 = sink.X;
+            }
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Y)))
+            {
+                Y1 = sink.Y;
+            }
         }
 
         [OnDeserialized]

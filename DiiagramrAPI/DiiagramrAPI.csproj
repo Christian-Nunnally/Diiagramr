@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props" Condition="Exists('..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -34,12 +35,11 @@
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="PropertyChanged, Version=2.1.4.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
-      <HintPath>..\packages\PropertyChanged.Fody.2.1.4\lib\netstandard1.0\PropertyChanged.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="PropertyChanged, Version=2.5.13.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.2.5.13\lib\net452\PropertyChanged.dll</HintPath>
     </Reference>
-    <Reference Include="Stylet, Version=1.1.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Stylet.1.1.21\lib\net45\Stylet.dll</HintPath>
+    <Reference Include="Stylet, Version=1.1.22.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Stylet.1.1.22\lib\net45\Stylet.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -76,6 +76,7 @@
     <Compile Include="Service\ColorTheme.cs" />
     <Compile Include="Service\DiagramCopier.cs" />
     <Compile Include="Service\DiagramViewModelFactory.cs" />
+    <Compile Include="Service\DiiagramrProjectLoadSave.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
@@ -120,7 +121,9 @@
     <None Include="NuGet\tools\CreateNode.psm1" />
     <None Include="NuGet\tools\init.ps1" />
     <None Include="NuGet\tools\PublishLibrary.psm1" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
@@ -136,11 +139,12 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\packages\Fody.2.2.0\build\net452\Fody.targets" Condition="Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" />
+  <Import Project="..\packages\Fody.3.2.16\build\Fody.targets" Condition="Exists('..\packages\Fody.3.2.16\build\Fody.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Fody.2.2.0\build\net452\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.2.2.0\build\net452\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Fody.3.2.16\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.2.16\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.2.5.13\build\PropertyChanged.Fody.props'))" />
   </Target>
 </Project>

@@ -35,7 +35,6 @@
                     <ScaleTransform ScaleX="10" ScaleY="10" />
                     <TranslateTransform X="0" Y="-68" />
                 </TransformGroup>
-
             </Label.RenderTransform>
             <Label.Style>
                 <Style TargetType="{x:Type Label}">

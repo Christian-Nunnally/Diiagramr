@@ -69,7 +69,13 @@ namespace DiiagramrAPI.Service
                 return;
             }
 
+            // todo: make this seriously async lol
             var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
+            if (packagesString == null)
+            {
+                return;
+            }
+
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
             AddToAvailableLibrariesFromPaths(libraryPaths);
         }

@@ -32,6 +32,11 @@ namespace DiiagramrAPI.Service
 
         public Color GetWireColorForType(Type type)
         {
+            if (type == null)
+            {
+                return _defaultColor;
+            }
+
             return _wireColorToTypeMap.ContainsKey(type) ? _wireColorToTypeMap[type] : _defaultColor;
         }
 
@@ -45,6 +50,11 @@ namespace DiiagramrAPI.Service
 
         public Color GetTerminalColorForType(Type type)
         {
+            if (type == null)
+            {
+                return _defaultColor;
+            }
+
             return _terminalColorToTypeMap.ContainsKey(type) ? _terminalColorToTypeMap[type] : _defaultColor;
         }
 

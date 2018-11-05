@@ -1,7 +1,7 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using PropertyChanged;
 
 namespace DiiagramrAPI.Model
 {
@@ -34,7 +34,11 @@ namespace DiiagramrAPI.Model
 
         public virtual void AddNode(NodeModel nodeModel)
         {
-            if (Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not add a nodeModel twice");
+            if (Nodes.Contains(nodeModel))
+            {
+                throw new InvalidOperationException("Can not add a nodeModel twice");
+            }
+
             nodeModel.SemanticsChanged += NodeSematicsChanged;
             nodeModel.PresentationChanged += NodePresentationChanged;
             Nodes.Add(nodeModel);
@@ -53,7 +57,11 @@ namespace DiiagramrAPI.Model
 
         public virtual void RemoveNode(NodeModel nodeModel)
         {
-            if (!Nodes.Contains(nodeModel)) throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
+            if (!Nodes.Contains(nodeModel))
+            {
+                throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
+            }
+
             nodeModel.SemanticsChanged -= NodeSematicsChanged;
             nodeModel.PresentationChanged -= NodePresentationChanged;
             Nodes.Remove(nodeModel);

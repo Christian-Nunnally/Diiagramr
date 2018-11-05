@@ -44,6 +44,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
 
         private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
+        private static readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
         private static ColorTheme _colorTheme;
 
         public double TerminalUpWireMinimumLength
@@ -114,17 +115,36 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             Data = terminal.Data;
             Name = terminal.Name;
             SetTerminalRotationBasedOnDirection();
+            SetBackgroundBrushWhenColorThemeAndTypeLoad(terminal);
+        }
 
-            if (ColorTheme != null)
+        private void SetBackgroundBrushWhenColorThemeAndTypeLoad(TerminalModel terminal)
+        {
+            if (terminal.Type == null)
             {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
+                ActionsToTakeWhenTypeIsLoaded.Add(() =>
+                {
+                    SetBackgroundBrushWhenColorThemeLoads(terminal);
+                });
             }
             else
+            {
+                SetBackgroundBrushWhenColorThemeLoads(terminal);
+            }
+        }
+
+        private void SetBackgroundBrushWhenColorThemeLoads(TerminalModel terminal)
+        {
+            if (ColorTheme == null)
             {
                 ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
                 {
                     TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
                 });
+            }
+            else
+            {
+                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
             }
         }
 
@@ -175,13 +195,21 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
+            if (e.PropertyName == nameof(TerminalModel.Direction))
             {
                 SetTerminalRotationBasedOnDirection();
             }
-            else if (e.PropertyName.Equals(nameof(Model.TerminalModel.Data)))
+            else if (e.PropertyName == nameof(Model.TerminalModel.Data))
             {
                 Data = TerminalModel.Data;
+            }
+            else if (e.PropertyName == nameof(Model.TerminalModel.Type))
+            {
+                if (TerminalModel.Type != null)
+                {
+                    ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
+                    ActionsToTakeWhenTypeIsLoaded.Clear();
+                }
             }
         }
 

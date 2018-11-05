@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
+using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -10,24 +11,26 @@ namespace DiiagramrAPI.Service
     public class DiagramCopier
     {
         private readonly IProjectManager _projectManager;
-        private readonly DataContractSerializer _serializer;
+        private DataContractSerializer _serializer;
 
         public DiagramCopier(IProjectManager projectManager)
         {
             _projectManager = projectManager;
-            _serializer = new DataContractSerializer(typeof(DiagramModel), _projectManager.GetSerializeableTypes());
         }
 
         public DiagramModel Copy(DiagramModel diagram)
         {
+            _serializer = new DataContractSerializer(typeof(DiagramModel), _projectManager.GetSerializeableTypes());
             DiagramModel diagramCopy;
             var memoryStream = new MemoryStream();
 
-            using (var xmlTextWriter = new XmlTextWriter(memoryStream, new UTF8Encoding(false)))
+            var memoryStream2 = new NotifyingStream(s => { });
+
+            using (var xmlTextWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { Encoding = Encoding.UTF8 }))
             {
                 _serializer.WriteObject(xmlTextWriter, diagram);
             }
-
+            memoryStream.Dispose();
             var buffer = Encoding.UTF8.GetString(memoryStream.ToArray());
             memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(buffer));
 
@@ -36,39 +39,53 @@ namespace DiiagramrAPI.Service
                 diagramCopy = (DiagramModel)_serializer.ReadObject(xmlTextReader);
             }
 
+            memoryStream.Dispose();
             return diagramCopy;
+        }
+    }
 
-            //var tempFileName = Path.GetTempFileName();
-            //Save(diagram, tempFileName);
-            //return Open(tempFileName);
+    public class NotifyingStream : Stream
+    {
+        public override bool CanRead => false;
 
+        public override bool CanSeek => false;
+
+        public override bool CanWrite => true;
+
+        public override long Length => 100;
+
+        public override long Position { get => 0; set { } }
+
+        private string _msg;
+        public Action<string> Notify { get; }
+
+        public NotifyingStream(Action<string> notify)
+        {
+            Notify = notify;
         }
 
-        public DiagramModel Open(string fileName)
+        public override void Flush()
         {
-            var serializer = new DataContractSerializer(typeof(DiagramModel), _projectManager.GetSerializeableTypes());
-            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                return (DiagramModel)serializer.ReadObject(stream);
-            }
         }
 
-        public void Save(DiagramModel diagram, string fileName)
+        public override int Read(byte[] buffer, int offset, int count)
         {
-            var serializer = new DataContractSerializer(typeof(DiagramModel), _projectManager.GetSerializeableTypes());
-            using (var writer = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
-            {
-                using (var w = XmlWriter.Create(writer))
-                {
-                    try
-                    {
-                        serializer.WriteObject(w, diagram);
-                    }
-                    catch (XmlException)
-                    {
-                    }
-                }
-            }
+            return 0;
+        }
+
+        public override long Seek(long offset, SeekOrigin origin)
+        {
+            return 0;
+        }
+
+        public override void SetLength(long value)
+        {
+        }
+
+        public override void Write(byte[] buffer, int offset, int count)
+        {
+            _msg += Encoding.UTF8.GetString(buffer);
+            Notify.Invoke(_msg);
         }
     }
 }

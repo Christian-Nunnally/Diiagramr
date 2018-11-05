@@ -59,6 +59,10 @@ namespace Diiagramr
             var viewModelName = modelType.Name;
             var viewName = viewModelName.Substring(0, viewModelName.Length - 5);
             var assembly = Assembly.GetAssembly(modelType);
+            if (!ViewAssemblies.Contains(assembly))
+            {
+                ViewAssemblies.Add(assembly);
+            }
             var viewType = assembly.ExportedTypes.First(t => t.Name == viewName);
             _viewModelToViewMapping.Add(modelType, viewType);
             return viewType;

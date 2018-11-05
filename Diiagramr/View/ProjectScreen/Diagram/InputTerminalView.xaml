@@ -22,7 +22,6 @@
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
-        <Label Content="Blah" Visibility="{Binding IsIntType, Converter={StaticResource Btv}}" HorizontalContentAlignment="Center" VerticalAlignment="Center"></Label>
         <Label
             HorizontalContentAlignment="Center"
             Content="{Binding Name}"

@@ -1,10 +1,10 @@
-﻿using System;
+﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Service;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
-using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.Service;
 
 namespace DiiagramrAPI.Model
 {
@@ -94,20 +94,66 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public virtual List<WireModel> ConnectedWires { get; set; }
 
+        [IgnoreDataMember]
         public Type Type { get; set; }
+
+        private string _typeName;
 
         [DataMember]
         public string TypeName
         {
-            get => Type?.AssemblyQualifiedName;
-            set => Type = Type.GetType(value) ?? Type.GetType(value, PluginLoader.AssemblyResolver, TypeResolver);
+            get => GetSafeTypeName(Type?.AssemblyQualifiedName ?? _typeName);
+            set => _typeName = GetRealTypeName(value);
+        }
+
+        private string GetRealTypeName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+
+            var typeNameInvalidChars = new string[] { ".", " ", "=", "," };
+            var typeNameValidChars = new string[] { "dddottt", "ssspaceee", "eeequalsss", "cccomaaa" };
+
+            var realName = typeName;
+            for (int i = 0; i < typeNameInvalidChars.Length; i++)
+            {
+                realName = realName.Replace(typeNameValidChars[i], typeNameInvalidChars[i]);
+            }
+            return realName;
+        }
+
+        private string GetSafeTypeName(string typeName)
+        {
+            if (typeName == null)
+            {
+                return null;
+            }
+
+            var typeNameInvalidChars = new string[] { ".", " ", "=", "," };
+            var typeNameValidChars = new string[] { "dddottt", "ssspaceee", "eeequalsss", "cccomaaa" };
+
+            var safeName = typeName;
+            for (int i = typeNameInvalidChars.Length - 1; i >= 0; i--)
+            {
+                safeName = safeName.Replace(typeNameInvalidChars[i], typeNameValidChars[i]);
+            }
+            return safeName;
         }
 
         [DataMember]
         public virtual string Name { get; set; }
 
-        [DataMember]
+        [IgnoreDataMember]
         public virtual object Data { get; set; }
+
+        [DataMember]
+        public virtual object SerializedData
+        {
+            get => ShouldSerializeData ? Data : null;
+            set => Data = ShouldSerializeData ? value : null;
+        }
 
         public double TerminalUpWireMinimumLength { get; set; }
         public double TerminalDownWireMinimumLength { get; set; }
@@ -115,23 +161,35 @@ namespace DiiagramrAPI.Model
         public double TerminalRightWireMinimumLength { get; set; }
         public int EdgeIndex { get; set; }
 
-        private Type TypeResolver(Assembly assembly, string name, bool ignore) => assembly == null ? Type.GetType(name, false, ignore) : assembly.GetType(name, false, ignore);
+        private Type TypeResolver(Assembly assembly, string name, bool ignore)
+        {
+            return assembly == null ? Type.GetType(name, false, ignore) : assembly.GetType(name, false, ignore);
+        }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(NodeX)) || e.PropertyName.Equals(nameof(OffsetX)))
+            {
                 X = NodeX + OffsetX;
+            }
             else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
+            {
                 Y = NodeY + OffsetY;
+            }
         }
 
         public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var node = (NodeModel) sender;
+            var node = (NodeModel)sender;
             if (e.PropertyName.Equals(nameof(NodeModel.X)))
+            {
                 NodeX = node.X;
+            }
+
             if (e.PropertyName.Equals(nameof(NodeModel.Y)))
+            {
                 NodeY = node.Y;
+            }
         }
 
         public void AddToNode(NodeModel node)
@@ -158,7 +216,11 @@ namespace DiiagramrAPI.Model
 
         public virtual void ConnectWire(WireModel wire)
         {
-            if (ConnectedWires.Contains(wire)) return;
+            if (ConnectedWires.Contains(wire))
+            {
+                return;
+            }
+
             ConnectedWires.Add(wire);
             WireConnected?.Invoke(wire);
             SemanticsChanged?.Invoke();
@@ -199,5 +261,21 @@ namespace DiiagramrAPI.Model
         ///     Notifies listeners when the sematics of this terminal have changed.
         /// </summary>
         public virtual event Action SemanticsChanged;
+
+        internal void InitializeType()
+        {
+            if (_typeName == null)
+            {
+                return;
+            }
+
+            try
+            {
+                Type = Type.GetType(_typeName) ?? Type.GetType(_typeName, PluginLoader.AssemblyResolver, TypeResolver);
+            }
+            catch
+            {
+            }
+        }
     }
 }

@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DiiagramrAPI.ViewModel.Diagram
 {
@@ -16,14 +17,18 @@ namespace DiiagramrAPI.ViewModel.Diagram
     {
         private const double WireDistanceOutOfTerminal = 25.0;
         private const double WireEdgeIndexSpacing = 0.0;
-
+        private const int WireAnimationFrameDelay = 15;
+        private bool _configuringWirePoints;
         public ColorTheme ColorTheme
         {
             private get => _colorTheme;
             set
             {
                 _colorTheme = value;
-                if (ColorTheme != null) LineColorBrush = new SolidColorBrush(ColorTheme.GetWireColorForType(WireModel.SinkTerminal.Type));
+                if (ColorTheme != null)
+                {
+                    LineColorBrush = new SolidColorBrush(ColorTheme.GetWireColorForType(WireModel.SinkTerminal.Type));
+                }
             }
         }
 
@@ -49,8 +54,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
             X2 = wire.X2 + DiagramViewModel.NodeBorderWidth;
             Y1 = wire.Y1 + DiagramViewModel.NodeBorderWidth;
             Y2 = wire.Y2 + DiagramViewModel.NodeBorderWidth;
-
-            ConfigureWirePoints();
         }
 
         public Point[] Points { get; set; }
@@ -64,10 +67,25 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(WireModel.X1))) X1 = WireModel.X1 + DiagramViewModel.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.X2))) X2 = WireModel.X2 + DiagramViewModel.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.Y1))) Y1 = WireModel.Y1 + DiagramViewModel.NodeBorderWidth;
-            if (e.PropertyName.Equals(nameof(WireModel.Y2))) Y2 = WireModel.Y2 + DiagramViewModel.NodeBorderWidth;
+            if (e.PropertyName.Equals(nameof(WireModel.X1)))
+            {
+                X1 = WireModel.X1 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.X2)))
+            {
+                X2 = WireModel.X2 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.Y1)))
+            {
+                Y1 = WireModel.Y1 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.Y2)))
+            {
+                Y2 = WireModel.Y2 + DiagramViewModel.NodeBorderWidth;
+            }
 
             if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
             {
@@ -75,10 +93,107 @@ namespace DiiagramrAPI.ViewModel.Diagram
                 return;
             }
 
-            ConfigureWirePoints();
+            if (View != null)
+            {
+                Points = GetWirePoints();
+            }
         }
 
-        private void ConfigureWirePoints()
+        private void AnimateAndConfigureWirePoints()
+        {
+            if (_configuringWirePoints)
+            {
+                return;
+            }
+
+            _configuringWirePoints = true;
+
+            new Thread(() =>
+            {
+                AnimateWirePointsOnUiThread(WireAnimationFrameDelay);
+                _configuringWirePoints = false;
+            }).Start();
+        }
+
+        protected override void OnViewLoaded()
+        {
+            AnimateAndConfigureWirePoints();
+        }
+
+        private void AnimateWirePointsOnUiThread(int frameDelay)
+        {
+            var wirePoints = GetWirePoints();
+            if (WireModel.UserWiredFromInput)
+            {
+                Array.Reverse(wirePoints);
+            }
+
+            var animation = GenerateFramesOfWiringAnimation(wirePoints);
+            foreach (var frame in animation)
+            {
+                View?.Dispatcher.Invoke(() =>
+                {
+                    Points = frame;
+                });
+
+                Thread.Sleep(frameDelay);
+            }
+        }
+
+        private List<Point[]> GenerateFramesOfWiringAnimation(Point[] originalPoints)
+        {
+            if (originalPoints.Length == 0)
+            {
+                return new List<Point[]>();
+            }
+
+            const int frames = 15;
+            var animation = new List<Point[]>();
+            var totalLength = GetLengthOfWire(originalPoints);
+
+            for (int frameNumber = 0; frameNumber < frames; frameNumber++)
+            {
+                var frame = new List<Point> { originalPoints[0] };
+                var lengthSoFar = 0.0;
+
+                for (int j = 0; j < originalPoints.Length - 2; j++)
+                {
+                    frame.Add(originalPoints[j]);
+                    var nextLength = Point.Subtract(originalPoints[j], originalPoints[j + 1]).Length;
+                    var targetLength = totalLength * Math.Sin((double)frameNumber / frames * (Math.PI / 2.0));
+                    if (lengthSoFar + nextLength > targetLength)
+                    {
+                        var diff_X = originalPoints[j + 1].X - originalPoints[j].X;
+                        var diff_Y = originalPoints[j + 1].Y - originalPoints[j].Y;
+                        var differenceLength = targetLength - lengthSoFar;
+                        var ratioOfCurrentLengthToDisplay = differenceLength / nextLength;
+                        var interpolatedX = originalPoints[j].X + diff_X * ratioOfCurrentLengthToDisplay;
+                        var interpolatedY = originalPoints[j].Y + diff_Y * ratioOfCurrentLengthToDisplay;
+                        var interpolatedPoint = new Point(interpolatedX, interpolatedY);
+                        frame.Add(interpolatedPoint);
+                        break;
+                    }
+                    lengthSoFar += nextLength;
+                }
+
+                animation.Add(frame.ToArray());
+            }
+
+            animation.Add(originalPoints);
+            return animation;
+        }
+
+        private double GetLengthOfWire(Point[] wirePoints)
+        {
+            var length = 0.0;
+            for (int i = 0; i < wirePoints.Length - 2; i++)
+            {
+                length += Point.Subtract(wirePoints[i], wirePoints[i + 1]).Length;
+            }
+            return length;
+        }
+
+        private Point[] GetWirePoints()
         {
             var start = new Point(X1, Y1);
             var end = new Point(X2, Y2);
@@ -87,8 +202,10 @@ namespace DiiagramrAPI.ViewModel.Diagram
             var stubStart = TranslatePointInDirection(start, WireModel.SinkTerminal.Direction, WireDistanceOutOfTerminal + startEdgeIndexExtensionLength);
             var stubEnd = TranslatePointInDirection(end, WireModel.SourceTerminal.Direction, WireDistanceOutOfTerminal + endEdgeIndexExtensionLength);
 
-            var backwardPoints = new List<Point>();
-            backwardPoints.Add(end);
+            var backwardPoints = new List<Point>
+            {
+                end
+            };
             var bannedDirectionForStart = OppositeDirection(WireModel.SinkTerminal.Direction);
             var bannedDirectionForEnd = OppositeDirection(WireModel.SourceTerminal.Direction);
 
@@ -100,15 +217,20 @@ namespace DiiagramrAPI.ViewModel.Diagram
                 stubEnd = backwardPoints[2];
             }
 
-            var points = new List<Point>();
-            points.Add(start);
+            var points = new List<Point>
+            {
+                start
+            };
             WireTwoPoints(stubStart, stubEnd, bannedDirectionForStart, bannedDirectionForEnd, points);
 
-            if (_uTurned) points.Add(backwardPoints[1]);
+            if (_uTurned)
+            {
+                points.Add(backwardPoints[1]);
+            }
 
             points.Add(end);
 
-            Points = points.ToArray();
+            return points.ToArray();
         }
 
         private static Direction GetBannedDirectionFromPoints(Point start, Point end)
@@ -125,8 +247,16 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
         {
-            if (direction == Direction.North) return new Point(p.X, p.Y - amount);
-            if (direction == Direction.South) return new Point(p.X, p.Y + amount);
+            if (direction == Direction.North)
+            {
+                return new Point(p.X, p.Y - amount);
+            }
+
+            if (direction == Direction.South)
+            {
+                return new Point(p.X, p.Y + amount);
+            }
+
             return direction == Direction.East ? new Point(p.X + amount, p.Y) : new Point(p.X - amount, p.Y);
         }
 
@@ -167,12 +297,29 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     if (start.Y >= end.Y)
                     {
                         if (bannedDirectionForEnd == Direction.East)
-                            if (start.X > end.X) return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.X > end.X)
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
 
                         if (bannedDirectionForEnd == Direction.West)
-                            if (start.X > end.X) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.X > end.X)
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
+
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
@@ -181,12 +328,29 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     if (start.X <= end.X)
                     {
                         if (bannedDirectionForEnd == Direction.North)
-                            if (start.Y > end.Y) return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.Y > end.Y)
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
 
                         if (bannedDirectionForEnd == Direction.South)
-                            if (start.Y > end.Y) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.Y > end.Y)
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
+
                         return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
@@ -195,12 +359,29 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     if (start.Y <= end.Y)
                     {
                         if (bannedDirectionForEnd == Direction.East)
-                            if (start.X > end.X) return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.X > end.X)
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
 
                         if (bannedDirectionForEnd == Direction.West)
-                            if (start.X > end.X) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.X > end.X)
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
+
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
@@ -209,12 +390,29 @@ namespace DiiagramrAPI.ViewModel.Diagram
                     if (start.X >= end.X)
                     {
                         if (bannedDirectionForEnd == Direction.North)
-                            if (start.Y > end.Y) return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.Y > end.Y)
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
 
                         if (bannedDirectionForEnd == Direction.South)
-                            if (start.Y > end.Y) return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-                            else return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                        {
+                            if (start.Y > end.Y)
+                            {
+                                return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                            else
+                            {
+                                return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
+                            }
+                        }
+
                         return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
@@ -232,7 +430,10 @@ namespace DiiagramrAPI.ViewModel.Diagram
             if (uturnCount++ > 10)
             {
                 while (pointsSoFar.Count > 1)
+                {
                     pointsSoFar.RemoveAt(pointsSoFar.Count - 1);
+                }
+
                 return pointsSoFar;
             }
 
@@ -278,9 +479,21 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
         private Direction OppositeDirection(Direction direction)
         {
-            if (direction == Direction.North) return Direction.South;
-            if (direction == Direction.South) return Direction.North;
-            if (direction == Direction.East) return Direction.West;
+            if (direction == Direction.North)
+            {
+                return Direction.South;
+            }
+
+            if (direction == Direction.South)
+            {
+                return Direction.North;
+            }
+
+            if (direction == Direction.East)
+            {
+                return Direction.West;
+            }
+
             return Direction.East;
         }
 
