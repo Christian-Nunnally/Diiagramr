@@ -41,19 +41,6 @@ namespace Diiagramr
         {
             base.Configure();
             var viewManager = this.Container.Get<ViewManager>();
-
-            var oldViewFactory = viewManager.ViewFactory;
-            viewManager.ViewFactory = type =>
-            {
-                try
-                {
-                    return oldViewFactory.Invoke(type);
-                }
-                catch
-                {
-                    return typeof(int);
-                }
-            };
         }
     }
 }

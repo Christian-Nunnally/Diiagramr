@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PropertyChanged, Version=2.5.13.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
@@ -79,6 +82,7 @@
     <Compile Include="Service\DiiagramrProjectLoadSave.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
+    <Compile Include="Service\Interfaces\ICopyable.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
     <Compile Include="Service\Interfaces\IFetchWebResource.cs" />
     <Compile Include="Service\Interfaces\ILibraryManager.cs" />

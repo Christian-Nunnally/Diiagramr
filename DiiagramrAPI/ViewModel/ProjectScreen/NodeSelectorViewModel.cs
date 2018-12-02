@@ -40,9 +40,8 @@ namespace DiiagramrAPI.ViewModel
             set
             {
                 _visible = value;
-                if (_visible && !nodesAdded)
+                if (_visible)
                 {
-                    nodesAdded = true;
                     AddNodes();
                 }
             }
@@ -63,6 +62,12 @@ namespace DiiagramrAPI.ViewModel
 
         public void AddNodes()
         {
+            if (nodesAdded)
+            {
+                return;
+            }
+
+            nodesAdded = true;
             foreach (var nodeViewModel in _nodeProvider.GetRegisteredNodes())
             {
                 if (nodeViewModel is DiagramCallNodeViewModel)
