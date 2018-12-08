@@ -15,6 +15,23 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public int Id { get; set; }
 
+        private string _name;
+
+        [DataMember]
+        public virtual string Name
+        {
+            get => _name;
+            set
+            {
+                if (_name != value)
+                {
+                    OnModelPropertyChanged(nameof(Name));
+                }
+
+                _name = value;
+            }
+        }
+
         private static int StaticId { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;

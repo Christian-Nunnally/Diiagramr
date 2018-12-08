@@ -393,7 +393,6 @@ namespace DiiagramrAPI.PluginNodeApi
             base.OnViewLoaded();
             _viewLoadedActions.ForEach(action => action.Invoke());
             _viewLoadedActions.Clear();
-            NodeModel.Terminals.ForEach(x => x.InitializeType());
         }
 
         public void MouseEntered(object sender, MouseEventArgs mouseEventArgs)

@@ -44,7 +44,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
 
         private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
-        private static readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
+        private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
         private static ColorTheme _colorTheme;
 
         public double TerminalUpWireMinimumLength
@@ -111,40 +111,37 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public TerminalViewModel(TerminalModel terminal)
         {
             TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            terminal.PropertyChanged += TerminalOnPropertyChanged;
-            Data = terminal.Data;
-            Name = terminal.Name;
+            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
+            Data = TerminalModel.Data;
+            Name = TerminalModel.Name;
             SetTerminalRotationBasedOnDirection();
-            SetBackgroundBrushWhenColorThemeAndTypeLoad(terminal);
+            SetBackgroundBrushWhenColorThemeAndTypeLoad();
         }
 
-        private void SetBackgroundBrushWhenColorThemeAndTypeLoad(TerminalModel terminal)
+        private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
         {
-            if (terminal.Type == null)
+            if (TerminalModel.Type == null)
             {
-                ActionsToTakeWhenTypeIsLoaded.Add(() =>
-                {
-                    SetBackgroundBrushWhenColorThemeLoads(terminal);
-                });
+                ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
             }
             else
             {
-                SetBackgroundBrushWhenColorThemeLoads(terminal);
+                SetBackgroundBrushWhenColorThemeLoads();
             }
         }
 
-        private void SetBackgroundBrushWhenColorThemeLoads(TerminalModel terminal)
+        private void SetBackgroundBrushWhenColorThemeLoads()
         {
             if (ColorTheme == null)
             {
                 ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
                 {
-                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
+                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
                 });
             }
             else
             {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
+                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
             }
         }
 

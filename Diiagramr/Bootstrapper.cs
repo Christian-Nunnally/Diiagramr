@@ -18,7 +18,7 @@ namespace Diiagramr
             builder.Bind<ViewManager>().To<CustomViewManager>().InSingletonScope();
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<IDirectoryService>().To<DirectoryService>().InSingletonScope();
-            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
+            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave2>();
             builder.Bind<IFetchWebResource>().To<WebResourceFetcher>().InSingletonScope();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();

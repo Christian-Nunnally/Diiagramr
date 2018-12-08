@@ -86,6 +86,7 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string MethodKey { get; set; }
 
+        [DataMember]
         public bool ShouldSerializeData { get; set; } = true;
 
         /// <summary>
@@ -102,48 +103,9 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string TypeName
         {
-            get => GetSafeTypeName(Type?.AssemblyQualifiedName ?? _typeName);
-            set => _typeName = GetRealTypeName(value);
+            get => Type?.AssemblyQualifiedName ?? _typeName;
+            set => _typeName = value;
         }
-
-        private string GetRealTypeName(string typeName)
-        {
-            if (typeName == null)
-            {
-                return null;
-            }
-
-            var typeNameInvalidChars = new string[] { ".", " ", "=", "," };
-            var typeNameValidChars = new string[] { "dddottt", "ssspaceee", "eeequalsss", "cccomaaa" };
-
-            var realName = typeName;
-            for (int i = 0; i < typeNameInvalidChars.Length; i++)
-            {
-                realName = realName.Replace(typeNameValidChars[i], typeNameInvalidChars[i]);
-            }
-            return realName;
-        }
-
-        private string GetSafeTypeName(string typeName)
-        {
-            if (typeName == null)
-            {
-                return null;
-            }
-
-            var typeNameInvalidChars = new string[] { ".", " ", "=", "," };
-            var typeNameValidChars = new string[] { "dddottt", "ssspaceee", "eeequalsss", "cccomaaa" };
-
-            var safeName = typeName;
-            for (int i = typeNameInvalidChars.Length - 1; i >= 0; i--)
-            {
-                safeName = safeName.Replace(typeNameInvalidChars[i], typeNameValidChars[i]);
-            }
-            return safeName;
-        }
-
-        [DataMember]
-        public virtual string Name { get; set; }
 
         [IgnoreDataMember]
         public virtual object Data { get; set; }
@@ -155,15 +117,22 @@ namespace DiiagramrAPI.Model
             set => Data = ShouldSerializeData ? value : null;
         }
 
+        [DataMember]
         public double TerminalUpWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalDownWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalLeftWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalRightWireMinimumLength { get; set; }
         public int EdgeIndex { get; set; }
 
         private Type TypeResolver(Assembly assembly, string name, bool ignore)
         {
-            return assembly == null ? Type.GetType(name, false, ignore) : assembly.GetType(name, false, ignore);
+            return assembly == null ? Type.GetType(name, true, ignore) : assembly.GetType(name, true, ignore);
         }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -255,6 +224,7 @@ namespace DiiagramrAPI.Model
         public void OnDeserialized(StreamingContext context)
         {
             PropertyChanged += OnTerminalPropertyChanged;
+            InitializeType();
         }
 
         /// <summary>

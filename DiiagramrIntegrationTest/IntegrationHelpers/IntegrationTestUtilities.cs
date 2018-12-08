@@ -38,7 +38,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<LibraryManagerWindowViewModel>().ToSelf();
                 builder.Bind<StartScreenViewModel>().ToSelf();
                 builder.Bind<IDirectoryService>().To<DirectoryService>();
-                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
+                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave2>();
                 builder.Bind<ILibraryManager>().To<LibraryManager>();
                 builder.Bind<IFetchWebResource>().To<WebResourceFetcher>();
                 builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();
@@ -120,7 +120,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         {
             diagramViewModel.DiagramDragEnter(diagram);
             diagramViewModel.DroppedDiagramCallNode(null, null);
-            diagramViewModel.LeftMouseButtonDown(new Point(0, 0));
+            diagramViewModel.PreviewLeftMouseButtonDown(new Point(0, 0));
             return diagramViewModel.NodeViewModels.Last() as DiagramCallNodeViewModel;
         }
     }

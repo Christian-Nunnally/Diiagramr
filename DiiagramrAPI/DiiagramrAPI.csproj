@@ -33,8 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="KellermanSoftware.Compare-NET-Objects, Version=3.1.0.0, Culture=neutral, PublicKeyToken=d970ace04cc85217, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompareNETObjects.3.01.0.0\lib\net451\KellermanSoftware.Compare-NET-Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="NUnit.CompareNetObjects, Version=0.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.CompareNetObjects.0.1.9\lib\net45\NUnit.CompareNetObjects.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=3.2.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.2.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -82,7 +88,6 @@
     <Compile Include="Service\DiiagramrProjectLoadSave.cs" />
     <Compile Include="Service\DirectoryService.cs" />
     <Compile Include="Service\EnumerableExtensionMethods.cs" />
-    <Compile Include="Service\Interfaces\ICopyable.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
     <Compile Include="Service\Interfaces\IFetchWebResource.cs" />
     <Compile Include="Service\Interfaces\ILibraryManager.cs" />
@@ -95,6 +100,7 @@
     <Compile Include="Service\NodeProvider.cs" />
     <Compile Include="Service\PluginLoader.cs" />
     <Compile Include="Service\ProjectFileService.cs" />
+    <Compile Include="Service\ProjectLoadSave2.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="Service\WebResourceFetcher.cs" />

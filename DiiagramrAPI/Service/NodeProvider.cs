@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace DiiagramrAPI.Service
 {
@@ -30,9 +30,20 @@ namespace DiiagramrAPI.Service
         public void RegisterNode(PluginNode node, NodeLibrary dependency)
         {
             var fullName = node.GetType().FullName ?? "";
-            if (_availableNodeViewModels.Contains(node)) return;
-            if (_nodeNameToViewModelMap.ContainsKey(fullName)) return;
-            if (_dependencyMap.ContainsKey(fullName)) throw new ProviderException("Node registered twice");
+            if (_availableNodeViewModels.Contains(node))
+            {
+                return;
+            }
+
+            if (_nodeNameToViewModelMap.ContainsKey(fullName))
+            {
+                return;
+            }
+
+            if (_dependencyMap.ContainsKey(fullName))
+            {
+                throw new ProviderException("Node registered twice");
+            }
 
             _nodeNameToViewModelMap.Add(fullName, node.GetType());
             _availableNodeViewModels.Add(node);
@@ -43,9 +54,12 @@ namespace DiiagramrAPI.Service
 
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
-            var fullName = node.NodeTypeFullName;
+            var fullName = node.Name;
             if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
+            {
                 throw NoViewModelException(fullName);
+            }
+
             viewModel.InitializeWithNode(node);
             return viewModel;
         }
@@ -53,13 +67,20 @@ namespace DiiagramrAPI.Service
         private Type GetViewModelTypeFromName(string fullNodeTypeName)
         {
             if (_nodeNameToViewModelMap.ContainsKey(fullNodeTypeName))
+            {
                 return _nodeNameToViewModelMap[fullNodeTypeName];
+            }
+
             throw NoViewModelException(fullNodeTypeName);
         }
 
         public PluginNode CreateNodeViewModelFromName(string typeFullName)
         {
-            if (!_dependencyMap.ContainsKey(typeFullName)) throw NoViewModelException(typeFullName);
+            if (!_dependencyMap.ContainsKey(typeFullName))
+            {
+                throw NoViewModelException(typeFullName);
+            }
+
             var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
             return LoadNodeViewModelFromNode(node);
         }

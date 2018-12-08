@@ -280,7 +280,7 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.CreateDiagram();
-            Assert.AreNotEqual(_projectManager.CurrentDiagrams[0].DiagramName, _projectManager.CurrentDiagrams[1].DiagramName);
+            Assert.AreNotEqual(_projectManager.CurrentDiagrams[0].Name, _projectManager.CurrentDiagrams[1].Name);
         }
 
         [TestMethod]

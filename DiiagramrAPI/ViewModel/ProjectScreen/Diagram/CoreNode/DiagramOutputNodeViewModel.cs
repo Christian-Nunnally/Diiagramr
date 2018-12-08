@@ -6,7 +6,19 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     {
         public Terminal<object> InputTerminal;
 
-        public event TerminalDataChangedDelegate<object> DataChanged;
+        private event TerminalDataChangedDelegate<object> _dataChanged;
+        public event TerminalDataChangedDelegate<object> DataChanged
+        {
+            add
+            {
+                _dataChanged += value;
+                value.Invoke(InputTerminal.Data);
+            }
+            remove
+            {
+                _dataChanged -= value;
+            }
+        }
 
         protected override void SetupNode(NodeSetup setup)
         {
@@ -18,7 +30,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         private void InputTerminalOnDataChanged(object data)
         {
-            DataChanged?.Invoke(data);
+            _dataChanged?.Invoke(data);
         }
     }
 }

@@ -101,7 +101,7 @@ namespace DiiagramrAPI.ViewModel
 
         public void CopyDiagram()
         {
-            var copier = new DiagramCopier(ProjectManager);
+            var copier = new DiagramCopier();
             var diagramCopy = copier.Copy(SelectedDiagram);
             ProjectManager.CreateDiagram(diagramCopy);
         }

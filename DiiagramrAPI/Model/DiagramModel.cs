@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Model
     {
         public DiagramModel()
         {
-            DiagramName = "";
+            Name = "";
         }
 
         public virtual bool IsOpen { get; set; }
@@ -19,9 +19,6 @@ namespace DiiagramrAPI.Model
         public bool NameEditMode { get; set; } = false;
 
         public bool NotNameEditMode => !NameEditMode;
-
-        [DataMember]
-        public virtual string DiagramName { get; set; }
 
         [DataMember]
         public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();

@@ -21,6 +21,49 @@ namespace DiiagramrIntegrationTest
         }
 
         [TestMethod]
+        public void EmptyProject_SaveLoad_ProjectStateRestored()
+        {
+            const string TestProjectName = nameof(TestProjectName);
+            _shell.CreateProject();
+            var projectExplorer = _shell.ProjectScreenViewModel.ProjectExplorerViewModel;
+            var project = projectExplorer.Project;
+            Assert.IsNotNull(project);
+            Assert.AreEqual(0, project.Diagrams.Count);
+            project.Name = TestProjectName;
+            var oldProjectId = project.Id;
+
+            SaveCloseLoadProject(_shell);
+
+            project = projectExplorer.Project;
+            Assert.IsNotNull(project);
+            Assert.AreEqual(0, project.Diagrams.Count);
+            Assert.AreEqual(TestProjectName, project.Name);
+            Assert.AreEqual(oldProjectId, project.Id);
+        }
+
+        [TestMethod]
+        public void EmptyDiagram_SaveLoad_DiagramStateRestored()
+        {
+            const string TestDiagramName = nameof(TestDiagramName);
+            _shell.CreateProject();
+            var projectExplorer = _shell.ProjectScreenViewModel.ProjectExplorerViewModel;
+            var projectManager = projectExplorer.ProjectManager;
+            projectManager.CreateDiagram();
+            var diagram = projectManager.CurrentDiagrams.First();
+            var oldDiagramId = diagram.Id;
+            diagram.Name = TestDiagramName;
+            Assert.AreEqual(0, diagram.Nodes.Count);
+
+            SaveCloseLoadProject(_shell);
+
+            diagram = projectManager.CurrentDiagrams.First();
+            Assert.IsNotNull(projectExplorer.Project);
+            Assert.AreEqual(0, diagram.Nodes.Count);
+            Assert.AreEqual(TestDiagramName, diagram.Name);
+            Assert.AreEqual(oldDiagramId, diagram.Id);
+        }
+
+        [TestMethod]
         public void LoadSaveSimpleDiagramDragNodeTest()
         {
             var projectScreen = _shell.ProjectScreenViewModel;
@@ -109,6 +152,14 @@ namespace DiiagramrIntegrationTest
             Assert.AreEqual(inputTerminalNode2.Y + DiagramViewModel.NodeBorderWidth, wireViewModel.Y1);
             Assert.AreEqual(outputTerminalNode1.X + DiagramViewModel.NodeBorderWidth, wireViewModel.X2);
             Assert.AreEqual(outputTerminalNode1.Y + DiagramViewModel.NodeBorderWidth, wireViewModel.Y2);
+        }
+
+        private void SaveCloseLoadProject(ShellViewModel shell)
+        {
+            var projectManager = shell.ProjectScreenViewModel.ProjectExplorerViewModel.ProjectManager;
+            projectManager.SaveProject();
+            projectManager.CloseProject();
+            projectManager.LoadProject();
         }
     }
 }
