@@ -1,9 +1,10 @@
-﻿using System;
-using System.Windows.Forms;
-using DiiagramrAPI.CustomControls;
+﻿using DiiagramrAPI.CustomControls;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using StyletIoC;
+using System;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace DiiagramrAPI.Service
 {
@@ -22,7 +23,10 @@ namespace DiiagramrAPI.Service
             _loadSave = loadSave;
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
-            if (!directoryService.Exists(ProjectDirectory)) directoryService.CreateDirectory(ProjectDirectory);
+            if (!directoryService.Exists(ProjectDirectory))
+            {
+                directoryService.CreateDirectory(ProjectDirectory);
+            }
         }
 
         public string ProjectDirectory { get; set; }
@@ -43,11 +47,34 @@ namespace DiiagramrAPI.Service
             _openFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
             _openFileDialog.FileName = "";
 
-            if (_openFileDialog.ShowDialog() != DialogResult.OK) return null;
+            if (_openFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return null;
+            }
 
             var project = _loadSave.Open(_openFileDialog.FileName);
             SetProjectNameFromPath(project, _openFileDialog.FileName);
+            ThrowIfDuplicateAssemblies();
+            OpenFirstDiagram(project);
             return project;
+        }
+
+        private static void OpenFirstDiagram(ProjectModel project)
+        {
+            var diagram = project.Diagrams.FirstOrDefault();
+            if (diagram != null)
+            {
+                diagram.IsOpen = true;
+            }
+        }
+
+        private void ThrowIfDuplicateAssemblies()
+        {
+            var currentAssemblyNames = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName);
+            if (currentAssemblyNames.Distinct().Count() != currentAssemblyNames.Count())
+            {
+                throw new DuplicateAssemblyException();
+            }
         }
 
         public DialogResult ConfirmProjectClose()
@@ -66,7 +93,10 @@ namespace DiiagramrAPI.Service
             _saveFileDialog.InitialDirectory = ProjectDirectory;
             _saveFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
 
-            if (_saveFileDialog.ShowDialog() != DialogResult.OK) return false;
+            if (_saveFileDialog.ShowDialog() != DialogResult.OK)
+            {
+                return false;
+            }
 
             SerializeAndSave(project, _saveFileDialog.FileName);
             SetProjectNameFromPath(project, _saveFileDialog.FileName);
@@ -81,10 +111,19 @@ namespace DiiagramrAPI.Service
         private void SetProjectNameFromPath(ProjectModel project, string path)
         {
             var lastBackslashIndex = path.LastIndexOf("\\", StringComparison.Ordinal);
-            if (lastBackslashIndex == -1) return;
+            if (lastBackslashIndex == -1)
+            {
+                return;
+            }
+
             ProjectDirectory = path.Substring(0, lastBackslashIndex);
             var lastPeriod = path.LastIndexOf(".", StringComparison.Ordinal);
             project.Name = path.Substring(lastBackslashIndex + 1, lastPeriod - lastBackslashIndex - 1);
+        }
+
+        [Serializable]
+        private class DuplicateAssemblyException : Exception
+        {
         }
     }
 }

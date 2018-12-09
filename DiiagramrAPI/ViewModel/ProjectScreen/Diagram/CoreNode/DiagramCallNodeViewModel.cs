@@ -161,13 +161,6 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         private void DiagramModelOnSemanticsChanged()
         {
             _diagramValidated = false;
-            /*
-            if (ReferencingDiagramModel.Nodes.Select(n => n.NodeViewModel).OfType<IoNode>().Count() == _ioNodeIdToTerminalViewModel.Count)
-            {
-                return;
-            }
-            */
-
             ValidateDiagramReference();
         }
 
@@ -185,7 +178,23 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             SyncTerminals();
 
             AutoSizeNodeToFitTerminals();
+            CopyTerminalDataAcrossNowThatEventListenersAreInPlace();
+
             InternalDiagramModel.Play();
+        }
+
+        private void CopyTerminalDataAcrossNowThatEventListenersAreInPlace()
+        {
+            foreach (var node in ReferencingDiagramModel.Nodes)
+            {
+                foreach (var terminal in node.Terminals.Where(t => t.Kind == TerminalKind.Output))
+                {
+                    var machingTerminal = InternalDiagramModel.Nodes
+                        .SelectMany(n => n.Terminals)
+                        .First(t => t.Id == terminal.Id);
+                    machingTerminal.Data = terminal.Data;
+                }
+            }
         }
 
         private void AutoSizeNodeToFitTerminals()

@@ -23,6 +23,8 @@ namespace Diiagramr
 
         public CustomViewManager(ViewManagerConfig config) : base(config)
         {
+            ViewFactory = Activator.CreateInstance;
+
             _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
             _viewModelToViewMapping.Add(typeof(ProjectScreenViewModel), typeof(ProjectScreenView));
             _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));

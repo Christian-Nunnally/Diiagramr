@@ -53,6 +53,7 @@ namespace DiiagramrAPI.Service
                     var wire = new WireModel(sinkTerminal, sourceTerminal);
                 }
             }
+            var loaded = AppDomain.CurrentDomain.GetAssemblies();
             return project;
         }
 

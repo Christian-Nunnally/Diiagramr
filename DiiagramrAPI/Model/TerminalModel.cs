@@ -86,9 +86,6 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string MethodKey { get; set; }
 
-        [DataMember]
-        public bool ShouldSerializeData { get; set; } = true;
-
         /// <summary>
         ///     The wire that is connected to this terminal. Null if no wire is connected.
         /// </summary>
@@ -107,15 +104,8 @@ namespace DiiagramrAPI.Model
             set => _typeName = value;
         }
 
-        [IgnoreDataMember]
-        public virtual object Data { get; set; }
-
         [DataMember]
-        public virtual object SerializedData
-        {
-            get => ShouldSerializeData ? Data : null;
-            set => Data = ShouldSerializeData ? value : null;
-        }
+        public virtual object Data { get; set; }
 
         [DataMember]
         public double TerminalUpWireMinimumLength { get; set; }

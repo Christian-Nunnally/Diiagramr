@@ -1,15 +1,12 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Service.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.Service.Interfaces;
-using StyletIoC.Internal;
 
 namespace DiiagramrAPI.Service
 {
@@ -30,7 +27,11 @@ namespace DiiagramrAPI.Service
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
             RegisterPluginNodesFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new NodeLibrary());
-            if (!_directoryService.Exists(_pluginDirectory)) _directoryService.CreateDirectory(_pluginDirectory);
+            if (!_directoryService.Exists(_pluginDirectory))
+            {
+                _directoryService.CreateDirectory(_pluginDirectory);
+            }
+
             LoadNonPluginDll();
             GetInstalledPlugins();
         }
@@ -49,7 +50,9 @@ namespace DiiagramrAPI.Service
         public void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
         {
             foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
+            {
                 LoadAssembly(pluginAssembly, libraryDependency);
+            }
         }
 
         private IEnumerable<Assembly> GetPluginAssemblies(string directory)
@@ -95,8 +98,12 @@ namespace DiiagramrAPI.Service
         private void RegisterPluginNodesFromAssembly(Assembly assembly, NodeLibrary libraryDependency)
         {
             foreach (var exportedType in assembly.ExportedTypes)
-                if (exportedType.Implements(typeof(PluginNode)) && !exportedType.IsAbstract)
+            {
+                if (typeof(PluginNode).IsAssignableFrom(exportedType) && !exportedType.IsAbstract)
+                {
                     _nodeProvider.RegisterNode((PluginNode)Activator.CreateInstance(exportedType), libraryDependency);
+                }
+            }
         }
 
         private void LoadNonPluginDll()

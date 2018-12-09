@@ -18,7 +18,7 @@ namespace Diiagramr
             builder.Bind<ViewManager>().To<CustomViewManager>().InSingletonScope();
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<IDirectoryService>().To<DirectoryService>().InSingletonScope();
-            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave2>();
+            builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
             builder.Bind<IFetchWebResource>().To<WebResourceFetcher>().InSingletonScope();
             builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
             builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
@@ -35,12 +35,6 @@ namespace Diiagramr
                 ViewAssemblies = new List<Assembly>() { this.GetType().Assembly }
             };
             builder.Bind<ViewManagerConfig>().ToInstance(viewManagerConfig);
-        }
-
-        protected override void Configure()
-        {
-            base.Configure();
-            var viewManager = this.Container.Get<ViewManager>();
         }
     }
 }

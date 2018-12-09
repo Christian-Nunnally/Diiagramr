@@ -9,5 +9,5 @@
              d:DesignHeight="40"
              d:DesignWidth="40"
              mc:Ignorable="d">
-    <Label Content="{Binding Value}" MouseDown="{s:Action AddTerminal}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
+    <Label Content="{Binding Value}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"></Label>
 </UserControl>

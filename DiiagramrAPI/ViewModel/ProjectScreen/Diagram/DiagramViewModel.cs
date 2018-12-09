@@ -29,7 +29,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, ColorTheme colorTheme, NodeSelectorViewModel nodeSelectorViewModel)
         {
-            TerminalViewModel.ColorTheme = colorTheme;
+            if (colorTheme != null)
+            {
+                TerminalViewModel.ColorTheme = colorTheme;
+            }
+
             if (diagram == null)
             {
                 throw new ArgumentNullException(nameof(diagram));

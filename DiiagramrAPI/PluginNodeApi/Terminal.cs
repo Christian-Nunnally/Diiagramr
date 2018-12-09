@@ -86,10 +86,5 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             Data = (T)(data ?? default(T));
         }
-
-        public void DisableSerialization()
-        {
-            UnderlyingTerminal.TerminalModel.ShouldSerializeData = false;
-        }
     }
 }

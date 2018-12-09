@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
 using Stylet;
+using System;
+using System.Linq;
 
 namespace DiiagramrAPI.ViewModel
 {
@@ -21,14 +21,25 @@ namespace DiiagramrAPI.ViewModel
 
         public void LoadProject()
         {
-            if (Parent != null) RequestClose();
-            _projectManager.LoadProject();
-            if (_projectManager.CurrentProject == null) LoadCanceled?.Invoke();
+            if (Parent != null)
+            {
+                RequestClose();
+            }
+
+            _projectManager.LoadProject(autoOpenDiagram: true);
+            if (_projectManager.CurrentProject == null)
+            {
+                LoadCanceled?.Invoke();
+            }
         }
 
         public void NewProject()
         {
-            if (Parent != null) RequestClose();
+            if (Parent != null)
+            {
+                RequestClose();
+            }
+
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.CurrentDiagrams.First().IsOpen = true;

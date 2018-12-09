@@ -18,7 +18,6 @@ namespace DiiagramrAPI.PluginNodeApi
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
         private readonly List<Action> _viewLoadedActions = new List<Action>();
-        public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
 
         public PluginNode()
         {
@@ -121,7 +120,6 @@ namespace DiiagramrAPI.PluginNodeApi
 
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
-            InitializeDynamicTerminals();
             InitializeWidthAndHeight();
         }
 
@@ -138,35 +136,6 @@ namespace DiiagramrAPI.PluginNodeApi
             {
                 Height = NodeModel.Height;
             }
-        }
-
-        private void InitializeDynamicTerminals()
-        {
-            var dynamicTerminals = NodeModel.Terminals
-                .Where(t => !string.IsNullOrEmpty(t.MethodKey)).ToArray();
-
-            foreach (var dynamicTerminal in dynamicTerminals)
-            {
-                var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(dynamicTerminal);
-                dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[dynamicTerminal.MethodKey];
-                AddTerminalViewModel(dynamicTerminalViewModel);
-            }
-        }
-
-        protected void CreateDynamicTerminal(string name, Type type, Direction direction, TerminalKind kind, string methodKey)
-        {
-            if (!DynamicTerminalMethods.ContainsKey(methodKey))
-            {
-                throw DynamicTerminalExpection(methodKey);
-            }
-
-            var terminalModel = new TerminalModel(name, type, direction, kind, 10000)
-            {
-                MethodKey = methodKey
-            };
-            var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
-            dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[methodKey];
-            AddTerminalViewModel(dynamicTerminalViewModel);
         }
 
         private void LoadTerminalViewModels()

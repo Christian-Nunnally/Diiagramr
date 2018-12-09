@@ -38,6 +38,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 {
                     action.Invoke();
                 }
+
+                ActionsToTakeWhenColorThemeIsLoaded.Clear();
             }
         }
 
@@ -362,12 +364,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
         {
-            if (terminal.Kind == TerminalKind.Input)
-            {
-                return new InputTerminalViewModel(terminal);
-            }
+            var terminalViewModel = terminal.Kind == TerminalKind.Input
+                ? (TerminalViewModel)new InputTerminalViewModel(terminal)
+                : (TerminalViewModel)new OutputTerminalViewModel(terminal);
 
-            return new OutputTerminalViewModel(terminal);
+            terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
+            return terminalViewModel;
+
+
         }
 
         public Adorner Adorner
