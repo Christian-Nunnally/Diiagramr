@@ -61,7 +61,7 @@ namespace DiiagramrAPI.Service
 
         private static void OpenFirstDiagram(ProjectModel project)
         {
-            var diagram = project.Diagrams.FirstOrDefault();
+            var diagram = project.Diagrams?.FirstOrDefault();
             if (diagram != null)
             {
                 diagram.IsOpen = true;

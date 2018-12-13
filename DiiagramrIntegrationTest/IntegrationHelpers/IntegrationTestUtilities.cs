@@ -38,7 +38,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<LibraryManagerWindowViewModel>().ToSelf();
                 builder.Bind<StartScreenViewModel>().ToSelf();
                 builder.Bind<IDirectoryService>().To<DirectoryService>();
-                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave2>();
+                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
                 builder.Bind<ILibraryManager>().To<LibraryManager>();
                 builder.Bind<IFetchWebResource>().To<WebResourceFetcher>();
                 builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();

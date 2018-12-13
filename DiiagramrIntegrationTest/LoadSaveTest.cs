@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Service;
+using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using DiiagramrIntegrationTest.IntegrationHelpers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,27 +19,6 @@ namespace DiiagramrIntegrationTest
         {
             _shell = IntegrationTestUtilities.SetupShellViewModel();
             _container = IntegrationTestUtilities.Container;
-        }
-
-        [TestMethod]
-        public void EmptyProject_SaveLoad_ProjectStateRestored()
-        {
-            const string TestProjectName = nameof(TestProjectName);
-            _shell.CreateProject();
-            var projectExplorer = _shell.ProjectScreenViewModel.ProjectExplorerViewModel;
-            var project = projectExplorer.Project;
-            Assert.IsNotNull(project);
-            Assert.AreEqual(0, project.Diagrams.Count);
-            project.Name = TestProjectName;
-            var oldProjectId = project.Id;
-
-            SaveCloseLoadProject(_shell);
-
-            project = projectExplorer.Project;
-            Assert.IsNotNull(project);
-            Assert.AreEqual(0, project.Diagrams.Count);
-            Assert.AreEqual(TestProjectName, project.Name);
-            Assert.AreEqual(oldProjectId, project.Id);
         }
 
         [TestMethod]
@@ -87,14 +67,14 @@ namespace DiiagramrIntegrationTest
             var node2 = _shell.PlaceNode(testNode);
 
             // wire nodes
-            var outputTerm = node1.OutputTerminalViewModels.First();
-            var inputTerm = node2.InputTerminalViewModels.First();
-            var wireViewModel = _shell.WireTerminals(outputTerm, inputTerm);
+            var outputTerminal = node1.OutputTerminalViewModels.First();
+            var inputTerminal = node2.InputTerminalViewModels.First();
+            var wireViewModel = _shell.WireTerminals(outputTerminal, inputTerminal);
 
             // set output
             node1.InputTerminalViewModels.First().Data = 4;
-            outputTerm.Data = 5;
-            Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
+            outputTerminal.Data = 5;
+            Assert.AreEqual(outputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
 
             // move node2
             node2.X = 16;
@@ -116,16 +96,18 @@ namespace DiiagramrIntegrationTest
             projectManager.CloseProject();
             projectManager.LoadProject();
 
+            projectManager.DiagramViewModels.ForEach(x => x.Diagram.Play());
+
             var diagramViewModel = _shell.OpenDiagram();
             Assert.AreEqual(2, diagramViewModel.NodeViewModels.Count);
             node1 = diagramViewModel.NodeViewModels[0];
             node2 = diagramViewModel.NodeViewModels[1];
 
             // check wire nodes
-            outputTerm = node1.OutputTerminalViewModels.First();
-            inputTerm = node2.InputTerminalViewModels.First();
-            Assert.AreNotEqual(0, outputTerm.TerminalModel.ConnectedWires.Count);
-            Assert.AreNotEqual(0, inputTerm.TerminalModel.ConnectedWires.Count);
+            outputTerminal = node1.OutputTerminalViewModels.First();
+            inputTerminal = node2.InputTerminalViewModels.First();
+            Assert.AreNotEqual(0, outputTerminal.TerminalModel.ConnectedWires.Count);
+            Assert.AreNotEqual(0, inputTerminal.TerminalModel.ConnectedWires.Count);
             Assert.AreEqual(5, ((TestPassthroughNode)node2).InputTerminal.Data);
             Assert.AreEqual(5, ((TestPassthroughNode)node1).OutputTerminal.Data);
             Assert.AreEqual(6, ((TestPassthroughNode)node2).OutputTerminal.Data);
@@ -134,15 +116,15 @@ namespace DiiagramrIntegrationTest
 
 
             // change data
-            outputTerm.Data = 6;
+            outputTerminal.Data = 6;
             Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
             Assert.AreEqual(((TestPassthroughNode)node2).InputTerminal.Data + 1, ((TestPassthroughNode)node2).OutputTerminal.Data);
 
             // change location
             node1.X = 11;
             node1.Y = 12;
-            inputTerminalNode2 = inputTerm.TerminalModel;
-            outputTerminalNode1 = outputTerm.TerminalModel;
+            inputTerminalNode2 = inputTerminal.TerminalModel;
+            outputTerminalNode1 = outputTerminal.TerminalModel;
             wireViewModel = diagramWell.ActiveItem.WireViewModels.First();
             Assert.AreEqual(inputTerminalNode2.X, node2.X);
             Assert.AreEqual(inputTerminalNode2.Y, node2.Y);

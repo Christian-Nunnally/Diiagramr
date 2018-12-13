@@ -13,23 +13,20 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     public class DiagramCallNodeViewModel : PluginNode
     {
         public static IProjectManager ProjectManager { get; set; }
-        public static IProvideNodes NodeProvider { private get; set; }
 
         // TODO: Come up with cleaner recursion detection method so we can get rid of this.
         private static readonly List<string> DiagramsCopiedDuringCallNodeCreation = new List<string>();
 
-        private readonly DiagramCopier _diagramCopier = new DiagramCopier();
-
+        private readonly DiagramCopier _diagramCopier = new DiagramCopier(ProjectManager);
         private readonly Dictionary<DiagramInputNodeViewModel, Terminal<object>> _inputNodeToTerminal = new Dictionary<DiagramInputNodeViewModel, Terminal<object>>();
 
         private readonly Dictionary<int, TerminalViewModel> _ioNodeIdToTerminalViewModel = new Dictionary<int, TerminalViewModel>();
         private readonly Dictionary<DiagramOutputNodeViewModel, Terminal<object>> _outputNodeToTerminal = new Dictionary<DiagramOutputNodeViewModel, Terminal<object>>();
+        private readonly IProvideNodes _nodeProvider;
         private bool _diagramValidated;
 
         private NodeSetup _nodeSetup;
-
         public DiagramModel ReferencingDiagramModel { get; private set; }
-
         private DiagramModel InternalDiagramModel { get; set; }
         private DiagramViewModel InternalDiagramViewModel { get; set; }
 
@@ -39,13 +36,18 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         [PluginNodeSetting]
         public string DiagramName { get; set; }
 
-        public static DiagramCallNodeViewModel CreateDiagramCallNode(DiagramModel diagram)
+        public static DiagramCallNodeViewModel CreateDiagramCallNode(DiagramModel diagram, IProvideNodes nodeProvider)
         {
-            var diagramNode = new DiagramCallNodeViewModel();
+            var diagramNode = new DiagramCallNodeViewModel(nodeProvider);
             var nodeModel = new NodeModel(typeof(DiagramCallNodeViewModel).FullName);
             diagramNode.InitializeWithNode(nodeModel);
             diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
             return diagramNode;
+        }
+
+        public DiagramCallNodeViewModel(IProvideNodes nodeProvider)
+        {
+            _nodeProvider = nodeProvider;
         }
 
         protected override void SetupNode(NodeSetup setup)
@@ -100,7 +102,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null, null);
+            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, _nodeProvider, null, null);
             DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 
@@ -161,7 +163,22 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         private void DiagramModelOnSemanticsChanged()
         {
             _diagramValidated = false;
+
+            if (CanDelayCopy())
+            {
+                return;
+            }
+
             ValidateDiagramReference();
+        }
+
+        private bool CanDelayCopy()
+        {
+            var ioNodeCount = ReferencingDiagramModel.Nodes
+                .Select(n => n.NodeViewModel)
+                .OfType<IoNode>()
+                .Count();
+            return ioNodeCount == _ioNodeIdToTerminalViewModel.Count;
         }
 
         private void ValidateDiagramReference(object data = null)

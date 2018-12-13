@@ -1,55 +1,38 @@
 ﻿using DiiagramrAPI.Model;
-using System.Collections.Generic;
+using DiiagramrAPI.Service.Interfaces;
+using System.IO;
+using System.Runtime.Serialization;
+using System.Text;
+using System.Xml;
 
 namespace DiiagramrAPI.Service
 {
     public class DiagramCopier
     {
+        private readonly IProjectManager _projectManager;
+
+        public DiagramCopier(IProjectManager projectManager)
+        {
+            _projectManager = projectManager;
+        }
+
         public DiagramModel Copy(DiagramModel diagram)
         {
-            var copiedDiagram = new DiagramModel
+            var serializer = new DataContractSerializer(typeof(DiagramModel), _projectManager.GetSerializeableTypes());
+            using (var memoryStream = new MemoryStream())
             {
-                Id = diagram.Id,
-                Name = diagram.Name + "_Copy"
-            };
-
-            var terminalMap = new Dictionary<TerminalModel, TerminalModel>();
-            var wires = new HashSet<WireModel>();
-            foreach (var node in diagram.Nodes)
-            {
-                var copiedNode = new NodeModel(node.Name, node.Dependency)
+                using (var xmlTextWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { Encoding = Encoding.UTF8 }))
                 {
-                    Id = node.Id,
-                    Width = node.Width,
-                    Height = node.Height,
-                    X = node.X,
-                    Y = node.Y
-                };
-
-                foreach (var terminal in node.Terminals)
-                {
-                    var copiedTerminal = new TerminalModel(terminal.Name, terminal.Type, terminal.Direction, terminal.Kind, terminal.TerminalIndex)
-                    {
-                        Data = terminal.Data,
-                        Id = terminal.Id
-                    };
-
-                    terminalMap.Add(terminal, copiedTerminal);
-                    copiedNode.AddTerminal(copiedTerminal);
-                    terminal.ConnectedWires.ForEach(w => wires.Add(w));
+                    serializer.WriteObject(xmlTextWriter, diagram);
                 }
 
-                copiedDiagram.AddNode(copiedNode);
-            }
+                memoryStream.Seek(0, SeekOrigin.Begin);
 
-            foreach (var wire in wires)
-            {
-                var terminal1 = terminalMap[wire.SinkTerminal];
-                var terminal2 = terminalMap[wire.SourceTerminal];
-                new WireModel(terminal1, terminal2) { Id = wire.Id };
+                using (var xmlTextReader = XmlReader.Create(memoryStream))
+                {
+                    return (DiagramModel)serializer.ReadObject(xmlTextReader);
+                }
             }
-
-            return copiedDiagram;
         }
     }
 }

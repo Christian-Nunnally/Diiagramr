@@ -1,9 +1,7 @@
 ﻿using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace DiiagramrAPI.Model
@@ -86,9 +84,6 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string MethodKey { get; set; }
 
-        /// <summary>
-        ///     The wire that is connected to this terminal. Null if no wire is connected.
-        /// </summary>
         [DataMember]
         public virtual List<WireModel> ConnectedWires { get; set; }
 
@@ -119,11 +114,6 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public double TerminalRightWireMinimumLength { get; set; }
         public int EdgeIndex { get; set; }
-
-        private Type TypeResolver(Assembly assembly, string name, bool ignore)
-        {
-            return assembly == null ? Type.GetType(name, true, ignore) : assembly.GetType(name, true, ignore);
-        }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -214,28 +204,11 @@ namespace DiiagramrAPI.Model
         public void OnDeserialized(StreamingContext context)
         {
             PropertyChanged += OnTerminalPropertyChanged;
-            InitializeType();
         }
 
         /// <summary>
         ///     Notifies listeners when the sematics of this terminal have changed.
         /// </summary>
         public virtual event Action SemanticsChanged;
-
-        internal void InitializeType()
-        {
-            if (_typeName == null)
-            {
-                return;
-            }
-
-            try
-            {
-                Type = Type.GetType(_typeName) ?? Type.GetType(_typeName, PluginLoader.AssemblyResolver, TypeResolver);
-            }
-            catch
-            {
-            }
-        }
     }
 }

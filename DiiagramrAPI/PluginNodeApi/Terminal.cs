@@ -72,13 +72,25 @@ namespace DiiagramrAPI.PluginNodeApi
                 return;
             }
 
-            if (UnderlyingTerminal.Data == null)
+            CastAndSetData(UnderlyingTerminal.Data);
+        }
+
+        private void CastAndSetData(object data)
+        {
+            if (data == null)
             {
                 Data = default(T);
             }
             else
             {
-                Data = (T)UnderlyingTerminal.Data;
+                try
+                {
+                    Data = (T)data;
+                }
+                catch (InvalidCastException)
+                {
+                    Data = default(T);
+                }
             }
         }
 

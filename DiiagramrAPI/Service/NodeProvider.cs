@@ -1,11 +1,11 @@
 ﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 
 namespace DiiagramrAPI.Service
 {
@@ -14,14 +14,12 @@ namespace DiiagramrAPI.Service
         private readonly IList<PluginNode> _availableNodeViewModels;
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
         private readonly IDictionary<string, NodeLibrary> _dependencyMap;
+        private readonly HashSet<Assembly> _loadedAssemblies = new HashSet<Assembly>();
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public NodeProvider()
         {
-            // Todo: Code smell
-            DiagramCallNodeViewModel.NodeProvider = this;
-
             _availableNodeViewModels = new List<PluginNode>();
             _nodeNameToViewModelMap = new Dictionary<string, Type>();
             _dependencyMap = new Dictionary<string, NodeLibrary>();
@@ -29,6 +27,7 @@ namespace DiiagramrAPI.Service
 
         public void RegisterNode(PluginNode node, NodeLibrary dependency)
         {
+            _loadedAssemblies.Add(node.GetType().Assembly);
             var fullName = node.GetType().FullName ?? "";
             if (_availableNodeViewModels.Contains(node))
             {
@@ -61,7 +60,31 @@ namespace DiiagramrAPI.Service
             }
 
             viewModel.InitializeWithNode(node);
+            ResolveTerminalTypes(viewModel);
             return viewModel;
+        }
+
+        private void ResolveTerminalTypes(PluginNode viewModel)
+        {
+            viewModel.TerminalViewModels.Select(t => t.TerminalModel).ForEach(ResolveTerminalType);
+        }
+
+        private void ResolveTerminalType(TerminalModel terminal)
+        {
+            terminal.Type = Type.GetType(terminal.TypeName)
+                ?? Type.GetType(terminal.TypeName, AssemblyResolver, TypeResolver);
+        }
+
+        private Assembly AssemblyResolver(AssemblyName assemblyName)
+        {
+            return _loadedAssemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
+        }
+
+        private Type TypeResolver(Assembly assembly, string name, bool ignore)
+        {
+            return assembly == null
+                ? Type.GetType(name, true, ignore)
+                : assembly.GetType(name, true, ignore);
         }
 
         private Type GetViewModelTypeFromName(string fullNodeTypeName)

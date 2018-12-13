@@ -16,7 +16,6 @@ namespace DiiagramrAPI.Service
         private readonly IDirectoryService _directoryService;
         private readonly string _pluginDirectory;
         private List<Type> _serializeableTypes = new List<Type>();
-        private static List<Assembly> _loadedAssemblies = new List<Assembly>();
 
         public PluginLoader(
             Func<IProvideNodes> nodeProviderFactory,
@@ -40,11 +39,6 @@ namespace DiiagramrAPI.Service
         {
             get => _serializeableTypes;
             set => _serializeableTypes = value.ToList();
-        }
-
-        public static Assembly AssemblyResolver(AssemblyName assemblyName)
-        {
-            return _loadedAssemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
         }
 
         public void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
@@ -81,7 +75,6 @@ namespace DiiagramrAPI.Service
         {
             RegisterPluginNodesFromAssembly(assembly, nodeLibrary);
             LoadSerializeableTypesFromAssembly(assembly);
-            _loadedAssemblies.Add(assembly);
         }
 
         private void LoadSerializeableTypesFromAssembly(Assembly assembly)
@@ -101,8 +94,20 @@ namespace DiiagramrAPI.Service
             {
                 if (typeof(PluginNode).IsAssignableFrom(exportedType) && !exportedType.IsAbstract)
                 {
-                    _nodeProvider.RegisterNode((PluginNode)Activator.CreateInstance(exportedType), libraryDependency);
+                    TryRegisterNode(libraryDependency, exportedType);
                 }
+            }
+        }
+
+        private void TryRegisterNode(NodeLibrary libraryDependency, Type exportedType)
+        {
+            try
+            {
+                _nodeProvider.RegisterNode((PluginNode)Activator.CreateInstance(exportedType), libraryDependency);
+            }
+            catch (MissingMethodException)
+            {
+                Console.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
             }
         }
 

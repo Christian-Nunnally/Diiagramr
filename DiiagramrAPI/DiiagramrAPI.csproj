@@ -100,7 +100,6 @@
     <Compile Include="Service\NodeProvider.cs" />
     <Compile Include="Service\PluginLoader.cs" />
     <Compile Include="Service\ProjectFileService.cs" />
-    <Compile Include="Service\ProjectLoadSave2.cs" />
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="Service\WebResourceFetcher.cs" />
