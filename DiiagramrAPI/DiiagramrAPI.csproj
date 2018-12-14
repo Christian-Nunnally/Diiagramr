@@ -69,6 +69,7 @@
     <Compile Include="Model\ProjectModel.cs" />
     <Compile Include="Model\TerminalModel.cs" />
     <Compile Include="Model\WireModel.cs" />
+    <Compile Include="PluginNodeApi\CoreUilities.cs" />
     <Compile Include="PluginNodeApi\Direction.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
     <Compile Include="PluginNodeApi\PluginNode.cs" />
