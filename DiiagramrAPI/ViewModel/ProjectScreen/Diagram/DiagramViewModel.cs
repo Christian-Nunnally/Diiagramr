@@ -25,7 +25,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
 
         private readonly IProvideNodes _nodeProvider;
-        private PluginNode _insertingNodeViewModel;
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, ColorTheme colorTheme, NodeSelectorViewModel nodeSelectorViewModel)
         {
@@ -45,7 +44,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             if (nodeSelectorViewModel != null)
             {
                 NodeSelectorViewModel = nodeSelectorViewModel;
-                NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+                NodeSelectorViewModel.NodeSelected += node => BeginInsertingNode(node, true);
             }
 
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
@@ -73,31 +72,13 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public bool NodeBeingDragged { get; set; }
 
         public DiagramControlViewModel DiagramControlViewModel { get; }
-
         public BindableCollection<PluginNode> NodeViewModels { get; set; }
-
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
-
-        public PluginNode InsertingNodeViewModel
-        {
-            get => _insertingNodeViewModel;
-            set
-            {
-                _insertingNodeViewModel = value;
-                if (_insertingNodeViewModel != null)
-                {
-                    // TODO: This is a really strange way of dropping nodes on the diagram.
-                    AddNode(_insertingNodeViewModel);
-                }
-            }
-        }
-
+        public PluginNode InsertingNodeViewModel { get; set; }
         public DiagramModel Diagram { get; }
 
         public double PanX { get; set; }
-
         public double PanY { get; set; }
-
         public double Zoom { get; set; }
 
         public string Name => Diagram.Name;
@@ -162,24 +143,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void NodeDraggingStopped()
         {
             NodeBeingDragged = false;
-        }
-
-        private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != nameof(NodeSelectorViewModel.SelectedNode))
-            {
-                return;
-            }
-
-            var selectedNode = NodeSelectorViewModel.SelectedNode;
-            if (selectedNode == null)
-            {
-                return;
-            }
-
-            InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
-            NodeSelectorViewModel.Visible = false;
-            NodeSelectorViewModel.SelectedNode = null;
         }
 
         private void AddWiresForNode(PluginNode viewModel)
@@ -324,6 +287,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             nodeViewModel.DropEventHandler(sender, e);
         }
 
+        // TODO: can this be an event or not be in this class please?
         public void DroppedDiagramCallNode(object sender, DragEventArgs e)
         {
             UnHighlightAllTerminals();
@@ -332,8 +296,16 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 return;
             }
 
-            InsertingNodeViewModel = DraggingDiagramCallNode;
+            BeginInsertingNode(DraggingDiagramCallNode);
             DraggingDiagramCallNode = null;
+        }
+
+        private void BeginInsertingNode(PluginNode node, bool insertCopy = false)
+        {
+            var nodeTypeName = node.GetType().FullName;
+            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
+            AddNode(nodeToInsert);
+            InsertingNodeViewModel = nodeToInsert;
         }
 
         #endregion
@@ -449,20 +421,29 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             PreviewRightMouseButtonDown(relativeMousePosition);
         }
 
-        public void PreviewRightMouseButtonDown(Point p)
+        public void PreviewRightMouseButtonDown(Point point)
         {
             if (InsertingNodeViewModel == null)
             {
-                NodeSelectorViewModel.RightPosition = p.X;
-                NodeSelectorViewModel.TopPosition = p.Y;
-                NodeSelectorViewModel.Visible = true;
+                ShowNodeSelector(point);
             }
             else
             {
-                NodeSelectorViewModel.SelectedNode = null;
-                RemoveNode(InsertingNodeViewModel);
-                InsertingNodeViewModel = null;
+                CancelInsertingNode();
             }
+        }
+
+        private void ShowNodeSelector(Point point)
+        {
+            NodeSelectorViewModel.RightPosition = point.X;
+            NodeSelectorViewModel.TopPosition = point.Y;
+            NodeSelectorViewModel.Visible = true;
+        }
+
+        private void CancelInsertingNode()
+        {
+            RemoveNode(InsertingNodeViewModel);
+            InsertingNodeViewModel = null;
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
