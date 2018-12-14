@@ -136,7 +136,6 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ShellViewModel.cs" />
-    <Compile Include="Properties\Annotations1.cs" />
     <Compile Include="View\ProjectScreen\Diagram\PointsToPathConverter.cs" />
   </ItemGroup>
   <ItemGroup>

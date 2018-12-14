@@ -41,7 +41,7 @@
                                 <ColorAnimation
                                     Storyboard.TargetProperty="Fill.Color"
                                     To="Transparent"
-                                    Duration="0:0:0.6" />
+                                    Duration="0:0:0.06" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.ExitActions>
@@ -178,6 +178,7 @@
             PanY="{Binding PanY, Mode=OneWayToSource}"
             PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
             PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
+            KeyDown="{s:Action KeyDownHandler}"
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
                 <Canvas
@@ -312,7 +313,7 @@
                                             <Border
                                                 Grid.Row="0"
                                                 Grid.Column="1"
-                                                MouseDown="{s:Action RemoveNodePressed}"
+                                                MouseDown="{s:Action RemoveSelectedNodes}"
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
                                                 <Label

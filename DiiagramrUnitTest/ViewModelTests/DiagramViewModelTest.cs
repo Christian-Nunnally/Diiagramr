@@ -114,7 +114,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestRemoveNodePressed_NodeNotSelected_DoesNotRemoveNode()
         {
             ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
-            _diagramViewModel.RemoveNodePressed();
+            _diagramViewModel.RemoveSelectedNodes();
             Assert.AreEqual(1, _diagramViewModel.NodeViewModels.Count);
         }
 
@@ -123,7 +123,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
             _pluginNodeMoq.SetupGet(n => n.IsSelected).Returns(true);
-            _diagramViewModel.RemoveNodePressed();
+            _diagramViewModel.RemoveSelectedNodes();
             Assert.AreEqual(0, _diagramViewModel.NodeViewModels.Count);
         }
 

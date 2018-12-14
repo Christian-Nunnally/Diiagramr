@@ -336,7 +336,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (altKeyPressed)
             {
-                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.Name);
+                BeginInsertingNode(node, true);
                 return;
             }
             if (!controlKeyPressed)
@@ -347,7 +347,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             node.IsSelected = true;
         }
 
-        public void RemoveNodePressed()
+        public void RemoveSelectedNodes()
         {
             NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
         }
@@ -462,6 +462,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - NodeBorderWidth;
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
+        }
+
+        public void KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                RemoveSelectedNodes();
+            }
         }
 
         #endregion
