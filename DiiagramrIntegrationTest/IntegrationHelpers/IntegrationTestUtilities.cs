@@ -118,10 +118,9 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 
         public static DiagramCallNodeViewModel PlaceDiagramCallNodeFor(this DiagramViewModel diagramViewModel, DiagramModel diagram)
         {
-            diagramViewModel.DiagramDragEnter(diagram);
-            diagramViewModel.DroppedDiagramCallNode(null, null);
-            diagramViewModel.PreviewLeftMouseButtonDown(new Point(0, 0));
-            return diagramViewModel.NodeViewModels.Last() as DiagramCallNodeViewModel;
+            var diagramCallNode = DiagramCallNodeViewModel.CreateDiagramCallNode(diagram, Container.Get<IProvideNodes>());
+            diagramViewModel.Diagram.AddNode(diagramCallNode.NodeModel);
+            return diagramCallNode;
         }
     }
 }
