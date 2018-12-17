@@ -92,6 +92,7 @@ namespace DiiagramrAPI.Model
         public void OnDeserialized(StreamingContext context)
         {
             SetupTerminalPropertyChangeNotifications();
+            SinkTerminal.Data = SourceTerminal.Data;
         }
 
         private void SetupTerminalPropertyChangeNotifications()

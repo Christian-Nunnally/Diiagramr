@@ -317,6 +317,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (View != null)
             {
+                Adorner = new ToolTipAdorner(View, this);
                 View.Focusable = true;
                 View.IsEnabled = true;
                 View?.Focus();
