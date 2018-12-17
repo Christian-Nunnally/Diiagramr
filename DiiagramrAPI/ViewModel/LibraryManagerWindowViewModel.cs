@@ -30,17 +30,17 @@ namespace DiiagramrAPI.ViewModel
         protected override void OnViewLoaded()
         {
             base.OnViewLoaded();
-            LibraryManager.LoadSources();
+            LibraryManager.LoadSourcesAsync();
         }
 
-        public void InstallSelectedLibrary()
+        public async Task InstallSelectedLibrary()
         {
             if (string.IsNullOrEmpty(SelectedLibrary)) return;
             if (SelectedLibrary.Split(' ').Length != 3) return;
             var selectedLibraryMajorVersion = int.Parse(SelectedLibrary.Split(' ')[2].Substring(0, 1));
             var selectedLibraryName = SelectedLibrary.Split(' ')[0];
             var selectedLibrary = new NodeLibrary(selectedLibraryName, "", selectedLibraryMajorVersion, 0, 0);
-            LibraryManager.InstallLatestVersionOfLibrary(selectedLibrary);
+            await LibraryManager.InstallLatestVersionOfLibraryAsync(selectedLibrary);
         }
     }
 }

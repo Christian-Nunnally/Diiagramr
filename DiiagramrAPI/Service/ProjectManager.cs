@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace DiiagramrAPI.Service
@@ -159,7 +160,7 @@ namespace DiiagramrAPI.Service
             DiagramViewModels.Add(diagramViewModel);
         }
 
-        private void DownloadProjectDependencies()
+        private async Task DownloadProjectDependencies()
         {
             foreach (var diagram in CurrentProject.Diagrams)
             {
@@ -167,7 +168,7 @@ namespace DiiagramrAPI.Service
                 {
                     if (node.Dependency != null)
                     {
-                        _libraryManager.InstallLatestVersionOfLibrary(node.Dependency);
+                        await _libraryManager.InstallLatestVersionOfLibraryAsync(node.Dependency);
                     }
                 }
             }

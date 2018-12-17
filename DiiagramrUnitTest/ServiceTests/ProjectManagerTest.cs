@@ -205,7 +205,7 @@ namespace DiiagramrUnitTests.ServiceTests
             pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(nodeModelMoq.Object);
 
             _projectManager.LoadProject();
-            _libraryManagerMoq.Verify(l => l.InstallLatestVersionOfLibrary(NodeLibraryMoq.Object));
+            _libraryManagerMoq.Verify(l => l.InstallLatestVersionOfLibraryAsync(NodeLibraryMoq.Object));
         }
 
         [TestMethod]

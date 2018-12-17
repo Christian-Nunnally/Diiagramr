@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
@@ -15,9 +16,9 @@ namespace DiiagramrAPI.Service.Interfaces
 
         bool RemoveSource(string sourceUrl);
 
-        bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription);
+        Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription);
 
-        void LoadSources();
+        Task LoadSourcesAsync();
 
         IEnumerable<Type> GetSerializeableTypes();
     }
