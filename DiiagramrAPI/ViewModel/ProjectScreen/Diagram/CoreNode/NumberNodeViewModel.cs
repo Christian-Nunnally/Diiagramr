@@ -5,9 +5,18 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     public class NumberNodeViewModel : PluginNode
     {
         private Terminal<int> _outputTerminal;
+        private int _value;
 
         [PluginNodeSetting]
-        public int Value { get; set; }
+        public int Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+            }
+        }
 
         protected override void SetupNode(NodeSetup setup)
         {
@@ -18,14 +27,14 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public void Add1()
         {
+            _outputTerminal.Data = Value + 1;
             Value++;
-            _outputTerminal.Data = Value;
         }
 
         public void Sub1()
         {
+            _outputTerminal.Data = Value - 1;
             Value--;
-            _outputTerminal.Data = Value;
         }
     }
 }

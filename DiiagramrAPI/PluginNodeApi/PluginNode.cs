@@ -1,15 +1,15 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service;
+using DiiagramrAPI.ViewModel.Diagram;
+using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using Stylet;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.Service;
-using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using Stylet;
 
 namespace DiiagramrAPI.PluginNodeApi
 {
@@ -18,7 +18,6 @@ namespace DiiagramrAPI.PluginNodeApi
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
         private readonly List<Action> _viewLoadedActions = new List<Action>();
-        public readonly Dictionary<string, Action<object>> DynamicTerminalMethods = new Dictionary<string, Action<object>>();
 
         public PluginNode()
         {
@@ -40,7 +39,11 @@ namespace DiiagramrAPI.PluginNodeApi
             set
             {
                 NodeModel.Height = value;
-                if (Height < MinimumHeight - 0.05) Height = MinimumHeight;
+                if (Height < MinimumHeight - 0.05)
+                {
+                    Height = MinimumHeight;
+                }
+
                 FixAllTerminals();
             }
         }
@@ -51,7 +54,11 @@ namespace DiiagramrAPI.PluginNodeApi
             set
             {
                 NodeModel.Width = value;
-                if (Width < MinimumWidth - 0.05) Width = MinimumWidth;
+                if (Width < MinimumWidth - 0.05)
+                {
+                    Width = MinimumWidth;
+                }
+
                 FixAllTerminals();
             }
         }
@@ -71,7 +78,11 @@ namespace DiiagramrAPI.PluginNodeApi
             get => _isSelected;
             set
             {
-                if (value) TerminalViewModels.ForEach(t => t.IsSelected = false);
+                if (value)
+                {
+                    TerminalViewModels.ForEach(t => t.IsSelected = false);
+                }
+
                 _isSelected = value;
             }
         }
@@ -90,12 +101,16 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private bool IsInitialized { get; set; }
         private bool MouseOverBorder { get; set; }
-        private IEnumerable<PropertyInfo> PluginNodeSettings => 
+        private IEnumerable<PropertyInfo> PluginNodeSettings =>
             GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
 
         public virtual void InitializeWithNode(NodeModel nodeModel)
         {
-            if (IsInitialized) return;
+            if (IsInitialized)
+            {
+                return;
+            }
+
             IsInitialized = true;
 
             NodeModel = nodeModel;
@@ -105,7 +120,6 @@ namespace DiiagramrAPI.PluginNodeApi
 
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
-            InitializeDynamicTerminals();
             InitializeWidthAndHeight();
         }
 
@@ -113,31 +127,15 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             X = NodeModel.X;
             Y = NodeModel.Y;
-            if (NodeModel.Width > 1) Width = NodeModel.Width;
-            if (NodeModel.Height > 1) Height = NodeModel.Height;
-        }
-
-        private void InitializeDynamicTerminals()
-        {
-            var dynamicTerminals = NodeModel.Terminals
-                .Where(t => !string.IsNullOrEmpty(t.MethodKey)).ToArray();
-
-            foreach (var dynamicTerminal in dynamicTerminals)
+            if (NodeModel.Width > 1)
             {
-                var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(dynamicTerminal);
-                dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[dynamicTerminal.MethodKey];
-                AddTerminalViewModel(dynamicTerminalViewModel);
+                Width = NodeModel.Width;
             }
-        }
 
-        protected void CreateDynamicTerminal(string name, Type type, Direction direction, TerminalKind kind, string methodKey)
-        {
-            if (!DynamicTerminalMethods.ContainsKey(methodKey)) throw DynamicTerminalExpection(methodKey);
-            var terminalModel = new TerminalModel(name, type, direction, kind, 10000);
-            terminalModel.MethodKey = methodKey;
-            var dynamicTerminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
-            dynamicTerminalViewModel.DataChanged += DynamicTerminalMethods[methodKey];
-            AddTerminalViewModel(dynamicTerminalViewModel);
+            if (NodeModel.Height > 1)
+            {
+                Height = NodeModel.Height;
+            }
         }
 
         private void LoadTerminalViewModels()
@@ -202,7 +200,11 @@ namespace DiiagramrAPI.PluginNodeApi
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
-            if (NodeModel == null) return;
+            if (NodeModel == null)
+            {
+                return;
+            }
+
             if (propertyName.Equals(nameof(X)))
             {
                 NodeModel.X = X;
@@ -213,23 +215,41 @@ namespace DiiagramrAPI.PluginNodeApi
             }
             else if (propertyName.Equals(nameof(Width)))
             {
-                if (Width < MinimumWidth) Width = MinimumWidth;
+                if (Width < MinimumWidth)
+                {
+                    Width = MinimumWidth;
+                }
+
                 NodeModel.Width = Width;
                 FixAllTerminals();
             }
             else if (propertyName.Equals(nameof(Height)))
             {
-                if (Height < MinimumHeight) Height = MinimumHeight;
+                if (Height < MinimumHeight)
+                {
+                    Height = MinimumHeight;
+                }
+
                 NodeModel.Height = Height;
                 FixAllTerminals();
             }
             else if (propertyName.Equals(nameof(Dragging)))
             {
-                if (Dragging) DragStarted?.Invoke();
-                else DragStopped?.Invoke();
+                if (Dragging)
+                {
+                    DragStarted?.Invoke();
+                }
+                else
+                {
+                    DragStopped?.Invoke();
+                }
             }
 
-            if (!_pluginNodeSettingCache.ContainsKey(propertyName)) return;
+            if (!_pluginNodeSettingCache.ContainsKey(propertyName))
+            {
+                return;
+            }
+
             var changedPropertyInfo = _pluginNodeSettingCache[propertyName];
             var value = changedPropertyInfo.GetValue(this);
             NodeModel?.SetVariable(propertyName, value);
@@ -249,7 +269,11 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private void DropAndArrangeTerminal(TerminalViewModel terminal, double x, double y)
         {
-            if (terminal == null) return;
+            if (terminal == null)
+            {
+                return;
+            }
+
             var dropDirection = CalculateClosestDirection(x, y);
             DropAndArrangeTerminal(terminal, dropDirection);
         }

@@ -54,7 +54,7 @@
             MouseLeave="{s:Action NewProjectButtonMouseLeft}"/>
         <Border
             Grid.Column="1"
-            MouseDown="{s:Action LoadProjectButtonHandler}"
+            MouseDown="{s:Action LoadProject}"
             Style="{StaticResource RectangleMouseOverStyle}"
             
             MouseEnter="{s:Action LoadProjectButtonMouseEntered}"

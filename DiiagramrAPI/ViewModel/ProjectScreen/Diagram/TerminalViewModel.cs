@@ -38,12 +38,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 {
                     action.Invoke();
                 }
+
+                ActionsToTakeWhenColorThemeIsLoaded.Clear();
             }
         }
 
         public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
 
         private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
+        private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
         private static ColorTheme _colorTheme;
 
         public double TerminalUpWireMinimumLength
@@ -110,21 +113,37 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public TerminalViewModel(TerminalModel terminal)
         {
             TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            terminal.PropertyChanged += TerminalOnPropertyChanged;
-            Data = terminal.Data;
-            Name = terminal.Name;
+            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
+            Data = TerminalModel.Data;
+            Name = TerminalModel.Name;
             SetTerminalRotationBasedOnDirection();
+            SetBackgroundBrushWhenColorThemeAndTypeLoad();
+        }
 
-            if (ColorTheme != null)
+        private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
+        {
+            if (TerminalModel.Type == null)
             {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
+                ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
             }
             else
             {
+                SetBackgroundBrushWhenColorThemeLoads();
+            }
+        }
+
+        private void SetBackgroundBrushWhenColorThemeLoads()
+        {
+            if (ColorTheme == null)
+            {
                 ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
                 {
-                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(terminal.Type));
+                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
                 });
+            }
+            else
+            {
+                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
             }
         }
 
@@ -175,13 +194,21 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(TerminalModel.Direction)))
+            if (e.PropertyName == nameof(TerminalModel.Direction))
             {
                 SetTerminalRotationBasedOnDirection();
             }
-            else if (e.PropertyName.Equals(nameof(Model.TerminalModel.Data)))
+            else if (e.PropertyName == nameof(Model.TerminalModel.Data))
             {
                 Data = TerminalModel.Data;
+            }
+            else if (e.PropertyName == nameof(Model.TerminalModel.Type))
+            {
+                if (TerminalModel.Type != null)
+                {
+                    ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
+                    ActionsToTakeWhenTypeIsLoaded.Clear();
+                }
             }
         }
 
@@ -338,12 +365,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
         {
-            if (terminal.Kind == TerminalKind.Input)
-            {
-                return new InputTerminalViewModel(terminal);
-            }
+            var terminalViewModel = terminal.Kind == TerminalKind.Input
+                ? (TerminalViewModel)new InputTerminalViewModel(terminal)
+                : (TerminalViewModel)new OutputTerminalViewModel(terminal);
 
-            return new OutputTerminalViewModel(terminal);
+            terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
+            return terminalViewModel;
+
+
         }
 
         public Adorner Adorner

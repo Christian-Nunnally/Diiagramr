@@ -4,10 +4,20 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
     public class TestIntNode : PluginNode
     {
+        private int _value;
+
         public Terminal<int> OutputTerminal { get; set; }
 
         [PluginNodeSetting]
-        public int Value { get; set; }
+        public int Value
+        {
+            get => _value;
+            set
+            {
+                _value = value;
+                OnPropertyChanged(nameof(Value));
+            }
+        }
 
         protected override void SetupNode(NodeSetup setup)
         {
@@ -16,8 +26,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
 
         public void SetValue(int value)
         {
-            Value = value;
             OutputTerminal.Data = value;
+            Value = value;
         }
     }
 }

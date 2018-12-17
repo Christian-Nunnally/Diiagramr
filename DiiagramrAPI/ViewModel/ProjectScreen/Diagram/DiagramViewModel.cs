@@ -1,16 +1,16 @@
-﻿using System;
-using System.ComponentModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using Stylet;
+using System;
+using System.ComponentModel;
+using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
@@ -19,7 +19,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private readonly ColorTheme _colorTheme;
         public const double NodeBorderWidth = 15.0;
         public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
-        
+
         public const double GridSnapInterval = 30.0;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
@@ -29,8 +29,16 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, ColorTheme colorTheme, NodeSelectorViewModel nodeSelectorViewModel)
         {
-            TerminalViewModel.ColorTheme = colorTheme;
-            if (diagram == null) throw new ArgumentNullException(nameof(diagram));
+            if (colorTheme != null)
+            {
+                TerminalViewModel.ColorTheme = colorTheme;
+            }
+
+            if (diagram == null)
+            {
+                throw new ArgumentNullException(nameof(diagram));
+            }
+
             _colorTheme = colorTheme;
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
 
@@ -47,6 +55,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
             if (diagram.Nodes != null)
+            {
                 foreach (var nodeModel in diagram.Nodes)
                 {
                     var viewModel = nodeProvider.LoadNodeViewModelFromNode(nodeModel);
@@ -55,6 +64,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                     AddNodeViewModel(viewModel);
                     AddWiresForNode(viewModel);
                 }
+            }
         }
 
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
@@ -75,7 +85,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             {
                 _insertingNodeViewModel = value;
                 if (_insertingNodeViewModel != null)
+                {
+                    // TODO: This is a really strange way of dropping nodes on the diagram.
                     AddNode(_insertingNodeViewModel);
+                }
             }
         }
 
@@ -87,21 +100,28 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public double Zoom { get; set; }
 
-        public string Name => Diagram.DiagramName;
+        public string Name => Diagram.Name;
 
         public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
         private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
 
-        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.DiagramName ?? ""} Call";
+        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Diagram.DiagramName))) NotifyOfPropertyChange(() => Name);
+            if (e.PropertyName.Equals(nameof(Diagram.Name)))
+            {
+                NotifyOfPropertyChange(() => Name);
+            }
         }
 
         private void AddNode(PluginNode viewModel)
         {
-            if (viewModel.NodeModel == null) throw new InvalidOperationException("Can't add a node to the diagram before it's been initialized");
+            if (viewModel.NodeModel == null)
+            {
+                throw new InvalidOperationException("Can't add a node to the diagram before it's been initialized");
+            }
+
             Diagram.AddNode(viewModel.NodeModel);
             AddNodeViewModel(viewModel);
             viewModel.TerminalWiringModeChanged += PluginNodeOnWiringModeChanged;
@@ -111,12 +131,19 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             UnHighlightAllTerminals();
             UnselectNodes();
-            if (enabled) HighlightTerminalsOfSameType(terminalViewModel.TerminalModel);
+            if (enabled)
+            {
+                HighlightTerminalsOfSameType(terminalViewModel.TerminalModel);
+            }
         }
 
         private void AddNodeViewModel(PluginNode viewModel)
         {
-            if (!Diagram.Nodes.Contains(viewModel.NodeModel)) throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
+            if (!Diagram.Nodes.Contains(viewModel.NodeModel))
+            {
+                throw new InvalidOperationException("Can't add a view model for a nodeModel that does not exist in the model.");
+            }
+
             viewModel.WireConnectedToTerminal += WireAddedToDiagram;
             viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
             viewModel.DragStarted += NodeDraggingStarted;
@@ -139,9 +166,17 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(NodeSelectorViewModel.SelectedNode)) return;
+            if (e.PropertyName != nameof(NodeSelectorViewModel.SelectedNode))
+            {
+                return;
+            }
+
             var selectedNode = NodeSelectorViewModel.SelectedNode;
-            if (selectedNode == null) return;
+            if (selectedNode == null)
+            {
+                return;
+            }
+
             InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
             NodeSelectorViewModel.Visible = false;
             NodeSelectorViewModel.SelectedNode = null;
@@ -158,22 +193,35 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void WireRemovedFromDiagram(WireModel wireModel)
         {
             var wireToRemove = WireViewModels.FirstOrDefault(wire => wire.WireModel == wireModel);
-            if (wireToRemove != null) WireViewModels.Remove(wireToRemove);
+            if (wireToRemove != null)
+            {
+                WireViewModels.Remove(wireToRemove);
+            }
         }
 
         private void WireAddedToDiagram(WireModel wireModel)
         {
-            if (WireViewModels.Any(x => x.WireModel == wireModel)) return;
+            if (WireViewModels.Any(x => x.WireModel == wireModel))
+            {
+                return;
+            }
+
             AddWireViewModel(wireModel);
         }
 
         private void HighlightTerminalsOfSameType(TerminalModel terminal)
         {
             foreach (var nodeViewModel in NodeViewModels)
+            {
                 if (terminal.Kind == TerminalKind.Output)
+                {
                     nodeViewModel.HighlightInputTerminalsOfType(terminal.Type);
+                }
                 else
+                {
                     nodeViewModel.HighlightOutputTerminalsOfType(terminal.Type);
+                }
+            }
         }
 
         private void UnHighlightAllTerminals()
@@ -185,16 +233,22 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             Diagram.RemoveNode(viewModel.NodeModel);
             NodeViewModels.Remove(viewModel);
-            viewModel.TerminalWiringModeChanged -= PluginNodeOnWiringModeChanged; 
+            viewModel.TerminalWiringModeChanged -= PluginNodeOnWiringModeChanged;
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
         }
 
         private void AddWireViewModel(WireModel wire)
         {
-            if (WireViewModels.Any(x => x.WireModel == wire)) return;
-            var wireViewModel = new WireViewModel(wire);
-            wireViewModel.ColorTheme = _colorTheme;
+            if (WireViewModels.Any(x => x.WireModel == wire))
+            {
+                return;
+            }
+
+            var wireViewModel = new WireViewModel(wire)
+            {
+                ColorTheme = _colorTheme
+            };
             WireViewModels.Add(wireViewModel);
             UnHighlightAllTerminals();
         }
@@ -250,13 +304,17 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void DiagramDragEnter(DiagramModel diagram)
         {
-            DraggingDiagramCallNode = DiagramCallNodeViewModel.CreateDiagramCallNode(diagram);
+            DraggingDiagramCallNode = DiagramCallNodeViewModel.CreateDiagramCallNode(diagram, _nodeProvider);
         }
 
         public void DragLeave(object sender, DragEventArgs e)
         {
             var o = e.Data.GetData(DataFormats.StringFormat);
-            if (!(o is DiagramModel)) return;
+            if (!(o is DiagramModel))
+            {
+                return;
+            }
+
             DraggingDiagramCallNode = null;
         }
 
@@ -269,7 +327,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void DroppedDiagramCallNode(object sender, DragEventArgs e)
         {
             UnHighlightAllTerminals();
-            if (DraggingDiagramCallNode == null) return;
+            if (DraggingDiagramCallNode == null)
+            {
+                return;
+            }
+
             InsertingNodeViewModel = DraggingDiagramCallNode;
             DraggingDiagramCallNode = null;
         }
@@ -302,10 +364,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (altKeyPressed)
             {
-                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.NodeTypeFullName);
+                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.Name);
                 return;
             }
-            if (!controlKeyPressed) UnselectNodes();
+            if (!controlKeyPressed)
+            {
+                UnselectNodes();
+            }
+
             node.IsSelected = true;
         }
 
@@ -330,12 +396,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void PreviewLeftMouseButtonDown(Point p, bool controlKeyPressed = true)
         {
             if (InsertingNodeViewModel == null)
+            {
                 return;
+            }
 
             if (!controlKeyPressed)
             {
-                InsertingNodeViewModel.X = RoundToNearest((int) InsertingNodeViewModel.X, GridSnapInterval);
-                InsertingNodeViewModel.Y = RoundToNearest((int) InsertingNodeViewModel.Y, GridSnapInterval);
+                InsertingNodeViewModel.X = RoundToNearest((int)InsertingNodeViewModel.X, GridSnapInterval);
+                InsertingNodeViewModel.Y = RoundToNearest((int)InsertingNodeViewModel.Y, GridSnapInterval);
             }
 
             InsertingNodeViewModel = null;
@@ -347,7 +415,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             var rem = value % multiple;
             var result = value - rem;
             if (rem > multiple / 2.0)
+            {
                 result += multiple;
+            }
+
             return result;
         }
 
@@ -397,14 +468,18 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
         {
-            var inputElement = (IInputElement) sender;
+            var inputElement = (IInputElement)sender;
             var relativeMousePosition = e.GetPosition(inputElement);
             MouseMoved(relativeMousePosition);
         }
 
         public void MouseMoved(Point mouseLocation)
         {
-            if (InsertingNodeViewModel == null) return;
+            if (InsertingNodeViewModel == null)
+            {
+                return;
+            }
+
             InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - NodeBorderWidth;
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
         }
@@ -425,19 +500,19 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         private static Point GetMousePositionRelativeToSender(object sender, MouseButtonEventArgs e)
         {
-            var inputElement = (IInputElement) sender;
+            var inputElement = (IInputElement)sender;
             return e.GetPosition(inputElement);
         }
 
         private static PluginNode UnpackNodeViewModelFromSender(object sender)
         {
-            return UnpackNodeViewModelFromControl((Control) sender);
+            return UnpackNodeViewModelFromControl((Control)sender);
         }
 
         private static PluginNode UnpackNodeViewModelFromControl(Control control)
         {
             var contentPresenter = control.DataContext as ContentPresenter;
-            return (PluginNode) (contentPresenter?.Content ?? control.DataContext);
+            return (PluginNode)(contentPresenter?.Content ?? control.DataContext);
         }
 
         #endregion

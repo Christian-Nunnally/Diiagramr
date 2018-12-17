@@ -120,7 +120,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         {
             diagramViewModel.DiagramDragEnter(diagram);
             diagramViewModel.DroppedDiagramCallNode(null, null);
-            diagramViewModel.LeftMouseButtonDown(new Point(0, 0));
+            diagramViewModel.PreviewLeftMouseButtonDown(new Point(0, 0));
             return diagramViewModel.NodeViewModels.Last() as DiagramCallNodeViewModel;
         }
     }

@@ -12,38 +12,21 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 {
     public class DiagramCallNodeViewModel : PluginNode
     {
+        public static IProjectManager ProjectManager { get; set; }
+
+        // TODO: Come up with cleaner recursion detection method so we can get rid of this.
         private static readonly List<string> DiagramsCopiedDuringCallNodeCreation = new List<string>();
-        public static IProjectManager ProjectManager
-        {
-            private get => s_projectManager;
-            set
-            {
-                if (value == null)
-                {
-                    return;
-                }
 
-                s_projectManager = value;
-                ProjectManagerOnLoadActions.ForEach(x => x.Invoke());
-                ProjectManagerOnLoadActions.Clear();
-            }
-        }
-        public static IProvideNodes NodeProvider { private get; set; }
-        private static readonly List<Action> ProjectManagerOnLoadActions = new List<Action>();
-
-        private DiagramCopier _diagramCopier;
-
+        private readonly DiagramCopier _diagramCopier = new DiagramCopier(ProjectManager);
         private readonly Dictionary<DiagramInputNodeViewModel, Terminal<object>> _inputNodeToTerminal = new Dictionary<DiagramInputNodeViewModel, Terminal<object>>();
 
         private readonly Dictionary<int, TerminalViewModel> _ioNodeIdToTerminalViewModel = new Dictionary<int, TerminalViewModel>();
         private readonly Dictionary<DiagramOutputNodeViewModel, Terminal<object>> _outputNodeToTerminal = new Dictionary<DiagramOutputNodeViewModel, Terminal<object>>();
+        private readonly IProvideNodes _nodeProvider;
         private bool _diagramValidated;
 
         private NodeSetup _nodeSetup;
-        private static IProjectManager s_projectManager;
-
         public DiagramModel ReferencingDiagramModel { get; private set; }
-
         private DiagramModel InternalDiagramModel { get; set; }
         private DiagramViewModel InternalDiagramViewModel { get; set; }
 
@@ -53,21 +36,18 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         [PluginNodeSetting]
         public string DiagramName { get; set; }
 
-        public static DiagramCallNodeViewModel CreateDiagramCallNode(DiagramModel diagram)
+        public static DiagramCallNodeViewModel CreateDiagramCallNode(DiagramModel diagram, IProvideNodes nodeProvider)
         {
-            var diagramNode = new DiagramCallNodeViewModel();
-            if (ProjectManager != null)
-            {
-                diagramNode.InitializeDiagramCopier(ProjectManager);
-            }
-            else
-            {
-                ProjectManagerOnLoadActions.Add(() => diagramNode.InitializeDiagramCopier(ProjectManager));
-            }
+            var diagramNode = new DiagramCallNodeViewModel(nodeProvider);
             var nodeModel = new NodeModel(typeof(DiagramCallNodeViewModel).FullName);
             diagramNode.InitializeWithNode(nodeModel);
             diagramNode.SetReferencingDiagramModelIfNotBroken(diagram);
             return diagramNode;
+        }
+
+        public DiagramCallNodeViewModel(IProvideNodes nodeProvider)
+        {
+            _nodeProvider = nodeProvider;
         }
 
         protected override void SetupNode(NodeSetup setup)
@@ -83,7 +63,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             if (!string.IsNullOrEmpty(DiagramName))
             {
-                SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(d => d.DiagramName.Equals(DiagramName)));
+                SetReferencingDiagramModelIfNotBroken(ProjectManager.CurrentDiagrams.First(d => d.Name.Equals(DiagramName)));
             }
         }
 
@@ -96,14 +76,14 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
             ReferencingDiagramModel = referencingDiagramModel;
             referencingDiagramModel.PropertyChanged += ReferencingDiagramModelPropertyChanged;
-            DiagramName = ReferencingDiagramModel.DiagramName;
+            DiagramName = ReferencingDiagramModel.Name;
         }
 
         private void ReferencingDiagramModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(DiagramName)))
             {
-                DiagramName = ReferencingDiagramModel.DiagramName;
+                DiagramName = ReferencingDiagramModel.Name;
                 Name = DiagramName + " Call";
             }
         }
@@ -115,20 +95,15 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
                 throw new DiagramCallRecursionException();
             }
 
-            if (DiagramsCopiedDuringCallNodeCreation.Contains(ReferencingDiagramModel.DiagramName))
+            if (DiagramsCopiedDuringCallNodeCreation.Contains(ReferencingDiagramModel.Name))
             {
                 throw new DiagramCallRecursionException();
             }
 
-            DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.DiagramName);
+            DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, NodeProvider, null, null);
-            DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.DiagramName);
-        }
-
-        private void InitializeDiagramCopier(IProjectManager projectManager)
-        {
-            _diagramCopier = new DiagramCopier(projectManager);
+            InternalDiagramViewModel = new DiagramViewModel(InternalDiagramModel, _nodeProvider, null, null);
+            DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 
         private void SyncTerminals()
@@ -150,12 +125,12 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         private Terminal<object> GetTerminalForNodeIfItAlreadyExists(IoNode ioNode)
         {
-            if (!_ioNodeIdToTerminalViewModel.ContainsKey(ioNode.Id))
+            if (!_ioNodeIdToTerminalViewModel.ContainsKey(ioNode.NodeModel.Id))
             {
                 return null;
             }
 
-            return _nodeSetup.CreateClientTerminal<object>(_ioNodeIdToTerminalViewModel[ioNode.Id]);
+            return _nodeSetup.CreateClientTerminal<object>(_ioNodeIdToTerminalViewModel[ioNode.NodeModel.Id]);
         }
 
         private void SyncTerminalForOutput(Terminal<object> terminal, DiagramOutputNodeViewModel outputNode)
@@ -163,7 +138,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             if (terminal == null)
             {
                 terminal = _nodeSetup.OutputTerminal<object>(outputNode.Name, Direction.South);
-                _ioNodeIdToTerminalViewModel.Add(outputNode.Id, terminal.UnderlyingTerminal);
+                _ioNodeIdToTerminalViewModel.Add(outputNode.NodeModel.Id, terminal.UnderlyingTerminal);
             }
 
             _outputNodeToTerminal.Add(outputNode, terminal);
@@ -177,7 +152,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             if (terminal == null)
             {
                 terminal = _nodeSetup.InputTerminal<object>(inputNode.Name, Direction.North);
-                _ioNodeIdToTerminalViewModel.Add(inputNode.Id, terminal.UnderlyingTerminal);
+                _ioNodeIdToTerminalViewModel.Add(inputNode.NodeModel.Id, terminal.UnderlyingTerminal);
             }
 
             _inputNodeToTerminal.Add(inputNode, terminal);
@@ -188,12 +163,22 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         private void DiagramModelOnSemanticsChanged()
         {
             _diagramValidated = false;
-            if (ReferencingDiagramModel.Nodes.Select(n => n.NodeViewModel).OfType<IoNode>().Count() == _ioNodeIdToTerminalViewModel.Count)
+
+            if (CanDelayCopy())
             {
                 return;
             }
 
             ValidateDiagramReference();
+        }
+
+        private bool CanDelayCopy()
+        {
+            var ioNodeCount = ReferencingDiagramModel.Nodes
+                .Select(n => n.NodeViewModel)
+                .OfType<IoNode>()
+                .Count();
+            return ioNodeCount == _ioNodeIdToTerminalViewModel.Count;
         }
 
         private void ValidateDiagramReference(object data = null)
@@ -210,6 +195,23 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             SyncTerminals();
 
             AutoSizeNodeToFitTerminals();
+            CopyTerminalDataAcrossNowThatEventListenersAreInPlace();
+
+            InternalDiagramModel.Play();
+        }
+
+        private void CopyTerminalDataAcrossNowThatEventListenersAreInPlace()
+        {
+            foreach (var node in ReferencingDiagramModel.Nodes)
+            {
+                foreach (var terminal in node.Terminals.Where(t => t.Kind == TerminalKind.Output))
+                {
+                    var machingTerminal = InternalDiagramModel.Nodes
+                        .SelectMany(n => n.Terminals)
+                        .First(t => t.Id == terminal.Id);
+                    machingTerminal.Data = terminal.Data;
+                }
+            }
         }
 
         private void AutoSizeNodeToFitTerminals()
@@ -223,7 +225,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         private void RemoveTerminalsForNoLongerExistingIoNodes()
         {
-            var existingNodeIds = InternalDiagramViewModel.NodeViewModels.OfType<IoNode>().Select(n => n.Id);
+            var existingNodeIds = InternalDiagramViewModel.NodeViewModels.OfType<IoNode>().Select(n => n.NodeModel.Id);
             foreach (var noLongerExistingIoNodeId in _ioNodeIdToTerminalViewModel.Keys.Except(existingNodeIds))
             {
                 RemoveTerminalViewModel(_ioNodeIdToTerminalViewModel[noLongerExistingIoNodeId]);
@@ -243,6 +245,9 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
                 outputNodeAndTerminal.Key.DataChanged -= ValidateDiagramReference;
                 outputNodeAndTerminal.Key.DataChanged -= outputNodeAndTerminal.Value.ChangeTerminalData;
             }
+
+            _inputNodeToTerminal.Clear();
+            _outputNodeToTerminal.Clear();
         }
 
         public override void Initialize()
@@ -267,7 +272,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
             }
 
             ReferencingDiagramModel.SemanticsChanged += DiagramModelOnSemanticsChanged;
-            DiagramName = ReferencingDiagramModel.DiagramName;
+            DiagramName = ReferencingDiagramModel.Name;
             _nodeSetup.NodeName(DiagramName + " Call");
             SyncTerminals();
         }

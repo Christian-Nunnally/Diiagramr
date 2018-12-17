@@ -21,7 +21,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         [TestMethod]
         public void TestAddSource_EmptySource_DoesNotAddSource()
         {
-            _libraryManagerMoq.ResetCalls();
+            _libraryManagerMoq.Invocations.Clear();
             _librarySourceManagerWindowViewModel.AddSource();
             _libraryManagerMoq.Verify(l => l.AddSource(It.IsAny<string>()), Times.Never);
         }

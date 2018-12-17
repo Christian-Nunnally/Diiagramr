@@ -1,10 +1,8 @@
-﻿using System;
+﻿using DiiagramrAPI.PluginNodeApi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection;
 using System.Runtime.Serialization;
-using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.Service;
 
 namespace DiiagramrAPI.Model
 {
@@ -86,52 +84,61 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public string MethodKey { get; set; }
 
-        public bool ShouldSerializeData { get; set; } = true;
-
-        /// <summary>
-        ///     The wire that is connected to this terminal. Null if no wire is connected.
-        /// </summary>
         [DataMember]
         public virtual List<WireModel> ConnectedWires { get; set; }
 
+        [IgnoreDataMember]
         public Type Type { get; set; }
+
+        private string _typeName;
 
         [DataMember]
         public string TypeName
         {
-            get => Type?.AssemblyQualifiedName;
-            set => Type = Type.GetType(value) ?? Type.GetType(value, PluginLoader.AssemblyResolver, TypeResolver);
+            get => Type?.AssemblyQualifiedName ?? _typeName;
+            set => _typeName = value;
         }
-
-        [DataMember]
-        public virtual string Name { get; set; }
 
         [DataMember]
         public virtual object Data { get; set; }
 
+        [DataMember]
         public double TerminalUpWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalDownWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalLeftWireMinimumLength { get; set; }
+
+        [DataMember]
         public double TerminalRightWireMinimumLength { get; set; }
         public int EdgeIndex { get; set; }
-
-        private Type TypeResolver(Assembly assembly, string name, bool ignore) => assembly == null ? Type.GetType(name, false, ignore) : assembly.GetType(name, false, ignore);
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(NodeX)) || e.PropertyName.Equals(nameof(OffsetX)))
+            {
                 X = NodeX + OffsetX;
+            }
             else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
+            {
                 Y = NodeY + OffsetY;
+            }
         }
 
         public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var node = (NodeModel) sender;
+            var node = (NodeModel)sender;
             if (e.PropertyName.Equals(nameof(NodeModel.X)))
+            {
                 NodeX = node.X;
+            }
+
             if (e.PropertyName.Equals(nameof(NodeModel.Y)))
+            {
                 NodeY = node.Y;
+            }
         }
 
         public void AddToNode(NodeModel node)
@@ -158,7 +165,11 @@ namespace DiiagramrAPI.Model
 
         public virtual void ConnectWire(WireModel wire)
         {
-            if (ConnectedWires.Contains(wire)) return;
+            if (ConnectedWires.Contains(wire))
+            {
+                return;
+            }
+
             ConnectedWires.Add(wire);
             WireConnected?.Invoke(wire);
             SemanticsChanged?.Invoke();

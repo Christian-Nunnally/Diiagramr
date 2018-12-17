@@ -79,7 +79,6 @@ namespace DiiagramrIntegrationTest
         ///     set to null.
         /// </summary>
         [TestMethod]
-        [Ignore]
         public void TestPluginNodeSettingUpdatesDiagramCallNode()
         {
             var projectScreen = _shell.ProjectScreenViewModel;

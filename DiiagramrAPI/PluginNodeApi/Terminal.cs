@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using DiiagramrAPI.ViewModel.Diagram;
+﻿using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
+using System.ComponentModel;
 
 namespace DiiagramrAPI.PluginNodeApi
 {
@@ -25,7 +25,7 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             UnderlyingTerminal = underlyingTerminal ?? throw new ArgumentNullException(nameof(underlyingTerminal));
             UnderlyingTerminal.PropertyChanged += UnderlyingTerminalOnPropertyChanged;
-            Data = (T) (underlyingTerminal.Data ?? default(T));
+            Data = (T)(underlyingTerminal.Data ?? default(T));
         }
 
         public TerminalViewModel UnderlyingTerminal { get; }
@@ -39,14 +39,18 @@ namespace DiiagramrAPI.PluginNodeApi
             get => _data;
             set
             {
-                if (_data != null && _data.Equals(value)) return;
+                if (_data != null && _data.Equals(value))
+                {
+                    return;
+                }
+
                 UnderlyingTerminal.Data = value;
                 _data = value;
                 _dataChanged?.Invoke(_data);
             }
         }
 
-        private event TerminalDataChangedDelegate<T> _dataChanged; 
+        private event TerminalDataChangedDelegate<T> _dataChanged;
 
         /// <summary>
         ///     Notifies subscribers when <see cref="Data" /> is changed.
@@ -63,19 +67,36 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data))) return;
-            if (UnderlyingTerminal.Data == null) Data = default(T);
-            else Data = (T) UnderlyingTerminal.Data;
+            if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data)))
+            {
+                return;
+            }
+
+            CastAndSetData(UnderlyingTerminal.Data);
+        }
+
+        private void CastAndSetData(object data)
+        {
+            if (data == null)
+            {
+                Data = default(T);
+            }
+            else
+            {
+                try
+                {
+                    Data = (T)data;
+                }
+                catch (InvalidCastException)
+                {
+                    Data = default(T);
+                }
+            }
         }
 
         public void ChangeTerminalData(object data)
         {
-            Data = (T) (data ?? default(T));
-        }
-
-        public void DisableSerialization()
-        {
-            UnderlyingTerminal.TerminalModel.ShouldSerializeData = false;
+            Data = (T)(data ?? default(T));
         }
     }
 }

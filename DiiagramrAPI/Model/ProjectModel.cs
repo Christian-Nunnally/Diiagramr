@@ -1,7 +1,7 @@
-﻿using System.Collections.ObjectModel;
-using System.Runtime.Serialization;
-using DiiagramrAPI.Service;
+﻿using DiiagramrAPI.Service;
 using PropertyChanged;
+using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace DiiagramrAPI.Model
 {
@@ -9,19 +9,6 @@ namespace DiiagramrAPI.Model
     [AddINotifyPropertyChangedInterface]
     public class ProjectModel : ModelBase
     {
-        private string _name;
-
-        [DataMember]
-        public virtual string Name
-        {
-            get => _name;
-            set
-            {
-                if (_name != value) OnModelPropertyChanged(nameof(Name));
-                _name = value;
-            }
-        }
-
         [DataMember]
         public virtual ObservableCollection<DiagramModel> Diagrams { get; set; }
 
@@ -30,12 +17,16 @@ namespace DiiagramrAPI.Model
         public ProjectModel()
         {
             Diagrams = new ObservableCollection<DiagramModel>();
-            _name = "NewProject";
+            Name = "NewProject";
         }
 
         public virtual void AddDiagram(DiagramModel diagram)
         {
-            if (Diagrams.Contains(diagram)) return;
+            if (Diagrams.Contains(diagram))
+            {
+                return;
+            }
+
             Diagrams.Add(diagram);
             ProjectChanged();
             TriggerProjectChangeWhenDiagramChanges(diagram);
@@ -43,7 +34,11 @@ namespace DiiagramrAPI.Model
 
         public virtual void RemoveDiagram(DiagramModel diagram)
         {
-            if (!Diagrams.Contains(diagram)) return;
+            if (!Diagrams.Contains(diagram))
+            {
+                return;
+            }
+
             Diagrams.Remove(diagram);
             ProjectChanged();
             RemoveTriggerProjectChangeWhenDiagramChanges(diagram);
@@ -70,7 +65,10 @@ namespace DiiagramrAPI.Model
         protected override void OnModelPropertyChanged(string propertyName = null)
         {
             base.OnModelPropertyChanged(propertyName);
-            if (propertyName.Equals(nameof(Name))) ProjectChanged();
+            if (propertyName.Equals(nameof(Name)))
+            {
+                ProjectChanged();
+            }
         }
 
         public void ProjectChanged()

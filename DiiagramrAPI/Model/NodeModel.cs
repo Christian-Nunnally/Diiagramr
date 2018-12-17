@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DiiagramrAPI.PluginNodeApi;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using DiiagramrAPI.PluginNodeApi;
 
 namespace DiiagramrAPI.Model
 {
@@ -19,13 +19,13 @@ namespace DiiagramrAPI.Model
 
         public NodeModel(string nodeTypeFullName)
         {
-            NodeTypeFullName = nodeTypeFullName;
+            Name = nodeTypeFullName;
             Terminals = new List<TerminalModel>();
         }
 
         public NodeModel(string nodeTypeFullName, NodeLibrary dependency)
         {
-            NodeTypeFullName = nodeTypeFullName;
+            Name = nodeTypeFullName;
             Dependency = dependency;
             Terminals = new List<TerminalModel>();
         }
@@ -44,9 +44,6 @@ namespace DiiagramrAPI.Model
         public List<TerminalModel> Terminals { get; set; }
 
         [DataMember]
-        public string NodeTypeFullName { get; set; }
-
-        [DataMember]
         public virtual NodeLibrary Dependency { get; set; }
 
         private double _x;
@@ -56,7 +53,11 @@ namespace DiiagramrAPI.Model
             get => _x;
             set
             {
-                if (Math.Abs(_x - value) < 0.001) return;
+                if (Math.Abs(_x - value) < 0.001)
+                {
+                    return;
+                }
+
                 _x = value;
                 PresentationChanged?.Invoke();
             }
@@ -69,7 +70,11 @@ namespace DiiagramrAPI.Model
             get => _y;
             set
             {
-                if (Math.Abs(_y - value) < 0.001) return;
+                if (Math.Abs(_y - value) < 0.001)
+                {
+                    return;
+                }
+
                 _y = value;
                 PresentationChanged?.Invoke();
             }
@@ -82,8 +87,12 @@ namespace DiiagramrAPI.Model
             get => _width;
             set
             {
-                if (Math.Abs(_width - value) < 0.001) return;
-                _width = value; 
+                if (Math.Abs(_width - value) < 0.001)
+                {
+                    return;
+                }
+
+                _width = value;
                 PresentationChanged?.Invoke();
             }
         }
@@ -95,7 +104,11 @@ namespace DiiagramrAPI.Model
             get => _height;
             set
             {
-                if (Math.Abs(_height - value) < 0.001) return;
+                if (Math.Abs(_height - value) < 0.001)
+                {
+                    return;
+                }
+
                 _height = value;
                 PresentationChanged?.Invoke();
             }
@@ -109,7 +122,7 @@ namespace DiiagramrAPI.Model
             {
                 _nodeViewModel = value;
                 _nodeViewModel.InitializePluginNodeSettings();
-                NodeTypeFullName = _nodeViewModel.GetType().FullName;
+                Name = _nodeViewModel.GetType().FullName;
             }
         }
 
@@ -120,7 +133,9 @@ namespace DiiagramrAPI.Model
                     || nameof(Height) == propertyName
                     || nameof(X) == propertyName
                     || nameof(Y) == propertyName)
+            {
                 PresentationChanged?.Invoke();
+            }
         }
 
         public virtual void AddTerminal(TerminalModel terminal)
@@ -153,14 +168,25 @@ namespace DiiagramrAPI.Model
 
         public virtual void SetVariable(string name, object value)
         {
-            if (!PersistedVariables.ContainsKey(name)) PersistedVariables.Add(name, value);
-            else PersistedVariables[name] = value;
+            if (!PersistedVariables.ContainsKey(name))
+            {
+                PersistedVariables.Add(name, value);
+            }
+            else
+            {
+                PersistedVariables[name] = value;
+            }
+
             SemanticsChanged?.Invoke();
         }
 
         public virtual object GetVariable(string name)
         {
-            if (!PersistedVariables.ContainsKey(name)) return null;
+            if (!PersistedVariables.ContainsKey(name))
+            {
+                return null;
+            }
+
             return PersistedVariables[name];
         }
 
@@ -187,7 +213,9 @@ namespace DiiagramrAPI.Model
         public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
         {
             if (!PersistedVariables.ContainsKey(info.Name))
+            {
                 SetVariable(info.Name, info.GetValue(NodeViewModel));
+            }
         }
     }
 }

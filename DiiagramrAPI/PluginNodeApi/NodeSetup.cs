@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
+using System.Linq;
 
 namespace DiiagramrAPI.PluginNodeApi
 {
@@ -29,8 +29,16 @@ namespace DiiagramrAPI.PluginNodeApi
         /// <param name="height">The height of the node.</param>
         public void NodeSize(int width, int height)
         {
-            if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01) _nodeViewModel.Width = width;
-            if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01) _nodeViewModel.Height = height;
+            if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01)
+            {
+                _nodeViewModel.Width = width;
+            }
+
+            if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01)
+            {
+                _nodeViewModel.Height = height;
+            }
+
             _nodeViewModel.MinimumHeight = height;
             _nodeViewModel.MinimumWidth = width;
         }
@@ -91,7 +99,10 @@ namespace DiiagramrAPI.PluginNodeApi
         private TerminalViewModel FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalKind kind)
         {
             var terminalViewModel = _nodeViewModel.TerminalViewModels.FirstOrDefault(viewModel => viewModel.TerminalModel.TerminalIndex == _terminalIndex);
-            if (terminalViewModel != null) return terminalViewModel;
+            if (terminalViewModel != null)
+            {
+                return terminalViewModel;
+            }
 
             var terminalModel = new TerminalModel(name, typeof(T), direction, kind, _terminalIndex);
             terminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
@@ -101,13 +112,12 @@ namespace DiiagramrAPI.PluginNodeApi
 
         public Terminal<T> CreateClientTerminal<T>(TerminalViewModel terminalViewModel)
         {
-            if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel)) throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
-            return new Terminal<T>(terminalViewModel);
-        }
+            if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel))
+            {
+                throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
+            }
 
-        public void RegisterDynamicTerminalMethod(string key, Action<object> action)
-        {
-            _nodeViewModel.DynamicTerminalMethods.Add(key, action);
+            return new Terminal<T>(terminalViewModel);
         }
     }
 }
