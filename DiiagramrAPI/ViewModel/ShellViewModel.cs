@@ -1,12 +1,9 @@
+using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.ProjectScreen;
+using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Windows.Forms;
-using System.Windows.Media;
-using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ProjectScreen;
-using Stylet;
 
 namespace DiiagramrAPI.ViewModel
 {
