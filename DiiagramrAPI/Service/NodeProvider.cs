@@ -54,6 +54,12 @@ namespace DiiagramrAPI.Service
         public PluginNode LoadNodeViewModelFromNode(NodeModel node)
         {
             var fullName = node.Name;
+
+            if (fullName == null)
+            {
+                return null;
+            }
+
             if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
             {
                 throw NoViewModelException(fullName);

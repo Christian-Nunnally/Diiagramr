@@ -113,6 +113,10 @@ namespace DiiagramrAPI.Service
         public void CreateDiagram()
         {
             CreateDiagram(new DiagramModel());
+            if (CurrentDiagrams.Count == 1 && CurrentDiagrams.First().Nodes.Count == 0)
+            {
+                CurrentProject.IsDirty = false;
+            }
         }
 
         public void CreateDiagram(DiagramModel diagram)

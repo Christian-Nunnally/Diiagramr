@@ -356,5 +356,15 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectManager.DeleteDiagram(_projectManager.CurrentDiagrams[0]);
             Assert.IsTrue(_projectManager.IsProjectDirty);
         }
+
+        [TestMethod]
+        public void EmptyProject_CreateDiagram_ProjectNotDirty()
+        {
+            _projectManager.CreateProject();
+
+            _projectManager.CreateDiagram();
+
+            Assert.IsFalse(_projectManager.IsProjectDirty);
+        }
     }
 }
