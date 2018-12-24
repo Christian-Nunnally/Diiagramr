@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace DiiagramrUnitTests.ServiceTests
@@ -67,7 +68,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_ConfirmSaveCanceled()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Cancel);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Cancel);
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
             _projectManager.CreateProject();
@@ -77,7 +78,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_ConfirmSaveNo()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.No);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.No);
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
             _projectManager.CreateProject();
@@ -87,7 +88,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void CreateProjectTest_ConfirmSaveYes()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Yes);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Yes);
             _projectFileServiceMoq.Setup(m => m.SaveProject(It.IsAny<ProjectModel>(), false)).Returns(true);
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
@@ -163,7 +164,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_ConfirmSaveCanceled()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Cancel);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Cancel);
 
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
@@ -174,7 +175,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_ConfirmSaveNo()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.No);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.No);
             _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
 
             _projectManager.CreateProject();
@@ -211,7 +212,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_ConfirmSaveYes()
         {
-            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(DialogResult.Yes);
+            _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Yes);
             _projectFileServiceMoq.Setup(m => m.SaveProject(It.IsAny<ProjectModel>(), false)).Returns(true);
             _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
 

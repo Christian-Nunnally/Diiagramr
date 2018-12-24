@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System.Windows;
 using DiiagramrAPI.Model;
 
 namespace DiiagramrAPI.Service.Interfaces
@@ -25,6 +25,6 @@ namespace DiiagramrAPI.Service.Interfaces
         /// Confirms ProjectModel Close.
         /// </summary>
         /// <returns>The Result from the calling Dialog.</returns>
-        DialogResult ConfirmProjectClose();
+        MessageBoxResult ConfirmProjectClose();
     }
 }

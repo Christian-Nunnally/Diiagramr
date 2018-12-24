@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace DiiagramrAPI.Service
 {
@@ -94,16 +94,16 @@ namespace DiiagramrAPI.Service
             if (IsProjectDirty)
             {
                 var result = _projectFileService.ConfirmProjectClose();
-                if (result == DialogResult.Cancel)
+                if (result == MessageBoxResult.Cancel)
                 {
                     return false;
                 }
 
-                if (result == DialogResult.Yes)
+                if (result == MessageBoxResult.Yes)
                 {
                     _projectFileService.SaveProject(CurrentProject, false);
                 }
-                else if (result == DialogResult.No)
+                else if (result == MessageBoxResult.No)
                 {
                     CurrentProject.IsDirty = false;
                 }

@@ -29,6 +29,7 @@ namespace Diiagramr
             builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
             builder.Bind<IFileDialog>().To<OpenFileDialog>().WithKey("open");
             builder.Bind<IFileDialog>().To<SaveFileDialog>().WithKey("save");
+            builder.Bind<IDialogService>().To<DialogService>().InSingletonScope();
             var viewManagerConfig = new ViewManagerConfig()
             {
                 ViewFactory = Activator.CreateInstance,

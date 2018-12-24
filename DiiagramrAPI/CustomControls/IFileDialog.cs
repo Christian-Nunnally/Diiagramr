@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
@@ -10,6 +10,6 @@ namespace DiiagramrAPI.CustomControls
 
         string FileName { get; set; }
 
-        DialogResult ShowDialog();
+        MessageBoxResult ShowDialog();
     }
 }

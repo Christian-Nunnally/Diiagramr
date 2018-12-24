@@ -82,6 +82,8 @@
     <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\DialogService.cs" />
+    <Compile Include="Service\Interfaces\IDialogService.cs" />
     <Compile Include="Service\ToolTipAdorner.cs" />
     <Compile Include="Service\ColorTheme.cs" />
     <Compile Include="Service\DiagramCopier.cs" />
