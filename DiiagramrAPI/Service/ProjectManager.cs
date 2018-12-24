@@ -78,7 +78,8 @@ namespace DiiagramrAPI.Service
                     return;
                 }
 
-                DownloadProjectDependencies();
+                // TODO: Make async
+                DownloadProjectDependencies().Wait();
                 CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
                 if (autoOpenDiagram && CurrentDiagrams.Any())

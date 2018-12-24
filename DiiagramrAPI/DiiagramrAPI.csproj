@@ -128,21 +128,12 @@
     <Compile Include="ViewModel\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuGet\tools\CreateNode.psm1" />
-    <None Include="NuGet\tools\init.ps1" />
-    <None Include="NuGet\tools\PublishLibrary.psm1" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="NuGet\content\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NuGet\lib\DiiagramrAPI.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
