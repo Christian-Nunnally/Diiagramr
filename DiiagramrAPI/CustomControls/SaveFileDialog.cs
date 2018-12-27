@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.CustomControls
 {
-    public class SaveFileDialog : IFileDialog
+    public class SaveFileDialog : IFileDialog, IDispoable
     {
         private readonly System.Windows.Forms.SaveFileDialog _dialog;
 
@@ -14,6 +14,11 @@ namespace DiiagramrAPI.CustomControls
         public string InitialDirectory { get => _dialog.InitialDirectory; set => _dialog.InitialDirectory = value; }
         public string Filter { get => _dialog.Filter; set => _dialog.Filter = value; }
         public string FileName { get => _dialog.FileName; set => _dialog.FileName = value; }
+
+        public void Dispose()
+        {
+            _dialog?.Dispose();
+        }
 
         public MessageBoxResult ShowDialog()
         {

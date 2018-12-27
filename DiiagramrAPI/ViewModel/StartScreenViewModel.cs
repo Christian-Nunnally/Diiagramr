@@ -21,14 +21,13 @@ namespace DiiagramrAPI.ViewModel
 
         public void LoadProject()
         {
-            if (Parent != null)
-            {
-                RequestClose();
-            }
-
             _projectManager.LoadProject(autoOpenDiagram: true);
-            if (_projectManager.CurrentProject == null)
+            if (_projectManager.CurrentProject != null)
             {
+                if (Parent != null)
+                {
+                    RequestClose();
+                }
                 LoadCanceled?.Invoke();
             }
         }

@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
-    public class OpenFileDialog : IFileDialog
+    public class OpenFileDialog : IFileDialog, IDisposable
     {
         private readonly System.Windows.Forms.OpenFileDialog _dialog;
 
@@ -14,6 +15,11 @@ namespace DiiagramrAPI.CustomControls
         public string InitialDirectory { get => _dialog.InitialDirectory; set => _dialog.InitialDirectory = value; }
         public string Filter { get => _dialog.Filter; set => _dialog.Filter = value; }
         public string FileName { get => _dialog.FileName; set => _dialog.FileName = value; }
+
+        public void Dispose()
+        {
+            _dialog?.Dispose();
+        }
 
         public MessageBoxResult ShowDialog()
         {
