@@ -62,7 +62,6 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomControls\IDispoable.cs" />
     <Compile Include="CustomControls\IFileDialog.cs" />
     <Compile Include="CustomControls\NodeResizeThumb.cs" />
     <Compile Include="CustomControls\NodeMoveThumb.cs" />
