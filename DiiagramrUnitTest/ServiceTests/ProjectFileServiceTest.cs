@@ -5,7 +5,7 @@ using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -18,14 +18,16 @@ namespace DiiagramrUnitTests.ServiceTests
         private Mock<IFileDialog> _testDialogMoq;
         private Mock<IProjectLoadSave> _projectLoadSaveMoq;
         private Mock<ProjectModel> _projectMoq;
+        private Mock<IDialogService> _dialogServiceMoq;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _projectMoq = new Mock<ProjectModel>();
+            _dialogServiceMoq = new Mock<IDialogService>();
             _projectLoadSaveMoq = new Mock<IProjectLoadSave>();
             _testDialogMoq = new Mock<IFileDialog>();
-            _testDialogMoq.Setup(d => d.ShowDialog()).Returns(DialogResult.Cancel);
+            _testDialogMoq.Setup(d => d.ShowDialog()).Returns(MessageBoxResult.Cancel);
             _testDialogMoq.SetupAllProperties();
             _directoryServiceMoq = new Mock<IDirectoryService>();
             _directoryServiceMoq.Setup(m => m.Exists(It.IsAny<string>())).Returns(false);
@@ -34,7 +36,8 @@ namespace DiiagramrUnitTests.ServiceTests
                 _directoryServiceMoq.Object,
                 _testDialogMoq.Object,
                 _testDialogMoq.Object,
-                _projectLoadSaveMoq.Object)
+                _projectLoadSaveMoq.Object,
+                _dialogServiceMoq.Object)
             {
                 ProjectDirectory = Directory
             };
@@ -71,7 +74,7 @@ namespace DiiagramrUnitTests.ServiceTests
             string fakeFileName = "Dir\\OtherDir\\ActualProject.xml";
             _testDialogMoq.Reset();
             _testDialogMoq.SetupGet(d => d.FileName).Returns(fakeFileName);
-            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(DialogResult.OK);
+            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(MessageBoxResult.OK);
             _projectFileService.SaveProject(_projectMoq.Object, true);
 
             _projectLoadSaveMoq.Verify(l => l.Save(_projectMoq.Object, fakeFileName));
@@ -92,7 +95,7 @@ namespace DiiagramrUnitTests.ServiceTests
             const string fakeFileName = "Dir\\OtherDir\\ActualProject.xml";
             _testDialogMoq.Reset();
             _testDialogMoq.SetupGet(d => d.FileName).Returns(fakeFileName);
-            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(DialogResult.OK);
+            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(MessageBoxResult.OK);
             _projectLoadSaveMoq.Setup(s => s.Open(fakeFileName)).Returns(_projectMoq.Object);
             _projectFileService.LoadProject();
 
@@ -102,7 +105,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_OpenFileDialogCanceled_NullProjectReturned()
         {
-            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(DialogResult.Cancel);
+            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(MessageBoxResult.Cancel);
             _projectLoadSaveMoq.Setup(s => s.Open(It.IsAny<string>())).Returns(_projectMoq.Object);
             Assert.IsNull(_projectFileService.LoadProject());
         }
@@ -110,7 +113,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_OpenFileDialogOk_ProjectReturned()
         {
-            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(DialogResult.OK);
+            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(MessageBoxResult.OK);
             _projectLoadSaveMoq.Setup(s => s.Open(It.IsAny<string>())).Returns(_projectMoq.Object);
             Assert.IsNotNull(_projectFileService.LoadProject());
         }

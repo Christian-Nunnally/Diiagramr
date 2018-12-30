@@ -9,6 +9,7 @@ using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -88,10 +89,16 @@ namespace DiiagramrAPI.ViewModel
                     continue;
                 }
 
-                library.Nodes.Add(nodeViewModel);
-
                 var nodeModel = new NodeModel("");
-                nodeViewModel.InitializeWithNode(nodeModel);
+                try
+                {
+                    nodeViewModel.InitializeWithNode(nodeModel);
+                    library.Nodes.Add(nodeViewModel);
+                }
+                catch (FileNotFoundException e)
+                {
+                    Console.Error.WriteLine($"Error in '{fullTypeName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
+                }
             }
         }
 

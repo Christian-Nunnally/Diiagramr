@@ -107,7 +107,7 @@ namespace DiiagramrAPI.Service
             }
             catch (MissingMethodException)
             {
-                Console.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
+                Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
             }
         }
 

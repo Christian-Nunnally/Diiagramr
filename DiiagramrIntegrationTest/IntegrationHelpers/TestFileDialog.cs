@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.CustomControls;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
@@ -14,9 +14,9 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             set { }
         }
 
-        public DialogResult ShowDialog()
+        public MessageBoxResult ShowDialog()
         {
-            return DialogResult.OK;
+            return MessageBoxResult.OK;
         }
 
         public TestFileDialog()

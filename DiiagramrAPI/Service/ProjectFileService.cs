@@ -4,23 +4,23 @@ using DiiagramrAPI.Service.Interfaces;
 using StyletIoC;
 using System;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows;
 
 namespace DiiagramrAPI.Service
 {
     public class ProjectFileService : IProjectFileService
     {
         private readonly IFileDialog _openFileDialog;
-
         private readonly IFileDialog _saveFileDialog;
-
         private readonly IProjectLoadSave _loadSave;
+        private readonly IDialogService _dialogService;
 
-        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog, IProjectLoadSave loadSave)
+        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog, IProjectLoadSave loadSave, IDialogService dialogService)
         {
             _openFileDialog = openDialog;
             _saveFileDialog = saveDialog;
             _loadSave = loadSave;
+            _dialogService = dialogService;
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
             if (!directoryService.Exists(ProjectDirectory))
@@ -47,7 +47,7 @@ namespace DiiagramrAPI.Service
             _openFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
             _openFileDialog.FileName = "";
 
-            if (_openFileDialog.ShowDialog() != DialogResult.OK)
+            if (_openFileDialog.ShowDialog() != MessageBoxResult.OK)
             {
                 return null;
             }
@@ -77,10 +77,10 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        public DialogResult ConfirmProjectClose()
+        public MessageBoxResult ConfirmProjectClose()
         {
             const string message = "Do you want to save before closing?";
-            return MessageBox.Show(message, "Diiagramr", MessageBoxButtons.YesNoCancel);
+            return _dialogService.Show(message, "Diiagramr", MessageBoxButton.YesNoCancel).Result;
         }
 
         private bool SaveAsProject(ProjectModel project)
@@ -93,7 +93,7 @@ namespace DiiagramrAPI.Service
             _saveFileDialog.InitialDirectory = ProjectDirectory;
             _saveFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
 
-            if (_saveFileDialog.ShowDialog() != DialogResult.OK)
+            if (_saveFileDialog.ShowDialog() != MessageBoxResult.OK)
             {
                 return false;
             }

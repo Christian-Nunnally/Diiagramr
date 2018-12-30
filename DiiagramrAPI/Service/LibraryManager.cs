@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -51,31 +52,31 @@ namespace DiiagramrAPI.Service
             return _pluginLoader.SerializeableTypes;
         }
 
-        public void LoadSources()
+        public async Task LoadSourcesAsync()
         {
             _shouldSourcesBeLoaded = true;
             if (_sourcesLoaded)
             {
                 return;
             }
-
-            Sources.ForEach(LoadSource);
+            foreach(var source in Sources)
+            {
+                await LoadSourceAsync(source);
+            }
         }
 
-        private void LoadSource(string sourceUrl)
+        private async Task LoadSourceAsync(string sourceUrl)
         {
             if (!_shouldSourcesBeLoaded)
             {
                 return;
             }
 
-            // todo: make this seriously async lol
-            var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
+            var packagesString = await _webResourceFetcher.DownloadStringAsync(sourceUrl);
             if (packagesString == null)
             {
                 return;
             }
-
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
             AddToAvailableLibrariesFromPaths(libraryPaths);
         }
@@ -96,14 +97,14 @@ namespace DiiagramrAPI.Service
             return true;
         }
 
-        public bool InstallLatestVersionOfLibrary(NodeLibrary libraryDescription)
+        public async Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription)
         {
             if (InstalledLibraryNames.Any(s => s == libraryDescription.ToString()))
             {
                 return true;
             }
 
-            LoadSources();
+            await LoadSourcesAsync();
 
             if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library))
             {

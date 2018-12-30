@@ -45,12 +45,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         protected override Size ArrangeOverride(Size finalSize)
         {
-            // where to position the customControl...this is relative to the element you are adorning
             double x = 0;
             double y = TerminalViewModel.TerminalDiameter;
             double width = label.DesiredSize.Width + 2.0;
             double height = label.DesiredSize.Height + 2.0;
-            border.Arrange(new Rect(x, y, 80, 50)); // you need to arrange 
+            border.Arrange(new Rect(x, y, 80, 50));
             return finalSize;
         }
 

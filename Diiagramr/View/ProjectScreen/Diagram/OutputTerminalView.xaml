@@ -21,50 +21,6 @@
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
-        <Label
-            Grid.RowSpan="2"
-            HorizontalContentAlignment="Center"
-            Content="{Binding Name}"
-            FontFamily="Verdana"
-            FontSize="1"
-            Foreground="Transparent"
-            IsHitTestVisible="False"
-            RenderTransformOrigin="0.5, 0">
-            <Label.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="10" ScaleY="10" />
-                    <TranslateTransform X="0" Y="-68" />
-                </TransformGroup>
-            </Label.RenderTransform>
-            <Label.Style>
-                <Style TargetType="{x:Type Label}">
-                    <Style.Triggers>
-                        <DataTrigger Binding="{Binding MouseWithin}" Value="True">
-                            <DataTrigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetProperty="Foreground.Color"
-                                            To="#F667"
-                                            Duration="0:0:0.05" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.EnterActions>
-                            <DataTrigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation
-                                            Storyboard.TargetProperty="Foreground.Color"
-                                            To="Transparent"
-                                            Duration="0:0:0.25" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </DataTrigger.ExitActions>
-                        </DataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </Label.Style>
-        </Label>
         <Border
             AllowDrop="True"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"

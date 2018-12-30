@@ -6,7 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Forms;
+using System.Threading.Tasks;
+using System.Windows;
 
 namespace DiiagramrAPI.Service
 {
@@ -77,7 +78,8 @@ namespace DiiagramrAPI.Service
                     return;
                 }
 
-                DownloadProjectDependencies();
+                // TODO: Make async
+                DownloadProjectDependencies().Wait();
                 CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
                 if (autoOpenDiagram && CurrentDiagrams.Any())
@@ -92,16 +94,16 @@ namespace DiiagramrAPI.Service
             if (IsProjectDirty)
             {
                 var result = _projectFileService.ConfirmProjectClose();
-                if (result == DialogResult.Cancel)
+                if (result == MessageBoxResult.Cancel)
                 {
                     return false;
                 }
 
-                if (result == DialogResult.Yes)
+                if (result == MessageBoxResult.Yes)
                 {
                     _projectFileService.SaveProject(CurrentProject, false);
                 }
-                else if (result == DialogResult.No)
+                else if (result == MessageBoxResult.No)
                 {
                     CurrentProject.IsDirty = false;
                 }
@@ -112,6 +114,10 @@ namespace DiiagramrAPI.Service
         public void CreateDiagram()
         {
             CreateDiagram(new DiagramModel());
+            if (CurrentDiagrams.Count == 1 && CurrentDiagrams.First().Nodes.Count == 0)
+            {
+                CurrentProject.IsDirty = false;
+            }
         }
 
         public void CreateDiagram(DiagramModel diagram)
@@ -159,7 +165,7 @@ namespace DiiagramrAPI.Service
             DiagramViewModels.Add(diagramViewModel);
         }
 
-        private void DownloadProjectDependencies()
+        private async Task DownloadProjectDependencies()
         {
             foreach (var diagram in CurrentProject.Diagrams)
             {
@@ -167,7 +173,7 @@ namespace DiiagramrAPI.Service
                 {
                     if (node.Dependency != null)
                     {
-                        _libraryManager.InstallLatestVersionOfLibrary(node.Dependency);
+                        await _libraryManager.InstallLatestVersionOfLibraryAsync(node.Dependency);
                     }
                 }
             }

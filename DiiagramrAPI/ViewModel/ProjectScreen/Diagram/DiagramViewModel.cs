@@ -265,7 +265,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
         }
-
+        
         public void NodeHelpPressed()
         {
             //todo
@@ -275,6 +275,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
             var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
+            if (InsertingNodeViewModel != null) e.Handled = true;
             PreviewLeftMouseButtonDown(relativeMousePosition, controlKeyPressed);
         }
 
