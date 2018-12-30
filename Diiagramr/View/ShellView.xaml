@@ -11,17 +11,23 @@
     Height="450"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
-    BorderBrush="ForestGreen"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
+    Style="{StaticResource CustomWindowStyle}"
     mc:Ignorable="d">
     <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\WindowStyle.xaml"/>
+                <ResourceDictionary>
+                    <Style TargetType="Menu">
+                        <Setter Property="Background" Value="#eeeeee"></Setter>
+                    </Style>
 
-        <Style TargetType="Menu">
-            <Setter Property="Background" Value="#9FC131"></Setter>
-        </Style>
-
-        <BooleanToVisibilityConverter x:Key="Btv" />
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
     <DockPanel>
         <Menu
