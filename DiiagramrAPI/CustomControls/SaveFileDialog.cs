@@ -1,28 +1,24 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
-    public class SaveFileDialog : IFileDialog, IDispoable
+    public class SaveFileDialog : IFileDialog
     {
-        private readonly System.Windows.Forms.SaveFileDialog _dialog;
-
-        public SaveFileDialog()
-        {
-            _dialog = new System.Windows.Forms.SaveFileDialog();
-        }
-
-        public string InitialDirectory { get => _dialog.InitialDirectory; set => _dialog.InitialDirectory = value; }
-        public string Filter { get => _dialog.Filter; set => _dialog.Filter = value; }
-        public string FileName { get => _dialog.FileName; set => _dialog.FileName = value; }
-
-        public void Dispose()
-        {
-            _dialog?.Dispose();
-        }
+        public string InitialDirectory { get; set; }
+        public string Filter { get; set; }
+        public string FileName { get; set; }
 
         public MessageBoxResult ShowDialog()
         {
-            var result = _dialog.ShowDialog();
+            var dialog = new System.Windows.Forms.SaveFileDialog
+            {
+                InitialDirectory = InitialDirectory,
+                Filter = Filter,
+                FileName = FileName
+            };
+            var result = dialog.ShowDialog();
+            dialog.Dispose();
             switch (result)
             {
                 case System.Windows.Forms.DialogResult.None:

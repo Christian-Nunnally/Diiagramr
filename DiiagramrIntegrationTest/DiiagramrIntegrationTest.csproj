@@ -52,6 +52,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntegrationHelpers\TestDialogService.cs" />
     <Compile Include="IntegrationHelpers\TestFileDialog.cs" />
     <Compile Include="IntegrationHelpers\TestIntNode.cs" />
     <Compile Include="IntegrationHelpers\TestPassthroughNode.cs" />

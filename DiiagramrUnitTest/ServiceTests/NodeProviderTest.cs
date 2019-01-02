@@ -30,14 +30,6 @@ namespace DiiagramrUnitTests.ServiceTests
             };
         }
 
-        [Ignore]
-        [TestMethod]
-        public void TestConstructor_InjectNode_InjectedNodeRegistered()
-        {
-            var nodeProvider = new NodeProvider();
-            Assert.IsTrue(nodeProvider.GetRegisteredNodes().Contains(_nodeViewModelMoq.Object));
-        }
-
         [TestMethod]
         public void TestRegisterNode_RegisterNode_NodeReturnedByGetRegisteredNodes()
         {

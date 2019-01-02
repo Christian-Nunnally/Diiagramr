@@ -44,6 +44,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();
                 builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
                 builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
+                builder.Bind<IDialogService>().To<TestDialogService>().InSingletonScope();
                 builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
                 builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
                 builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");

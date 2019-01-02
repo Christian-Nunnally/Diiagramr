@@ -268,9 +268,18 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void CreateDiagramTest_ProjectDirty()
+        public void CreateDiagramTest_ProjectNotDirty()
         {
             _projectManager.CreateProject();
+            _projectManager.CreateDiagram();
+            Assert.IsFalse(_projectManager.IsProjectDirty);
+        }
+
+        [TestMethod]
+        public void CreateSecondDiagramTest_ProjectDirty()
+        {
+            _projectManager.CreateProject();
+            _projectManager.CreateDiagram();
             _projectManager.CreateDiagram();
             Assert.IsTrue(_projectManager.IsProjectDirty);
         }
