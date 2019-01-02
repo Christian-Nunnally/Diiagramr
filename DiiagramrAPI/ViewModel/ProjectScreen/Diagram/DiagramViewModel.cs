@@ -3,7 +3,6 @@ using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using Stylet;
 using System;
 using System.ComponentModel;
@@ -25,7 +24,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
 
         private readonly IProvideNodes _nodeProvider;
-        private PluginNode _insertingNodeViewModel;
 
         public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, ColorTheme colorTheme, NodeSelectorViewModel nodeSelectorViewModel)
         {
@@ -45,7 +43,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             if (nodeSelectorViewModel != null)
             {
                 NodeSelectorViewModel = nodeSelectorViewModel;
-                NodeSelectorViewModel.PropertyChanged += NodeSelectorPropertyChanged;
+                NodeSelectorViewModel.NodeSelected += node => BeginInsertingNode(node, true);
             }
 
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
@@ -73,39 +71,16 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public bool NodeBeingDragged { get; set; }
 
         public DiagramControlViewModel DiagramControlViewModel { get; }
-
         public BindableCollection<PluginNode> NodeViewModels { get; set; }
-
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
-
-        public PluginNode InsertingNodeViewModel
-        {
-            get => _insertingNodeViewModel;
-            set
-            {
-                _insertingNodeViewModel = value;
-                if (_insertingNodeViewModel != null)
-                {
-                    // TODO: This is a really strange way of dropping nodes on the diagram.
-                    AddNode(_insertingNodeViewModel);
-                }
-            }
-        }
-
+        public PluginNode InsertingNodeViewModel { get; set; }
         public DiagramModel Diagram { get; }
 
         public double PanX { get; set; }
-
         public double PanY { get; set; }
-
         public double Zoom { get; set; }
 
         public string Name => Diagram.Name;
-
-        public bool IsDraggingDiagramCallNode => DraggingDiagramCallNode != null;
-        private DiagramCallNodeViewModel DraggingDiagramCallNode { get; set; }
-
-        public string DropDiagramCallText => $"Drop {DraggingDiagramCallNode?.ReferencingDiagramModel?.Name ?? ""} Call";
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -162,24 +137,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void NodeDraggingStopped()
         {
             NodeBeingDragged = false;
-        }
-
-        private void NodeSelectorPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName != nameof(NodeSelectorViewModel.SelectedNode))
-            {
-                return;
-            }
-
-            var selectedNode = NodeSelectorViewModel.SelectedNode;
-            if (selectedNode == null)
-            {
-                return;
-            }
-
-            InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(selectedNode.GetType().FullName);
-            NodeSelectorViewModel.Visible = false;
-            NodeSelectorViewModel.SelectedNode = null;
         }
 
         private void AddWiresForNode(PluginNode viewModel)
@@ -253,90 +210,19 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             UnHighlightAllTerminals();
         }
 
-        #region Drag Drop Handlers
-
-        public void DragOver(object sender, DragEventArgs e)
+        private void BeginInsertingNode(PluginNode node, bool insertCopy = false)
         {
-            var o = e.Data.GetData(DataFormats.StringFormat);
-
-            if (o is TerminalModel terminal)
-            {
-                UnHighlightAllTerminals();
-                HighlightTerminalsOfSameType(terminal);
-                e.Effects = DragDropEffects.Link;
-                return;
-            }
-
-            if (o is TerminalViewModel)
-            {
-                e.Effects = DragDropEffects.Link;
-                e.Handled = true;
-                return;
-            }
-
-            if (o is DiagramModel)
-            {
-                e.Effects = DragDropEffects.Copy;
-                return;
-            }
-
-            e.Effects = DragDropEffects.None;
+            var nodeTypeName = node.GetType().FullName;
+            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
+            AddNode(nodeToInsert);
+            InsertingNodeViewModel = nodeToInsert;
         }
 
-        public void DragEnter(object sender, DragEventArgs e)
+        private void CancelInsertingNode()
         {
-            var o = e.Data.GetData(DataFormats.StringFormat);
-            if (o is TerminalModel terminal)
-            {
-                UnHighlightAllTerminals();
-                HighlightTerminalsOfSameType(terminal);
-            }
-
-            if (o is DiagramModel diagram)
-            {
-                e.Effects = DragDropEffects.Move;
-                DiagramDragEnter(diagram);
-                return;
-            }
-
-            e.Effects = DragDropEffects.None;
+            RemoveNode(InsertingNodeViewModel);
+            InsertingNodeViewModel = null;
         }
-
-        public void DiagramDragEnter(DiagramModel diagram)
-        {
-            DraggingDiagramCallNode = DiagramCallNodeViewModel.CreateDiagramCallNode(diagram, _nodeProvider);
-        }
-
-        public void DragLeave(object sender, DragEventArgs e)
-        {
-            var o = e.Data.GetData(DataFormats.StringFormat);
-            if (!(o is DiagramModel))
-            {
-                return;
-            }
-
-            DraggingDiagramCallNode = null;
-        }
-
-        public void DropEventHandler(object sender, DragEventArgs e)
-        {
-            var nodeViewModel = UnpackNodeViewModelFromSender(sender);
-            nodeViewModel.DropEventHandler(sender, e);
-        }
-
-        public void DroppedDiagramCallNode(object sender, DragEventArgs e)
-        {
-            UnHighlightAllTerminals();
-            if (DraggingDiagramCallNode == null)
-            {
-                return;
-            }
-
-            InsertingNodeViewModel = DraggingDiagramCallNode;
-            DraggingDiagramCallNode = null;
-        }
-
-        #endregion
 
         #region View Event Handlers
 
@@ -364,7 +250,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (altKeyPressed)
             {
-                InsertingNodeViewModel = _nodeProvider.CreateNodeViewModelFromName(node.NodeModel.Name);
+                BeginInsertingNode(node, true);
                 return;
             }
             if (!controlKeyPressed)
@@ -375,7 +261,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             node.IsSelected = true;
         }
 
-        public void RemoveNodePressed()
+        public void RemoveSelectedNodes()
         {
             NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
         }
@@ -402,24 +288,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (!controlKeyPressed)
             {
-                InsertingNodeViewModel.X = RoundToNearest((int)InsertingNodeViewModel.X, GridSnapInterval);
-                InsertingNodeViewModel.Y = RoundToNearest((int)InsertingNodeViewModel.Y, GridSnapInterval);
+                InsertingNodeViewModel.X = CoreUilities.RoundToNearest((int)InsertingNodeViewModel.X, GridSnapInterval);
+                InsertingNodeViewModel.Y = CoreUilities.RoundToNearest((int)InsertingNodeViewModel.Y, GridSnapInterval);
             }
 
             InsertingNodeViewModel = null;
-        }
-
-
-        private static double RoundToNearest(double value, double multiple)
-        {
-            var rem = value % multiple;
-            var result = value - rem;
-            if (rem > multiple / 2.0)
-            {
-                result += multiple;
-            }
-
-            return result;
         }
 
         public void LeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -450,20 +323,23 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             PreviewRightMouseButtonDown(relativeMousePosition);
         }
 
-        public void PreviewRightMouseButtonDown(Point p)
+        public void PreviewRightMouseButtonDown(Point point)
         {
             if (InsertingNodeViewModel == null)
             {
-                NodeSelectorViewModel.RightPosition = p.X;
-                NodeSelectorViewModel.TopPosition = p.Y;
-                NodeSelectorViewModel.Visible = true;
+                ShowNodeSelector(point);
             }
             else
             {
-                NodeSelectorViewModel.SelectedNode = null;
-                RemoveNode(InsertingNodeViewModel);
-                InsertingNodeViewModel = null;
+                CancelInsertingNode();
             }
+        }
+
+        private void ShowNodeSelector(Point point)
+        {
+            NodeSelectorViewModel.RightPosition = point.X;
+            NodeSelectorViewModel.TopPosition = point.Y;
+            NodeSelectorViewModel.Visible = true;
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -484,9 +360,13 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
         }
 
-        #endregion
-
-        #region Helper Methods
+        public void KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                RemoveSelectedNodes();
+            }
+        }
 
         private double GetPointRelativeToPanAndZoomX(double x)
         {
@@ -516,6 +396,5 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         }
 
         #endregion
-
     }
 }

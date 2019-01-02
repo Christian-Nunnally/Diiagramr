@@ -151,12 +151,15 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestSelectNode_MousedOverNodeSet_SelectedNodeSetToMousedOverNode()
+        public void NodeMousedOver_SelectNode_NodeSelectedEventFiredForMousedOverNode()
         {
+            var nodeSelected = false;
+            _nodeSelectorViewModel.NodeSelected += n => nodeSelected = _nodeMoq1.Object == n;
             _nodeSelectorViewModel.MousedOverNode = _nodeMoq1.Object;
+
             _nodeSelectorViewModel.SelectNode();
 
-            Assert.AreEqual(_nodeMoq1.Object, _nodeSelectorViewModel.SelectedNode);
+            Assert.IsTrue(nodeSelected);
         }
 
         [TestMethod]

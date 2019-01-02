@@ -12,8 +12,15 @@
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
     BorderBrush="ForestGreen"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.Resources>
+
+        <Style TargetType="Menu">
+            <Setter Property="Background" Value="#9FC131"></Setter>
+        </Style>
+
         <BooleanToVisibilityConverter x:Key="Btv" />
     </Window.Resources>
     <DockPanel>

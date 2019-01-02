@@ -60,7 +60,7 @@ namespace DiiagramrAPI.Model
         {
             if (!Nodes.Contains(nodeModel))
             {
-                throw new InvalidOperationException("Can not remove a nodeModel that isn't on the diagram");
+                return;
             }
 
             nodeModel.SemanticsChanged -= NodeSematicsChanged;

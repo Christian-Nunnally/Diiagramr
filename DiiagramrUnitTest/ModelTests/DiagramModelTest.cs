@@ -50,8 +50,7 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void TestRemoveNode_NodeNotOnDiagram_ThrowsException()
+        public void TestRemoveNode_NodeNotOnDiagram_NoOp()
         {
             var dia = new DiagramModel();
             dia.RemoveNode(_nodeMoq.Object);

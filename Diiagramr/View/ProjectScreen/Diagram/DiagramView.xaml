@@ -11,11 +11,6 @@
     d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
-    AllowDrop="True"
-    DragEnter="{s:Action DragEnter}"
-    DragLeave="{s:Action DragLeave}"
-    DragOver="{s:Action DragOver}"
-    Drop="{s:Action DroppedDiagramCallNode}"
     MouseMove="{s:Action MouseMoveHandler}"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -41,7 +36,7 @@
                                 <ColorAnimation
                                     Storyboard.TargetProperty="Fill.Color"
                                     To="Transparent"
-                                    Duration="0:0:0.6" />
+                                    Duration="0:0:0.06" />
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.ExitActions>
@@ -178,6 +173,7 @@
             PanY="{Binding PanY, Mode=OneWayToSource}"
             PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
             PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
+            KeyDown="{s:Action KeyDownHandler}"
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
                 <Canvas
@@ -235,10 +231,8 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
-                                                AllowDrop="True"
                                                 Cursor="SizeAll"
                                                 DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                Drop="{s:Action DropEventHandler}"
                                                 MouseEnter="{s:Action MouseEntered}"
                                                 MouseLeave="{s:Action MouseLeft}"
                                                 PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorderHandler}"
@@ -312,7 +306,7 @@
                                             <Border
                                                 Grid.Row="0"
                                                 Grid.Column="1"
-                                                MouseDown="{s:Action RemoveNodePressed}"
+                                                MouseDown="{s:Action RemoveSelectedNodes}"
                                                 Style="{StaticResource DeleteNodeButtonStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
                                                 <Label
@@ -359,30 +353,5 @@
             s:View.Model="{Binding DiagramControlViewModel}" />
 
         <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
-
-        <Border Background="#BBFFFFFF" Visibility="{Binding IsDraggingDiagramCallNode, Converter={StaticResource Btv}}">
-            <Grid
-                Width="300"
-                Height="100"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                IsHitTestVisible="False">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="57*" />
-                    <RowDefinition Height="43*" />
-                </Grid.RowDefinitions>
-                <Polygon
-                    Grid.Row="0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    Fill="Green"
-                    Points="20 0,25 0, 25 20, 45, 20, 45 25, 25 25, 25 45, 20 45, 20 25, 0 25, 0 25, 0, 20, 20 20" />
-                <Label
-                    Grid.Row="1"
-                    HorizontalContentAlignment="Center"
-                    Content="{Binding DropDiagramCallText}"
-                    FontSize="18" />
-            </Grid>
-        </Border>
     </Grid>
 </UserControl>

@@ -27,7 +27,7 @@ namespace DiiagramrAPI.ViewModel
             _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
         }
 
-        public virtual PluginNode SelectedNode { get; set; }
+        public event Action<PluginNode> NodeSelected;
 
         public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
         public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
@@ -126,7 +126,7 @@ namespace DiiagramrAPI.ViewModel
 
         public void SelectNode()
         {
-            SelectedNode = MousedOverNode;
+            NodeSelected?.Invoke(MousedOverNode);
             Visible = false;
         }
 
