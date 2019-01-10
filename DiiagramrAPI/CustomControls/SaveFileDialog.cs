@@ -1,12 +1,15 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
-    public class SaveFileDialog : IFileDialog, IDispoable
+    public class SaveFileDialog : IFileDialog
     {
-        private readonly System.Windows.Forms.SaveFileDialog _dialog;
+        public string InitialDirectory { get; set; }
+        public string Filter { get; set; }
+        public string FileName { get; set; }
 
-        public SaveFileDialog()
+        public MessageBoxResult ShowDialog()
         {
             _dialog = new System.Windows.Forms.SaveFileDialog();
         }
