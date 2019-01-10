@@ -30,7 +30,7 @@ namespace DiiagramrIntegrationTest
             nodeSelector.Visible = true;
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
 
-            _shell.CreateProject();
+            _shell.ExecuteCommand("File:New");
             projectManager.CreateDiagram();
             var diagramViewModel = _shell.OpenDiagram();
             var node1 = _shell.PlaceNode(testNode);

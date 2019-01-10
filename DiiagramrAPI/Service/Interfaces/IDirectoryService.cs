@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IDirectoryService
+    public interface IDirectoryService : IDiiagramrService
     {
         string GetCurrentDirectory();
 

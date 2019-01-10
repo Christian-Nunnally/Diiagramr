@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Model;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
 
 namespace DiiagramrUnitTests.ServiceTests
 {
@@ -185,31 +183,6 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void LoadProjectTest_InstallsNodeDependencies()
-        {
-            var projectModelMoq = new Mock<ProjectModel>();
-            var diagramModelMoq = new Mock<DiagramModel>();
-            var nodeModelMoq = new Mock<NodeModel>("");
-            var diagrams = new ObservableCollection<DiagramModel> { diagramModelMoq.Object };
-            var nodes = new List<NodeModel> { nodeModelMoq.Object };
-            var NodeLibraryMoq = new Mock<NodeLibrary>();
-            var pluginNodeMoq = new Mock<PluginNode>();
-            const string libraryName = "testLibName";
-            const int libraryVersion = 1;
-            NodeLibraryMoq.SetupGet(d => d.Name).Returns(libraryName);
-            NodeLibraryMoq.SetupGet(d => d.MajorVersion).Returns(libraryVersion);
-            nodeModelMoq.SetupGet(n => n.Dependency).Returns(NodeLibraryMoq.Object);
-            projectModelMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
-            diagramModelMoq.SetupGet(d => d.Nodes).Returns(nodes);
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(projectModelMoq.Object);
-            _nodeProviderMoq.Setup(p => p.LoadNodeViewModelFromNode(nodeModelMoq.Object)).Returns(pluginNodeMoq.Object);
-            pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(nodeModelMoq.Object);
-
-            _projectManager.LoadProject();
-            _libraryManagerMoq.Verify(l => l.InstallLatestVersionOfLibraryAsync(NodeLibraryMoq.Object));
-        }
-
-        [TestMethod]
         public void LoadProjectTest_ConfirmSaveYes()
         {
             _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Yes);
@@ -265,14 +238,6 @@ namespace DiiagramrUnitTests.ServiceTests
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             Assert.AreEqual(_projectManager.CurrentDiagrams.First(), _projectManager.DiagramViewModels.First().Diagram);
-        }
-
-        [TestMethod]
-        public void CreateDiagramTest_ProjectDirty()
-        {
-            _projectManager.CreateProject();
-            _projectManager.CreateDiagram();
-            Assert.IsTrue(_projectManager.IsProjectDirty);
         }
 
         [TestMethod]

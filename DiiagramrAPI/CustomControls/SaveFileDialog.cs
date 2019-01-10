@@ -15,6 +15,8 @@ namespace DiiagramrAPI.CustomControls
         public string Filter { get => _dialog.Filter; set => _dialog.Filter = value; }
         public string FileName { get => _dialog.FileName; set => _dialog.FileName = value; }
 
+        public string ServiceBindingKey => "save";
+
         public void Dispose()
         {
             _dialog?.Dispose();

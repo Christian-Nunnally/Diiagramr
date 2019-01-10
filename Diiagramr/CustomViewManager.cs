@@ -17,11 +17,11 @@ using System.Reflection;
 
 namespace Diiagramr
 {
-    public class CustomViewManager : ViewManager
+    public class DiiagramrViewManager : ViewManager
     {
         private readonly Dictionary<Type, Type> _viewModelToViewMapping = new Dictionary<Type, Type>();
 
-        public CustomViewManager(ViewManagerConfig config) : base(config)
+        public DiiagramrViewManager(ViewManagerConfig config) : base(config)
         {
             ViewFactory = Activator.CreateInstance;
 
@@ -44,6 +44,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(DiagramInputNodeViewModel), typeof(DiagramInputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramCallNodeViewModel), typeof(DiagramCallNodeView));
             _viewModelToViewMapping.Add(typeof(AddNodeViewModel), typeof(AddNodeView));
+            _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
         }
 
         protected override Type LocateViewForModel(Type modelType)
@@ -55,7 +56,7 @@ namespace Diiagramr
 
             if (!modelType.IsSubclassOf(typeof(PluginNode)))
             {
-                throw new ViewNotFoundException();
+                throw new ViewNotFoundException(modelType.FullName);
             }
 
             var viewModelName = modelType.Name;
@@ -73,5 +74,8 @@ namespace Diiagramr
 
     public class ViewNotFoundException : Exception
     {
+        public ViewNotFoundException(string message) : base(message)
+        {
+        }
     }
 }

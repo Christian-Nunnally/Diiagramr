@@ -130,6 +130,7 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ShellViewModel.cs" />
+    <Compile Include="SeparatorCommandVisibilityConverter.cs" />
     <Compile Include="View\ProjectScreen\Diagram\PointsToPathConverter.cs" />
     <Compile Include="WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>
@@ -227,6 +228,10 @@
     <Page Include="View\ProjectScreen\ProjectScreenView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ContextMenuView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\StartScreenView.xaml">
       <SubType>Designer</SubType>

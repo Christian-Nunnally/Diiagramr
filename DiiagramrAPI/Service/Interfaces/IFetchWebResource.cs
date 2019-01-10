@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IFetchWebResource
+    public interface IFetchWebResource : IDiiagramrService
     {
         Task<string> DownloadStringAsync(string url);
 

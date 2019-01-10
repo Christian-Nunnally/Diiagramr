@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.CustomControls;
+﻿using DiiagramrAPI;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
@@ -29,6 +29,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 }
 
                 IStyletIoCBuilder builder = new StyletIoCBuilder();
+                BootstrapperUtilities.BindTestServices(builder);
                 builder.Bind<ShellViewModel>().ToSelf();
                 builder.Bind<ProjectExplorerViewModel>().ToSelf();
                 builder.Bind<DiagramWellViewModel>().ToSelf();
@@ -37,17 +38,8 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
                 builder.Bind<ProjectScreenViewModel>().ToSelf();
                 builder.Bind<LibraryManagerWindowViewModel>().ToSelf();
                 builder.Bind<StartScreenViewModel>().ToSelf();
-                builder.Bind<IDirectoryService>().To<DirectoryService>();
-                builder.Bind<IProjectLoadSave>().To<ProjectLoadSave>();
-                builder.Bind<ILibraryManager>().To<LibraryManager>();
-                builder.Bind<IFetchWebResource>().To<WebResourceFetcher>();
+                builder.Bind<ContextMenuViewModel>().ToSelf();
                 builder.Bind<LibrarySourceManagerWindowViewModel>().ToSelf();
-                builder.Bind<IProjectFileService>().To<ProjectFileService>().InSingletonScope();
-                builder.Bind<IProjectManager>().To<ProjectManager>().InSingletonScope();
-                builder.Bind<IProvideNodes>().To<NodeProvider>().InSingletonScope();
-                builder.Bind<IPluginLoader>().To<PluginLoader>().InSingletonScope();
-                builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("open");
-                builder.Bind<IFileDialog>().To<TestFileDialog>().WithKey("save");
                 builder.Bind<DiagramViewModelFactory>().ToSelf();
                 builder.Bind<ColorTheme>().ToSelf();
                 _container = builder.BuildContainer();

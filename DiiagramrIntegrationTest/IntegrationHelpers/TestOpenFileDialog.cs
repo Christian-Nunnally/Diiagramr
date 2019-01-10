@@ -1,9 +1,10 @@
 ﻿using DiiagramrAPI.CustomControls;
+using DiiagramrAPI.Service.Interfaces;
 using System.Windows;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
-    public class TestFileDialog : IFileDialog
+    public class TestOpenFileDialog : IFileDialog, ITestImplementationOf<SaveFileDialog>
     {
         public string InitialDirectory { get; set; }
         public string Filter { get; set; }
@@ -14,12 +15,14 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             set { }
         }
 
+        public string ServiceBindingKey => "test";
+
         public MessageBoxResult ShowDialog()
         {
             return MessageBoxResult.OK;
         }
 
-        public TestFileDialog()
+        public TestOpenFileDialog()
         {
             InitialDirectory = "c://";
         }

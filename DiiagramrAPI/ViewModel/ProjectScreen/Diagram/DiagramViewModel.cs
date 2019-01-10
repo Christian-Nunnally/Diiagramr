@@ -229,18 +229,22 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void MouseEntered(object sender, MouseEventArgs e)
         {
             var nodeViewModel = UnpackNodeViewModelFromSender(sender);
-            nodeViewModel.MouseEntered(sender, e);
+            nodeViewModel?.MouseEntered(sender, e);
         }
 
         public void MouseLeft(object sender, MouseEventArgs e)
         {
             var nodeViewModel = UnpackNodeViewModelFromSender(sender);
-            nodeViewModel.MouseLeft(sender, e);
+            nodeViewModel?.MouseLeft(sender, e);
         }
 
         public void PreviewLeftMouseDownOnBorderHandler(object sender, MouseButtonEventArgs e)
         {
             var node = UnpackNodeViewModelFromSender(sender);
+            if (node == null)
+            {
+                return;
+            }
             var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
             var altKeyPressed = Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt);
             PreviewLeftMouseButtonDownOnBorder(node, controlKeyPressed, altKeyPressed);
@@ -265,7 +269,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             NodeViewModels.Where(node => node.IsSelected).ForEach(RemoveNode);
         }
-        
+
         public void NodeHelpPressed()
         {
             //todo
@@ -275,7 +279,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
             var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
-            if (InsertingNodeViewModel != null) e.Handled = true;
+            if (InsertingNodeViewModel != null)
+            {
+                e.Handled = true;
+            }
+
             PreviewLeftMouseButtonDown(relativeMousePosition, controlKeyPressed);
         }
 
@@ -392,7 +400,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private static PluginNode UnpackNodeViewModelFromControl(Control control)
         {
             var contentPresenter = control.DataContext as ContentPresenter;
-            return (PluginNode)(contentPresenter?.Content ?? control.DataContext);
+            return (contentPresenter?.Content ?? control.DataContext) as PluginNode;
         }
 
         #endregion
