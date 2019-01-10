@@ -1,11 +1,10 @@
-﻿using System;
+﻿using DiiagramrAPI.Model;
+using System;
 using System.Collections.Generic;
-using System.Reflection;
-using DiiagramrAPI.Model;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IPluginLoader
+    public interface IPluginLoader : IDiiagramrService
     {
         IEnumerable<Type> SerializeableTypes { get; set; }
 

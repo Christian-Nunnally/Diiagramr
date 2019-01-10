@@ -1,10 +1,12 @@
 ﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service.Commands;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
+using System.Linq;
 
 namespace DiiagramrUnitTests.ViewModelTests
 {
@@ -23,6 +25,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         private Mock<ProjectScreenViewModel> _projectScreenViewModelMoq;
         private ShellViewModel _shellViewModel;
         private Mock<StartScreenViewModel> _startScreenViewModelMoq;
+        private Mock<ContextMenuViewModel> _contextMenuViewModelMoq;
 
         [TestInitialize]
         public void TestInitialize()
@@ -31,6 +34,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _pluginLoaderMoq = new Mock<IPluginLoader>();
             _libraryManagerMoq = new Mock<ILibraryManager>();
+            _contextMenuViewModelMoq = new Mock<ContextMenuViewModel>();
             _nodeSelectorViewModelMoq = new Mock<NodeSelectorViewModel>(
                 (Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
             _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>((Func<IProjectManager>)(() => _projectManagerMoq.Object));
@@ -51,48 +55,15 @@ namespace DiiagramrUnitTests.ViewModelTests
                 () => _projectScreenViewModelMoq.Object,
                 () => _libraryManagerViewModelMoq.Object,
                 () => _startScreenViewModelMoq.Object,
-                () => _projectManagerMoq.Object);
+                () => _projectManagerMoq.Object,
+                () => Enumerable.Empty<IDiiagramrCommand>(),
+                () => _contextMenuViewModelMoq.Object);
         }
 
         [TestMethod]
         public void TestRequestClose_CallsCloseProject()
         {
             _shellViewModel.RequestClose();
-            _projectManagerMoq.Verify(m => m.CloseProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestCreateProject_CallsCreateProject()
-        {
-            _shellViewModel.CreateProject();
-            _projectManagerMoq.Verify(m => m.CreateProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestLoadProject_CallsLoadProject()
-        {
-            _shellViewModel.LoadProject();
-            _projectManagerMoq.Verify(m => m.LoadProject(false), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestSaveProject_CallsSaveProject()
-        {
-            _shellViewModel.SaveProject();
-            _projectManagerMoq.Verify(m => m.SaveProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestSaveAsProject_CallsSaveAsProject()
-        {
-            _shellViewModel.SaveAsProject();
-            _projectManagerMoq.Verify(m => m.SaveAsProject(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestClose_CallsCloseProject()
-        {
-            _shellViewModel.Close();
             _projectManagerMoq.Verify(m => m.CloseProject(), Times.Once);
         }
 

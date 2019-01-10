@@ -1,8 +1,9 @@
-﻿using System.Windows;
+﻿using DiiagramrAPI.Service.Interfaces;
+using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
-    public interface IFileDialog
+    public interface IFileDialog : IDiiagramrService, IKeyedDiiagramrService
     {
         string InitialDirectory { get; set; }
 

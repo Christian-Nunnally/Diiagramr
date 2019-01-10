@@ -78,13 +78,25 @@ namespace DiiagramrAPI.Service
                     return;
                 }
 
-                // TODO: Make async
-                DownloadProjectDependencies().Wait();
-                CurrentProjectChanged?.Invoke();
-                CurrentProject.IsDirty = false;
-                if (autoOpenDiagram && CurrentDiagrams.Any())
+                try
                 {
-                    CurrentDiagrams.First().IsOpen = true;
+                    CurrentProjectChanged?.Invoke();
+                    CurrentProject.IsDirty = false;
+                    if (autoOpenDiagram && CurrentDiagrams.Any())
+                    {
+                        CurrentDiagrams.First().IsOpen = true;
+                    }
+                }
+                catch
+                {
+                    // TODO: Make async
+                    DownloadProjectDependencies().Wait();
+                    CurrentProjectChanged?.Invoke();
+                    CurrentProject.IsDirty = false;
+                    if (autoOpenDiagram && CurrentDiagrams.Any())
+                    {
+                        CurrentDiagrams.First().IsOpen = true;
+                    }
                 }
             }
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface ILibraryManager
+    public interface ILibraryManager : IDiiagramrService
     {
         ObservableCollection<string> Sources { get; }
         ObservableCollection<string> InstalledLibraryNames { get; }

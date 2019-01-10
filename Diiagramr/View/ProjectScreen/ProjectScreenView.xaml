@@ -10,23 +10,7 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" MinWidth="175" />
-            <ColumnDefinition Width="3" />
-            <ColumnDefinition Width="40*" />
-        </Grid.ColumnDefinitions>
-
-        <ContentControl
-            Grid.Column="0"
-            Margin="2,2,0,1"
-            s:View.Model="{Binding ProjectExplorerViewModel}" />
-
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
-
-        <ContentControl
+    <ContentControl
             Grid.Column="2"
-            Margin="0,0,2,1"
             s:View.Model="{Binding DiagramWellViewModel}" />
-    </Grid>
 </UserControl>

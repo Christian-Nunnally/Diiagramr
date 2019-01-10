@@ -25,7 +25,7 @@ namespace DiiagramrIntegrationTest
         public void EmptyDiagram_SaveLoad_DiagramStateRestored()
         {
             const string TestDiagramName = nameof(TestDiagramName);
-            _shell.CreateProject();
+            _shell.ExecuteCommand("File:New");
             var projectExplorer = _shell.ProjectScreenViewModel.ProjectExplorerViewModel;
             var projectManager = projectExplorer.ProjectManager;
             projectManager.CreateDiagram();
@@ -53,7 +53,7 @@ namespace DiiagramrIntegrationTest
             var nodeSelector = (NodeSelectorViewModel)_container.Get(typeof(NodeSelectorViewModel));
             nodeSelector.Visible = true;
             var testNode = nodeSelector.AvailableNodeViewModels.OfType<TestPassthroughNode>().First();
-            _shell.CreateProject();
+            _shell.ExecuteCommand("File:New");
             projectManager.CurrentProject.IsDirty = false;
             Assert.IsNotNull(projectManager.CurrentProject);
 

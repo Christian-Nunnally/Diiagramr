@@ -5,10 +5,15 @@
     xmlns:diiagramr="clr-namespace:Diiagramr"
     xmlns:s="https://github.com/canton7/Stylet">
     <Application.Resources>
-        <s:ApplicationLoader>
-            <s:ApplicationLoader.Bootstrapper>
-                <diiagramr:Bootstrapper />
-            </s:ApplicationLoader.Bootstrapper>
-        </s:ApplicationLoader>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="WindowStyle.xaml"/>
+                <s:ApplicationLoader>
+                    <s:ApplicationLoader.Bootstrapper>
+                        <diiagramr:Bootstrapper />
+                    </s:ApplicationLoader.Bootstrapper>
+                </s:ApplicationLoader>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

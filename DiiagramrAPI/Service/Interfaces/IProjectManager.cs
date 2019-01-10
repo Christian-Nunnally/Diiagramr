@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProjectManager
+    public interface IProjectManager : IDiiagramrService
     {
         event Action CurrentProjectChanged;
 

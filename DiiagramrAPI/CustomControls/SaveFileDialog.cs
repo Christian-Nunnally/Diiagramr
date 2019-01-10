@@ -1,33 +1,40 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Forms;
 
 namespace DiiagramrAPI.CustomControls
 {
     public class SaveFileDialog : IFileDialog
     {
-        public string InitialDirectory { get; set; }
-        public string Filter { get; set; }
-        public string FileName { get; set; }
+        private System.Windows.Forms.SaveFileDialog _dialog;
+
+        public SaveFileDialog()
+        {
+            _dialog = new System.Windows.Forms.SaveFileDialog();
+        }
+
+        public string InitialDirectory { get => _dialog.InitialDirectory; set => _dialog.InitialDirectory = value; }
+        public string Filter { get => _dialog.Filter; set => _dialog.Filter = value; }
+        public string FileName { get => _dialog.FileName; set => _dialog.FileName = value; }
+
+        public string ServiceBindingKey => "save";
+
+        public void Dispose()
+        {
+            _dialog?.Dispose();
+        }
 
         public MessageBoxResult ShowDialog()
         {
-            var dialog = new System.Windows.Forms.SaveFileDialog
-            {
-                InitialDirectory = InitialDirectory,
-                Filter = Filter,
-                FileName = FileName
-            };
-            var result = dialog.ShowDialog();
-            dialog.Dispose();
+            var result = _dialog.ShowDialog();
             switch (result)
             {
-                case System.Windows.Forms.DialogResult.None:
+                case DialogResult.None:
                     return MessageBoxResult.None;
-                case System.Windows.Forms.DialogResult.OK:
+                case DialogResult.OK:
                     return MessageBoxResult.OK;
-                case System.Windows.Forms.DialogResult.Yes:
+                case DialogResult.Yes:
                     return MessageBoxResult.Yes;
-                case System.Windows.Forms.DialogResult.No:
+                case DialogResult.No:
                     return MessageBoxResult.No;
                 default: return MessageBoxResult.Cancel;
             }

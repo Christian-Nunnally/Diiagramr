@@ -1,9 +1,9 @@
-﻿using System.Windows;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
+using System.Windows;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProjectFileService
+    public interface IProjectFileService : IDiiagramrService
     {
 
         string ProjectDirectory { get; set; }

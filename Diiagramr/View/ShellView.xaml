@@ -11,45 +11,53 @@
     Height="450"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
-    BorderBrush="ForestGreen"
     SnapsToDevicePixels="True"
     UseLayoutRounding="True"
+    Style="{StaticResource CustomWindowStyle}"
     mc:Ignorable="d">
     <Window.Resources>
-
-        <Style TargetType="Menu">
-            <Setter Property="Background" Value="#9FC131"></Setter>
-        </Style>
-
-        <BooleanToVisibilityConverter x:Key="Btv" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\WindowStyle.xaml"/>
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Window.Resources>
-    <DockPanel>
-        <Menu
-            Height="20"
-            VerticalAlignment="Top"
-            DockPanel.Dock="Top">
-            <MenuItem Header="File">
-                <MenuItem Command="{s:Action CreateProject}" Header="New" />
-                <MenuItem Command="{s:Action LoadProject}" Header="Open" />
-                <Separator />
-                <MenuItem Command="{s:Action SaveProject}" Header="Save" />
-                <MenuItem Command="{s:Action SaveAsProject}" Header="Save As" />
-                <Separator />
-                <MenuItem Command="{s:Action Close}" Header="Close" />
-            </MenuItem>
-            <MenuItem Header="Tools">
-                <MenuItem Command="{s:Action ManageLibraries}" Header="Libraries" />
-            </MenuItem>
-        </Menu>
-        <Grid>
-            <ContentControl s:View.Model="{Binding ActiveItem}" />
-            <Border MouseDown="{s:Action CloseWindow}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
-                <DockPanel
+    <Grid>
+        <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ItemsControl Height="22" VerticalAlignment="Top" DockPanel.Dock="Top" Background="#2D2D30" Foreground="White" ItemsSource="{Binding TopLevelMenuItems}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Label Content="{Binding Name}" MouseDown="{s:Action ExecuteCommandHandler}" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0">
+                            <Label.Style>
+                                <Style TargetType="Label">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#3E3E40"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Label.Style>
+                        </Label>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"></StackPanel>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+            <Grid>
+                <ContentControl s:View.Model="{Binding ActiveItem}" />
+                <Border MouseDown="{s:Action CloseWindow}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
+                    <DockPanel
                     MaxWidth="{Binding ActiveWindow.MaxWidth}"
                     MaxHeight="{Binding ActiveWindow.MaxHeight}"
                     Margin="100"
                     Background="Transparent">
-                    <Label
+                        <Label
                         Height="48"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Top"
@@ -57,20 +65,24 @@
                         DockPanel.Dock="Top"
                         FontSize="24"
                         IsHitTestVisible="False" />
-                    <ContentControl s:View.Model="{Binding ActiveWindow}" />
-                </DockPanel>
-                <Border.Style>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="Background" Value="#45000000" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseDirectlyOver" Value="True">
-                                <Setter Property="Background" Value="#25000000" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Border.Style>
-            </Border>
-        </Grid>
-    </DockPanel>
+                        <ContentControl s:View.Model="{Binding ActiveWindow}" />
+                    </DockPanel>
+                    <Border.Style>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="Background" Value="#45000000" />
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseDirectlyOver" Value="True">
+                                    <Setter Property="Background" Value="#25000000" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                </Border>
+            </Grid>
+        </DockPanel>
+        <Canvas>
+            <ContentControl s:View.Model="{Binding ContextMenuViewModel}" Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" Canvas.Left="{Binding ContextMenuViewModel.X}" Canvas.Top="{Binding ContextMenuViewModel.Y}"/>
+        </Canvas>
+    </Grid>
 </Window>
 
