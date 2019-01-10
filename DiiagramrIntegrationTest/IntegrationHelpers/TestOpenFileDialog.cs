@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DiiagramrIntegrationTest.IntegrationHelpers
 {
-    public class TestOpenFileDialog : IFileDialog, ITestImplementationOf<SaveFileDialog>
+    public class TestOpenFileDialog : IFileDialog, ITestImplementationOf<OpenFileDialog>
     {
         public string InitialDirectory { get; set; }
         public string Filter { get; set; }

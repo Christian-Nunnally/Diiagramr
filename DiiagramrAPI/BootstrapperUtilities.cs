@@ -21,7 +21,14 @@ namespace DiiagramrAPI
             foreach (var fakeType in fakeTypes)
             {
                 var realType = fakeType.GetInterface("ITestImplementationOf`1").GetGenericArguments()[0];
-                realToFakeTypeDictionary.Add(realType, fakeType);
+                try
+                {
+                    realToFakeTypeDictionary.Add(realType, fakeType);
+                }
+                catch (ArgumentException e)
+                {
+                    throw new ArgumentException($"There is already a test implementation of {realType.Name}, that has been provided by {realToFakeTypeDictionary[realType].Name}. {fakeType.Name} needs to be removed.", e);
+                }
             }
 
             foreach (var loadedService in loadedServiceInterfaces)
