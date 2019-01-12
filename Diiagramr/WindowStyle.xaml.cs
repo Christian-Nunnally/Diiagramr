@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 
 namespace WpfApplication
 {
@@ -30,6 +25,8 @@ namespace WpfApplication
             else
             {
                 window.WindowState = System.Windows.WindowState.Normal;
+
+                window.ResizeMode = ResizeMode.NoResize;
             }
         }
 

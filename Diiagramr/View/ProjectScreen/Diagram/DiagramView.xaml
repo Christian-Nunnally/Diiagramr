@@ -148,7 +148,7 @@
                 <Ellipse
                     Width="2"
                     Height="2"
-                    Fill="#bbbbbb" />
+                    Fill="#404040" />
             </VisualBrush.Visual>
         </VisualBrush>
 
@@ -167,7 +167,7 @@
         <customControls:ZoomBorder
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="#fefffe"
+            Background="#1E1E1E"
             MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}"
             PanX="{Binding PanX, Mode=OneWayToSource}"
             PanY="{Binding PanY, Mode=OneWayToSource}"
@@ -176,12 +176,21 @@
             KeyDown="{s:Action KeyDownHandler}"
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
-                <Canvas
-                    MinWidth="3002"
-                    MinHeight="3002"
-                    Margin="-3015"
-                    Background="{StaticResource DotFillBrush}"
-                    Visibility="{Binding IsSnapGridVisible, Converter={StaticResource Btv}}" />
+                <Canvas>
+                    <Border BorderBrush="#404040" 
+                            BorderThickness="2" 
+                            Width="{Binding BoundingBox.Width}" 
+                            Height="{Binding BoundingBox.Height}"
+                            Canvas.Left="{Binding BoundingBox.Left}"
+                            Canvas.Top="{Binding BoundingBox.Top}"
+                            CornerRadius="5">
+                        <Canvas
+                            Margin="13,13,0,0"
+                            Background="{StaticResource DotFillBrush}"
+                            Visibility="{Binding IsSnapGridVisible, Converter={StaticResource Btv}}" />
+                    </Border>
+                </Canvas>
+
                 <!--  Wire Items Control  -->
                 <ItemsControl
                     ItemContainerStyle="{StaticResource WireContainerStyle}"
@@ -320,7 +329,7 @@
                                                     Foreground="#202020" />
                                             </Border>
 
-                                            <Border
+                                            <!--<Border
                                                 Grid.Row="1"
                                                 Grid.Column="0"
                                                 MouseDown="{s:Action NodeHelpPressed}"
@@ -334,7 +343,7 @@
                                                     FontFamily="Verdana"
                                                     FontSize="7"
                                                     Foreground="#202020" />
-                                            </Border>
+                                            </Border>-->
 
                                         </Grid>
                                     </DataTemplate>
@@ -346,11 +355,11 @@
             </Grid>
         </customControls:ZoomBorder>
 
-        <ContentControl
+        <!--<ContentControl
             Margin="2"
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
-            s:View.Model="{Binding DiagramControlViewModel}" />
+            s:View.Model="{Binding DiagramControlViewModel}" />-->
 
         <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
     </Grid>

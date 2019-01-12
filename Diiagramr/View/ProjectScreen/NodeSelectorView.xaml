@@ -46,7 +46,7 @@
 
         <BooleanToVisibilityConverter x:Key="Btv"/>
     </UserControl.Resources>
-    <Canvas Background="#AAFFFFFF"
+    <Canvas Background="#11888888"
             MouseDown="{s:Action BackgroundMouseDown}">
         <Grid Canvas.Top="{Binding TopPosition}"
               Canvas.Left="{Binding RightPosition}"

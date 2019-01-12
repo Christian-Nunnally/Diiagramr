@@ -16,10 +16,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
     public class DiagramViewModel : Screen
     {
         private readonly ColorTheme _colorTheme;
+        public const int DiagramMargin = 100;
         public const double NodeBorderWidth = 15.0;
         public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
+        public const double NodeSelectorRightMargin = 400;
+        public const double NodeSelectorBottomMargin = 250;
 
         public const double GridSnapInterval = 30.0;
+        public const double DiagramBorderThickness = 2.0;
+        public const double GridSnapIntervalOffSetCorrection = 13.0;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
 
@@ -69,7 +74,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public bool IsSnapGridVisible => InsertingNodeViewModel != null || NodeBeingDragged;
         public bool NodeBeingDragged { get; set; }
-
+        public Rect BoundingBox { get; set; }
+        public Rect DefaultBoundingBox { get; } = new Rect(100, 100, 800, 600);
         public DiagramControlViewModel DiagramControlViewModel { get; }
         public BindableCollection<PluginNode> NodeViewModels { get; set; }
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
@@ -125,8 +131,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             viewModel.DragStopped += NodeDraggingStopped;
             NodeViewModels.Add(viewModel);
             AddWiresForNode(viewModel);
-
             viewModel.Initialize();
+            UpdateDiagramBoundingBox();
         }
 
         private void NodeDraggingStarted()
@@ -137,6 +143,32 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void NodeDraggingStopped()
         {
             NodeBeingDragged = false;
+            UpdateDiagramBoundingBox();
+        }
+
+        private void UpdateDiagramBoundingBox()
+        {
+            if (NodeViewModels.Count == 0)
+            {
+                BoundingBox = new Rect(-DiagramMargin, -DiagramMargin, DiagramMargin, DiagramMargin);
+                NotifyOfPropertyChange(nameof(BoundingBox));
+                return;
+            }
+
+            var minX = Math.Min(NodeViewModels.Select(n => n.X).Min() - DiagramMargin, DefaultBoundingBox.Left);
+            var minY = Math.Min(NodeViewModels.Select(n => n.Y).Min() - DiagramMargin, DefaultBoundingBox.Top);
+            var maxX = Math.Max(NodeViewModels.Select(n => n.X + n.Width).Max() + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, DefaultBoundingBox.Right);
+            var maxY = Math.Max(NodeViewModels.Select(n => n.Y + n.Height).Max() + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, DefaultBoundingBox.Bottom);
+            var width = maxX - minX;
+            var height = maxY - minY;
+
+            var snappedX = CoreUilities.RoundToNearest(minX, GridSnapInterval);
+            var snappedY = CoreUilities.RoundToNearest(minY, GridSnapInterval);
+            var snappedWidth = CoreUilities.RoundToNearest(width, GridSnapInterval);
+            var snappedHeight = CoreUilities.RoundToNearest(height, GridSnapInterval);
+
+            BoundingBox = new Rect(snappedX, snappedY, snappedWidth, snappedHeight);
+            NotifyOfPropertyChange(nameof(BoundingBox));
         }
 
         private void AddWiresForNode(PluginNode viewModel)
@@ -193,6 +225,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             viewModel.TerminalWiringModeChanged -= PluginNodeOnWiringModeChanged;
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
+            UpdateDiagramBoundingBox();
         }
 
         private void AddWireViewModel(WireModel wire)
@@ -216,6 +249,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
             AddNode(nodeToInsert);
             InsertingNodeViewModel = nodeToInsert;
+            InsertingNodeViewModel.X = 400;
+            InsertingNodeViewModel.Y = 400;
+            UpdateDiagramBoundingBox();
         }
 
         private void CancelInsertingNode()
@@ -345,8 +381,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         private void ShowNodeSelector(Point point)
         {
-            NodeSelectorViewModel.RightPosition = point.X;
-            NodeSelectorViewModel.TopPosition = point.Y;
+            var availableWidth = View != null ? View.RenderSize.Width : 0;
+            var availableHeight = View != null ? View.RenderSize.Height : 0;
+
+            NodeSelectorViewModel.RightPosition = point.X < availableWidth - NodeSelectorRightMargin ? point.X : availableWidth - NodeSelectorRightMargin;
+            NodeSelectorViewModel.TopPosition = point.Y < availableHeight - NodeSelectorBottomMargin ? point.Y : availableHeight - NodeSelectorBottomMargin;
             NodeSelectorViewModel.Visible = true;
         }
 

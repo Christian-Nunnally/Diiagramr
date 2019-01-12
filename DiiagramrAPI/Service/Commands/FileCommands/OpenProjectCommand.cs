@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.ViewModel;
+using System.Linq;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
@@ -11,6 +12,11 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
         public override void Execute(ShellViewModel shell)
         {
             shell.ProjectManager.LoadProject();
+            var firstDiagram = shell.ProjectManager.CurrentDiagrams.FirstOrDefault();
+            if (firstDiagram != null)
+            {
+                firstDiagram.IsOpen = true;
+            }
         }
     }
 }

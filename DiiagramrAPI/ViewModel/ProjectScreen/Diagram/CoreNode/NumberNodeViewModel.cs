@@ -20,7 +20,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         protected override void SetupNode(NodeSetup setup)
         {
-            setup.NodeSize(40, 40);
+            setup.NodeSize(30, 30);
             setup.NodeName("Number Node");
             _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
         }
