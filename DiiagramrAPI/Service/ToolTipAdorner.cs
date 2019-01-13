@@ -8,13 +8,11 @@ namespace DiiagramrAPI.Service
 {
     public class ToolTipAdorner : Adorner
     {
-        private VisualCollection visualChildren;
+        private readonly double MarginAroundLabel = 4.0;
+        private readonly double MarginFromTerminal = 5.0;
         private Border border;
         private TextBlock label;
-        private readonly double MarginFromTerminal = 5.0;
-        private readonly double MarginAroundLabel = 4.0;
-
-        public TerminalViewModel AdornedTerminal { get; set; }
+        private VisualCollection visualChildren;
 
         public ToolTipAdorner(UIElement adornedElement, TerminalViewModel adornedTerminal) : base(adornedElement)
         {
@@ -53,6 +51,9 @@ namespace DiiagramrAPI.Service
             visualChildren.Add(border);
         }
 
+        public TerminalViewModel AdornedTerminal { get; set; }
+        protected override int VisualChildrenCount => visualChildren.Count;
+
         protected override Size ArrangeOverride(Size finalSize)
         {
             double width = border.Width;
@@ -63,6 +64,8 @@ namespace DiiagramrAPI.Service
             border.Arrange(new Rect(x, y, width, height));
             return finalSize;
         }
+
+        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
 
         private double GetRelativeXBasedOnTerminalDirection(double width)
         {
@@ -93,9 +96,5 @@ namespace DiiagramrAPI.Service
                     return (TerminalViewModel.TerminalDiameter / 2) - (height / 2);
             }
         }
-
-        protected override int VisualChildrenCount => visualChildren.Count;
-
-        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
     }
 }

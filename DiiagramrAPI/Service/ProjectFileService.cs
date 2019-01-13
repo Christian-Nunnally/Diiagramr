@@ -10,10 +10,10 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectFileService : IProjectFileService
     {
+        private readonly IDialogService _dialogService;
+        private readonly IProjectLoadSave _loadSave;
         private readonly IFileDialog _openFileDialog;
         private readonly IFileDialog _saveFileDialog;
-        private readonly IProjectLoadSave _loadSave;
-        private readonly IDialogService _dialogService;
 
         public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog, IProjectLoadSave loadSave, IDialogService dialogService)
         {
@@ -31,14 +31,10 @@ namespace DiiagramrAPI.Service
 
         public string ProjectDirectory { get; set; }
 
-        public bool SaveProject(ProjectModel project, bool saveAs)
+        public MessageBoxResult ConfirmProjectClose()
         {
-            if (saveAs || project.Name == "NewProject")
-            {
-                return SaveAsProject(project);
-            }
-            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ".xml");
-            return true;
+            const string message = "Do you want to save before closing?";
+            return _dialogService.Show(message, "Diiagramr", MessageBoxButton.YesNoCancel).Result;
         }
 
         public ProjectModel LoadProject()
@@ -59,6 +55,16 @@ namespace DiiagramrAPI.Service
             return project;
         }
 
+        public bool SaveProject(ProjectModel project, bool saveAs)
+        {
+            if (saveAs || project.Name == "NewProject")
+            {
+                return SaveAsProject(project);
+            }
+            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ".xml");
+            return true;
+        }
+
         private static void OpenFirstDiagram(ProjectModel project)
         {
             var diagram = project.Diagrams?.FirstOrDefault();
@@ -66,21 +72,6 @@ namespace DiiagramrAPI.Service
             {
                 diagram.IsOpen = true;
             }
-        }
-
-        private void ThrowIfDuplicateAssemblies()
-        {
-            var currentAssemblyNames = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName);
-            if (currentAssemblyNames.Distinct().Count() != currentAssemblyNames.Count())
-            {
-                throw new DuplicateAssemblyException();
-            }
-        }
-
-        public MessageBoxResult ConfirmProjectClose()
-        {
-            const string message = "Do you want to save before closing?";
-            return _dialogService.Show(message, "Diiagramr", MessageBoxButton.YesNoCancel).Result;
         }
 
         private bool SaveAsProject(ProjectModel project)
@@ -119,6 +110,15 @@ namespace DiiagramrAPI.Service
             ProjectDirectory = path.Substring(0, lastBackslashIndex);
             var lastPeriod = path.LastIndexOf(".", StringComparison.Ordinal);
             project.Name = path.Substring(lastBackslashIndex + 1, lastPeriod - lastBackslashIndex - 1);
+        }
+
+        private void ThrowIfDuplicateAssemblies()
+        {
+            var currentAssemblyNames = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName);
+            if (currentAssemblyNames.Distinct().Count() != currentAssemblyNames.Count())
+            {
+                throw new DuplicateAssemblyException();
+            }
         }
 
         [Serializable]

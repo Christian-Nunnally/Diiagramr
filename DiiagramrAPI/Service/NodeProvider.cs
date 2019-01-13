@@ -12,17 +12,52 @@ namespace DiiagramrAPI.Service
     public class NodeProvider : IProvideNodes
     {
         private readonly IList<PluginNode> _availableNodeViewModels;
-        private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
         private readonly IDictionary<string, NodeLibrary> _dependencyMap;
         private readonly HashSet<Assembly> _loadedAssemblies = new HashSet<Assembly>();
-
-        public event PropertyChangedEventHandler PropertyChanged;
+        private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
 
         public NodeProvider()
         {
             _availableNodeViewModels = new List<PluginNode>();
             _nodeNameToViewModelMap = new Dictionary<string, Type>();
             _dependencyMap = new Dictionary<string, NodeLibrary>();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public PluginNode CreateNodeViewModelFromName(string typeFullName)
+        {
+            if (!_dependencyMap.ContainsKey(typeFullName))
+            {
+                throw NoViewModelException(typeFullName);
+            }
+
+            var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
+            return LoadNodeViewModelFromNode(node);
+        }
+
+        public IEnumerable<PluginNode> GetRegisteredNodes()
+        {
+            return _availableNodeViewModels.ToArray();
+        }
+
+        public PluginNode LoadNodeViewModelFromNode(NodeModel node)
+        {
+            var fullName = node.Name;
+
+            if (fullName == null)
+            {
+                return null;
+            }
+
+            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
+            {
+                throw NoViewModelException(fullName);
+            }
+
+            viewModel.InitializeWithNode(node);
+            ResolveTerminalTypes(viewModel);
+            return viewModel;
         }
 
         public void RegisterNode(PluginNode node, NodeLibrary dependency)
@@ -51,46 +86,14 @@ namespace DiiagramrAPI.Service
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
-        public PluginNode LoadNodeViewModelFromNode(NodeModel node)
+        private static Exception NoViewModelException(string typeFullName)
         {
-            var fullName = node.Name;
-
-            if (fullName == null)
-            {
-                return null;
-            }
-
-            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
-            {
-                throw NoViewModelException(fullName);
-            }
-
-            viewModel.InitializeWithNode(node);
-            ResolveTerminalTypes(viewModel);
-            return viewModel;
-        }
-
-        private void ResolveTerminalTypes(PluginNode viewModel)
-        {
-            viewModel.TerminalViewModels.Select(t => t.TerminalModel).ForEach(ResolveTerminalType);
-        }
-
-        private void ResolveTerminalType(TerminalModel terminal)
-        {
-            terminal.Type = Type.GetType(terminal.TypeName)
-                ?? Type.GetType(terminal.TypeName, AssemblyResolver, TypeResolver);
+            return new ProviderException($"Tried to load unregistered view model '{typeFullName}'");
         }
 
         private Assembly AssemblyResolver(AssemblyName assemblyName)
         {
             return _loadedAssemblies.FirstOrDefault(a => a.FullName == assemblyName.FullName);
-        }
-
-        private Type TypeResolver(Assembly assembly, string name, bool ignore)
-        {
-            return assembly == null
-                ? Type.GetType(name, true, ignore)
-                : assembly.GetType(name, true, ignore);
         }
 
         private Type GetViewModelTypeFromName(string fullNodeTypeName)
@@ -103,25 +106,22 @@ namespace DiiagramrAPI.Service
             throw NoViewModelException(fullNodeTypeName);
         }
 
-        public PluginNode CreateNodeViewModelFromName(string typeFullName)
+        private void ResolveTerminalType(TerminalModel terminal)
         {
-            if (!_dependencyMap.ContainsKey(typeFullName))
-            {
-                throw NoViewModelException(typeFullName);
-            }
-
-            var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
-            return LoadNodeViewModelFromNode(node);
+            terminal.Type = Type.GetType(terminal.TypeName)
+                ?? Type.GetType(terminal.TypeName, AssemblyResolver, TypeResolver);
         }
 
-        private static Exception NoViewModelException(string typeFullName)
+        private void ResolveTerminalTypes(PluginNode viewModel)
         {
-            return new ProviderException($"Tried to load unregistered view model '{typeFullName}'");
+            viewModel.TerminalViewModels.Select(t => t.TerminalModel).ForEach(ResolveTerminalType);
         }
 
-        public IEnumerable<PluginNode> GetRegisteredNodes()
+        private Type TypeResolver(Assembly assembly, string name, bool ignore)
         {
-            return _availableNodeViewModels.ToArray();
+            return assembly == null
+                ? Type.GetType(name, true, ignore)
+                : assembly.GetType(name, true, ignore);
         }
     }
 

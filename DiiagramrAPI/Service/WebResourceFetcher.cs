@@ -10,6 +10,17 @@ namespace DiiagramrAPI.Service
         private readonly WebClient _webClient = new WebClient();
         private bool _currentlyFetching = false;
 
+        public async Task DownloadFileAsync(string url, string downloadToPath)
+        {
+            try
+            {
+                await Task.Run(() => _webClient.DownloadFile(new Uri(url), downloadToPath));
+            }
+            catch
+            {
+            }
+        }
+
         public async Task<string> DownloadStringAsync(string url)
         {
             if (_currentlyFetching)
@@ -30,17 +41,6 @@ namespace DiiagramrAPI.Service
             finally
             {
                 _currentlyFetching = false;
-            }
-        }
-
-        public async Task DownloadFileAsync(string url, string downloadToPath)
-        {
-            try
-            {
-                await Task.Run(() => _webClient.DownloadFile(new Uri(url), downloadToPath));
-            }
-            catch
-            {
             }
         }
     }
