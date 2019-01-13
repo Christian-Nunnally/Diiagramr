@@ -8,11 +8,10 @@ namespace DiiagramrAPI.Service.Interfaces
         string ProjectDirectory { get; set; }
 
         /// <summary>
-        /// Saves the project.
+        /// Confirms ProjectModel Close.
         /// </summary>
-        /// <param name="project">The project.</param>
-        /// <param name="saveAs">Whether this should be saved with saveAs.</param>
-        bool SaveProject(ProjectModel project, bool saveAs);
+        /// <returns>The Result from the calling Dialog.</returns>
+        MessageBoxResult ConfirmProjectClose();
 
         /// <summary>
         /// Loads the project.
@@ -21,9 +20,10 @@ namespace DiiagramrAPI.Service.Interfaces
         ProjectModel LoadProject();
 
         /// <summary>
-        /// Confirms ProjectModel Close.
+        /// Saves the project.
         /// </summary>
-        /// <returns>The Result from the calling Dialog.</returns>
-        MessageBoxResult ConfirmProjectClose();
+        /// <param name="project">The project.</param>
+        /// <param name="saveAs">Whether this should be saved with saveAs.</param>
+        bool SaveProject(ProjectModel project, bool saveAs);
     }
 }

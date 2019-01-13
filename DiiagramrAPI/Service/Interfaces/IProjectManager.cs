@@ -10,21 +10,11 @@ namespace DiiagramrAPI.Service.Interfaces
     {
         event Action CurrentProjectChanged;
 
+        ObservableCollection<DiagramModel> CurrentDiagrams { get; }
         ProjectModel CurrentProject { get; set; }
 
-        bool IsProjectDirty { get; }
-
-        ObservableCollection<DiagramModel> CurrentDiagrams { get; }
-
         IList<DiagramViewModel> DiagramViewModels { get; }
-
-        void CreateProject();
-
-        void SaveProject();
-
-        void SaveAsProject();
-
-        void LoadProject(bool autoOpenDiagram = false);
+        bool IsProjectDirty { get; }
 
         bool CloseProject();
 
@@ -32,8 +22,16 @@ namespace DiiagramrAPI.Service.Interfaces
 
         void CreateDiagram(DiagramModel diagram);
 
+        void CreateProject();
+
         void DeleteDiagram(DiagramModel diagram);
 
         IEnumerable<Type> GetSerializeableTypes();
+
+        void LoadProject(bool autoOpenDiagram = false);
+
+        void SaveAsProject();
+
+        void SaveProject();
     }
 }
