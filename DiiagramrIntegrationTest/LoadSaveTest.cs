@@ -58,7 +58,7 @@ namespace DiiagramrIntegrationTest
             Assert.IsNotNull(projectManager.CurrentProject);
 
             projectManager.CreateDiagram();
-            Assert.AreEqual(1, projectManager.CurrentDiagrams.Count);
+            Assert.AreEqual(2, projectManager.CurrentDiagrams.Count);
 
             _shell.OpenDiagram();
 
