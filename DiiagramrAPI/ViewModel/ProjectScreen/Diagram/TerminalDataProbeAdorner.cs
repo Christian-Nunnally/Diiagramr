@@ -7,10 +7,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
     public class TerminalDataProbeAdorner : Adorner
     {
-        private VisualCollection visualChildren;
         private Border border;
         private TextBlock label;
-        public TerminalViewModel AdornedTerminal { get; set; }
+        private VisualCollection visualChildren;
 
         public TerminalDataProbeAdorner(UIElement adornedElement, TerminalViewModel adornedTerminal) : base(adornedElement)
         {
@@ -47,6 +46,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             visualChildren.Add(border);
         }
 
+        public TerminalViewModel AdornedTerminal { get; set; }
+        protected override int VisualChildrenCount => visualChildren.Count;
+
         protected override Size ArrangeOverride(Size finalSize)
         {
             double x = 0;
@@ -56,8 +58,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             border.Arrange(new Rect(x, y, 80, 50));
             return finalSize;
         }
-
-        protected override int VisualChildrenCount => visualChildren.Count;
 
         protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
     }

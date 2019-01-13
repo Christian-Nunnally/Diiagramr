@@ -11,21 +11,11 @@ namespace DiiagramrAPI.ViewModel.Diagram
             Play();
         }
 
-        public bool PlayChecked { get; set; }
-
         public bool PauseChecked { get; set; }
-
+        public bool PlayChecked { get; set; }
         public bool StopChecked { get; set; }
 
         private DiagramModel Diagram { get; }
-
-        public void Play()
-        {
-            PauseChecked = false;
-            StopChecked = false;
-            PlayChecked = true;
-            Diagram.Play();
-        }
 
         public void Pause()
         {
@@ -33,6 +23,14 @@ namespace DiiagramrAPI.ViewModel.Diagram
             PauseChecked = true;
             StopChecked = false;
             Diagram.Pause();
+        }
+
+        public void Play()
+        {
+            PauseChecked = false;
+            StopChecked = false;
+            PlayChecked = true;
+            Diagram.Play();
         }
 
         public void Stop()

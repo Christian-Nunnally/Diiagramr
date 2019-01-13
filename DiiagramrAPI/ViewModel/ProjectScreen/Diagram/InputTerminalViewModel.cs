@@ -11,13 +11,13 @@ namespace DiiagramrAPI.ViewModel.Diagram
     {
         private string _directEditTextBoxText = "0";
 
-        public bool IsIntType => TerminalModel.Type == typeof(int);
-        public bool IsFloatType => TerminalModel.Type == typeof(float);
-        public bool IsStringType => TerminalModel.Type == typeof(string);
-        public bool IsCharType => TerminalModel.Type == typeof(char);
-        public bool IsBoolType => TerminalModel.Type == typeof(bool);
-        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
-        public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
+        public InputTerminalViewModel(TerminalModel inputTerminal) : base(inputTerminal)
+        {
+            if (inputTerminal.Kind != TerminalKind.Input)
+            {
+                throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
+            }
+        }
 
         public string DirectEditTextBoxText
         {
@@ -57,11 +57,45 @@ namespace DiiagramrAPI.ViewModel.Diagram
             }
         }
 
-        public InputTerminalViewModel(TerminalModel inputTerminal) : base(inputTerminal)
+        public bool IsBoolType => TerminalModel.Type == typeof(bool);
+        public bool IsCharType => TerminalModel.Type == typeof(char);
+        public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
+        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
+        public bool IsFloatType => TerminalModel.Type == typeof(float);
+        public bool IsIntType => TerminalModel.Type == typeof(int);
+        public bool IsStringType => TerminalModel.Type == typeof(string);
+
+        public void DirectEditTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
-            if (inputTerminal.Kind != TerminalKind.Input)
+            TextBox inputTextBox = (TextBox)e.OriginalSource;
+            DirectEditTextBoxText = Data?.ToString();
+            inputTextBox.Dispatcher.BeginInvoke(
+                new Action(delegate
+                {
+                    inputTextBox.SelectAll();
+                }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+        }
+
+        public void DirectEditTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
             {
-                throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
+                IsSelected = false;
+            }
+        }
+
+        public void DirectEditTextBoxVisibiliyChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            TextBox inputTextBox = (TextBox)sender;
+
+            DirectEditTextBoxText = Data?.ToString();
+        }
+
+        public void TerminalDoubleClicked()
+        {
+            if (IsBoolType)
+            {
+                Data = !(bool)(Data ?? false);
             }
         }
 
@@ -81,40 +115,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
             if (propertyName.Equals(nameof(IsSelected)))
             {
                 OnPropertyChanged(nameof(IsDirectEditTextBoxVisible));
-            }
-        }
-
-        public void DirectEditTextBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                IsSelected = false;
-            }
-        }
-
-        public void DirectEditTextBoxGotFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox inputTextBox = (TextBox)e.OriginalSource;
-            DirectEditTextBoxText = Data?.ToString();
-            inputTextBox.Dispatcher.BeginInvoke(
-                new Action(delegate
-                {
-                    inputTextBox.SelectAll();
-                }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
-        }
-
-        public void DirectEditTextBoxVisibiliyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            TextBox inputTextBox = (TextBox)sender;
-
-            DirectEditTextBoxText = Data?.ToString();
-        }
-
-        public void TerminalDoubleClicked()
-        {
-            if (IsBoolType)
-            {
-                Data = !(bool)(Data ?? false);
             }
         }
     }

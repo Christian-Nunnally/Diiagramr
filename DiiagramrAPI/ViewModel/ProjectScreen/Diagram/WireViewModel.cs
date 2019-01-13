@@ -15,10 +15,24 @@ namespace DiiagramrAPI.ViewModel.Diagram
 {
     public class WireViewModel : Screen
     {
+        private const int WireAnimationFrameDelay = 15;
         private const double WireDistanceOutOfTerminal = 25.0;
         private const double WireEdgeIndexSpacing = 0.0;
-        private const int WireAnimationFrameDelay = 15;
+        private ColorTheme _colorTheme;
         private bool _configuringWirePoints;
+
+        private bool _uTurned = false;
+
+        public WireViewModel(WireModel wire)
+        {
+            WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
+            wire.PropertyChanged += WireOnPropertyChanged;
+
+            X1 = wire.X1 + DiagramViewModel.NodeBorderWidth;
+            X2 = wire.X2 + DiagramViewModel.NodeBorderWidth;
+            Y1 = wire.Y1 + DiagramViewModel.NodeBorderWidth;
+            Y2 = wire.Y2 + DiagramViewModel.NodeBorderWidth;
+        }
 
         public ColorTheme ColorTheme
         {
@@ -35,70 +49,61 @@ namespace DiiagramrAPI.ViewModel.Diagram
         }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
-        private ColorTheme _colorTheme;
-
-        private double UpUTurnLengthSink => WireModel.SinkTerminal.TerminalUpWireMinimumLength;
-        private double DownUTurnLengthSink => WireModel.SinkTerminal.TerminalDownWireMinimumLength;
-        private double LeftUTurnLengthSink => WireModel.SinkTerminal.TerminalLeftWireMinimumLength;
-        private double RightUTurnLengthSink => WireModel.SinkTerminal.TerminalRightWireMinimumLength;
-
-        private double UpUTurnLengthSource => WireModel.SourceTerminal.TerminalUpWireMinimumLength;
-        private double DownUTurnLengthSource => WireModel.SourceTerminal.TerminalDownWireMinimumLength;
-        private double LeftUTurnLengthSource => WireModel.SourceTerminal.TerminalLeftWireMinimumLength;
-        private double RightUTurnLengthSource => WireModel.SourceTerminal.TerminalRightWireMinimumLength;
-
-        public WireViewModel(WireModel wire)
-        {
-            WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
-            wire.PropertyChanged += WireOnPropertyChanged;
-
-            X1 = wire.X1 + DiagramViewModel.NodeBorderWidth;
-            X2 = wire.X2 + DiagramViewModel.NodeBorderWidth;
-            Y1 = wire.Y1 + DiagramViewModel.NodeBorderWidth;
-            Y2 = wire.Y2 + DiagramViewModel.NodeBorderWidth;
-        }
-
         public Point[] Points { get; set; }
-
+        public WireModel WireModel { get; private set; }
         public double X1 { get; private set; }
         public double X2 { get; private set; }
         public double Y1 { get; private set; }
         public double Y2 { get; private set; }
+        private double DownUTurnLengthSink => WireModel.SinkTerminal.TerminalDownWireMinimumLength;
+        private double DownUTurnLengthSource => WireModel.SourceTerminal.TerminalDownWireMinimumLength;
+        private double LeftUTurnLengthSink => WireModel.SinkTerminal.TerminalLeftWireMinimumLength;
+        private double LeftUTurnLengthSource => WireModel.SourceTerminal.TerminalLeftWireMinimumLength;
+        private double RightUTurnLengthSink => WireModel.SinkTerminal.TerminalRightWireMinimumLength;
+        private double RightUTurnLengthSource => WireModel.SourceTerminal.TerminalRightWireMinimumLength;
+        private double UpUTurnLengthSink => WireModel.SinkTerminal.TerminalUpWireMinimumLength;
+        private double UpUTurnLengthSource => WireModel.SourceTerminal.TerminalUpWireMinimumLength;
 
-        public WireModel WireModel { get; private set; }
-
-        private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void DisconnectWire()
         {
-            if (e.PropertyName.Equals(nameof(WireModel.X1)))
+            WireModel.DisconnectWire();
+        }
+
+        public void WireMouseDown(object sender, MouseEventArgs e)
+        {
+            DisconnectWire();
+        }
+
+        protected override void OnViewLoaded()
+        {
+            AnimateAndConfigureWirePoints();
+        }
+
+        private static Direction GetBannedDirectionFromPoints(Point start, Point end)
+        {
+            if (Math.Abs(start.X - end.X) > Math.Abs(start.Y - end.Y))
             {
-                X1 = WireModel.X1 + DiagramViewModel.NodeBorderWidth;
+                return start.X - end.X > 0 ? Direction.East : Direction.West;
+            }
+            else
+            {
+                return start.Y - end.Y > 0 ? Direction.South : Direction.North;
+            }
+        }
+
+        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
+        {
+            if (direction == Direction.North)
+            {
+                return new Point(p.X, p.Y - amount);
             }
 
-            if (e.PropertyName.Equals(nameof(WireModel.X2)))
+            if (direction == Direction.South)
             {
-                X2 = WireModel.X2 + DiagramViewModel.NodeBorderWidth;
+                return new Point(p.X, p.Y + amount);
             }
 
-            if (e.PropertyName.Equals(nameof(WireModel.Y1)))
-            {
-                Y1 = WireModel.Y1 + DiagramViewModel.NodeBorderWidth;
-            }
-
-            if (e.PropertyName.Equals(nameof(WireModel.Y2)))
-            {
-                Y2 = WireModel.Y2 + DiagramViewModel.NodeBorderWidth;
-            }
-
-            if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
-            {
-                WireModel.PropertyChanged -= WireOnPropertyChanged;
-                return;
-            }
-
-            if (View != null)
-            {
-                Points = GetWirePoints();
-            }
+            return direction == Direction.East ? new Point(p.X + amount, p.Y) : new Point(p.X - amount, p.Y);
         }
 
         private void AnimateAndConfigureWirePoints()
@@ -115,11 +120,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
                 AnimateWirePointsOnUiThread(WireAnimationFrameDelay);
                 _configuringWirePoints = false;
             }).Start();
-        }
-
-        protected override void OnViewLoaded()
-        {
-            AnimateAndConfigureWirePoints();
         }
 
         private void AnimateWirePointsOnUiThread(int frameDelay)
@@ -235,41 +235,118 @@ namespace DiiagramrAPI.ViewModel.Diagram
             return points.ToArray();
         }
 
-        private static Direction GetBannedDirectionFromPoints(Point start, Point end)
-        {
-            if (Math.Abs(start.X - end.X) > Math.Abs(start.Y - end.Y))
-            {
-                return start.X - end.X > 0 ? Direction.East : Direction.West;
-            }
-            else
-            {
-                return start.Y - end.Y > 0 ? Direction.South : Direction.North;
-            }
-        }
-
-        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
+        private Direction OppositeDirection(Direction direction)
         {
             if (direction == Direction.North)
             {
-                return new Point(p.X, p.Y - amount);
+                return Direction.South;
             }
 
             if (direction == Direction.South)
             {
-                return new Point(p.X, p.Y + amount);
+                return Direction.North;
             }
 
-            return direction == Direction.East ? new Point(p.X + amount, p.Y) : new Point(p.X - amount, p.Y);
+            if (direction == Direction.East)
+            {
+                return Direction.West;
+            }
+
+            return Direction.East;
         }
 
-        public void WireMouseDown(object sender, MouseEventArgs e)
+        private IList<Point> UTurn(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
-            DisconnectWire();
+            _uTurned = true;
+            if (uturnCount++ > 10)
+            {
+                while (pointsSoFar.Count > 1)
+                {
+                    pointsSoFar.RemoveAt(pointsSoFar.Count - 1);
+                }
+
+                return pointsSoFar;
+            }
+
+            Point newPoint;
+            Direction newBannedDirection;
+            if (bannedDirectionForStart == Direction.North || bannedDirectionForStart == Direction.South)
+            {
+                if (start.X < end.X)
+                {
+                    // Going east.
+                    var sink = fromSourceTerminal ? RightUTurnLengthSource : RightUTurnLengthSink;
+                    newPoint = new Point(start.X + sink, start.Y);
+                    newBannedDirection = Direction.West;
+                }
+                else
+                {
+                    // Going west.
+                    var sink = fromSourceTerminal ? LeftUTurnLengthSource : LeftUTurnLengthSink;
+                    newPoint = new Point(start.X - sink, start.Y);
+                    newBannedDirection = Direction.East;
+                }
+            }
+            else
+            {
+                if (start.Y < end.Y)
+                {
+                    // Going south.
+                    var sink = fromSourceTerminal ? DownUTurnLengthSource : DownUTurnLengthSink;
+                    newPoint = new Point(start.X, start.Y + sink);
+                    newBannedDirection = Direction.North;
+                }
+                else
+                {
+                    // Going north.
+                    var sink = fromSourceTerminal ? UpUTurnLengthSource : UpUTurnLengthSink;
+                    newPoint = new Point(start.X, start.Y - sink);
+                    newBannedDirection = Direction.South;
+                }
+            }
+
+            return WireTwoPoints(newPoint, end, newBannedDirection, pointsSoFar, bannedDirectionForEnd, uturnCount, maxNumberOfPoints, fromSourceTerminal);
         }
 
-        public void DisconnectWire()
+        private IList<Point> WireHorizontiallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
-            WireModel.DisconnectWire();
+            var bannedStart = start.X < end.X ? Direction.West : Direction.East;
+            var newPoint = new Point(end.X, start.Y);
+            return WireTwoPoints(newPoint, end, bannedStart, bannedDirectionForEnd, pointsSoFar, uturnCount, fromSourceTerminal);
+        }
+
+        private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName.Equals(nameof(WireModel.X1)))
+            {
+                X1 = WireModel.X1 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.X2)))
+            {
+                X2 = WireModel.X2 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.Y1)))
+            {
+                Y1 = WireModel.Y1 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.Y2)))
+            {
+                Y2 = WireModel.Y2 + DiagramViewModel.NodeBorderWidth;
+            }
+
+            if (e.PropertyName.Equals(nameof(WireModel.SourceTerminal)) || e.PropertyName.Equals(nameof(WireModel.SinkTerminal)))
+            {
+                WireModel.PropertyChanged -= WireOnPropertyChanged;
+                return;
+            }
+
+            if (View != null)
+            {
+                Points = GetWirePoints();
+            }
         }
 
         private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar)
@@ -425,88 +502,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
 
             // UTurn if nothing else works
             return UTurn(start, end, bannedDirectionForStart, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-        }
-
-        private bool _uTurned = false;
-
-        private IList<Point> UTurn(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
-        {
-            _uTurned = true;
-            if (uturnCount++ > 10)
-            {
-                while (pointsSoFar.Count > 1)
-                {
-                    pointsSoFar.RemoveAt(pointsSoFar.Count - 1);
-                }
-
-                return pointsSoFar;
-            }
-
-            Point newPoint;
-            Direction newBannedDirection;
-            if (bannedDirectionForStart == Direction.North || bannedDirectionForStart == Direction.South)
-            {
-                if (start.X < end.X)
-                {
-                    // Going east.
-                    var sink = fromSourceTerminal ? RightUTurnLengthSource : RightUTurnLengthSink;
-                    newPoint = new Point(start.X + sink, start.Y);
-                    newBannedDirection = Direction.West;
-                }
-                else
-                {
-                    // Going west.
-                    var sink = fromSourceTerminal ? LeftUTurnLengthSource : LeftUTurnLengthSink;
-                    newPoint = new Point(start.X - sink, start.Y);
-                    newBannedDirection = Direction.East;
-                }
-            }
-            else
-            {
-                if (start.Y < end.Y)
-                {
-                    // Going south.
-                    var sink = fromSourceTerminal ? DownUTurnLengthSource : DownUTurnLengthSink;
-                    newPoint = new Point(start.X, start.Y + sink);
-                    newBannedDirection = Direction.North;
-                }
-                else
-                {
-                    // Going north.
-                    var sink = fromSourceTerminal ? UpUTurnLengthSource : UpUTurnLengthSink;
-                    newPoint = new Point(start.X, start.Y - sink);
-                    newBannedDirection = Direction.South;
-                }
-            }
-
-            return WireTwoPoints(newPoint, end, newBannedDirection, pointsSoFar, bannedDirectionForEnd, uturnCount, maxNumberOfPoints, fromSourceTerminal);
-        }
-
-        private Direction OppositeDirection(Direction direction)
-        {
-            if (direction == Direction.North)
-            {
-                return Direction.South;
-            }
-
-            if (direction == Direction.South)
-            {
-                return Direction.North;
-            }
-
-            if (direction == Direction.East)
-            {
-                return Direction.West;
-            }
-
-            return Direction.East;
-        }
-
-        private IList<Point> WireHorizontiallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
-        {
-            var bannedStart = start.X < end.X ? Direction.West : Direction.East;
-            var newPoint = new Point(end.X, start.Y);
-            return WireTwoPoints(newPoint, end, bannedStart, bannedDirectionForEnd, pointsSoFar, uturnCount, fromSourceTerminal);
         }
 
         private IList<Point> WireVerticallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
