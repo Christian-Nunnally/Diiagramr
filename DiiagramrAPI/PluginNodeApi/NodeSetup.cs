@@ -22,34 +22,14 @@ namespace DiiagramrAPI.PluginNodeApi
             _nodeViewModel = nodeViewModel ?? throw new ArgumentNullException(nameof(nodeViewModel));
         }
 
-        /// <summary>
-        ///     Sets the initial node geometry.
-        /// </summary>
-        /// <param name="width">The width of the node.</param>
-        /// <param name="height">The height of the node.</param>
-        public void NodeSize(int width, int height)
+        public Terminal<T> CreateClientTerminal<T>(TerminalViewModel terminalViewModel)
         {
-            if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01)
+            if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel))
             {
-                _nodeViewModel.Width = width;
+                throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
             }
 
-            if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01)
-            {
-                _nodeViewModel.Height = height;
-            }
-
-            _nodeViewModel.MinimumHeight = height;
-            _nodeViewModel.MinimumWidth = width;
-        }
-
-        /// <summary>
-        ///     Sets the name of a node, this is what displays above the node on the diagram.
-        /// </summary>
-        /// <param name="name"></param>
-        public void NodeName(string name)
-        {
-            _nodeViewModel.Name = name;
+            return new Terminal<T>(terminalViewModel);
         }
 
         /// <summary>
@@ -69,6 +49,36 @@ namespace DiiagramrAPI.PluginNodeApi
         public Terminal<T> InputTerminal<T>(string name, Direction direction)
         {
             return CreateClientTerminal<T>(name, direction, TerminalKind.Input);
+        }
+
+        /// <summary>
+        ///     Sets the name of a node, this is what displays above the node on the diagram.
+        /// </summary>
+        /// <param name="name"></param>
+        public void NodeName(string name)
+        {
+            _nodeViewModel.Name = name;
+        }
+
+        /// <summary>
+        ///     Sets the initial node geometry.
+        /// </summary>
+        /// <param name="width">The width of the node.</param>
+        /// <param name="height">The height of the node.</param>
+        public void NodeSize(int width, int height)
+        {
+            if (Math.Abs(_nodeViewModel.NodeModel.Width) < 0.01)
+            {
+                _nodeViewModel.Width = width;
+            }
+
+            if (Math.Abs(_nodeViewModel.NodeModel.Height) < 0.01)
+            {
+                _nodeViewModel.Height = height;
+            }
+
+            _nodeViewModel.MinimumHeight = height;
+            _nodeViewModel.MinimumWidth = width;
         }
 
         /// <summary>
@@ -108,16 +118,6 @@ namespace DiiagramrAPI.PluginNodeApi
             terminalViewModel = TerminalViewModel.CreateTerminalViewModel(terminalModel);
             _nodeViewModel.AddTerminalViewModel(terminalViewModel);
             return terminalViewModel;
-        }
-
-        public Terminal<T> CreateClientTerminal<T>(TerminalViewModel terminalViewModel)
-        {
-            if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel))
-            {
-                throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
-            }
-
-            return new Terminal<T>(terminalViewModel);
         }
     }
 }
