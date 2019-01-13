@@ -10,36 +10,18 @@ namespace DiiagramrAPI.CustomControls
     [AddINotifyPropertyChangedInterface]
     public class ZoomBorder : Border
     {
-        private UIElement _child;
-        private Point _origin;
-        private Point _start;
-
-        public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(
-            "Zoom", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
-
-        public double Zoom
-        {
-            get => (double)GetValue(ZoomProperty);
-            set => SetValue(ZoomProperty, value);
-        }
-
         public static readonly DependencyProperty PanXProperty = DependencyProperty.Register(
             "PanX", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
-
-        public double PanX
-        {
-            get => (double)GetValue(PanXProperty);
-            set => SetValue(PanXProperty, value);
-        }
 
         public static readonly DependencyProperty PanYProperty = DependencyProperty.Register(
             "PanY", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
 
-        public double PanY
-        {
-            get => (double)GetValue(PanYProperty);
-            set => SetValue(PanYProperty, value);
-        }
+        public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(
+            "Zoom", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
+
+        private UIElement _child;
+        private Point _origin;
+        private Point _start;
 
         public override UIElement Child
         {
@@ -56,63 +38,77 @@ namespace DiiagramrAPI.CustomControls
             }
         }
 
+        public double PanX
+        {
+            get => (double)GetValue(PanXProperty);
+            set => SetValue(PanXProperty, value);
+        }
+
+        public double PanY
+        {
+            get => (double)GetValue(PanYProperty);
+            set => SetValue(PanYProperty, value);
+        }
+
+        public double Zoom
+        {
+            get => (double)GetValue(ZoomProperty);
+            set => SetValue(ZoomProperty, value);
+        }
+
         private static TranslateTransform GetTranslateTransform(UIElement element)
         {
             return (TranslateTransform)((TransformGroup)element.RenderTransform)
                 .Children.First(tr => tr is TranslateTransform);
         }
 
-        private ScaleTransform GetScaleTransform(UIElement element)
-        {
-            return (ScaleTransform)((TransformGroup)element.RenderTransform)
-                .Children.First(tr => tr is ScaleTransform);
-        }
-
-        private void Initialize(UIElement element)
-        {
-            _child = element;
-            if (_child == null)
-            {
-                return;
-            }
-
-            var group = new TransformGroup();
-            var st = new ScaleTransform();
-            group.Children.Add(st);
-            var tt = new TranslateTransform();
-            group.Children.Add(tt);
-            _child.RenderTransform = group;
-            _child.RenderTransformOrigin = new Point(0.0, 0.0);
-            Zoom = 1.0;
-
-            MouseWheel += child_MouseWheel;
-            MouseLeftButtonDown += child_MouseLeftButtonDown;
-            MouseLeftButtonUp += child_MouseLeftButtonUp;
-            MouseMove += child_MouseMove;
-            PreviewMouseRightButtonDown += child_PreviewMouseRightButtonDown;
-        }
-
-        private void Reset()
+        private void Child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if (_child == null)
             {
                 return;
             }
-            // reset zoom
-            var st = GetScaleTransform(_child);
-            st.ScaleX = 1.0;
-            st.ScaleY = 1.0;
-            Zoom = 1.0;
 
-            // reset pan
             var tt = GetTranslateTransform(_child);
-            tt.X = 0.0;
-            tt.Y = 0.0;
-            PanX = tt.X;
-            PanY = tt.Y;
+            _start = e.GetPosition(this);
+            _origin = new Point(tt.X, tt.Y);
+            Cursor = Cursors.Hand;
+            _child.CaptureMouse();
+            e.Handled = false;
         }
 
-        private void child_MouseWheel(object sender, MouseWheelEventArgs e)
+        private void Child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (_child == null)
+            {
+                return;
+            }
+
+            _child.ReleaseMouseCapture();
+            Cursor = Cursors.Arrow;
+            e.Handled = false;
+        }
+
+        private void Child_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_child == null)
+            {
+                return;
+            }
+
+            if (_child.IsMouseCaptured)
+            {
+                var tt = GetTranslateTransform(_child);
+                var v = _start - e.GetPosition(this);
+                tt.X = _origin.X - v.X;
+                tt.Y = _origin.Y - v.Y;
+                PanX = tt.X;
+                PanY = tt.Y;
+            }
+            e.Handled = false;
+        }
+
+        private void Child_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             if (_child == null)
             {
@@ -144,55 +140,59 @@ namespace DiiagramrAPI.CustomControls
             e.Handled = false;
         }
 
-        private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void Child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            e.Handled = false;
+        }
+
+        private ScaleTransform GetScaleTransform(UIElement element)
+        {
+            return (ScaleTransform)((TransformGroup)element.RenderTransform)
+                .Children.First(tr => tr is ScaleTransform);
+        }
+
+        private void Initialize(UIElement element)
+        {
+            _child = element;
             if (_child == null)
             {
                 return;
             }
 
+            var group = new TransformGroup();
+            var st = new ScaleTransform();
+            group.Children.Add(st);
+            var tt = new TranslateTransform();
+            group.Children.Add(tt);
+            _child.RenderTransform = group;
+            _child.RenderTransformOrigin = new Point(0.0, 0.0);
+            Zoom = 1.0;
+
+            MouseWheel += Child_MouseWheel;
+            MouseLeftButtonDown += Child_MouseLeftButtonDown;
+            MouseLeftButtonUp += Child_MouseLeftButtonUp;
+            MouseMove += Child_MouseMove;
+            PreviewMouseRightButtonDown += Child_PreviewMouseRightButtonDown;
+        }
+
+        private void Reset()
+        {
+            if (_child == null)
+            {
+                return;
+            }
+            // reset zoom
+            var st = GetScaleTransform(_child);
+            st.ScaleX = 1.0;
+            st.ScaleY = 1.0;
+            Zoom = 1.0;
+
+            // reset pan
             var tt = GetTranslateTransform(_child);
-            _start = e.GetPosition(this);
-            _origin = new Point(tt.X, tt.Y);
-            Cursor = Cursors.Hand;
-            _child.CaptureMouse();
-            e.Handled = false;
-        }
-
-        private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (_child == null)
-            {
-                return;
-            }
-
-            _child.ReleaseMouseCapture();
-            Cursor = Cursors.Arrow;
-            e.Handled = false;
-        }
-
-        private void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = false;
-        }
-
-        private void child_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (_child == null)
-            {
-                return;
-            }
-
-            if (_child.IsMouseCaptured)
-            {
-                var tt = GetTranslateTransform(_child);
-                var v = _start - e.GetPosition(this);
-                tt.X = _origin.X - v.X;
-                tt.Y = _origin.Y - v.Y;
-                PanX = tt.X;
-                PanY = tt.Y;
-            }
-            e.Handled = false;
+            tt.X = 0.0;
+            tt.Y = 0.0;
+            PanX = tt.X;
+            PanY = tt.Y;
         }
     }
 }

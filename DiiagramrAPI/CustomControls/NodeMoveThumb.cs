@@ -14,6 +14,23 @@ namespace DiiagramrAPI.CustomControls
             PreviewMouseUp += OnPreviewMouseUp;
         }
 
+        private void MoveThumb_DragDelta(object sender, DragDeltaEventArgs e)
+        {
+            if (!(DataContext is ContentPresenter contentPresenter))
+            {
+                return;
+            }
+
+            if (!(contentPresenter.Content is PluginNode node))
+            {
+                return;
+            }
+
+            node.X += e.HorizontalChange;
+            node.Y += e.VerticalChange;
+            node.Dragging = true;
+        }
+
         private void OnPreviewMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             if (!(DataContext is ContentPresenter contentPresenter))
@@ -35,23 +52,6 @@ namespace DiiagramrAPI.CustomControls
 
             node.X = CoreUilities.RoundToNearest(node.X, DiagramViewModel.GridSnapInterval);
             node.Y = CoreUilities.RoundToNearest(node.Y, DiagramViewModel.GridSnapInterval);
-        }
-
-        private void MoveThumb_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            if (!(DataContext is ContentPresenter contentPresenter))
-            {
-                return;
-            }
-
-            if (!(contentPresenter.Content is PluginNode node))
-            {
-                return;
-            }
-
-            node.X += e.HorizontalChange;
-            node.Y += e.VerticalChange;
-            node.Dragging = true;
         }
     }
 }

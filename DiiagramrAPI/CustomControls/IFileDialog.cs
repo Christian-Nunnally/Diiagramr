@@ -5,11 +5,9 @@ namespace DiiagramrAPI.CustomControls
 {
     public interface IFileDialog : IDiiagramrService, IKeyedDiiagramrService
     {
-        string InitialDirectory { get; set; }
-
-        string Filter { get; set; }
-
         string FileName { get; set; }
+        string Filter { get; set; }
+        string InitialDirectory { get; set; }
 
         MessageBoxResult ShowDialog();
     }
