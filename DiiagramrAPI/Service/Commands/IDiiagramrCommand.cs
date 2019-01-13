@@ -13,6 +13,7 @@ namespace DiiagramrAPI.Service.Commands
         float Weight { get; }
 
         void Execute(ShellViewModel shell);
+
         bool CanExecute(ShellViewModel shell);
     }
 }

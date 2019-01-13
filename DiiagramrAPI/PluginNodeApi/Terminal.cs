@@ -37,6 +37,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public T Data
         {
             get => _data;
+
             set
             {
                 if (_data != null && _data.Equals(value))
@@ -62,7 +63,10 @@ namespace DiiagramrAPI.PluginNodeApi
                 _dataChanged += value;
                 _dataChanged.Invoke(_data);
             }
-            remove { _dataChanged -= value; }
+            remove
+            {
+                _dataChanged -= value;
+            }
         }
 
         private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)

@@ -42,7 +42,7 @@ namespace DiiagramrIntegrationTest
 
             var controlViewModel = diagramWell.ActiveItem.DiagramControlViewModel;
 
-            // play 
+            // play
             outTerm.Data = 5;
             Assert.AreEqual(outTerm.Data, inTerm.Data);
             Assert.AreEqual((int)inTerm.Data + 1, node2.OutputTerminalViewModels.First().Data);

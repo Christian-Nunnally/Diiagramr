@@ -47,10 +47,12 @@ namespace DiiagramrAPI.Model
         public virtual NodeLibrary Dependency { get; set; }
 
         private double _x;
+
         [DataMember]
         public virtual double X
         {
             get => _x;
+
             set
             {
                 if (Math.Abs(_x - value) < 0.001)
@@ -64,10 +66,12 @@ namespace DiiagramrAPI.Model
         }
 
         private double _y;
+
         [DataMember]
         public virtual double Y
         {
             get => _y;
+
             set
             {
                 if (Math.Abs(_y - value) < 0.001)
@@ -81,10 +85,12 @@ namespace DiiagramrAPI.Model
         }
 
         private double _width;
+
         [DataMember]
         public virtual double Width
         {
             get => _width;
+
             set
             {
                 if (Math.Abs(_width - value) < 0.001)
@@ -98,10 +104,12 @@ namespace DiiagramrAPI.Model
         }
 
         private double _height;
+
         [DataMember]
         public virtual double Height
         {
             get => _height;
+
             set
             {
                 if (Math.Abs(_height - value) < 0.001)
@@ -115,9 +123,11 @@ namespace DiiagramrAPI.Model
         }
 
         private PluginNode _nodeViewModel;
+
         public virtual PluginNode NodeViewModel
         {
             get => _nodeViewModel;
+
             set
             {
                 _nodeViewModel = value;

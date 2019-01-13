@@ -12,6 +12,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
         public int Value
         {
             get => _value;
+
             set
             {
                 _value = value;

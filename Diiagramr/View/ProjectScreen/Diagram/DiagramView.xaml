@@ -20,7 +20,7 @@
             <Setter Property="RadiusY" Value="3" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Fill" Value="#264F78"/>
+                    <Setter Property="Fill" Value="#264F78" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -158,9 +158,9 @@
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
                 <Canvas>
-                    <Border BorderBrush="#404040" 
-                            BorderThickness="2" 
-                            Width="{Binding BoundingBox.Width}" 
+                    <Border BorderBrush="#404040"
+                            BorderThickness="2"
+                            Width="{Binding BoundingBox.Width}"
                             Height="{Binding BoundingBox.Height}"
                             Canvas.Left="{Binding BoundingBox.Left}"
                             Canvas.Top="{Binding BoundingBox.Top}"
@@ -325,7 +325,6 @@
                                                     FontSize="7"
                                                     Foreground="#202020" />
                                             </Border>-->
-
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -343,12 +342,12 @@
             s:View.Model="{Binding DiagramControlViewModel}" />-->
 
         <Label Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}"
-               Content="Right Click to Insert a Node." 
-               Foreground="#A4A4A4" 
-               FontSize="11" 
-               HorizontalAlignment="Center" 
-               VerticalAlignment="Center" 
-               Padding="0"/>
+               Content="Right Click to Insert a Node."
+               Foreground="#A4A4A4"
+               FontSize="11"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center"
+               Padding="0" />
 
         <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
     </Grid>

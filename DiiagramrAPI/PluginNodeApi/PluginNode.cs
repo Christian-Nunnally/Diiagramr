@@ -25,9 +25,13 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
+
         public event Action<WireModel> WireConnectedToTerminal;
+
         public event Action<WireModel> WireDisconnectedFromTerminal;
+
         public event Action DragStarted;
+
         public event Action DragStopped;
 
         public virtual double X { get; set; }
@@ -36,6 +40,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Height
         {
             get => NodeModel.Height;
+
             set
             {
                 NodeModel.Height = value;
@@ -51,6 +56,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double Width
         {
             get => NodeModel.Width;
+
             set
             {
                 NodeModel.Width = value;
@@ -76,6 +82,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual bool IsSelected
         {
             get => _isSelected;
+
             set
             {
                 if (value)
@@ -88,10 +95,13 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
+
         public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels =>
             TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
+
         public IEnumerable<InputTerminalViewModel> InputTerminalViewModels =>
             TerminalViewModels.OfType<InputTerminalViewModel>();
+
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels =>
             TerminalViewModels.OfType<OutputTerminalViewModel>();
 
@@ -101,6 +111,7 @@ namespace DiiagramrAPI.PluginNodeApi
 
         private bool IsInitialized { get; set; }
         private bool MouseOverBorder { get; set; }
+
         private IEnumerable<PropertyInfo> PluginNodeSettings =>
             GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
 
@@ -333,14 +344,17 @@ namespace DiiagramrAPI.PluginNodeApi
                     terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
                     terminal.YRelativeToNode = 0;
                     break;
+
                 case Direction.East:
                     terminal.XRelativeToNode = Width;
                     terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
                     break;
+
                 case Direction.South:
                     terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
                     terminal.YRelativeToNode = Height;
                     break;
+
                 case Direction.West:
                     terminal.XRelativeToNode = 0;
                     terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
@@ -405,7 +419,7 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         /// <summary>
-        ///     All node customization such as turning on/off features 
+        ///     All node customization such as turning on/off features
         ///     and setting node geometry happens here.
         /// </summary>
         protected virtual void SetupNode(NodeSetup setup)

@@ -33,6 +33,7 @@ namespace DiiagramrAPI.Service
         public IList<DiagramViewModel> DiagramViewModels { get; }
 
         public event Action CurrentProjectChanged;
+
         public ProjectModel CurrentProject { get; set; }
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;

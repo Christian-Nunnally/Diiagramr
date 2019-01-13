@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using PropertyChanged;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using PropertyChanged;
 
 namespace DiiagramrAPI.CustomControls
 {
@@ -14,24 +14,22 @@ namespace DiiagramrAPI.CustomControls
         private Point _origin;
         private Point _start;
 
-
         public static readonly DependencyProperty ZoomProperty = DependencyProperty.Register(
             "Zoom", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
 
         public double Zoom
         {
-            get { return (double)GetValue(ZoomProperty); }
-            set { SetValue(ZoomProperty, value); }
+            get => (double)GetValue(ZoomProperty);
+            set => SetValue(ZoomProperty, value);
         }
-
 
         public static readonly DependencyProperty PanXProperty = DependencyProperty.Register(
             "PanX", typeof(double), typeof(ZoomBorder), new PropertyMetadata(default(double)));
 
         public double PanX
         {
-            get { return (double)GetValue(PanXProperty); }
-            set { SetValue(PanXProperty, value); }
+            get => (double)GetValue(PanXProperty);
+            set => SetValue(PanXProperty, value);
         }
 
         public static readonly DependencyProperty PanYProperty = DependencyProperty.Register(
@@ -39,17 +37,21 @@ namespace DiiagramrAPI.CustomControls
 
         public double PanY
         {
-            get { return (double)GetValue(PanYProperty); }
-            set { SetValue(PanYProperty, value); }
+            get => (double)GetValue(PanYProperty);
+            set => SetValue(PanYProperty, value);
         }
 
         public override UIElement Child
         {
-            get { return base.Child; }
+            get => base.Child;
+
             set
             {
                 if ((value != null) && !Equals(value, Child))
+                {
                     Initialize(value);
+                }
+
                 base.Child = value;
             }
         }
@@ -69,7 +71,11 @@ namespace DiiagramrAPI.CustomControls
         private void Initialize(UIElement element)
         {
             _child = element;
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
+
             var group = new TransformGroup();
             var st = new ScaleTransform();
             group.Children.Add(st);
@@ -88,7 +94,10 @@ namespace DiiagramrAPI.CustomControls
 
         private void Reset()
         {
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
             // reset zoom
             var st = GetScaleTransform(_child);
             st.ScaleX = 1.0;
@@ -103,17 +112,21 @@ namespace DiiagramrAPI.CustomControls
             PanY = tt.Y;
         }
 
-        #region Child Events
-
         private void child_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
+
             var st = GetScaleTransform(_child);
             var tt = GetTranslateTransform(_child);
 
             var zoom = e.Delta > 0 ? .2 : -.2;
             if (!(e.Delta > 0) && ((st.ScaleX < .4) || (st.ScaleY < .4)))
+            {
                 return;
+            }
 
             var relative = e.GetPosition(_child);
 
@@ -129,39 +142,47 @@ namespace DiiagramrAPI.CustomControls
             PanX = tt.X;
             PanY = tt.Y;
             e.Handled = false;
-
         }
 
         private void child_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
+
             var tt = GetTranslateTransform(_child);
             _start = e.GetPosition(this);
             _origin = new Point(tt.X, tt.Y);
             Cursor = Cursors.Hand;
             _child.CaptureMouse();
             e.Handled = false;
-
         }
 
         private void child_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
+
             _child.ReleaseMouseCapture();
             Cursor = Cursors.Arrow;
             e.Handled = false;
-
         }
 
         private void child_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = false;
-
         }
 
         private void child_MouseMove(object sender, MouseEventArgs e)
         {
-            if (_child == null) return;
+            if (_child == null)
+            {
+                return;
+            }
+
             if (_child.IsMouseCaptured)
             {
                 var tt = GetTranslateTransform(_child);
@@ -173,7 +194,5 @@ namespace DiiagramrAPI.CustomControls
             }
             e.Handled = false;
         }
-
-        #endregion
     }
 }

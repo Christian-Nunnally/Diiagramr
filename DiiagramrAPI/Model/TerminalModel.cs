@@ -113,6 +113,7 @@ namespace DiiagramrAPI.Model
 
         [DataMember]
         public double TerminalRightWireMinimumLength { get; set; }
+
         public int EdgeIndex { get; set; }
 
         public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)

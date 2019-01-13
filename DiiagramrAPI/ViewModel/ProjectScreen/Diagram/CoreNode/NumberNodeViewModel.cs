@@ -11,6 +11,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         public int Value
         {
             get => _value;
+
             set
             {
                 _value = value;

@@ -75,7 +75,6 @@ namespace DiiagramrUnitTests.ModelTests
             Assert.AreEqual(_outputTerminalMoq.Object, wire.SourceTerminal);
         }
 
-
         [TestMethod]
         public void TestConstructor_SetsSourceTerminalConnectedWireToSelf()
         {
@@ -195,6 +194,7 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         private class Parent { }
+
         private class Child : Parent { }
     }
 }

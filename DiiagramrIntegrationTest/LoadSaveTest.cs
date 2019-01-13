@@ -114,7 +114,6 @@ namespace DiiagramrIntegrationTest
             Assert.AreEqual(6, ((TestPassthroughNode)node2).Value);
             Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
 
-
             // change data
             outputTerminal.Data = 6;
             Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);

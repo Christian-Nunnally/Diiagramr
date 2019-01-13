@@ -1,5 +1,5 @@
-﻿using System;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
+using System;
 
 namespace DiiagramrAPI.ViewModel
 {
@@ -21,14 +21,22 @@ namespace DiiagramrAPI.ViewModel
 
         public void AddSource()
         {
-            if (string.IsNullOrEmpty(SourceTextBoxText)) return;
+            if (string.IsNullOrEmpty(SourceTextBoxText))
+            {
+                return;
+            }
+
             LibraryManager.AddSource(SourceTextBoxText);
             SourceTextBoxText = "";
         }
 
         public void RemoveSelectedSource()
         {
-            if (string.IsNullOrEmpty(SelectedSource)) return;
+            if (string.IsNullOrEmpty(SelectedSource))
+            {
+                return;
+            }
+
             LibraryManager.RemoveSource(SelectedSource);
         }
     }

@@ -5,7 +5,6 @@ namespace DiiagramrAPI.Service.Interfaces
 {
     public interface IProjectFileService : IDiiagramrService
     {
-
         string ProjectDirectory { get; set; }
 
         /// <summary>

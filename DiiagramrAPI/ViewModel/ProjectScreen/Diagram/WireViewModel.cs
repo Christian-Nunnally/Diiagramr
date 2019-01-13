@@ -19,9 +19,11 @@ namespace DiiagramrAPI.ViewModel.Diagram
         private const double WireEdgeIndexSpacing = 0.0;
         private const int WireAnimationFrameDelay = 15;
         private bool _configuringWirePoints;
+
         public ColorTheme ColorTheme
         {
             private get => _colorTheme;
+
             set
             {
                 _colorTheme = value;
@@ -323,6 +325,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
+
                 case Direction.West:
                     // The end is to the left of the start
                     if (start.X <= end.X)
@@ -354,6 +357,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                         return WireHorizontiallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
+
                 case Direction.North:
                     // The end is below the start
                     if (start.Y <= end.Y)
@@ -385,6 +389,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
                         return WireVerticallyTowardsEnd(start, end, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
                     }
                     break;
+
                 case Direction.East:
                     // The end is to the right of the start
                     if (start.X >= end.X)

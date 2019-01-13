@@ -45,7 +45,7 @@
                     <DataTemplate>
                         <Border Width="Auto" MouseUp="{s:Action DiagramProjectItemMouseUp}">
                             <Grid>
-                                <TextBox Text="{Binding Name, Mode=TwoWay}" 
+                                <TextBox Text="{Binding Name, Mode=TwoWay}"
                                          FontSize="14"
                                          Height="25"
                                          FocusVisualStyle="{x:Null}"
@@ -54,8 +54,8 @@
                                          PreviewMouseDown="{s:Action PreviewMouseDown}"
                                          KeyDown="{s:Action EditNameTextBoxKeyDown}"
                                          VerticalContentAlignment="Center"
-                                         Visibility="{Binding NameEditMode, Converter={StaticResource btv}}"/>
-                                <Label Content="{Binding Name}" 
+                                         Visibility="{Binding NameEditMode, Converter={StaticResource btv}}" />
+                                <Label Content="{Binding Name}"
                                        FontSize="14"
                                        FocusVisualStyle="{x:Null}"
                                        Visibility="{Binding NotNameEditMode, Converter={StaticResource btv}}">

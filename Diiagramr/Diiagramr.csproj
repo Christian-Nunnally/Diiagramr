@@ -279,7 +279,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj">
-      <Project>{27b53540-1ffb-490c-9db1-d829179869ea}</Project>
+      <Project>{27B53540-1FFB-490C-9DB1-D829179869EA}</Project>
       <Name>DiiagramrAPI</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiiagramrUnitTest\DiiagramrUnitTest.csproj">

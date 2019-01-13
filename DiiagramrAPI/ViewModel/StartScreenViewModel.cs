@@ -52,6 +52,7 @@ namespace DiiagramrAPI.ViewModel
         public bool IsMouseOverNewProjectButton
         {
             get => _isMouseOverNewProjectButton;
+
             set
             {
                 _isMouseOverNewProjectButton = value;
@@ -72,6 +73,7 @@ namespace DiiagramrAPI.ViewModel
         public bool IsMouseOverLoadProjectButton
         {
             get => _isMouseOverLoadProjectButton;
+
             set
             {
                 _isMouseOverLoadProjectButton = value;

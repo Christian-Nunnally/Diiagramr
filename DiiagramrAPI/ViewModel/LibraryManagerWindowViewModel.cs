@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace DiiagramrAPI.ViewModel
 {
@@ -35,8 +35,16 @@ namespace DiiagramrAPI.ViewModel
 
         public async Task InstallSelectedLibrary()
         {
-            if (string.IsNullOrEmpty(SelectedLibrary)) return;
-            if (SelectedLibrary.Split(' ').Length != 3) return;
+            if (string.IsNullOrEmpty(SelectedLibrary))
+            {
+                return;
+            }
+
+            if (SelectedLibrary.Split(' ').Length != 3)
+            {
+                return;
+            }
+
             var selectedLibraryMajorVersion = int.Parse(SelectedLibrary.Split(' ')[2].Substring(0, 1));
             var selectedLibraryName = SelectedLibrary.Split(' ')[0];
             var selectedLibrary = new NodeLibrary(selectedLibraryName, "", selectedLibraryMajorVersion, 0, 0);

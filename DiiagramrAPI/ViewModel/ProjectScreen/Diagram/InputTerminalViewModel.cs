@@ -22,6 +22,7 @@ namespace DiiagramrAPI.ViewModel.Diagram
         public string DirectEditTextBoxText
         {
             get => _directEditTextBoxText;
+
             set
             {
                 if (IsIntType)

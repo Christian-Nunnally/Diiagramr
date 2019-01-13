@@ -30,12 +30,16 @@ namespace DiiagramrAPI.CustomControls
             {
                 case DialogResult.None:
                     return MessageBoxResult.None;
+
                 case DialogResult.OK:
                     return MessageBoxResult.OK;
+
                 case DialogResult.Yes:
                     return MessageBoxResult.Yes;
+
                 case DialogResult.No:
                     return MessageBoxResult.No;
+
                 default: return MessageBoxResult.Cancel;
             }
         }

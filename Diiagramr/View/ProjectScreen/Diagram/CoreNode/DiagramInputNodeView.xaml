@@ -9,5 +9,5 @@
              d:DesignHeight="30"
              d:DesignWidth="30"
              mc:Ignorable="d">
-    <Label Content="I" FontFamily="Consolas" FontSize="16" HorizontalContentAlignment="Center"/>
+    <Label Content="I" FontFamily="Consolas" FontSize="16" HorizontalContentAlignment="Center" />
 </UserControl>

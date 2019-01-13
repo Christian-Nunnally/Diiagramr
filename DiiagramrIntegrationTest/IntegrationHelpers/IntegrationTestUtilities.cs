@@ -72,7 +72,6 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             return diagramViewModel;
         }
 
-
         // Places the given node at (ptX, ptY) on active diagram and returns new node
         public static PluginNode PlaceNode(this ShellViewModel shell, PluginNode node, int ptX = 0, int ptY = 0)
         {

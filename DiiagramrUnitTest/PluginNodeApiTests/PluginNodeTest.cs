@@ -304,6 +304,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public int PublicProperty
         {
             get => _publicProperty;
+
             set
             {
                 _publicProperty = value;
@@ -314,6 +315,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public int PublicPropertyNonSetting
         {
             get => _publicPropertyNonSetting;
+
             set
             {
                 _publicPropertyNonSetting = value;

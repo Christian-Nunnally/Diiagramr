@@ -21,7 +21,6 @@ namespace DiiagramrAPI.Service
             Func<IProvideNodes> nodeProviderFactory,
             Func<IDirectoryService> directoryServiceFactory)
         {
-
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";

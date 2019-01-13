@@ -18,7 +18,7 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\WindowStyle.xaml"/>
+                <ResourceDictionary Source="..\WindowStyle.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
@@ -35,7 +35,7 @@
                                 <Style TargetType="Label">
                                     <Style.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#3E3E40"/>
+                                            <Setter Property="Background" Value="#3E3E40" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -81,8 +81,7 @@
             </Grid>
         </DockPanel>
         <Canvas>
-            <ContentControl s:View.Model="{Binding ContextMenuViewModel}" Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" Canvas.Left="{Binding ContextMenuViewModel.X}" Canvas.Top="{Binding ContextMenuViewModel.Y}"/>
+            <ContentControl s:View.Model="{Binding ContextMenuViewModel}" Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" Canvas.Left="{Binding ContextMenuViewModel.X}" Canvas.Top="{Binding ContextMenuViewModel.Y}" />
         </Canvas>
     </Grid>
 </Window>
-

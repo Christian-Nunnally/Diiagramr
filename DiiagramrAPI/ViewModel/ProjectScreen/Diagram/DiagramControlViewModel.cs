@@ -5,7 +5,6 @@ namespace DiiagramrAPI.ViewModel.Diagram
 {
     public class DiagramControlViewModel : Screen
     {
-
         public DiagramControlViewModel(DiagramModel diagram)
         {
             Diagram = diagram;

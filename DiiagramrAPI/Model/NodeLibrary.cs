@@ -40,7 +40,11 @@ namespace DiiagramrAPI.Model
 
         public bool IsNewerVersionThan(NodeLibrary otherLibrary)
         {
-            if (otherLibrary.MinorVersion < MinorVersion) return true;
+            if (otherLibrary.MinorVersion < MinorVersion)
+            {
+                return true;
+            }
+
             return otherLibrary.Patch < Patch;
         }
     }

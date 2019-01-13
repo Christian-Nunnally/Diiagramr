@@ -2,20 +2,20 @@
                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="WindowChromeButtonStyle" TargetType="{x:Type Button}">
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Width" Value="30"/>
-        <Setter Property="DockPanel.Dock" Value="Right"/>
-        <Setter Property="FontFamily" Value="Consolas"/>
-        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True"/>
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
-        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Width" Value="30" />
+        <Setter Property="DockPanel.Dock" Value="Right" />
+        <Setter Property="FontFamily" Value="Consolas" />
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Foreground" Value="White" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
@@ -71,7 +71,7 @@
                                          Points="0,0 1,0 4.5,4
                                                  8,0 9,0 5,4.5
                                                  9,9 8,9 4.5,5
-                                                 1,9 0,9 4,4.5"/>
+                                                 1,9 0,9 4,4.5" />
                             </Button>
                             <Button x:Name="btnRestore"
                                     Style="{StaticResource WindowChromeButtonStyle}"
@@ -80,14 +80,14 @@
                                          Points="0,0 0,9
                                                  9,9 9,0, 0,0
                                                  1,2 1,8
-                                                 8,8 8,2 1,2"/>
+                                                 8,8 8,2 1,2" />
                             </Button>
                             <Button x:Name="btnMinimize"
                                     Style="{StaticResource WindowChromeButtonStyle}"
                                     Click="MinimizeClick">
                                 <Polygon Fill="#b0b0b0"
                                          Points="0,7 9,7
-                                                 9,9 0,9"/>
+                                                 9,9 0,9" />
                             </Button>
                         </DockPanel>
                     </Grid>

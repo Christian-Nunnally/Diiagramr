@@ -21,6 +21,7 @@ namespace DiiagramrAPI.Model
         public virtual string Name
         {
             get => _name;
+
             set
             {
                 if (_name != value)

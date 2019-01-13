@@ -7,6 +7,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         public Terminal<object> InputTerminal;
 
         private event TerminalDataChangedDelegate<object> _dataChanged;
+
         public event TerminalDataChangedDelegate<object> DataChanged
         {
             add

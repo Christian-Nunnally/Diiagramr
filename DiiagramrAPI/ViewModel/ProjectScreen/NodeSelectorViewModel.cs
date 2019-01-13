@@ -38,6 +38,7 @@ namespace DiiagramrAPI.ViewModel
         public bool Visible
         {
             get => _visible;
+
             set
             {
                 _visible = value;
@@ -140,7 +141,6 @@ namespace DiiagramrAPI.ViewModel
             if (!library.NodesLoaded)
             {
                 library.NodesLoaded = true;
-
             }
             ShowLibrary(library);
         }

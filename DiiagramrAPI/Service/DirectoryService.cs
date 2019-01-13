@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using DiiagramrAPI.Service.Interfaces;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Security.AccessControl;
-using DiiagramrAPI.Service.Interfaces;
 
 namespace DiiagramrAPI.Service
 {
@@ -76,8 +76,14 @@ namespace DiiagramrAPI.Service
 
         public void Delete(string path, bool recursive)
         {
-            if (path.Contains('.')) File.Delete(path);
-            else Directory.Delete(path, recursive);
+            if (path.Contains('.'))
+            {
+                File.Delete(path);
+            }
+            else
+            {
+                Directory.Delete(path, recursive);
+            }
         }
 
         public void ExtractToDirectory(string from, string to)
@@ -94,5 +100,5 @@ namespace DiiagramrAPI.Service
         {
             return File.ReadAllText(path);
         }
-    } 
+    }
 }

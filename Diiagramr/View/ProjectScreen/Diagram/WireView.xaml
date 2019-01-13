@@ -1,32 +1,31 @@
 ﻿<UserControl x:Class="Diiagramr.View.Diagram.WireView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:s="https://github.com/canton7/Stylet"
              xmlns:diagram="clr-namespace:Diiagramr.View.Diagram"
              xmlns:diagram1="clr-namespace:DiiagramrAPI.ViewModel.Diagram;assembly=DiiagramrAPI"
-             mc:Ignorable="d" 
+             mc:Ignorable="d"
              d:DataContext="{d:DesignInstance diagram1:WireViewModel}">
     <UserControl.Resources>
-        <diagram:PointsToPathConverter x:Key="PointsToPathConverter"/>
+        <diagram:PointsToPathConverter x:Key="PointsToPathConverter" />
     </UserControl.Resources>
-    
+
     <Path Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
               StrokeThickness="4"
-              StrokeLineJoin="Miter" 
+              StrokeLineJoin="Miter"
               StrokeMiterLimit="1"
               MouseDown="{s:Action WireMouseDown}">
         <Path.Style>
             <Style TargetType="{x:Type Path}">
-                <Setter Property="Stroke" Value="{Binding LineColorBrush}"/>
+                <Setter Property="Stroke" Value="{Binding LineColorBrush}" />
                 <Style.Triggers>
                     <Trigger Property="IsMouseOver" Value="True">
-                        <Setter Property="Stroke" Value="#883333"/>
+                        <Setter Property="Stroke" Value="#883333" />
                     </Trigger>
                 </Style.Triggers>
             </Style>
         </Path.Style>
     </Path>
 </UserControl>
-

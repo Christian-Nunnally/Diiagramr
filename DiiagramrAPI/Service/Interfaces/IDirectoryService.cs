@@ -12,6 +12,7 @@ namespace DiiagramrAPI.Service.Interfaces
         IEnumerable<string> GetDirectories(string path);
 
         IEnumerable<string> GetFiles(string path, string searchPattern);
+
         IEnumerable<string> GetFiles(string path, string searchPattern, SearchOption searchOption);
 
         void Move(string fromPath, string toPath);

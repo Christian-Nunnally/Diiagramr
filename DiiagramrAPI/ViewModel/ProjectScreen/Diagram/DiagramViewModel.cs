@@ -262,8 +262,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             InsertingNodeViewModel = null;
         }
 
-        #region View Event Handlers
-
         public void MouseEntered(object sender, MouseEventArgs e)
         {
             var nodeViewModel = UnpackNodeViewModelFromSender(sender);
@@ -443,7 +441,5 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             var contentPresenter = control.DataContext as ContentPresenter;
             return (contentPresenter?.Content ?? control.DataContext) as PluginNode;
         }
-
-        #endregion
     }
 }

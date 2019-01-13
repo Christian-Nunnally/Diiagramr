@@ -26,6 +26,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public static ColorTheme ColorTheme
         {
             get => _colorTheme;
+
             set
             {
                 _colorTheme = value;
@@ -78,6 +79,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public virtual bool IsSelected
         {
             get => _isSelected;
+
             set
             {
                 _isSelected = value;
@@ -150,6 +152,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public virtual TerminalModel TerminalModel { get; }
 
         public Action<object> DataChanged;
+
         public event Action<TerminalViewModel, bool> WiringModeChanged;
 
         private bool _isSelected;
@@ -166,6 +169,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public virtual object Data
         {
             get => _data;
+
             set
             {
                 _data = value;
@@ -219,12 +223,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 case Direction.North:
                     TerminalRotation = 0;
                     break;
+
                 case Direction.East:
                     TerminalRotation = 90;
                     break;
+
                 case Direction.South:
                     TerminalRotation = 180;
                     break;
+
                 default:
                     TerminalRotation = 270;
                     break;
@@ -371,13 +378,12 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
             return terminalViewModel;
-
-
         }
 
         public Adorner Adorner
         {
             get => _adorner;
+
             set
             {
                 if (value == null && _adorner != null)

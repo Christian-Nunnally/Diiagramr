@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -59,7 +58,7 @@ namespace DiiagramrAPI.Service
             {
                 return;
             }
-            foreach(var source in Sources)
+            foreach (var source in Sources)
             {
                 await LoadSourceAsync(source);
             }
@@ -202,8 +201,6 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        #region Static Helper Methods
-
         private static NodeLibrary CreateLibraryFromPath(string libraryPath)
         {
             var splitPath = libraryPath.Split('/');
@@ -222,7 +219,5 @@ namespace DiiagramrAPI.Service
             var xmlElement = XElement.Parse(packagesXml);
             return xmlElement.Descendants(searchString).Select(descendant => descendant.LastAttribute.Value).ToList();
         }
-
-        #endregion
     }
 }

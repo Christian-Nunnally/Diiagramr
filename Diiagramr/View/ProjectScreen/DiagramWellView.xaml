@@ -59,7 +59,6 @@
                     s:View.Model="{Binding}"
                     ClipToBounds="True"
                     IsTabStop="False" />
-
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
