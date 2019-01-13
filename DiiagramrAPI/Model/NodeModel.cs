@@ -12,10 +12,15 @@ namespace DiiagramrAPI.Model
         [DataMember]
         public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
-        private NodeModel()
-        {
-            Terminals = new List<TerminalModel>();
-        }
+        private double _height;
+
+        private PluginNode _nodeViewModel;
+
+        private double _width;
+
+        private double _x;
+
+        private double _y;
 
         public NodeModel(string nodeTypeFullName)
         {
@@ -30,80 +35,23 @@ namespace DiiagramrAPI.Model
             Terminals = new List<TerminalModel>();
         }
 
-        /// <summary>
-        ///     Notifies listeners when the sematics of this node have changed.
-        /// </summary>
-        public virtual event Action SemanticsChanged;
+        private NodeModel()
+        {
+            Terminals = new List<TerminalModel>();
+        }
 
         /// <summary>
         ///     Notifies listeners when the appearance of this node have changed.
         /// </summary>
         public virtual event Action PresentationChanged;
 
-        [DataMember]
-        public List<TerminalModel> Terminals { get; set; }
+        /// <summary>
+        ///     Notifies listeners when the sematics of this node have changed.
+        /// </summary>
+        public virtual event Action SemanticsChanged;
 
         [DataMember]
         public virtual NodeLibrary Dependency { get; set; }
-
-        private double _x;
-
-        [DataMember]
-        public virtual double X
-        {
-            get => _x;
-
-            set
-            {
-                if (Math.Abs(_x - value) < 0.001)
-                {
-                    return;
-                }
-
-                _x = value;
-                PresentationChanged?.Invoke();
-            }
-        }
-
-        private double _y;
-
-        [DataMember]
-        public virtual double Y
-        {
-            get => _y;
-
-            set
-            {
-                if (Math.Abs(_y - value) < 0.001)
-                {
-                    return;
-                }
-
-                _y = value;
-                PresentationChanged?.Invoke();
-            }
-        }
-
-        private double _width;
-
-        [DataMember]
-        public virtual double Width
-        {
-            get => _width;
-
-            set
-            {
-                if (Math.Abs(_width - value) < 0.001)
-                {
-                    return;
-                }
-
-                _width = value;
-                PresentationChanged?.Invoke();
-            }
-        }
-
-        private double _height;
 
         [DataMember]
         public virtual double Height
@@ -122,8 +70,6 @@ namespace DiiagramrAPI.Model
             }
         }
 
-        private PluginNode _nodeViewModel;
-
         public virtual PluginNode NodeViewModel
         {
             get => _nodeViewModel;
@@ -136,14 +82,56 @@ namespace DiiagramrAPI.Model
             }
         }
 
-        protected override void OnModelPropertyChanged(string propertyName = null)
+        [DataMember]
+        public List<TerminalModel> Terminals { get; set; }
+
+        [DataMember]
+        public virtual double Width
         {
-            base.OnModelPropertyChanged(propertyName);
-            if (nameof(Width) == propertyName
-                    || nameof(Height) == propertyName
-                    || nameof(X) == propertyName
-                    || nameof(Y) == propertyName)
+            get => _width;
+
+            set
             {
+                if (Math.Abs(_width - value) < 0.001)
+                {
+                    return;
+                }
+
+                _width = value;
+                PresentationChanged?.Invoke();
+            }
+        }
+
+        [DataMember]
+        public virtual double X
+        {
+            get => _x;
+
+            set
+            {
+                if (Math.Abs(_x - value) < 0.001)
+                {
+                    return;
+                }
+
+                _x = value;
+                PresentationChanged?.Invoke();
+            }
+        }
+
+        [DataMember]
+        public virtual double Y
+        {
+            get => _y;
+
+            set
+            {
+                if (Math.Abs(_y - value) < 0.001)
+                {
+                    return;
+                }
+
+                _y = value;
                 PresentationChanged?.Invoke();
             }
         }
@@ -156,9 +144,9 @@ namespace DiiagramrAPI.Model
             terminal.AddToNode(this);
         }
 
-        public virtual void SetTerminalsPropertyChanged()
+        public virtual void DisableTerminals()
         {
-            Terminals.ForEach(t => PropertyChanged += t.NodePropertyChanged);
+            Terminals.ForEach(t => t.DisableWire());
         }
 
         public virtual void EnableTerminals()
@@ -166,14 +154,47 @@ namespace DiiagramrAPI.Model
             Terminals.ForEach(t => t.EnableWire());
         }
 
+        public virtual object GetVariable(string name)
+        {
+            if (!PersistedVariables.ContainsKey(name))
+            {
+                return null;
+            }
+
+            return PersistedVariables[name];
+        }
+
+        public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
+        {
+            if (!PersistedVariables.ContainsKey(info.Name))
+            {
+                SetVariable(info.Name, info.GetValue(NodeViewModel));
+            }
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
+            Terminals.ForEach(t => t.SemanticsChanged += TerminalSematicsChanged);
+        }
+
+        public virtual void RemoveTerminal(TerminalModel terminal)
+        {
+            terminal.DisconnectWires();
+            terminal.SemanticsChanged -= TerminalSematicsChanged;
+            PropertyChanged -= terminal.NodePropertyChanged;
+            Terminals.Remove(terminal);
+            TerminalSematicsChanged();
+        }
+
         public virtual void ResetTerminals()
         {
             Terminals.ForEach(t => t.ResetWire());
         }
 
-        public virtual void DisableTerminals()
+        public virtual void SetTerminalsPropertyChanged()
         {
-            Terminals.ForEach(t => t.DisableWire());
+            Terminals.ForEach(t => PropertyChanged += t.NodePropertyChanged);
         }
 
         public virtual void SetVariable(string name, object value)
@@ -190,42 +211,21 @@ namespace DiiagramrAPI.Model
             SemanticsChanged?.Invoke();
         }
 
-        public virtual object GetVariable(string name)
+        protected override void OnModelPropertyChanged(string propertyName = null)
         {
-            if (!PersistedVariables.ContainsKey(name))
+            base.OnModelPropertyChanged(propertyName);
+            if (nameof(Width) == propertyName
+                    || nameof(Height) == propertyName
+                    || nameof(X) == propertyName
+                    || nameof(Y) == propertyName)
             {
-                return null;
+                PresentationChanged?.Invoke();
             }
-
-            return PersistedVariables[name];
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            Terminals.ForEach(t => t.SemanticsChanged += TerminalSematicsChanged);
         }
 
         private void TerminalSematicsChanged()
         {
             SemanticsChanged?.Invoke();
-        }
-
-        public virtual void RemoveTerminal(TerminalModel terminal)
-        {
-            terminal.DisconnectWires();
-            terminal.SemanticsChanged -= TerminalSematicsChanged;
-            PropertyChanged -= terminal.NodePropertyChanged;
-            Terminals.Remove(terminal);
-            TerminalSematicsChanged();
-        }
-
-        public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
-        {
-            if (!PersistedVariables.ContainsKey(info.Name))
-            {
-                SetVariable(info.Name, info.GetValue(NodeViewModel));
-            }
         }
     }
 }
