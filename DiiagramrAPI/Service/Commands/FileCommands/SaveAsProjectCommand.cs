@@ -4,8 +4,8 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
 {
     public class SaveAsProjectCommand : DiiagramrCommand
     {
-        public override string Parent => "File";
         public override string Name => "Save As...";
+        public override string Parent => "File";
         public override float Weight => .4f;
 
         public override void Execute(ShellViewModel shell)

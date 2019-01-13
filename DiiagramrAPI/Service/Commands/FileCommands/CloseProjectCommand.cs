@@ -7,13 +7,13 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
     {
         private readonly StartScreenViewModel _startScreenViewModel;
 
-        public override string Parent => "File";
-        public override string Name => "Close";
-
         public CloseProjectCommand(Func<StartScreenViewModel> startScreenViewModelFactory)
         {
             _startScreenViewModel = startScreenViewModelFactory.Invoke();
         }
+
+        public override string Name => "Close";
+        public override string Parent => "File";
 
         public override void Execute(ShellViewModel shell)
         {

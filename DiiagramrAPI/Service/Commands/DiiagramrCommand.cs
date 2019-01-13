@@ -5,8 +5,8 @@ namespace DiiagramrAPI.Service.Commands
 {
     public abstract class DiiagramrCommand : IDiiagramrCommand
     {
-        public virtual string Parent => null;
         public abstract string Name { get; }
+        public virtual string Parent => null;
         public IList<IDiiagramrCommand> SubCommandItems { get; set; } = new List<IDiiagramrCommand>();
         public virtual float Weight => 0f;
 

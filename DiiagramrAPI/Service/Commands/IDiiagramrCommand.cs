@@ -6,14 +6,13 @@ namespace DiiagramrAPI.Service.Commands
 {
     public interface IDiiagramrCommand : IDiiagramrService
     {
-        IList<IDiiagramrCommand> SubCommandItems { get; set; }
-
-        string Parent { get; }
         string Name { get; }
+        string Parent { get; }
+        IList<IDiiagramrCommand> SubCommandItems { get; set; }
         float Weight { get; }
 
-        void Execute(ShellViewModel shell);
-
         bool CanExecute(ShellViewModel shell);
+
+        void Execute(ShellViewModel shell);
     }
 }

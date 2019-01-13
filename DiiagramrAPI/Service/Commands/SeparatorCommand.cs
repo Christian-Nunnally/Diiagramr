@@ -2,15 +2,6 @@
 
 namespace DiiagramrAPI.Service.Commands
 {
-    public abstract class SeparatorCommand : DiiagramrCommand
-    {
-        public override string Name => "";
-
-        public override void Execute(ShellViewModel shell)
-        {
-        }
-    }
-
     public class FileSeparatorCommand1 : SeparatorCommand
     {
         public override string Parent => "File";
@@ -21,5 +12,14 @@ namespace DiiagramrAPI.Service.Commands
     {
         public override string Parent => "File";
         public override float Weight => 0.3f;
+    }
+
+    public abstract class SeparatorCommand : DiiagramrCommand
+    {
+        public override string Name => "";
+
+        public override void Execute(ShellViewModel shell)
+        {
+        }
     }
 }
