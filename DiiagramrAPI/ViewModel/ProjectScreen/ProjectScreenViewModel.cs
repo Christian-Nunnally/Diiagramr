@@ -7,8 +7,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
     public class ProjectScreenViewModel : Screen
     {
         private readonly IProjectManager _projectManager;
-        public ProjectExplorerViewModel ProjectExplorerViewModel { get; set; }
-        public DiagramWellViewModel DiagramWellViewModel { get; set; }
 
         public ProjectScreenViewModel(
             Func<ProjectExplorerViewModel> projectExplorerViewModelFactory,
@@ -20,5 +18,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
         }
+
+        public DiagramWellViewModel DiagramWellViewModel { get; set; }
+        public ProjectExplorerViewModel ProjectExplorerViewModel { get; set; }
     }
 }

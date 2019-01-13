@@ -22,35 +22,12 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
 
         public ObservableCollection<DiagramModel> CurrentDiagrams { get; private set; }
 
-        private void ProjectManagerOnCurrentProjectChanged()
+        public void CloseActiveDiagram()
         {
-            if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
+            if (ActiveItem != null)
             {
-                SetCurrentDiagrams(_projectManager.CurrentDiagrams);
+                ActiveItem.Diagram.IsOpen = false;
             }
-        }
-
-        private void SetCurrentDiagrams(ObservableCollection<DiagramModel> diagrams)
-        {
-            RemoveAllOldDiagrams();
-            CurrentDiagrams = diagrams;
-            AddAllNewDiagrams();
-        }
-
-        private void RemoveAllOldDiagrams()
-        {
-            if (CurrentDiagrams == null)
-            {
-                return;
-            }
-
-            foreach (var diagram in CurrentDiagrams)
-            {
-                diagram.IsOpen = false;
-                diagram.PropertyChanged -= DiagramOnPropertyChanged;
-            }
-
-            CurrentDiagrams.CollectionChanged -= CurrentDiagramsOnCollectionChanged;
         }
 
         private void AddAllNewDiagrams()
@@ -61,6 +38,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
             }
 
             CurrentDiagrams.CollectionChanged += CurrentDiagramsOnCollectionChanged;
+        }
+
+        private void CloseDiagram(DiagramModel diagram)
+        {
+            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Diagram == diagram);
+            if (diagramViewModel != null)
+            {
+                CloseItem(diagramViewModel);
+            }
         }
 
         private void CurrentDiagramsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -99,12 +85,22 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
             }
         }
 
-        private void CloseDiagram(DiagramModel diagram)
+        private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Diagram == diagram);
-            if (diagramViewModel != null)
+            var diagramViewModelSender = (DiagramViewModel)sender;
+            if (e.PropertyName.Equals(nameof(DiagramViewModel.Name)))
             {
-                CloseItem(diagramViewModel);
+                var oldActiveItem = ActiveItem;
+                ActiveItem = diagramViewModelSender;
+                if (diagramViewModelSender.Name.Equals(""))
+                {
+                    CloseActiveDiagram();
+                    return;
+                }
+                if (oldActiveItem != diagramViewModelSender)
+                {
+                    ActiveItem = oldActiveItem;
+                }
             }
         }
 
@@ -127,31 +123,35 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
             ActiveItem = diagramViewModel;
         }
 
-        private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void ProjectManagerOnCurrentProjectChanged()
         {
-            var diagramViewModelSender = (DiagramViewModel)sender;
-            if (e.PropertyName.Equals(nameof(DiagramViewModel.Name)))
+            if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
-                var oldActiveItem = ActiveItem;
-                ActiveItem = diagramViewModelSender;
-                if (diagramViewModelSender.Name.Equals(""))
-                {
-                    CloseActiveDiagram();
-                    return;
-                }
-                if (oldActiveItem != diagramViewModelSender)
-                {
-                    ActiveItem = oldActiveItem;
-                }
+                SetCurrentDiagrams(_projectManager.CurrentDiagrams);
             }
         }
 
-        public void CloseActiveDiagram()
+        private void RemoveAllOldDiagrams()
         {
-            if (ActiveItem != null)
+            if (CurrentDiagrams == null)
             {
-                ActiveItem.Diagram.IsOpen = false;
+                return;
             }
+
+            foreach (var diagram in CurrentDiagrams)
+            {
+                diagram.IsOpen = false;
+                diagram.PropertyChanged -= DiagramOnPropertyChanged;
+            }
+
+            CurrentDiagrams.CollectionChanged -= CurrentDiagramsOnCollectionChanged;
+        }
+
+        private void SetCurrentDiagrams(ObservableCollection<DiagramModel> diagrams)
+        {
+            RemoveAllOldDiagrams();
+            CurrentDiagrams = diagrams;
+            AddAllNewDiagrams();
         }
     }
 }

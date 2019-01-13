@@ -12,11 +12,10 @@ namespace DiiagramrAPI.ViewModel
         }
 
         public ILibraryManager LibraryManager { get; }
+        public override int MaxHeight => 400;
+        public override int MaxWidth => 400;
         public string SelectedSource { get; set; }
         public string SourceTextBoxText { get; set; }
-
-        public override int MaxWidth => 400;
-        public override int MaxHeight => 400;
         public override string Title => "Library Source Manager";
 
         public void AddSource()

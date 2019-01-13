@@ -17,9 +17,38 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.ViewModel
 {
+    [AddINotifyPropertyChangedInterface]
+    public class Library
+    {
+        public Library(string name)
+        {
+            Name = name;
+            Nodes = new List<PluginNode>();
+        }
+
+        public Brush BackgroundBrush { get; private set; }
+        public string Name { get; }
+        public virtual List<PluginNode> Nodes { get; }
+        public bool NodesLoaded { get; set; }
+
+        public virtual void Select()
+        {
+            BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+        }
+
+        public virtual void Unselect()
+        {
+            BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+        }
+    }
+
     public class NodeSelectorViewModel : Screen
     {
         private IProvideNodes _nodeProvider;
+
+        private bool _visible;
+
+        private bool nodesAdded = false;
 
         public NodeSelectorViewModel(Func<IProvideNodes> nodeProvider)
         {
@@ -30,10 +59,15 @@ namespace DiiagramrAPI.ViewModel
         public event Action<PluginNode> NodeSelected;
 
         public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
-        public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
         public BindableCollection<Library> LibrariesList { get; set; } = new BindableCollection<Library>();
-
         public PluginNode MousedOverNode { get; set; }
+        public bool NodePreviewVisible => MousedOverNode != null;
+        public double PreviewNodePositionX { get; set; }
+        public double PreviewNodePositionY { get; set; }
+        public double PreviewNodeScaleX { get; set; }
+        public double PreviewNodeScaleY { get; set; }
+        public double RightPosition { get; set; }
+        public double TopPosition { get; set; }
 
         public bool Visible
         {
@@ -49,18 +83,7 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
-        public bool NodePreviewVisible => MousedOverNode != null;
-
-        public double TopPosition { get; set; }
-        public double RightPosition { get; set; }
-
-        public double PreviewNodeScaleX { get; set; }
-        public double PreviewNodeScaleY { get; set; }
-        public double PreviewNodePositionX { get; set; }
-        public double PreviewNodePositionY { get; set; }
-
-        private bool nodesAdded = false;
-        private bool _visible;
+        public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
 
         public void AddNodes()
         {
@@ -103,31 +126,10 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
-        private bool IsHiddenFromSelector(PluginNode nodeViewModel)
-        {
-            return nodeViewModel.GetType().IsDefined(typeof(HideFromNodeSelector), false);
-        }
-
-        private Library GetOrCreateLibrary(string libraryName)
-        {
-            if (LibrariesList.All(l => l.Name != libraryName))
-            {
-                LibrariesList.Insert(0, new Library(libraryName));
-            }
-
-            return LibrariesList.First(l => l.Name == libraryName);
-        }
-
         public void BackgroundMouseDown()
         {
             VisibleNodesList.Clear();
             MousedOverNode = null;
-            Visible = false;
-        }
-
-        public void SelectNode()
-        {
-            NodeSelected?.Invoke(MousedOverNode);
             Visible = false;
         }
 
@@ -145,6 +147,13 @@ namespace DiiagramrAPI.ViewModel
             ShowLibrary(library);
         }
 
+        public void MouseLeftSelector()
+        {
+            LibrariesList.ForEach(l => l.Unselect());
+            VisibleNodesList.Clear();
+            MousedOverNode = null;
+        }
+
         public void NodeMouseEnterHandler(object sender, MouseEventArgs e)
         {
             if (!(((Border)sender).DataContext is PluginNode node))
@@ -155,6 +164,12 @@ namespace DiiagramrAPI.ViewModel
             PreviewNode(node);
         }
 
+        public void SelectNode()
+        {
+            NodeSelected?.Invoke(MousedOverNode);
+            Visible = false;
+        }
+
         public void ShowLibrary(Library library)
         {
             VisibleNodesList.Clear();
@@ -162,6 +177,26 @@ namespace DiiagramrAPI.ViewModel
             LibrariesList.ForEach(l => l.Unselect());
             library.Select();
             MousedOverNode = null;
+        }
+
+        private Library GetOrCreateLibrary(string libraryName)
+        {
+            if (LibrariesList.All(l => l.Name != libraryName))
+            {
+                LibrariesList.Insert(0, new Library(libraryName));
+            }
+
+            return LibrariesList.First(l => l.Name == libraryName);
+        }
+
+        private bool IsHiddenFromSelector(PluginNode nodeViewModel)
+        {
+            return nodeViewModel.GetType().IsDefined(typeof(HideFromNodeSelector), false);
+        }
+
+        private void NodesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            AddNodes();
         }
 
         private void PreviewNode(PluginNode node)
@@ -183,43 +218,6 @@ namespace DiiagramrAPI.ViewModel
 
             PreviewNodePositionX = (workingWidth - newWidth) / 2.0;
             PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
-        }
-
-        public void MouseLeftSelector()
-        {
-            LibrariesList.ForEach(l => l.Unselect());
-            VisibleNodesList.Clear();
-            MousedOverNode = null;
-        }
-
-        private void NodesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            AddNodes();
-        }
-    }
-
-    [AddINotifyPropertyChangedInterface]
-    public class Library
-    {
-        public Library(string name)
-        {
-            Name = name;
-            Nodes = new List<PluginNode>();
-        }
-
-        public virtual List<PluginNode> Nodes { get; }
-        public string Name { get; }
-        public Brush BackgroundBrush { get; private set; }
-        public bool NodesLoaded { get; set; }
-
-        public virtual void Select()
-        {
-            BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-        }
-
-        public virtual void Unselect()
-        {
-            BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         }
     }
 }
