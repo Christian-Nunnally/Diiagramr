@@ -202,11 +202,11 @@ namespace DiiagramrAPI.PluginNodeApi
 
         public void UnselectTerminals()
         {
-            TerminalViewModels.ForEach(terminal =>
+            foreach (var terminal in TerminalViewModels)
             {
                 terminal.IsSelected = false;
                 terminal.HighlightVisible = false;
-            });
+            }
         }
 
         protected override void OnPropertyChanged(string propertyName)
