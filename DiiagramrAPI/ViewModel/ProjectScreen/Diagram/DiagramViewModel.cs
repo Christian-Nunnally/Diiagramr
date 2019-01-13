@@ -74,6 +74,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public bool IsSnapGridVisible => InsertingNodeViewModel != null || NodeBeingDragged;
         public bool NodeBeingDragged { get; set; }
+        public bool AreInstructionsVisible => !NodeViewModels.Any();
         public Rect BoundingBox { get; set; }
         public Rect DefaultBoundingBox { get; } = new Rect(100, 100, 800, 600);
         public DiagramControlViewModel DiagramControlViewModel { get; }
@@ -133,6 +134,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             AddWiresForNode(viewModel);
             viewModel.Initialize();
             UpdateDiagramBoundingBox();
+            NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }
 
         private void NodeDraggingStarted()
@@ -226,6 +228,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
             UpdateDiagramBoundingBox();
+            NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }
 
         private void AddWireViewModel(WireModel wire)
@@ -247,11 +250,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
+            nodeToInsert.X = 400;
+            nodeToInsert.Y = 400;
             AddNode(nodeToInsert);
             InsertingNodeViewModel = nodeToInsert;
-            InsertingNodeViewModel.X = 400;
-            InsertingNodeViewModel.Y = 400;
-            UpdateDiagramBoundingBox();
         }
 
         private void CancelInsertingNode()

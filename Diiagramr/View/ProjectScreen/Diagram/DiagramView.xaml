@@ -20,26 +20,7 @@
             <Setter Property="RadiusY" Value="3" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Trigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="Fill.Color"
-                                    To="LightBlue"
-                                    Duration="0:0:0.01" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.EnterActions>
-                    <Trigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <ColorAnimation
-                                    Storyboard.TargetProperty="Fill.Color"
-                                    To="Transparent"
-                                    Duration="0:0:0.06" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </Trigger.ExitActions>
+                    <Setter Property="Fill" Value="#264F78"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -120,8 +101,8 @@
         </Style>
 
         <Style x:Key="SelectionStyle" TargetType="Border">
-            <Setter Property="BorderBrush" Value="DodgerBlue" />
-            <Setter Property="CornerRadius" Value="1" />
+            <Setter Property="BorderBrush" Value="#3E8FD6" />
+            <Setter Property="CornerRadius" Value=".7" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
             <Setter Property="IsHitTestVisible" Value="False" />
@@ -130,8 +111,8 @@
         <Style x:Key="NodeBorderStyle" TargetType="Border">
             <Setter Property="Background" Value="White" />
             <Setter Property="CornerRadius" Value="1" />
-            <Setter Property="BorderBrush" Value="#555" />
-            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#E6E6E6" />
+            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
             <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeBorderThickness}" />
@@ -155,7 +136,7 @@
         <BooleanToVisibilityConverter x:Key="Btv" />
 
         <Style x:Key="NodeBorderExtenderStyle" TargetType="Rectangle">
-            <Setter Property="Fill" Value="#555" />
+            <Setter Property="Fill" Value="#E6E6E6" />
             <Setter Property="RadiusX" Value="2" />
             <Setter Property="RadiusY" Value="2" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
@@ -312,7 +293,7 @@
                                                 Style="{StaticResource SelectionStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
 
-                                            <Border
+                                            <!--<Border
                                                 Grid.Row="0"
                                                 Grid.Column="1"
                                                 MouseDown="{s:Action RemoveSelectedNodes}"
@@ -327,7 +308,7 @@
                                                     FontFamily="Verdana"
                                                     FontSize="7"
                                                     Foreground="#202020" />
-                                            </Border>
+                                            </Border>-->
 
                                             <!--<Border
                                                 Grid.Row="1"
@@ -360,6 +341,14 @@
             HorizontalAlignment="Right"
             VerticalAlignment="Top"
             s:View.Model="{Binding DiagramControlViewModel}" />-->
+
+        <Label Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}"
+               Content="Right Click to Insert a Node." 
+               Foreground="#A4A4A4" 
+               FontSize="11" 
+               HorizontalAlignment="Center" 
+               VerticalAlignment="Center" 
+               Padding="0"/>
 
         <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
     </Grid>
