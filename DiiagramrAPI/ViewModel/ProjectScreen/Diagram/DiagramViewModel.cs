@@ -83,6 +83,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public double PanY { get; set; }
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
         public double Zoom { get; set; }
+        public Point DraggingRectangleCorner { get; set; }
+        public Rect DraggingRectangle { get; set; }
 
         public void KeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -96,6 +98,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             UnselectNodes();
             UnselectTerminals();
+
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            {
+                DraggingRectangle = new Rect(p.X, p.Y, 100, 100);
+            }
         }
 
         public void LeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -194,11 +201,22 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             PreviewLeftMouseButtonDownOnBorder(node, controlKeyPressed, altKeyPressed);
         }
 
-        public void PreviewRightMouseButtonDown(Point point)
+        public void PreviewRightMouseButtonDown(Point point, Screen viewModelMouseIsOver)
         {
             if (InsertingNodeViewModel == null)
             {
-                ShowNodeSelector(point);
+                if (viewModelMouseIsOver is InputTerminalViewModel inputTerminalMouseIsOver)
+                {
+                    ShowNodeSelector(point, n => n.TerminalViewModels.Any(t => t is OutputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(inputTerminalMouseIsOver.TerminalModel.Type)));
+                }
+                else if (viewModelMouseIsOver is OutputTerminalViewModel outputTerminalMouseIsOver)
+                {
+                    ShowNodeSelector(point, n => n.TerminalViewModels.Any(t => t is InputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(outputTerminalMouseIsOver.TerminalModel.Type)));
+                }
+                else
+                {
+                    ShowNodeSelector(point, n => true);
+                }
             }
             else
             {
@@ -209,7 +227,12 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void PreviewRightMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
-            PreviewRightMouseButtonDown(relativeMousePosition);
+            Screen viewModelMouseIsOver = null;
+            if (Mouse.DirectlyOver is FrameworkElement elementMouseIsOver)
+            {
+                viewModelMouseIsOver = elementMouseIsOver.DataContext as Screen;
+            }
+            PreviewRightMouseButtonDown(relativeMousePosition, viewModelMouseIsOver);
         }
 
         public void RemoveSelectedNodes()
@@ -368,14 +391,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }
 
-        private void ShowNodeSelector(Point point)
+        private void ShowNodeSelector(Point point, Func<PluginNode, bool> filter)
         {
             var availableWidth = View != null ? View.RenderSize.Width : 0;
             var availableHeight = View != null ? View.RenderSize.Height : 0;
 
             NodeSelectorViewModel.RightPosition = point.X < availableWidth - NodeSelectorRightMargin ? point.X : availableWidth - NodeSelectorRightMargin;
             NodeSelectorViewModel.TopPosition = point.Y < availableHeight - NodeSelectorBottomMargin ? point.Y : availableHeight - NodeSelectorBottomMargin;
-            NodeSelectorViewModel.Visible = true;
+            NodeSelectorViewModel.Show(filter);
         }
 
         private void UnHighlightAllTerminals()

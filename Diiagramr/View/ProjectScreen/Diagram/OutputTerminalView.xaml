@@ -17,11 +17,13 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
-    <Grid RenderTransformOrigin="0.5, 0.5">
+    <Grid RenderTransformOrigin="0.5, 0.5"
+          FocusVisualStyle="{x:Null}">
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
         <Border
+            FocusVisualStyle="{x:Null}"
             AllowDrop="True"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
             Drop="{s:Action DropEventHandler}"
@@ -41,6 +43,7 @@
             </Border.Style>
         </Border>
         <Border
+            FocusVisualStyle="{x:Null}"
             Background="DeepSkyBlue"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
@@ -58,12 +61,14 @@
             Y1="5"
             Y2="7" />
         <Border
+            FocusVisualStyle="{x:Null}"
             BorderBrush="#101010"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
             IsHitTestVisible="False" />
         <Border
-            BorderBrush="DeepSkyBlue"
+            FocusVisualStyle="{x:Null}"
+            BorderBrush="#007ACC"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
             IsHitTestVisible="False"

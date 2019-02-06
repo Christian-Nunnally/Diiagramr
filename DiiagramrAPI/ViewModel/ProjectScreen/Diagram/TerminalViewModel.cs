@@ -68,11 +68,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             set
             {
-                if (value == null && _adorner != null)
+                if (value == null)
                 {
                     RemoveAllAdornersFromTerminal();
                 }
-                else if (value != null)
+                else
                 {
                     AdornerLayer.GetAdornerLayer(View).Add(value);
                 }
@@ -132,6 +132,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 }
 
                 SelectedTerminal = _isSelected ? this : null;
+                if (!_isSelected)
+                {
+                    Adorner = null;
+                }
             }
         }
 
@@ -255,7 +259,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
             {
-                Adorner = new TerminalDataProbeAdorner(View, this);
+                SetTerminalAdorner(new TerminalDataProbeAdorner(View, this));
             }
         }
 
@@ -276,10 +280,13 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             if (View != null)
             {
-                Adorner = new ToolTipAdorner(View, this);
-                View.Focusable = true;
-                View.IsEnabled = true;
-                View?.Focus();
+                if (!IsSelected)
+                {
+                    SetTerminalAdorner(new ToolTipAdorner(View, this));
+                    View.Focusable = true;
+                    View.IsEnabled = true;
+                    View?.Focus();
+                }
             }
             MouseWithin = true;
         }
@@ -287,7 +294,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public void MouseLeft(object sender, MouseEventArgs e)
         {
             MouseWithin = false;
-            Adorner = null;
+            if (!(Adorner is DirectEditTextBoxAdorner))
+            {
+                Adorner = null;
+            }
         }
 
         public void MouseMove(object sender, MouseEventArgs e)
@@ -349,12 +359,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         private void RemoveAllAdornersFromTerminal()
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(View);
-            Adorner[] toRemoveArray = adornerLayer.GetAdorners(View);
-            if (toRemoveArray != null)
+            if (adornerLayer != null)
             {
-                for (int x = 0; x < toRemoveArray.Length; x++)
+                Adorner[] toRemoveArray = adornerLayer.GetAdorners(View);
+                if (toRemoveArray != null)
                 {
-                    adornerLayer.Remove(toRemoveArray[x]);
+                    for (int x = 0; x < toRemoveArray.Length; x++)
+                    {
+                        adornerLayer.Remove(toRemoveArray[x]);
+                    }
                 }
             }
         }
@@ -425,6 +438,18 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                     ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
                     ActionsToTakeWhenTypeIsLoaded.Clear();
                 }
+            }
+        }
+
+        protected void SetTerminalAdorner(Adorner adorner)
+        {
+            if (adorner is DirectEditTextBoxAdorner)
+            {
+                Adorner = adorner;
+            }
+            else if (Adorner == null)
+            {
+                Adorner = adorner;
             }
         }
     }

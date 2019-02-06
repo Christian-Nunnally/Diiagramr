@@ -69,6 +69,14 @@ namespace DiiagramrAPI.CustomControls
                 return;
             }
 
+            if (Keyboard.IsKeyDown(Key.LeftCtrl)
+             || Keyboard.IsKeyDown(Key.RightCtrl)
+             || Keyboard.IsKeyDown(Key.LeftShift)
+             || Keyboard.IsKeyDown(Key.RightShift))
+            {
+                return;
+            }
+
             var tt = GetTranslateTransform(_child);
             _start = e.GetPosition(this);
             _origin = new Point(tt.X, tt.Y);

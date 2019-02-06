@@ -59,7 +59,8 @@ namespace DiiagramrAPI.ViewModel
         public event Action<PluginNode> NodeSelected;
 
         public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
-        public BindableCollection<Library> LibrariesList { get; set; } = new BindableCollection<Library>();
+        public List<Library> LibrariesList { get; set; } = new List<Library>();
+        public BindableCollection<Library> VisibleLibrariesList { get; set; } = new BindableCollection<Library>();
         public PluginNode MousedOverNode { get; set; }
         public bool NodePreviewVisible => MousedOverNode != null;
         public double PreviewNodePositionX { get; set; }
@@ -80,10 +81,24 @@ namespace DiiagramrAPI.ViewModel
                 {
                     AddNodes();
                 }
+                else
+                {
+                    Filter = x => true;
+                }
             }
         }
 
         public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
+
+        private Func<PluginNode, bool> Filter = x => true;
+
+        public void Show(Func<PluginNode, bool> filter)
+        {
+            Visible = true;
+            Filter = filter;
+            VisibleLibrariesList.Clear();
+            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
+        }
 
         public void AddNodes()
         {
@@ -173,8 +188,8 @@ namespace DiiagramrAPI.ViewModel
         public void ShowLibrary(Library library)
         {
             VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(library.Nodes);
-            LibrariesList.ForEach(l => l.Unselect());
+            VisibleNodesList.AddRange(library.Nodes.Where(Filter).OrderBy(n => n.Weight));
+            VisibleLibrariesList.ForEach(l => l.Unselect());
             library.Select();
             MousedOverNode = null;
         }

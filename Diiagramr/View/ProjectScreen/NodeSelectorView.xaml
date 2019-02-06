@@ -58,7 +58,7 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
 
-            <ItemsControl ItemsSource="{Binding LibrariesList}">
+            <ItemsControl ItemsSource="{Binding VisibleLibrariesList}">
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
                         <Setter Property="ContentTemplate">

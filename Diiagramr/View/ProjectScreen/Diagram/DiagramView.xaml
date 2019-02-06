@@ -86,8 +86,6 @@
             <Setter Property="Background" Value="IndianRed" />
             <Setter Property="CornerRadius" Value="3" />
             <Setter Property="Margin" Value="2,0,0,2" />
-            <!--            <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
-            <!--            <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
         </Style>
 
         <Style x:Key="NodeHelpButtonStyle" TargetType="Border">
@@ -109,9 +107,9 @@
         </Style>
 
         <Style x:Key="NodeBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="White" />
+            <Setter Property="Background" Value="#ffffff" />
             <Setter Property="CornerRadius" Value="1" />
-            <Setter Property="BorderBrush" Value="#E6E6E6" />
+            <Setter Property="BorderBrush" Value="#3E3E42" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
             <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
@@ -136,7 +134,7 @@
         <BooleanToVisibilityConverter x:Key="Btv" />
 
         <Style x:Key="NodeBorderExtenderStyle" TargetType="Rectangle">
-            <Setter Property="Fill" Value="#E6E6E6" />
+            <Setter Property="Fill" Value="#3E3E42" />
             <Setter Property="RadiusX" Value="2" />
             <Setter Property="RadiusY" Value="2" />
             <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
@@ -166,7 +164,7 @@
                             Canvas.Top="{Binding BoundingBox.Top}"
                             CornerRadius="5">
                         <Canvas
-                            Margin="13,13,0,0"
+                            Margin="12,12,0,0"
                             Background="{StaticResource DotFillBrush}"
                             Visibility="{Binding IsSnapGridVisible, Converter={StaticResource Btv}}" />
                     </Border>
@@ -334,6 +332,15 @@
                 </ItemsControl>
             </Grid>
         </customControls:ZoomBorder>
+
+        <Canvas>
+            <Rectangle 
+                Canvas.Left="{Binding DraggingRectangle.X, Mode=TwoWay}" 
+                Canvas.Top="{Binding DraggingRectangle.Y, Mode=TwoWay}" 
+                Width="{Binding DraggingRectangle.Width, Mode=TwoWay}"
+                Height="{Binding DraggingRectangle.Height, Mode=TwoWay}"
+                Fill="Red"/>
+        </Canvas>
 
         <!--<ContentControl
             Margin="2"

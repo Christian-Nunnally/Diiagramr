@@ -94,6 +94,7 @@
     <Compile Include="Service\Interfaces\IDiiagramrService.cs" />
     <Compile Include="Service\Interfaces\IKeyedDiiagramrService.cs" />
     <Compile Include="Service\Interfaces\IProvideTestImplementation.cs" />
+    <Compile Include="Service\DirectEditTextBoxAdorner.cs" />
     <Compile Include="Service\ToolTipAdorner.cs" />
     <Compile Include="Service\ColorTheme.cs" />
     <Compile Include="Service\DiagramCopier.cs" />

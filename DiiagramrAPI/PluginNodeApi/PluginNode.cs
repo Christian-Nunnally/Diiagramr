@@ -83,6 +83,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public IEnumerable<OutputTerminalViewModel> OutputTerminalViewModels =>
             TerminalViewModels.OfType<OutputTerminalViewModel>();
 
+        public virtual float Weight { get; set; }
         public virtual bool ResizeEnabled { get; set; }
         public virtual bool ResizerVisible => ResizeEnabled && IsSelected;
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }

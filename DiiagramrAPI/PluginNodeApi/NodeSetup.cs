@@ -61,6 +61,15 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         /// <summary>
+        ///     Sets the weight of the node in the node selector (where it gets inserted in the list).
+        /// </summary>
+        /// <param name="weight">Usually between 0 and 1, 1 being at the bottom of the list and 0 being at the top of the list.</param>
+        public void NodeWeight(float weight)
+        {
+            _nodeViewModel.Weight = weight;
+        }
+
+        /// <summary>
         ///     Sets the initial node geometry.
         /// </summary>
         /// <param name="width">The width of the node.</param>

@@ -138,7 +138,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
+            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0), null);
 
             Assert.IsNull(_diagramViewModel.InsertingNodeViewModel);
         }
@@ -153,7 +153,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
+            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0), null);
 
             Assert.AreEqual(0, _diagramViewModel.NodeViewModels.Count);
         }

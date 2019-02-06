@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Service;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Windows;
@@ -10,6 +11,8 @@ namespace DiiagramrAPI.ViewModel.Diagram
     public class InputTerminalViewModel : TerminalViewModel
     {
         private string _directEditTextBoxText = "0";
+
+        public TextBox DirectEditTextBox { get; set; }
 
         public InputTerminalViewModel(TerminalModel inputTerminal) : base(inputTerminal)
         {
@@ -112,9 +115,20 @@ namespace DiiagramrAPI.ViewModel.Diagram
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
-            if (propertyName.Equals(nameof(IsSelected)))
+            if (propertyName == nameof(IsSelected))
             {
                 OnPropertyChanged(nameof(IsDirectEditTextBoxVisible));
+            }
+            else if (propertyName == nameof(IsDirectEditTextBoxVisible))
+            {
+                if (IsDirectEditTextBoxVisible)
+                {
+                    SetTerminalAdorner(new DirectEditTextBoxAdorner(View, this));
+                }
+                else
+                {
+                    Adorner = null;
+                }
             }
         }
     }
