@@ -19,6 +19,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\WindowStyle.xaml" />
+                <ResourceDictionary Source="DiiagramrDarkTheme.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
@@ -27,7 +28,7 @@
     </Window.Resources>
     <Grid>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ItemsControl Height="22" VerticalAlignment="Top" DockPanel.Dock="Top" Background="#2D2D30" Foreground="White" ItemsSource="{Binding TopLevelMenuItems}">
+            <ItemsControl Height="22" VerticalAlignment="Top" DockPanel.Dock="Top" Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}" Foreground="White" ItemsSource="{Binding TopLevelMenuItems}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Label Content="{Binding Name}" MouseDown="{s:Action ExecuteCommandHandler}" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0">
