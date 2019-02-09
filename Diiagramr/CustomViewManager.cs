@@ -1,12 +1,14 @@
 using Diiagramr.View;
 using Diiagramr.View.Diagram;
 using Diiagramr.View.Diagram.CoreNode;
+using Diiagramr.View.IdDrop;
 using Diiagramr.View.ShellScreen;
 using Diiagramr.View.ShellScreen.ProjectScreen;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
+using DiiagramrAPI.ViewModel.IdDrop;
 using DiiagramrAPI.ViewModel.ProjectScreen;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
@@ -30,6 +32,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));
             _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindowViewModel), typeof(LibrarySourceManagerWindowView));
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
+            _viewModelToViewMapping.Add(typeof(IdDropStartScreenViewModel), typeof(IdDropStartScreenView));
             _viewModelToViewMapping.Add(typeof(ProjectExplorerViewModel), typeof(ProjectExplorerView));
             _viewModelToViewMapping.Add(typeof(NodeSelectorViewModel), typeof(NodeSelectorView));
             _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));

@@ -81,6 +81,8 @@
     <Compile Include="Service\Commands\FileCommands\SaveAsProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\NewProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\OpenProjectCommand.cs" />
+    <Compile Include="Service\Commands\StartupCommands\IdDropStartScreenCommand.cs" />
+    <Compile Include="Service\Commands\StartupCommands\DiiagramrStartScreenCommand.cs" />
     <Compile Include="Service\Commands\ToolCommands\ManageLibrariesCommand.cs" />
     <Compile Include="Service\DialogService.cs" />
     <Compile Include="Service\Commands\SeparatorCommand.cs" />
@@ -118,6 +120,7 @@
     <Compile Include="Service\WebResourceFetcher.cs" />
     <Compile Include="ViewModel\AbstractShellWindow.cs" />
     <Compile Include="ViewModel\ContextMenuViewModel.cs" />
+    <Compile Include="ViewModel\IdDrop\IdDropStartScreenViewModel.cs" />
     <Compile Include="ViewModel\LibrarySourceManagerWindowViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\DiagramWellViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\AddNodeViewModel.cs" />

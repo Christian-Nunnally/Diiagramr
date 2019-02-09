@@ -15,29 +15,29 @@ namespace DiiagramrAPI.ViewModel
 {
     public class ShellViewModel : Conductor<IScreen>.StackNavigation
     {
+        public const string StartCommandId = "start";
         public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
         private Dictionary<string, IDiiagramrCommand> _shellCommands = new Dictionary<string, IDiiagramrCommand>();
 
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
             Func<LibraryManagerWindowViewModel> libraryManagerWindowViewModelFactory,
-            Func<StartScreenViewModel> startScreenScreenViewModelFactory,
             Func<IProjectManager> projectManagerFactory,
             Func<IEnumerable<IDiiagramrCommand>> commandsFactory,
             Func<ContextMenuViewModel> contextMenuViewModelFactory)
         {
+            var commands = commandsFactory.Invoke().OrderBy(c => c.Weight);
             ContextMenuViewModel = contextMenuViewModelFactory.Invoke();
-            SetupMenuItems(commandsFactory.Invoke());
+            SetupCommands(commandsFactory.Invoke());
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
             LibraryManagerWindowViewModel = libraryManagerWindowViewModelFactory.Invoke();
-            StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
-            StartScreenViewModel.LoadCanceled += () => ShowScreen(StartScreenViewModel);
 
             ProjectManager = projectManagerFactory.Invoke();
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
             ShowScreen(ProjectScreenViewModel);
-            ShowScreen(StartScreenViewModel);
+
+            ExecuteCommand(StartCommandId);
         }
 
         public AbstractShellWindow ActiveWindow { get; set; }
@@ -48,7 +48,6 @@ namespace DiiagramrAPI.ViewModel
         public LibraryManagerWindowViewModel LibraryManagerWindowViewModel { get; set; }
         public IProjectManager ProjectManager { get; }
         public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
-        public StartScreenViewModel StartScreenViewModel { get; set; }
         public ObservableCollection<IDiiagramrCommand> TopLevelMenuItems { get; set; }
         public string WindowTitle { get; set; } = "Diiagramr";
 
@@ -139,7 +138,7 @@ namespace DiiagramrAPI.ViewModel
         {
             if (ProjectManager.CurrentProject == null)
             {
-                ShowScreen(StartScreenViewModel);
+                ExecuteCommand(StartCommandId);
             }
 
             CanSaveProject = ProjectManager.CurrentProject != null;
@@ -147,12 +146,34 @@ namespace DiiagramrAPI.ViewModel
             WindowTitle = "Diiagramr" + (ProjectManager.CurrentProject != null ? " - " + ProjectManager.CurrentProject.Name : "");
         }
 
-        private void SetupMenuItems(IEnumerable<IDiiagramrCommand> menuItems)
+        private void SetupCommands(IEnumerable<IDiiagramrCommand> commands)
         {
             // TODO: Consider making a "CommandHandler" class, that handles this, or make the commands construct themselves this way.
+            SetupMenuCommands(commands.Where(c => c.ShowInMenu));
+            foreach (var command in commands)
+            {
+                var commandPath = GenerateCommandPath(command);
+                if (!_shellCommands.ContainsKey(commandPath))
+                {
+                    _shellCommands.Add(commandPath, command);
+                }
+                else
+                {
+                    if (_shellCommands[commandPath].Weight < command.Weight)
+                    {
+                        _shellCommands[commandPath] = command;
+                    }
+                }
+            }
+
+            ContextMenuViewModel.ExecuteCommandHandler += ExecuteCommand;
+        }
+
+        private void SetupMenuCommands(IEnumerable<IDiiagramrCommand> commands)
+        {
             TopLevelMenuItems = new ObservableCollection<IDiiagramrCommand>();
-            var topLevelMenuItems = menuItems.Where(x => x.Parent == null);
-            var nonTopLevelMenuItems = menuItems.Where(x => x.Parent != null);
+            var topLevelMenuItems = commands.Where(x => x.Parent == null);
+            var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
             foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
             {
                 TopLevelMenuItems.Add(topLevelMenuItem);
@@ -161,16 +182,6 @@ namespace DiiagramrAPI.ViewModel
                     topLevelMenuItem.SubCommandItems.Add(subMenuItem);
                 }
             }
-            foreach (var command in menuItems)
-            {
-                var commandPath = GenerateCommandPath(command);
-                if (!_shellCommands.ContainsKey(commandPath))
-                {
-                    _shellCommands.Add(commandPath, command);
-                }
-            }
-
-            ContextMenuViewModel.ExecuteCommandHandler += ExecuteCommand;
         }
     }
 }
