@@ -1,15 +1,16 @@
 
 ![alt text](https://christiannunnally.visualstudio.com/_apis/public/build/definitions/dc817913-1f75-417f-b386-e5f6fb3c347f/3/badge)
  
-# Introduction 
-Diiagramr is an automation type Visual Programming Language (VPL) where wires transmit data changes between nodes. Originally designed for automating real time data processing in a highly configurable way to make experimentation easy, and to provide nodes with rich visual space to interact directly with the user.
-
-# Getting Started
-
+# Installation
 - Installation process
 1. Download setup.exe from: **https://diiagramr.blob.core.windows.net/diiagramrinstall/setup.exe**.
 2. run setup.exe to run click once installer.
 3. Diiagramr should be installed on your machine!
+
+# Introduction 
+Diiagramr is an automation type Visual Programming Language (VPL) where wires transmit data changes between nodes. Originally designed for automating real time data processing in a highly configurable way to make experimentation easy, and to provide nodes with rich visual space to interact directly with the user.
+
+# Getting Started
 
 - Downloading Libraries
 1. Run Diiagramr.
