@@ -1,15 +1,19 @@
 ﻿using DiiagramrAPI.ViewModel;
+using System.Windows;
 
 namespace DiiagramrAPI.Service.Commands.ToolCommands
 {
-    public class ToolsCommandGroup : DiiagramrCommand
+    public class ToolsCommandGroup : TopLevelToolBarCommand
     {
         public override string Name => "Tools";
         public override float Weight => 0.5f;
 
-        public override void Execute(ShellViewModel shell)
+        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
         {
-            shell.ShowContextMenu(SubCommandItems);
+            if (parameter is Point point)
+            {
+                shell.ShowContextMenu(SubCommandItems, new Point(point.X, point.Y + 21));
+            }
         }
     }
 }

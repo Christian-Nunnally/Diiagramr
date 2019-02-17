@@ -28,7 +28,7 @@ namespace DiiagramrAPI.Service.Interfaces
 
         IEnumerable<Type> GetSerializeableTypes();
 
-        void LoadProject(bool autoOpenDiagram = false);
+        void LoadProject(ProjectModel project, bool autoOpenDiagram = false);
 
         void SaveAsProject();
 

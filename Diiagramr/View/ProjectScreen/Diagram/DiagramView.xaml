@@ -121,17 +121,17 @@
                     </Style>
 
                     <VisualBrush
-            x:Key="DotFillBrush"
-            TileMode="Tile"
-            Viewbox="0,0,30,30"
-            ViewboxUnits="Absolute"
-            Viewport="0,0,30,30"
-            ViewportUnits="Absolute">
+                        x:Key="DotFillBrush"
+                        TileMode="Tile"
+                        Viewbox="0,0,30,30"
+                        ViewboxUnits="Absolute"
+                        Viewport="0,0,30,30"
+                        ViewportUnits="Absolute">
                         <VisualBrush.Visual>
                             <Ellipse
-                    Width="2"
-                    Height="2"
-                    Fill="#404040" />
+                                Width="2"
+                                Height="2"
+                                Fill="#404040" />
                         </VisualBrush.Visual>
                     </VisualBrush>
 
@@ -153,7 +153,7 @@
         <customControls:ZoomBorder
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
-            Background="#1E1E1E"
+            Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
             MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}"
             PanX="{Binding PanX, Mode=OneWayToSource}"
             PanY="{Binding PanY, Mode=OneWayToSource}"

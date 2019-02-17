@@ -7,13 +7,13 @@
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
     Title="{Binding WindowTitle}"
-    Width="1010"
-    Height="830"
+    Width="{Binding Width}"
+    Height="{Binding Height}"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
     SnapsToDevicePixels="True"
-    UseLayoutRounding="True"
     Style="{StaticResource CustomWindowStyle}"
+    UseLayoutRounding="True"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -28,10 +28,23 @@
     </Window.Resources>
     <Grid>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ItemsControl Height="22" VerticalAlignment="Top" DockPanel.Dock="Top" Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}" Foreground="White" ItemsSource="{Binding TopLevelMenuItems}">
+            <ItemsControl
+                Height="22"
+                VerticalAlignment="Top"
+                Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
+                DockPanel.Dock="Top"
+                Foreground="White"
+                ItemsSource="{Binding TopLevelMenuItems}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Label Content="{Binding Name}" MouseDown="{s:Action ExecuteCommandHandler}" Foreground="White" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0">
+                        <Label
+                            Padding="5,0"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            Content="{Binding Name}"
+                            Foreground="White"
+                            IsHitTestVisible="True"
+                            MouseDown="{s:Action ExecuteCommandHandler}">
                             <Label.Style>
                                 <Style TargetType="Label">
                                     <Style.Triggers>
@@ -46,7 +59,7 @@
                 </ItemsControl.ItemTemplate>
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal"></StackPanel>
+                        <StackPanel Orientation="Horizontal" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
             </ItemsControl>
@@ -54,18 +67,18 @@
                 <ContentControl s:View.Model="{Binding ActiveItem}" />
                 <Border MouseDown="{s:Action CloseWindow}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
                     <DockPanel
-                    MaxWidth="{Binding ActiveWindow.MaxWidth}"
-                    MaxHeight="{Binding ActiveWindow.MaxHeight}"
-                    Margin="100"
-                    Background="Transparent">
+                        MaxWidth="{Binding ActiveWindow.MaxWidth}"
+                        MaxHeight="{Binding ActiveWindow.MaxHeight}"
+                        Margin="100"
+                        Background="Transparent">
                         <Label
-                        Height="48"
-                        HorizontalContentAlignment="Center"
-                        VerticalContentAlignment="Top"
-                        Content="{Binding ActiveWindow.Title}"
-                        DockPanel.Dock="Top"
-                        FontSize="24"
-                        IsHitTestVisible="False" />
+                            Height="48"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Top"
+                            Content="{Binding ActiveWindow.Title}"
+                            DockPanel.Dock="Top"
+                            FontSize="24"
+                            IsHitTestVisible="False" />
                         <ContentControl s:View.Model="{Binding ActiveWindow}" />
                     </DockPanel>
                     <Border.Style>
@@ -82,7 +95,11 @@
             </Grid>
         </DockPanel>
         <Canvas>
-            <ContentControl s:View.Model="{Binding ContextMenuViewModel}" Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" Canvas.Left="{Binding ContextMenuViewModel.X}" Canvas.Top="{Binding ContextMenuViewModel.Y}" />
+            <ContentControl
+                Canvas.Left="{Binding ContextMenuViewModel.X}"
+                Canvas.Top="{Binding ContextMenuViewModel.Y}"
+                s:View.Model="{Binding ContextMenuViewModel}"
+                Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" />
         </Canvas>
     </Grid>
 </Window>

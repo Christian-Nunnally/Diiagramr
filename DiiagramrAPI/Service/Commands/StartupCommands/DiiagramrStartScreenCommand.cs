@@ -12,9 +12,9 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
             _startScreenViewModel = startScreenViewModelFactory.Invoke();
         }
 
-        public override string Name => ShellViewModel.StartCommandId;
+        public override string Name => ShellViewModel.StartCommandId + "DISABLED";
 
-        public override void Execute(ShellViewModel shell)
+        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
         {
             shell.ShowScreen(_startScreenViewModel);
             _startScreenViewModel.LoadCanceled += () => shell.ShowScreen(_startScreenViewModel);

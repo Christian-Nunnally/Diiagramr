@@ -26,7 +26,7 @@ namespace DiiagramrAPI.ViewModel
             Nodes = new List<PluginNode>();
         }
 
-        public Brush BackgroundBrush { get; private set; }
+        public Brush BackgroundBrush { get; private set; } = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         public string Name { get; }
         public virtual List<PluginNode> Nodes { get; }
         public bool NodesLoaded { get; set; }

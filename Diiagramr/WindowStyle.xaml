@@ -1,6 +1,18 @@
-﻿<ResourceDictionary x:Class="WpfApplication.WindowStyle"
-                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+﻿<ResourceDictionary
+    x:Class="WpfApplication.WindowStyle"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  This is needed because WPF hides the resize border when maximized, but I still want some padding around the window.  -->
+    <Style x:Key="InflatingBorderAroundChromeStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="0" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                <Setter Property="BorderThickness" Value="{Binding Source={x:Static SystemParameters.WindowResizeBorderThickness}}" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="WindowChromeButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="BorderThickness" Value="0" />
         <Setter Property="Width" Value="30" />
@@ -22,19 +34,20 @@
         </Setter>
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="#3F3F41"></Setter>
+                <Setter Property="Background" Value="#3F3F41" />
             </Trigger>
         </Style.Triggers>
     </Style>
     <Style x:Key="CustomWindowStyle" TargetType="{x:Type Window}">
         <Setter Property="WindowChrome.WindowChrome">
             <Setter.Value>
-                <WindowChrome CaptionHeight="28"
-                              CornerRadius="4"
-                              GlassFrameThickness="0"
-                              NonClientFrameEdges="None"
-                              ResizeBorderThickness="5"
-                              UseAeroCaptionButtons="False" />
+                <WindowChrome
+                    CaptionHeight="22"
+                    CornerRadius="5"
+                    GlassFrameThickness="0"
+                    NonClientFrameEdges="None"
+                    ResizeBorderThickness="5"
+                    UseAeroCaptionButtons="False" />
             </Setter.Value>
         </Setter>
         <Setter Property="BorderBrush" Value="#2D2D30" />
@@ -42,55 +55,53 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Window}">
-                    <Grid>
-                        <Border Background="{TemplateBinding Background}"
+                    <Border Style="{StaticResource InflatingBorderAroundChromeStyle}">
+                        <Grid>
+                            <Border
+                                Background="{TemplateBinding Background}"
                                 BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="5,24,5,5">
-                            <AdornerDecorator>
-                                <ContentPresenter />
-                            </AdornerDecorator>
-                        </Border>
+                                <AdornerDecorator>
+                                    <ContentPresenter />
+                                </AdornerDecorator>
+                            </Border>
 
-                        <DockPanel Height="30"
-                                   VerticalAlignment="Top"
-                                   LastChildFill="False"
-                                   Margin="5,0">
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="logo32x32_e3S_icon.ico" Margin="4,8"></Image>
-                                <TextBlock Margin="8,0,0,0"
-                                       VerticalAlignment="Center"
-                                       DockPanel.Dock="Left"
-                                       FontSize="12"
-                                       Foreground="#818183"
-                                       Text="{TemplateBinding Title}" />
-                            </StackPanel>
-                            <Button x:Name="btnClose"
-                                    Style="{StaticResource WindowChromeButtonStyle}"
-                                    Click="CloseClick">
-                                <Polygon Fill="White"
-                                         Points="0,0 1,0 4.5,4
-                                                 8,0 9,0 5,4.5
-                                                 9,9 8,9 4.5,5
-                                                 1,9 0,9 4,4.5" />
-                            </Button>
-                            <Button x:Name="btnRestore"
-                                    Style="{StaticResource WindowChromeButtonStyle}"
-                                    Click="MaximizeRestoreClick">
-                                <Polygon Fill="#b0b0b0"
-                                         Points="0,0 0,9
-                                                 9,9 9,0, 0,0
-                                                 1,2 1,8
-                                                 8,8 8,2 1,2" />
-                            </Button>
-                            <Button x:Name="btnMinimize"
-                                    Style="{StaticResource WindowChromeButtonStyle}"
-                                    Click="MinimizeClick">
-                                <Polygon Fill="#b0b0b0"
-                                         Points="0,7 9,7
-                                                 9,9 0,9" />
-                            </Button>
-                        </DockPanel>
-                    </Grid>
+                            <DockPanel
+                                Height="30"
+                                Margin="5,0"
+                                VerticalAlignment="Top"
+                                LastChildFill="False">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="4,8" Source="logo32x32_e3S_icon.ico" />
+                                    <TextBlock
+                                        Margin="8,0,0,0"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        FontSize="12"
+                                        Foreground="#818183"
+                                        Text="{TemplateBinding Title}" />
+                                </StackPanel>
+                                <Button
+                                    x:Name="btnClose"
+                                    Click="CloseClick"
+                                    Style="{StaticResource WindowChromeButtonStyle}">
+                                    <Polygon Fill="White" Points="0,0 1,0 4.5,4                                                  8,0 9,0 5,4.5                                                  9,9 8,9 4.5,5                                                  1,9 0,9 4,4.5" />
+                                </Button>
+                                <Button
+                                    x:Name="btnRestore"
+                                    Click="MaximizeRestoreClick"
+                                    Style="{StaticResource WindowChromeButtonStyle}">
+                                    <Polygon Fill="#b0b0b0" Points="0,0 0,9                                                  9,9 9,0, 0,0                                                  1,2 1,8                                                  8,8 8,2 1,2" />
+                                </Button>
+                                <Button
+                                    x:Name="btnMinimize"
+                                    Click="MinimizeClick"
+                                    Style="{StaticResource WindowChromeButtonStyle}">
+                                    <Polygon Fill="#b0b0b0" Points="0,7 9,7                                                  9,9 0,9" />
+                                </Button>
+                            </DockPanel>
+                        </Grid>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

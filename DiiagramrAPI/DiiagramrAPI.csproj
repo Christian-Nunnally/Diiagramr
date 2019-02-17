@@ -78,11 +78,20 @@
     <Compile Include="PluginNodeApi\PluginNodeSetting.cs" />
     <Compile Include="PluginNodeApi\Terminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Service\Commands\FileCommands\VisualDropCloseProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\SaveAsProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\NewProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\OpenProjectCommand.cs" />
-    <Compile Include="Service\Commands\StartupCommands\IdDropStartScreenCommand.cs" />
+    <Compile Include="Service\Commands\StartupCommands\VisualDropStartScreenCommand2.cs" />
+    <Compile Include="Service\Commands\StartupCommands\VisualDropStartScreenCommand.cs" />
     <Compile Include="Service\Commands\StartupCommands\DiiagramrStartScreenCommand.cs" />
+    <Compile Include="Service\Commands\TopLevelToolBarCommand.cs" />
+    <Compile Include="Service\Commands\ToolBarCommand.cs" />
     <Compile Include="Service\Commands\ToolCommands\ManageLibrariesCommand.cs" />
     <Compile Include="Service\DialogService.cs" />
     <Compile Include="Service\Commands\SeparatorCommand.cs" />
@@ -91,12 +100,13 @@
     <Compile Include="Service\Commands\DiiagramrCommand.cs" />
     <Compile Include="Service\Interfaces\IDialogService.cs" />
     <Compile Include="Service\Commands\ToolCommands\ToolsCommandGroup.cs" />
-    <Compile Include="Service\Commands\FileCommands\FileCommandGroup.cs" />
+    <Compile Include="Service\Commands\FileCommands\ProjectCommandGroup.cs" />
     <Compile Include="Service\Commands\IDiiagramrCommand.cs" />
     <Compile Include="Service\Interfaces\IDiiagramrService.cs" />
     <Compile Include="Service\Interfaces\IKeyedDiiagramrService.cs" />
     <Compile Include="Service\Interfaces\IProvideTestImplementation.cs" />
     <Compile Include="Service\DirectEditTextBoxAdorner.cs" />
+    <Compile Include="Service\Interfaces\IShownInShellReaction.cs" />
     <Compile Include="Service\ToolTipAdorner.cs" />
     <Compile Include="Service\ColorTheme.cs" />
     <Compile Include="Service\DiagramCopier.cs" />
@@ -120,7 +130,8 @@
     <Compile Include="Service\WebResourceFetcher.cs" />
     <Compile Include="ViewModel\AbstractShellWindow.cs" />
     <Compile Include="ViewModel\ContextMenuViewModel.cs" />
-    <Compile Include="ViewModel\IdDrop\IdDropStartScreenViewModel.cs" />
+    <Compile Include="ViewModel\VisualDrop\VisualDropStartScreenViewModel2.cs" />
+    <Compile Include="ViewModel\VisualDrop\VisualDropStartScreenViewModel.cs" />
     <Compile Include="ViewModel\LibrarySourceManagerWindowViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\DiagramWellViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\Diagram\CoreNode\AddNodeViewModel.cs" />
@@ -144,14 +155,18 @@
     <Compile Include="ViewModel\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

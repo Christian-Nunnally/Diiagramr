@@ -4,7 +4,9 @@
 
     <Color x:Key="DarkGray" >#2D2D30</Color>
     <Color x:Key="SelectionBlue" >#3E8FD6</Color>
+    <Color x:Key="DiiagramrBlack" >#101010</Color>
 
     <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="{StaticResource ResourceKey=DarkGray}"/>
     <SolidColorBrush x:Key="NodeSelectionStyleBrush" Color="{StaticResource ResourceKey=SelectionBlue}"/>
+    <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}"/>
 </ResourceDictionary>

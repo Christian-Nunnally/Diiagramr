@@ -51,7 +51,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         public void HandlePreviewMouseDoubleClick()
         {
-            ReferencingDiagramModel.IsOpen = true;
+            ReferencingDiagramModel.Open();
         }
 
         public override void Initialize()

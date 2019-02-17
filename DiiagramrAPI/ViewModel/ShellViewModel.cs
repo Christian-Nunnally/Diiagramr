@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Commands;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.ProjectScreen;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -18,6 +18,9 @@ namespace DiiagramrAPI.ViewModel
         public const string StartCommandId = "start";
         public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
         private Dictionary<string, IDiiagramrCommand> _shellCommands = new Dictionary<string, IDiiagramrCommand>();
+        private const double ShellRelativePositonYOffSet = -22;
+        private const double ShellRelativePositonXOffSet = -5;
+        private const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
@@ -48,20 +51,30 @@ namespace DiiagramrAPI.ViewModel
         public LibraryManagerWindowViewModel LibraryManagerWindowViewModel { get; set; }
         public IProjectManager ProjectManager { get; }
         public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
-        public ObservableCollection<IDiiagramrCommand> TopLevelMenuItems { get; set; }
+        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; set; }
         public string WindowTitle { get; set; } = "Diiagramr";
+        public double Width { get; set; } = 1010;
+        public double Height { get; set; } = 830;
 
         public void CloseWindow()
         {
-            ActiveWindow.OpenWindow -= OpenWindow;
-            ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
+            if (ActiveWindow != null)
+            {
+                ActiveWindow.OpenWindow -= OpenWindow;
+                ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
+            }
         }
 
         public void ExecuteCommand(IDiiagramrCommand command)
         {
+            ExecuteCommand(command, null);
+        }
+
+        public void ExecuteCommand(IDiiagramrCommand command, object parameter)
+        {
             if (command.CanExecute(this))
             {
-                command.Execute(this);
+                command.Execute(this, parameter);
             }
         }
 
@@ -78,7 +91,18 @@ namespace DiiagramrAPI.ViewModel
             var control = sender as Control;
             if (control?.DataContext is DiiagramrCommand command)
             {
-                ExecuteCommand(command);
+                var shellRelativePosition = control.TransformToAncestor(Application.Current.MainWindow);
+                var correctedRelativePosition = shellRelativePosition.Transform(new Point(ShellRelativePositonXOffSet, ShellRelativePositonYOffSet));
+
+                if (View is Window window)
+                {
+                    if (window.WindowState == WindowState.Maximized)
+                    {
+                        correctedRelativePosition = new Point(correctedRelativePosition.X + MaximizedWindowChromeRelativePositionAdjustment, correctedRelativePosition.Y + MaximizedWindowChromeRelativePositionAdjustment);
+                    }
+                }
+
+                ExecuteCommand(command, correctedRelativePosition);
             }
         }
 
@@ -104,16 +128,23 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
+        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        {
+            ContextMenuViewModel.ShowContextMenu(commands, position);
+        }
+
         public void ShowContextMenu(IList<IDiiagramrCommand> commands)
         {
-            ContextMenuViewModel.Visible = !ContextMenuViewModel.Visible;
-            ContextMenuViewModel.Commands.Clear();
-            commands.ForEach(ContextMenuViewModel.Commands.Add);
+            ShowContextMenu(commands, new Point(0, 22));
         }
 
         public void ShowScreen(IScreen screen)
         {
             ActiveItem = screen;
+            if (screen is IShownInShellReaction reaction)
+            {
+                reaction.ShownInShell();
+            }
         }
 
         public void WindowClosing(object sender, CancelEventArgs e)
@@ -149,7 +180,7 @@ namespace DiiagramrAPI.ViewModel
         private void SetupCommands(IEnumerable<IDiiagramrCommand> commands)
         {
             // TODO: Consider making a "CommandHandler" class, that handles this, or make the commands construct themselves this way.
-            SetupMenuCommands(commands.Where(c => c.ShowInMenu));
+            SetupMenuCommands(commands.OfType<ToolBarCommand>());
             foreach (var command in commands)
             {
                 var commandPath = GenerateCommandPath(command);
@@ -171,8 +202,8 @@ namespace DiiagramrAPI.ViewModel
 
         private void SetupMenuCommands(IEnumerable<IDiiagramrCommand> commands)
         {
-            TopLevelMenuItems = new ObservableCollection<IDiiagramrCommand>();
-            var topLevelMenuItems = commands.Where(x => x.Parent == null);
+            TopLevelMenuItems = new ObservableCollection<TopLevelToolBarCommand>();
+            var topLevelMenuItems = commands.OfType<TopLevelToolBarCommand>();
             var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
             foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
             {

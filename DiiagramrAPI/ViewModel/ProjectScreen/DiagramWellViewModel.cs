@@ -128,6 +128,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen
             if (_projectManager.CurrentProject != null && _projectManager.CurrentDiagrams != null)
             {
                 SetCurrentDiagrams(_projectManager.CurrentDiagrams);
+                var diagram = _projectManager.CurrentDiagrams.FirstOrDefault();
+                if (diagram == null)
+                {
+                    _projectManager.CreateDiagram();
+                }
+                else
+                {
+                    diagram.IsOpen = true;
+                }
             }
         }
 

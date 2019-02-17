@@ -116,11 +116,11 @@ namespace DiiagramrAPI.Service
             return _libraryManager.GetSerializeableTypes();
         }
 
-        public void LoadProject(bool autoOpenDiagram = false)
+        public void LoadProject(ProjectModel project, bool autoOpenDiagram = false)
         {
             if (CloseProject())
             {
-                CurrentProject = _projectFileService.LoadProject();
+                CurrentProject = project;
                 if (CurrentProject == null)
                 {
                     return;
@@ -133,6 +133,10 @@ namespace DiiagramrAPI.Service
                     if (autoOpenDiagram && CurrentDiagrams.Any())
                     {
                         CurrentDiagrams.First().IsOpen = true;
+                    }
+                    else if (autoOpenDiagram)
+                    {
+                        CreateDiagram();
                     }
                 }
                 catch
@@ -151,7 +155,8 @@ namespace DiiagramrAPI.Service
 
         public void LoadProjectButtonHandler()
         {
-            LoadProject(autoOpenDiagram: true);
+            var project = _projectFileService.LoadProject();
+            LoadProject(project, autoOpenDiagram: true);
         }
 
         public void SaveAsProject()

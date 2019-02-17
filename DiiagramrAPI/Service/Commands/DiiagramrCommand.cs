@@ -9,13 +9,20 @@ namespace DiiagramrAPI.Service.Commands
         public virtual string Parent => null;
         public IList<IDiiagramrCommand> SubCommandItems { get; set; } = new List<IDiiagramrCommand>();
         public virtual float Weight => 0f;
-        public virtual bool ShowInMenu => true;
 
         public bool CanExecute(ShellViewModel shell)
         {
             return true;
         }
 
-        public abstract void Execute(ShellViewModel shell);
+        internal abstract void ExecuteInternal(ShellViewModel shell, object parameter);
+
+        public void Execute(ShellViewModel shell, object parameter)
+        {
+            if (CanExecute(shell))
+            {
+                ExecuteInternal(shell, parameter);
+            }
+        }
     }
 }

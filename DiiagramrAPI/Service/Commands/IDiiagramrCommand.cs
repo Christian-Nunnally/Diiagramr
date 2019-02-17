@@ -10,10 +10,9 @@ namespace DiiagramrAPI.Service.Commands
         string Parent { get; }
         IList<IDiiagramrCommand> SubCommandItems { get; set; }
         float Weight { get; }
-        bool ShowInMenu { get; }
 
         bool CanExecute(ShellViewModel shell);
 
-        void Execute(ShellViewModel shell);
+        void Execute(ShellViewModel shell, object parameter);
     }
 }

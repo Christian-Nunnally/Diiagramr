@@ -62,6 +62,12 @@ namespace DiiagramrAPI.Model
             Nodes.ForEach(n => n.EnableTerminals());
         }
 
+        public virtual void Open()
+        {
+            IsOpen = false;
+            IsOpen = true;
+        }
+
         public virtual void RemoveNode(NodeModel nodeModel)
         {
             if (!Nodes.Contains(nodeModel))

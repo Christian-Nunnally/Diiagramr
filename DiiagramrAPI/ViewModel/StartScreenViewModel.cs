@@ -7,12 +7,14 @@ namespace DiiagramrAPI.ViewModel
 {
     public class StartScreenViewModel : Screen
     {
+        private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
         private bool _isMouseOverLoadProjectButton;
         private bool _isMouseOverNewProjectButton;
 
-        public StartScreenViewModel(Func<IProjectManager> projectManagerFactory)
+        public StartScreenViewModel(Func<IProjectManager> projectManagerFactory, Func<IProjectFileService> projectFileServiceFactory)
         {
+            _projectFileService = projectFileServiceFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
         }
 
@@ -45,7 +47,8 @@ namespace DiiagramrAPI.ViewModel
 
         public void LoadProject()
         {
-            _projectManager.LoadProject(autoOpenDiagram: true);
+            var project = _projectFileService.LoadProject();
+            _projectManager.LoadProject(project, autoOpenDiagram: true);
             if (_projectManager.CurrentProject != null)
             {
                 if (Parent != null)
@@ -75,7 +78,7 @@ namespace DiiagramrAPI.ViewModel
 
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
-            _projectManager.CurrentDiagrams.First().IsOpen = true;
+            _projectManager.CurrentDiagrams.First().Open();
         }
 
         public void NewProjectButtonMouseEntered()

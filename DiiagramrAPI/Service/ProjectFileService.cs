@@ -10,6 +10,7 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectFileService : IProjectFileService
     {
+        public const string ProjectFileExtension = ".xml";
         private readonly IDialogService _dialogService;
         private readonly IProjectLoadSave _loadSave;
         private readonly IFileDialog _openFileDialog;
@@ -31,6 +32,8 @@ namespace DiiagramrAPI.Service
 
         public string ProjectDirectory { get; set; }
 
+        public event Action<ProjectModel> ProjectSaved;
+
         public MessageBoxResult ConfirmProjectClose()
         {
             const string message = "Do you want to save before closing?";
@@ -40,7 +43,7 @@ namespace DiiagramrAPI.Service
         public ProjectModel LoadProject()
         {
             _openFileDialog.InitialDirectory = ProjectDirectory;
-            _openFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
+            _openFileDialog.Filter = $"ProjectModel files(*{ProjectFileExtension})|*{ProjectFileExtension}|All files(*.*)|*.*";
             _openFileDialog.FileName = "";
 
             if (_openFileDialog.ShowDialog() != MessageBoxResult.OK)
@@ -48,10 +51,14 @@ namespace DiiagramrAPI.Service
                 return null;
             }
 
-            var project = _loadSave.Open(_openFileDialog.FileName);
-            SetProjectNameFromPath(project, _openFileDialog.FileName);
+            return LoadProject(_openFileDialog.FileName);
+        }
+
+        public ProjectModel LoadProject(string path)
+        {
+            var project = _loadSave.Open(path);
+            SetProjectNameFromPath(project, path);
             ThrowIfDuplicateAssemblies();
-            OpenFirstDiagram(project);
             return project;
         }
 
@@ -61,17 +68,8 @@ namespace DiiagramrAPI.Service
             {
                 return SaveAsProject(project);
             }
-            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ".xml");
+            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ProjectFileExtension);
             return true;
-        }
-
-        private static void OpenFirstDiagram(ProjectModel project)
-        {
-            var diagram = project.Diagrams?.FirstOrDefault();
-            if (diagram != null)
-            {
-                diagram.IsOpen = true;
-            }
         }
 
         private bool SaveAsProject(ProjectModel project)
@@ -82,21 +80,22 @@ namespace DiiagramrAPI.Service
             }
 
             _saveFileDialog.InitialDirectory = ProjectDirectory;
-            _saveFileDialog.Filter = "ProjectModel files(*.xml)|*.xml|All files(*.*)|*.*";
+            _saveFileDialog.Filter = $"ProjectModel files(*{ProjectFileExtension})|*{ProjectFileExtension}|All files(*.*)|*.*";
 
             if (_saveFileDialog.ShowDialog() != MessageBoxResult.OK)
             {
                 return false;
             }
 
-            SerializeAndSave(project, _saveFileDialog.FileName);
             SetProjectNameFromPath(project, _saveFileDialog.FileName);
+            SerializeAndSave(project, _saveFileDialog.FileName);
             return true;
         }
 
         private void SerializeAndSave(ProjectModel project, string name)
         {
             _loadSave.Save(project, name);
+            ProjectSaved(project);
         }
 
         private void SetProjectNameFromPath(ProjectModel project, string path)

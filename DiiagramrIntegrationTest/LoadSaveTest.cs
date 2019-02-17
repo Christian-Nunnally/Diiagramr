@@ -94,7 +94,7 @@ namespace DiiagramrIntegrationTest
             // save
             projectManager.SaveProject();
             projectManager.CloseProject();
-            projectManager.LoadProject();
+            projectManager.LoadProject(new DiiagramrAPI.Model.ProjectModel());
 
             projectManager.DiagramViewModels.ForEach(x => x.Diagram.Play());
 
@@ -140,7 +140,7 @@ namespace DiiagramrIntegrationTest
             var projectManager = shell.ProjectScreenViewModel.ProjectExplorerViewModel.ProjectManager;
             projectManager.SaveProject();
             projectManager.CloseProject();
-            projectManager.LoadProject();
+            projectManager.LoadProject(new DiiagramrAPI.Model.ProjectModel());
         }
     }
 }

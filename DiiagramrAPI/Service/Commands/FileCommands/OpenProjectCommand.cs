@@ -1,21 +1,31 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel;
+using System;
 using System.Linq;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
-    public class OpenProjectCommand : DiiagramrCommand
+    public class OpenProjectCommand : ToolBarCommand
     {
+        private IProjectFileService _projectFileService;
+
         public override string Name => "Open";
-        public override string Parent => "File";
+        public override string Parent => "Project";
         public override float Weight => .9f;
 
-        public override void Execute(ShellViewModel shell)
+        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory)
         {
-            shell.ProjectManager.LoadProject();
+            _projectFileService = projectFileServiceFactory.Invoke();
+        }
+
+        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        {
+            var project = _projectFileService.LoadProject();
+            shell.ProjectManager.LoadProject(project);
             var firstDiagram = shell.ProjectManager.CurrentDiagrams.FirstOrDefault();
             if (firstDiagram != null)
             {
-                firstDiagram.IsOpen = true;
+                firstDiagram.Open();
             }
         }
     }

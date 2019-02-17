@@ -11,20 +11,22 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class StartScreenViewModelTest
     {
         private Mock<IProjectManager> _projectManagerMoq;
+        private Mock<IProjectFileService> _projectFileServiceMoq;
         private StartScreenViewModel _startScreenViewModel;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _projectManagerMoq = new Mock<IProjectManager>();
-            _startScreenViewModel = new StartScreenViewModel(() => _projectManagerMoq.Object);
+            _projectFileServiceMoq = new Mock<IProjectFileService>();
+            _startScreenViewModel = new StartScreenViewModel(() => _projectManagerMoq.Object, () => _projectFileServiceMoq.Object);
         }
 
         [TestMethod]
         public void TestLoadProject_CallsLoadProjectOnProjectManager()
         {
             _startScreenViewModel.LoadProject();
-            _projectManagerMoq.Verify(m => m.LoadProject(true));
+            _projectManagerMoq.Verify(m => m.LoadProject(It.IsAny<ProjectModel>(), true));
         }
 
         [TestMethod]

@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Model;
+using System;
 using System.Windows;
 
 namespace DiiagramrAPI.Service.Interfaces
@@ -6,6 +7,8 @@ namespace DiiagramrAPI.Service.Interfaces
     public interface IProjectFileService : IDiiagramrService
     {
         string ProjectDirectory { get; set; }
+
+        event Action<ProjectModel> ProjectSaved;
 
         /// <summary>
         /// Confirms ProjectModel Close.
@@ -18,6 +21,13 @@ namespace DiiagramrAPI.Service.Interfaces
         /// </summary>
         /// <returns>The loaded project.</returns>
         ProjectModel LoadProject();
+
+        /// <summary>
+        /// Loads the project.
+        /// </summary>
+        /// <param name="path">The path to the project.</param>
+        /// <returns>The loaded project.</returns>
+        ProjectModel LoadProject(string path);
 
         /// <summary>
         /// Saves the project.

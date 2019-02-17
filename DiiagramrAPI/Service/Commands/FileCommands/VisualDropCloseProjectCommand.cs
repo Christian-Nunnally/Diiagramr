@@ -1,19 +1,21 @@
 ﻿using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.ViewModel.VisualDrop;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
-    public class CloseProjectCommand : DiiagramrCommand
+    public class VisualDropCloseProjectCommand : ToolBarCommand
     {
-        private readonly StartScreenViewModel _startScreenViewModel;
+        private readonly VisualDropStartScreenViewModel2 _startScreenViewModel;
 
-        public CloseProjectCommand(Func<StartScreenViewModel> startScreenViewModelFactory)
+        public VisualDropCloseProjectCommand(Func<VisualDropStartScreenViewModel2> startScreenViewModelFactory)
         {
             _startScreenViewModel = startScreenViewModelFactory.Invoke();
         }
 
         public override string Name => "Close";
         public override string Parent => "Project";
+        public override float Weight => 0.1f;
 
         internal override void ExecuteInternal(ShellViewModel shell, object parameter)
         {
