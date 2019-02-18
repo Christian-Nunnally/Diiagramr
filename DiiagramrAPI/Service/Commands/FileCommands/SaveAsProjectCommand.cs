@@ -10,9 +10,9 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
         public override string Parent => "Project";
         public override float Weight => .4f;
 
-        private readonly VisualDropStartScreenViewModel2 _visualDropStartScreenViewModel;
+        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 
-        public SaveAsProjectCommand(Func<VisualDropStartScreenViewModel2> visualDropStartScreenViewModelFactory)
+        public SaveAsProjectCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
         {
             _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
         }

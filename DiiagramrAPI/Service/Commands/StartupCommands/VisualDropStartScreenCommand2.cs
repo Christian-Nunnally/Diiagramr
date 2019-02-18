@@ -6,9 +6,9 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
 {
     public class VisualDropStartScreenCommand2 : DiiagramrCommand
     {
-        private readonly VisualDropStartScreenViewModel2 _visualDropStartScreenViewModel;
+        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 
-        public VisualDropStartScreenCommand2(Func<VisualDropStartScreenViewModel2> visualDropStartScreenViewModelFactory)
+        public VisualDropStartScreenCommand2(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
         {
             _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
         }

@@ -12,6 +12,8 @@
     d:DesignHeight="300"
     d:DesignWidth="600"
     MouseMove="{s:Action MouseMoveHandler}"
+    PreviewKeyDown="{s:Action PreviewKeyDownHandler}"
+    PreviewKeyUp="{s:Action PreviewKeyUpHandler}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -54,9 +56,9 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation
-                                    Storyboard.TargetProperty="Foreground.Color"
-                                    To="Transparent"
-                                    Duration="0:0:0.25" />
+                                                Storyboard.TargetProperty="Foreground.Color"
+                                                To="Transparent"
+                                                Duration="0:0:0.25" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </DataTrigger.EnterActions>
@@ -64,9 +66,9 @@
                                     <BeginStoryboard>
                                         <Storyboard>
                                             <ColorAnimation
-                                    Storyboard.TargetProperty="Foreground.Color"
-                                    To="#F667"
-                                    Duration="0:0:0.05" />
+                                                Storyboard.TargetProperty="Foreground.Color"
+                                                To="#F667"
+                                                Duration="0:0:0.05" />
                                         </Storyboard>
                                     </BeginStoryboard>
                                 </DataTrigger.ExitActions>
@@ -155,21 +157,22 @@
             VerticalAlignment="Stretch"
             Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
             MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}"
-            PanX="{Binding PanX, Mode=OneWayToSource}"
-            PanY="{Binding PanY, Mode=OneWayToSource}"
+            PanX="{Binding PanX, Mode=TwoWay}"
+            PanY="{Binding PanY, Mode=TwoWay}"
             PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
+            PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
             PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
-            KeyDown="{s:Action KeyDownHandler}"
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
                 <Canvas>
-                    <Border BorderBrush="#404040"
-                            BorderThickness="2"
-                            Width="{Binding BoundingBox.Width}"
-                            Height="{Binding BoundingBox.Height}"
-                            Canvas.Left="{Binding BoundingBox.Left}"
-                            Canvas.Top="{Binding BoundingBox.Top}"
-                            CornerRadius="5">
+                    <Border
+                        Canvas.Left="{Binding BoundingBox.Left}"
+                        Canvas.Top="{Binding BoundingBox.Top}"
+                        Width="{Binding BoundingBox.Width}"
+                        Height="{Binding BoundingBox.Height}"
+                        BorderBrush="#404040"
+                        BorderThickness="2"
+                        CornerRadius="5">
                         <Canvas
                             Margin="12,12,0,0"
                             Background="{StaticResource DotFillBrush}"
@@ -346,7 +349,10 @@
                 Canvas.Top="{Binding DraggingRectangle.Y, Mode=TwoWay}"
                 Width="{Binding DraggingRectangle.Width, Mode=TwoWay}"
                 Height="{Binding DraggingRectangle.Height, Mode=TwoWay}"
-                Fill="Red" />
+                Stroke="{StaticResource DiagramSelectionRectangleStroke}"
+                StrokeThickness="2"
+                RadiusX="3"
+                RadiusY="3"/>
         </Canvas>
 
         <!--<ContentControl
@@ -355,13 +361,14 @@
             VerticalAlignment="Top"
             s:View.Model="{Binding DiagramControlViewModel}" />-->
 
-        <Label Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}"
-               Content="Right Click to Insert a Node."
-               Foreground="#A4A4A4"
-               FontSize="11"
-               HorizontalAlignment="Center"
-               VerticalAlignment="Center"
-               Padding="0" />
+        <Label
+            Padding="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Content="Right Click to Insert a Node."
+            FontSize="11"
+            Foreground="#A4A4A4"
+            Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />
 
         <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
     </Grid>

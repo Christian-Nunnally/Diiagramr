@@ -33,7 +33,6 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindowViewModel), typeof(LibrarySourceManagerWindowView));
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
             _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel), typeof(VisualDropStartScreenView));
-            _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel2), typeof(VisualDropStartScreenView2));
             _viewModelToViewMapping.Add(typeof(ProjectExplorerViewModel), typeof(ProjectExplorerView));
             _viewModelToViewMapping.Add(typeof(NodeSelectorViewModel), typeof(NodeSelectorView));
             _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));

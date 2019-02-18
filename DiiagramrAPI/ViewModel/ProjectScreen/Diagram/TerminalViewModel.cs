@@ -68,11 +68,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             set
             {
-                if (value == null)
-                {
-                    RemoveAllAdornersFromTerminal();
-                }
-                else
+                RemoveAllAdornersFromTerminal();
+                if (value != null)
                 {
                     AdornerLayer.GetAdornerLayer(View).Add(value);
                 }
@@ -253,22 +250,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             }
 
             WireToTerminal(terminal);
-        }
-
-        public void KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-            {
-                SetTerminalAdorner(new TerminalDataProbeAdorner(View, this));
-            }
-        }
-
-        public void KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
-            {
-                Adorner = null;
-            }
         }
 
         public void LostFocus()

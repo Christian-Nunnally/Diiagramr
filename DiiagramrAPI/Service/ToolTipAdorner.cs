@@ -23,11 +23,14 @@ namespace DiiagramrAPI.Service
 
             AdornedTerminal = adornedTerminal;
             visualChildren = new VisualCollection(this);
+            var text = AdornedTerminal.Data != null && AdornedTerminal.Data.ToString().Length < 8
+                ? AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString()
+                : AdornedTerminal.Name;
 
             label = new TextBlock
             {
                 IsHitTestVisible = false,
-                Text = AdornedTerminal.Name,
+                Text = text,
                 Margin = new Thickness(0),
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,

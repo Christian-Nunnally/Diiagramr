@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DiiagramrAPI.Service
@@ -51,7 +52,16 @@ namespace DiiagramrAPI.Service
                 Mode = BindingMode.TwoWay
             };
             textBox.SetBinding(TextBox.TextProperty, binding);
+            textBox.KeyDown += KeyDownHandler;
             visualChildren.Add(textBox);
+        }
+
+        private void KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                AdornedTerminal.Adorner = null;
+            }
         }
 
         public TerminalViewModel AdornedTerminal { get; set; }

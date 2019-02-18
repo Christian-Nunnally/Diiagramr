@@ -11,6 +11,7 @@
     Height="{Binding Height}"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
+    FocusVisualStyle="{x:Null}"
     SnapsToDevicePixels="True"
     Style="{StaticResource CustomWindowStyle}"
     UseLayoutRounding="True"

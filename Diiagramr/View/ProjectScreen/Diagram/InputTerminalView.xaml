@@ -10,14 +10,13 @@
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:InputTerminalViewModel}"
-    mc:Ignorable="d"
-    KeyDown="{s:Action KeyDown}"
-    KeyUp="{s:Action KeyUp}"
-    MouseDoubleClick="{s:Action TerminalDoubleClicked}">
+    FocusVisualStyle="{x:Null}"
+    MouseDoubleClick="{s:Action TerminalDoubleClicked}"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
-    <Grid RenderTransformOrigin="0.5, 0.5" FocusVisualStyle="{x:Null}">
+    <Grid FocusVisualStyle="{x:Null}" RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
@@ -25,11 +24,11 @@
             AllowDrop="True"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
             Drop="{s:Action DropEventHandler}"
+            FocusVisualStyle="{x:Null}"
             MouseEnter="{s:Action MouseEntered}"
             MouseLeave="{s:Action MouseLeft}"
             MouseLeftButtonDown="{s:Action TerminalLeftMouseDownHandler}"
-            MouseMove="{s:Action MouseMove}"
-            FocusVisualStyle="{x:Null}">
+            MouseMove="{s:Action MouseMove}">
             <Border.Style>
                 <Style>
                     <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
@@ -42,10 +41,10 @@
             </Border.Style>
         </Border>
         <Border
-            FocusVisualStyle="{x:Null}"
             Background="#007ACC"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
         <Line
@@ -60,16 +59,16 @@
             Y1="2"
             Y2="4" />
         <Border
-            FocusVisualStyle="{x:Null}"
             BorderBrush="#101010"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False" />
         <Border
-            FocusVisualStyle="{x:Null}"
             BorderBrush="#007ACC"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
         <!--<TextBox

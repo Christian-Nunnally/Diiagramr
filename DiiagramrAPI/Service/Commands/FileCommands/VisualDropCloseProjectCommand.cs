@@ -6,9 +6,9 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
 {
     public class VisualDropCloseProjectCommand : ToolBarCommand
     {
-        private readonly VisualDropStartScreenViewModel2 _startScreenViewModel;
+        private readonly VisualDropStartScreenViewModel _startScreenViewModel;
 
-        public VisualDropCloseProjectCommand(Func<VisualDropStartScreenViewModel2> startScreenViewModelFactory)
+        public VisualDropCloseProjectCommand(Func<VisualDropStartScreenViewModel> startScreenViewModelFactory)
         {
             _startScreenViewModel = startScreenViewModelFactory.Invoke();
         }

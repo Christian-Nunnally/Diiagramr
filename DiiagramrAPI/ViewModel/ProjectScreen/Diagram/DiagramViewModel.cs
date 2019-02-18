@@ -70,7 +70,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public bool AreInstructionsVisible => !NodeViewModels.Any();
         public Rect BoundingBox { get; set; }
-        public Rect DefaultBoundingBox { get; } = new Rect(100, 100, 800, 600);
+        public Rect DefaultBoundingBox { get; } = new Rect(100, 100, 800, 550);
         public DiagramModel Diagram { get; }
         public DiagramControlViewModel DiagramControlViewModel { get; }
         public PluginNode InsertingNodeViewModel { get; set; }
@@ -84,13 +84,26 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public BindableCollection<WireViewModel> WireViewModels { get; set; }
         public double Zoom { get; set; }
         public Point DraggingRectangleCorner { get; set; }
-        public Rect DraggingRectangle { get; set; }
 
-        public void KeyDownHandler(object sender, KeyEventArgs e)
+        private bool _draggingLasso;
+
+        public Rect DraggingRectangle { get; set; }
+        public double ViewWidth { get; set; }
+        public double ViewHeight { get; set; }
+
+        public void PreviewKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
             {
                 RemoveSelectedNodes();
+            }
+        }
+
+        public void PreviewKeyUpHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            {
+                _draggingLasso = false;
             }
         }
 
@@ -101,6 +114,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
+                _draggingLasso = true;
                 DraggingRectangle = new Rect(p.X, p.Y, 100, 100);
             }
         }
@@ -109,6 +123,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
             LeftMouseButtonDown(relativeMousePosition);
+        }
+
+        public void PreviewLeftMouseButtonUpHandler(object sender, MouseButtonEventArgs e)
+        {
+            if (_draggingLasso)
+            {
+                _draggingLasso = false;
+                DraggingRectangle = new Rect(0, 0, 0, 0);
+            }
         }
 
         public void MouseEntered(object sender, MouseEventArgs e)
@@ -125,13 +148,26 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void MouseMoved(Point mouseLocation)
         {
-            if (InsertingNodeViewModel == null)
+            if (InsertingNodeViewModel != null)
             {
-                return;
+                MoveInsertingNode(mouseLocation);
             }
+            else
+            {
+                if (_draggingLasso)
+                {
+                    var newWidth = Math.Abs(mouseLocation.X - DraggingRectangle.Left);
+                    var newHeight = Math.Abs(mouseLocation.Y - DraggingRectangle.Top);
+                    DraggingRectangle = new Rect(DraggingRectangle.X, DraggingRectangle.Y, newWidth, newHeight);
+                }
+            }
+        }
 
+        private void MoveInsertingNode(Point mouseLocation)
+        {
             InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - NodeBorderWidth;
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
+            UpdateDiagramBoundingBox();
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -159,7 +195,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 InsertingNodeViewModel.Y = CoreUilities.RoundToNearest((int)InsertingNodeViewModel.Y, GridSnapInterval);
             }
 
-            InsertingNodeViewModel = null;
+            if (InsertingNodeViewModel != null)
+            {
+                InsertingNodeViewModel = null;
+                UpdateDiagramBoundingBox();
+            }
         }
 
         public void PreviewLeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -434,8 +474,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             var snappedX = CoreUilities.RoundToNearest(minX, GridSnapInterval);
             var snappedY = CoreUilities.RoundToNearest(minY, GridSnapInterval);
-            var snappedWidth = CoreUilities.RoundToNearest(width, GridSnapInterval);
-            var snappedHeight = CoreUilities.RoundToNearest(height, GridSnapInterval);
+            var snappedMaxX = CoreUilities.RoundToNearest(maxX, GridSnapInterval);
+            var snappedMaxY = CoreUilities.RoundToNearest(maxY, GridSnapInterval);
+            var snappedWidth = snappedMaxX - snappedX;
+            var snappedHeight = snappedMaxY - snappedY;
 
             BoundingBox = new Rect(snappedX, snappedY, snappedWidth, snappedHeight);
             NotifyOfPropertyChange(nameof(BoundingBox));
