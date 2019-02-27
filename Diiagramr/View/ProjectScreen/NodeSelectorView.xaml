@@ -13,41 +13,65 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
-            <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
-            <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode}" />
-            <Setter Property="ContentTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-        <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
-            <Canvas />
-        </ItemsPanelTemplate>
-        <Style x:Key="NodeBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="White" />
-            <Setter Property="BorderBrush" Value="Gray" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="Width" Value="{Binding MousedOverNode.Width}" />
-            <Setter Property="Height" Value="{Binding MousedOverNode.Height}" />
-            <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeBorderThickness}" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\DarkTheme.xaml" />
+                <ResourceDictionary>
+                    <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
+                        <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode}" />
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <ContentControl s:View.Model="{Binding}" IsTabStop="False" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
 
-        <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
-            <Setter Property="Background" Value="White" />
-            <Style.Triggers>
-                <Trigger Property="Border.IsMouseOver" Value="True">
-                    <Setter Property="Border.Background" Value="#FFC8C8C8" />
-                </Trigger>
-            </Style.Triggers>
-        </Style>
+                    <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
+                        <Canvas />
+                    </ItemsPanelTemplate>
 
-        <BooleanToVisibilityConverter x:Key="Btv" />
+                    <Style x:Key="NodeBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="White" />
+                        <Setter Property="BorderBrush" Value="Gray" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="Width" Value="{Binding MousedOverNode.Width}" />
+                        <Setter Property="Height" Value="{Binding MousedOverNode.Height}" />
+                        <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeBorderThickness}" />
+                    </Style>
+
+                    <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
+                        <Style.Triggers>
+                            <Trigger Property="Border.IsMouseOver" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource MenuItemMouseOverBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="LibrarySelectionBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLibraryMenuExpanded}" Value="True">
+                                <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="LabelStyle" TargetType="Label">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
-    <Canvas Background="#11888888" MouseDown="{s:Action BackgroundMouseDown}">
+    <Canvas Background="#50181818" MouseDown="{s:Action BackgroundMouseDown}">
         <Grid
             Canvas.Left="{Binding RightPosition}"
             Canvas.Top="{Binding TopPosition}"
@@ -65,7 +89,7 @@
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate>
-                                    <Border Background="{Binding BackgroundBrush}" MouseEnter="{s:Action LibraryMouseEnterHandler}">
+                                    <Border Style="{StaticResource LibrarySelectionBorderStyle}" MouseEnter="{s:Action LibraryMouseEnterHandler}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition />
@@ -74,9 +98,8 @@
                                             <Label
                                                 Height="40"
                                                 Margin="0,0,12,0"
-                                                VerticalContentAlignment="Center"
                                                 Content="{Binding Name}"
-                                                FontSize="14" />
+                                                Style="{StaticResource LabelStyle}" />
                                             <Polygon
                                                 Grid.Column="1"
                                                 Margin="0,0,4,0"
@@ -105,9 +128,8 @@
                                         Style="{StaticResource NodeSelectionBorderStyle}">
                                         <Label
                                             Height="28"
-                                            VerticalContentAlignment="Center"
                                             Content="{Binding Name}"
-                                            FontSize="14" />
+                                            Style="{StaticResource LabelStyle}" />
                                     </Border>
                                 </DataTemplate>
                             </Setter.Value>

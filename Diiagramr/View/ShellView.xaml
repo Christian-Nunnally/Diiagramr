@@ -20,7 +20,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\WindowStyle.xaml" />
-                <ResourceDictionary Source="DiiagramrDarkTheme.xaml" />
+                <ResourceDictionary Source="DarkTheme.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>

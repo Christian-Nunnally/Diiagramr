@@ -26,6 +26,7 @@ namespace DiiagramrAPI.ViewModel
             Nodes = new List<PluginNode>();
         }
 
+        public bool IsLibraryMenuExpanded { get; set; }
         public Brush BackgroundBrush { get; private set; } = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
         public string Name { get; }
         public virtual List<PluginNode> Nodes { get; }
@@ -34,11 +35,13 @@ namespace DiiagramrAPI.ViewModel
         public virtual void Select()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
+            IsLibraryMenuExpanded = true;
         }
 
         public virtual void Unselect()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+            IsLibraryMenuExpanded = false;
         }
     }
 
