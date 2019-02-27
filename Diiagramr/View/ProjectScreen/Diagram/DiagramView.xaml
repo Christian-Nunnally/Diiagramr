@@ -11,7 +11,7 @@
     d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
-    MouseMove="{s:Action MouseMoveHandler}"
+    PreviewMouseMove="{s:Action PreviewMouseMoveHandler}"
     PreviewKeyDown="{s:Action PreviewKeyDownHandler}"
     PreviewKeyUp="{s:Action PreviewKeyUpHandler}"
     mc:Ignorable="d">
@@ -284,13 +284,21 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
-                                                HorizontalAlignment="Stretch"
                                                 Style="{StaticResource NodeBorderStyle}">
                                                 <ContentControl
                                                     HorizontalContentAlignment="Stretch"
                                                     VerticalContentAlignment="Stretch"
                                                     s:View.Model="{Binding}"
                                                     IsTabStop="False" />
+                                            </Border>
+
+                                            <Border
+                                                Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                IsHitTestVisible="True"
+                                                Visibility="{Binding Dragging, Converter={StaticResource Btv}}">
                                             </Border>
 
                                             <Border

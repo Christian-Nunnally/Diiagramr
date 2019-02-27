@@ -175,7 +175,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestMouseMoved_NotInsertingNode_DoesNothing()
         {
-            _diagramViewModel.MouseMoved(new Point(0, 0));
+            _diagramViewModel.PreviewMouseMoved(new Point(0, 0));
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(m => m.Y).Returns(10);
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.MouseMoved(new Point(5, 5));
+            _diagramViewModel.PreviewMouseMoved(new Point(5, 5));
 
             _pluginNodeMoq.VerifySet(m => m.X = -10);
             _pluginNodeMoq.VerifySet(m => m.Y = -10);
@@ -209,7 +209,7 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
             _diagramViewModel.Zoom = 2;
-            _diagramViewModel.MouseMoved(new Point(5, 5));
+            _diagramViewModel.PreviewMouseMoved(new Point(5, 5));
 
             _pluginNodeMoq.VerifySet(m => m.X = -13.5);
             _pluginNodeMoq.VerifySet(m => m.Y = -13.5);

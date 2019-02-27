@@ -84,7 +84,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             nodeSelector.MousedOverNode = node;
             nodeSelector.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
-            diagramViewModel.MouseMoved(pt);
+            diagramViewModel.PreviewMouseMoved(pt);
             Assert.AreEqual(ptX - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
             Assert.AreEqual(ptY - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Height / 2, diagramViewModel.InsertingNodeViewModel.Y);
             diagramViewModel.PreviewLeftMouseButtonDown(pt);

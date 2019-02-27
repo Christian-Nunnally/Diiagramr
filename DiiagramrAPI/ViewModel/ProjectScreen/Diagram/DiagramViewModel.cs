@@ -145,7 +145,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             nodeViewModel?.MouseLeft(sender, e);
         }
 
-        public void MouseMoved(Point mouseLocation)
+        public bool PreviewMouseMoved(Point mouseLocation)
         {
             if (InsertingNodeViewModel != null)
             {
@@ -164,7 +164,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             if (NodeBeingDragged)
             {
                 UpdateDiagramBoundingBox();
+                return true;
             }
+            return false;
         }
 
         private void MoveInsertingNode(Point mouseLocation)
@@ -173,11 +175,11 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
         }
 
-        public void MouseMoveHandler(object sender, MouseEventArgs e)
+        public void PreviewMouseMoveHandler(object sender, MouseEventArgs e)
         {
             var inputElement = (IInputElement)sender;
             var relativeMousePosition = e.GetPosition(inputElement);
-            MouseMoved(relativeMousePosition);
+            e.Handled = PreviewMouseMoved(relativeMousePosition);
         }
 
         public void NodeHelpPressed()
@@ -185,23 +187,27 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             //todo
         }
 
-        public void PreviewLeftMouseButtonDown(Point p, bool controlKeyPressed = true)
+        public bool PreviewLeftMouseButtonDown(Point p, bool controlKeyPressed = true)
         {
+            var handled = false;
             if (InsertingNodeViewModel == null)
             {
-                return;
+                return handled;
             }
-
             if (!controlKeyPressed)
             {
                 InsertingNodeViewModel.X = CoreUilities.RoundToNearest((int)InsertingNodeViewModel.X, GridSnapInterval);
                 InsertingNodeViewModel.Y = CoreUilities.RoundToNearest((int)InsertingNodeViewModel.Y, GridSnapInterval);
             }
-
+            if (NodeBeingDragged)
+            {
+                handled = true;
+            }
             if (InsertingNodeViewModel != null)
             {
                 InsertNode();
             }
+            return handled;
         }
 
         private void InsertNode()
@@ -215,12 +221,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         {
             var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
             var controlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
-            if (InsertingNodeViewModel != null)
-            {
-                e.Handled = true;
-            }
-
-            PreviewLeftMouseButtonDown(relativeMousePosition, controlKeyPressed);
+            e.Handled = PreviewLeftMouseButtonDown(relativeMousePosition, controlKeyPressed);
         }
 
         public void PreviewLeftMouseButtonDownOnBorder(PluginNode node, bool controlKeyPressed, bool altKeyPressed)
