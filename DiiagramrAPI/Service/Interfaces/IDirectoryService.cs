@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IDirectoryService : IDiiagramrService
+    public interface IDirectoryService : IService
     {
         void CreateDirectory(string path);
 

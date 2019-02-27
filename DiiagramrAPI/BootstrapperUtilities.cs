@@ -17,9 +17,9 @@ namespace DiiagramrAPI
                                     ? typeReplacementMap[serviceImplementation]
                                     : serviceImplementation;
 
-                if (serviceImplementation.GetInterface(nameof(IKeyedDiiagramrService)) != null)
+                if (serviceImplementation.GetInterface(nameof(IKeyedService)) != null)
                 {
-                    var keyedService = (IKeyedDiiagramrService)Activator.CreateInstance(serviceImplementation);
+                    var keyedService = (IKeyedService)Activator.CreateInstance(serviceImplementation);
                     builder.Bind(intreface).To(typeToBind).WithKey(keyedService.ServiceBindingKey);
                 }
                 else
@@ -35,7 +35,7 @@ namespace DiiagramrAPI
                             .Where(a => !a.GlobalAssemblyCache)
                             .SelectMany(x => x.GetExportedTypes())
                             .Where(t => t.GetInterface("ITestImplementationOf`1") == null);
-            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IDiiagramrService)) != null);
+            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
@@ -49,7 +49,7 @@ namespace DiiagramrAPI
                             .Where(a => !a.GlobalAssemblyCache)
                             .SelectMany(x => x.GetTypes());
             var loadedTypes = allTypes.Where(t => t.GetInterface("ITestImplementationOf`1") == null);
-            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IDiiagramrService)) != null);
+            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
 
             var fakeTypes = allTypes.Where(t => t.IsClass && !t.IsAbstract && t.GetInterface("ITestImplementationOf`1") != null);
             var realToFakeTypeDictionary = new Dictionary<Type, Type>();

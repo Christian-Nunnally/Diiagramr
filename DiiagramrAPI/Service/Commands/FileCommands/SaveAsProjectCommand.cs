@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
         internal override void ExecuteInternal(ShellViewModel shell, object parameter)
         {
             shell.ProjectManager.SaveAsProject();
-            shell.WindowTitle = "Diiagramr" + (shell.ProjectManager.CurrentProject != null ? " - " + shell.ProjectManager.CurrentProject.Name : "");
+            shell.WindowTitle = "Visual Drop" + (shell.ProjectManager.CurrentProject != null ? " - " + shell.ProjectManager.CurrentProject.Name : "");
         }
     }
 }

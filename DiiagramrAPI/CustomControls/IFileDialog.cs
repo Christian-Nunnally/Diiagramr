@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
-    public interface IFileDialog : IDiiagramrService, IKeyedDiiagramrService
+    public interface IFileDialog : IService, IKeyedService
     {
         string FileName { get; set; }
         string Filter { get; set; }

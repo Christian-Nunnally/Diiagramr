@@ -74,7 +74,6 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public DiagramModel Diagram { get; }
         public DiagramControlViewModel DiagramControlViewModel { get; }
         public PluginNode InsertingNodeViewModel { get; set; }
-        public bool IsSnapGridVisible => InsertingNodeViewModel != null || NodeBeingDragged;
         public string Name => Diagram.Name;
         public bool NodeBeingDragged { get; set; }
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
@@ -161,13 +160,17 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                     DraggingRectangle = new Rect(DraggingRectangle.X, DraggingRectangle.Y, newWidth, newHeight);
                 }
             }
+
+            if (NodeBeingDragged)
+            {
+                UpdateDiagramBoundingBox();
+            }
         }
 
         private void MoveInsertingNode(Point mouseLocation)
         {
             InsertingNodeViewModel.X = GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - NodeBorderWidth;
             InsertingNodeViewModel.Y = GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - NodeBorderWidth;
-            UpdateDiagramBoundingBox();
         }
 
         public void MouseMoveHandler(object sender, MouseEventArgs e)
@@ -197,9 +200,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (InsertingNodeViewModel != null)
             {
-                InsertingNodeViewModel = null;
-                UpdateDiagramBoundingBox();
+                InsertNode();
             }
+        }
+
+        private void InsertNode()
+        {
+            InsertingNodeViewModel.Dragging = false;
+            InsertingNodeViewModel = null;
+            UpdateDiagramBoundingBox();
         }
 
         public void PreviewLeftMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -358,6 +367,7 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             nodeToInsert.Y = 400;
             AddNode(nodeToInsert);
             InsertingNodeViewModel = nodeToInsert;
+            InsertingNodeViewModel.Dragging = true;
         }
 
         private void CancelInsertingNode()

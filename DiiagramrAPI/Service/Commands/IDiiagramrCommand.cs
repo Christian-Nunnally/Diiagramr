@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands
 {
-    public interface IDiiagramrCommand : IDiiagramrService
+    public interface IDiiagramrCommand : IService
     {
         string Name { get; }
         string Parent { get; }

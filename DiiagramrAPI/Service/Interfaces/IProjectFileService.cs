@@ -4,7 +4,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProjectFileService : IDiiagramrService
+    public interface IProjectFileService : IService
     {
         string ProjectDirectory { get; set; }
 

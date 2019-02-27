@@ -251,26 +251,5 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.VerifySet(m => m.IsSelected = false, Times.Never);
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
         }
-
-        [TestMethod]
-        public void TestIsSnapGridVisible_InsertingNodeViewModelNotNull_ReturnsTrue()
-        {
-            _nodeMoq = new Mock<NodeModel>("node");
-            _pluginNodeMoq = new Mock<PluginNode>();
-            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
-            _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-
-            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
-            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
-            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
-        }
-
-        [TestMethod]
-        public void TestIsSnapGridVisible_NodeBeingDraggedTrue_ReturnsTrue()
-        {
-            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
-            _diagramViewModel.NodeBeingDragged = true;
-            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
-        }
     }
 }

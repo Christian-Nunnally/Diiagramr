@@ -7,7 +7,7 @@
     /// Should be implemented by a service interface, e.g. <code>interface IAmAService : IDiiagramrService</code>
     /// then implementations of "IAmAService" will be automatically found and added to the composition catalog.
     /// </remarks>
-    public interface IDiiagramrService
+    public interface IService
     {
     }
 }
