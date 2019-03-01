@@ -79,6 +79,7 @@
                             Content="{Binding ActiveWindow.Title}"
                             DockPanel.Dock="Top"
                             FontSize="24"
+                            Foreground="{StaticResource ForegroundBrush}"
                             IsHitTestVisible="False" />
                         <ContentControl s:View.Model="{Binding ActiveWindow}" />
                     </DockPanel>

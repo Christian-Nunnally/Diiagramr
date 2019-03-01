@@ -164,6 +164,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             if (NodeBeingDragged)
             {
                 UpdateDiagramBoundingBox();
+            }
+            if (InsertingNodeViewModel != null)
+            {
                 return true;
             }
             return false;

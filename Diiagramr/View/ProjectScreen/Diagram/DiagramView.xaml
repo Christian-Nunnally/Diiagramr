@@ -358,6 +358,7 @@
                 Width="{Binding DraggingRectangle.Width, Mode=TwoWay}"
                 Height="{Binding DraggingRectangle.Height, Mode=TwoWay}"
                 Stroke="{StaticResource DiagramSelectionRectangleStroke}"
+                Fill="{StaticResource DiagramSelectionRectangleFill}"
                 StrokeThickness="2"
                 RadiusX="3"
                 RadiusY="3"/>

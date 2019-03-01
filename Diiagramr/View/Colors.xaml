@@ -3,8 +3,11 @@
     <Color x:Key="SelectionBlue">#3E8FD6</Color>
     <Color x:Key="DiiagramrBlack">#101010</Color>
     <Color x:Key="DiiagramrOffWhite">#E6E6E6</Color>
+    <Color x:Key="TransparentDiiagramrOffWhite">#11E6E6E6</Color>
     <Color x:Key="LightGray">#C8C8C8</Color>
     <Color x:Key="DarkHighlightGray">#424245</Color>
     <Color x:Key="White">#FFFFFF</Color>
     <Color x:Key="Black">#000000</Color>
+    <Color x:Key="TransparentBlack">#11000000</Color>
+    <Color x:Key="LessTransparentBlack">#55000000</Color>
 </ResourceDictionary>

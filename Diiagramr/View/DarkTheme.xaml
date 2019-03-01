@@ -8,8 +8,11 @@
             <SolidColorBrush x:Key="NodeSelectionStyleBrush" Color="{StaticResource ResourceKey=SelectionBlue}" />
             <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffWhite}" />
+            <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />
             <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=DarkHighlightGray}" />
             <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=White}" />
+            <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />
+            <SolidColorBrush x:Key="WindowBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=TransparentBlack}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
