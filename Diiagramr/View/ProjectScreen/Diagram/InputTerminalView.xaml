@@ -10,15 +10,13 @@
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     d:DataContext="{d:DesignInstance diagram1:InputTerminalViewModel}"
-    mc:Ignorable="d"
-    LostFocus="{s:Action LostFocus}"
-    KeyDown="{s:Action KeyDown}"
-    KeyUp="{s:Action KeyUp}"
-    MouseDoubleClick="{s:Action TerminalDoubleClicked}">
+    FocusVisualStyle="{x:Null}"
+    MouseDoubleClick="{s:Action TerminalDoubleClicked}"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
-    <Grid RenderTransformOrigin="0.5, 0.5">
+    <Grid FocusVisualStyle="{x:Null}" RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
@@ -26,6 +24,7 @@
             AllowDrop="True"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
             Drop="{s:Action DropEventHandler}"
+            FocusVisualStyle="{x:Null}"
             MouseEnter="{s:Action MouseEntered}"
             MouseLeave="{s:Action MouseLeft}"
             MouseLeftButtonDown="{s:Action TerminalLeftMouseDownHandler}"
@@ -42,9 +41,10 @@
             </Border.Style>
         </Border>
         <Border
-            Background="DeepSkyBlue"
+            Background="#007ACC"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
         <Line
@@ -62,14 +62,17 @@
             BorderBrush="#101010"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False" />
         <Border
-            BorderBrush="DeepSkyBlue"
+            BorderBrush="#007ACC"
             BorderThickness="1"
             CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
-        <TextBox
+        <!--<TextBox
+            FocusVisualStyle="{x:Null}"
             RenderTransformOrigin="0.5 0"
             HorizontalContentAlignment="Center"
             VerticalContentAlignment="Center"
@@ -86,6 +89,6 @@
                     <TranslateTransform X="0" Y="-46" />
                 </TransformGroup>
             </TextBox.RenderTransform>
-        </TextBox>
+        </TextBox>-->
     </Grid>
 </UserControl>

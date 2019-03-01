@@ -28,7 +28,23 @@ namespace DiiagramrAPI.PluginNodeApi
             Data = (T)(underlyingTerminal.Data ?? default(T));
         }
 
-        public TerminalViewModel UnderlyingTerminal { get; }
+        /// <summary>
+        ///     Notifies subscribers when <see cref="Data" /> is changed.
+        /// </summary>
+        public event TerminalDataChangedDelegate<T> DataChanged
+        {
+            add
+            {
+                _dataChanged += value;
+                _dataChanged.Invoke(_data);
+            }
+            remove
+            {
+                _dataChanged -= value;
+            }
+        }
+
+        private event TerminalDataChangedDelegate<T> _dataChanged;
 
         /// <summary>
         ///     The data on the terminal. Setting this will result in data propagating to connected wires.
@@ -37,6 +53,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public T Data
         {
             get => _data;
+
             set
             {
                 if (_data != null && _data.Equals(value))
@@ -50,29 +67,11 @@ namespace DiiagramrAPI.PluginNodeApi
             }
         }
 
-        private event TerminalDataChangedDelegate<T> _dataChanged;
+        public TerminalViewModel UnderlyingTerminal { get; }
 
-        /// <summary>
-        ///     Notifies subscribers when <see cref="Data" /> is changed.
-        /// </summary>
-        public event TerminalDataChangedDelegate<T> DataChanged
+        public void ChangeTerminalData(object data)
         {
-            add
-            {
-                _dataChanged += value;
-                _dataChanged.Invoke(_data);
-            }
-            remove { _dataChanged -= value; }
-        }
-
-        private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data)))
-            {
-                return;
-            }
-
-            CastAndSetData(UnderlyingTerminal.Data);
+            Data = (T)(data ?? default(T));
         }
 
         private void CastAndSetData(object data)
@@ -94,9 +93,14 @@ namespace DiiagramrAPI.PluginNodeApi
             }
         }
 
-        public void ChangeTerminalData(object data)
+        private void UnderlyingTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Data = (T)(data ?? default(T));
+            if (!e.PropertyName.Equals(nameof(TerminalViewModel.Data)))
+            {
+                return;
+            }
+
+            CastAndSetData(UnderlyingTerminal.Data);
         }
     }
 }

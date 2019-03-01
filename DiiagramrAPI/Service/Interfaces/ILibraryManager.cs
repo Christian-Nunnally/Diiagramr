@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface ILibraryManager : IDiiagramrService
+    public interface ILibraryManager : IService
     {
-        ObservableCollection<string> Sources { get; }
-        ObservableCollection<string> InstalledLibraryNames { get; }
         ObservableCollection<NodeLibrary> AvailableLibraries { get; }
+        ObservableCollection<string> InstalledLibraryNames { get; }
+        ObservableCollection<string> Sources { get; }
 
         bool AddSource(string sourceUrl);
 
-        bool RemoveSource(string sourceUrl);
+        IEnumerable<Type> GetSerializeableTypes();
 
         Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription);
 
         Task LoadSourcesAsync();
 
-        IEnumerable<Type> GetSerializeableTypes();
+        bool RemoveSource(string sourceUrl);
     }
 }

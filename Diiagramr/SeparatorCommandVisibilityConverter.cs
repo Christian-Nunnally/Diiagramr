@@ -6,11 +6,11 @@ using System.Windows.Data;
 
 namespace Diiagramr
 {
-    public class SeparatorCommandVisibilityConverter : IValueConverter
+    public class NotSeparatorCommandVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is SeparatorCommand ? Visibility.Visible : Visibility.Collapsed;
+            return value is SeparatorCommand ? Visibility.Collapsed : Visibility.Visible;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -19,11 +19,11 @@ namespace Diiagramr
         }
     }
 
-    public class NotSeparatorCommandVisibilityConverter : IValueConverter
+    public class SeparatorCommandVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            return value is SeparatorCommand ? Visibility.Collapsed : Visibility.Visible;
+            return value is SeparatorCommand ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

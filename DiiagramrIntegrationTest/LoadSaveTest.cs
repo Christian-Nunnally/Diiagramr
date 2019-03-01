@@ -58,7 +58,7 @@ namespace DiiagramrIntegrationTest
             Assert.IsNotNull(projectManager.CurrentProject);
 
             projectManager.CreateDiagram();
-            Assert.AreEqual(1, projectManager.CurrentDiagrams.Count);
+            Assert.AreEqual(2, projectManager.CurrentDiagrams.Count);
 
             _shell.OpenDiagram();
 
@@ -94,7 +94,7 @@ namespace DiiagramrIntegrationTest
             // save
             projectManager.SaveProject();
             projectManager.CloseProject();
-            projectManager.LoadProject();
+            projectManager.LoadProject(new DiiagramrAPI.Model.ProjectModel());
 
             projectManager.DiagramViewModels.ForEach(x => x.Diagram.Play());
 
@@ -113,7 +113,6 @@ namespace DiiagramrIntegrationTest
             Assert.AreEqual(6, ((TestPassthroughNode)node2).OutputTerminal.Data);
             Assert.AreEqual(6, ((TestPassthroughNode)node2).Value);
             Assert.AreEqual(((TestPassthroughNode)node1).OutputTerminal.Data, ((TestPassthroughNode)node2).InputTerminal.Data);
-
 
             // change data
             outputTerminal.Data = 6;
@@ -141,7 +140,7 @@ namespace DiiagramrIntegrationTest
             var projectManager = shell.ProjectScreenViewModel.ProjectExplorerViewModel.ProjectManager;
             projectManager.SaveProject();
             projectManager.CloseProject();
-            projectManager.LoadProject();
+            projectManager.LoadProject(new DiiagramrAPI.Model.ProjectModel());
         }
     }
 }

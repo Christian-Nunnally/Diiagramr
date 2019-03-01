@@ -2,10 +2,10 @@
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IFetchWebResource : IDiiagramrService
+    public interface IFetchWebResource : IService
     {
-        Task<string> DownloadStringAsync(string url);
-
         Task DownloadFileAsync(string url, string downloadToPath);
+
+        Task<string> DownloadStringAsync(string url);
     }
 }

@@ -21,7 +21,7 @@
         </p>
         <fieldset style="width: 800px">
             <legend><strong>Repository URLs</strong></legend>
-            In the package manager settings, add the following URL to the list of 
+            In the package manager settings, add the following URL to the list of
             Package Sources:
             <blockquote>
                 <strong><%= Helpers.GetRepositoryUrl(Request.Url, Request.ApplicationPath) %></strong>

@@ -7,7 +7,7 @@
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
     d:DataContext="{d:DesignInstance viewModel:LibrarySourceManagerWindowViewModel}"
-    d:DesignHeight="400"
+    d:DesignHeight="200"
     d:DesignWidth="400"
     mc:Ignorable="d">
     <Grid Background="White">

@@ -30,76 +30,12 @@ namespace DiiagramrAPI.Service
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
-        public IList<DiagramViewModel> DiagramViewModels { get; }
-
         public event Action CurrentProjectChanged;
-        public ProjectModel CurrentProject { get; set; }
-        public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
+
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
-
-        public void CreateProject()
-        {
-            if (CloseProject())
-            {
-                CurrentProject = new ProjectModel();
-                CurrentProjectChanged?.Invoke();
-                CurrentProject.IsDirty = false;
-            }
-        }
-
-        public void SaveProject()
-        {
-            if (_projectFileService.SaveProject(CurrentProject, false))
-            {
-                CurrentProject.IsDirty = false;
-            }
-        }
-
-        public void SaveAsProject()
-        {
-            if (_projectFileService.SaveProject(CurrentProject, true))
-            {
-                CurrentProject.IsDirty = false;
-            }
-        }
-
-        public void LoadProjectButtonHandler()
-        {
-            LoadProject(autoOpenDiagram: true);
-        }
-
-        public void LoadProject(bool autoOpenDiagram = false)
-        {
-            if (CloseProject())
-            {
-                CurrentProject = _projectFileService.LoadProject();
-                if (CurrentProject == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    CurrentProjectChanged?.Invoke();
-                    CurrentProject.IsDirty = false;
-                    if (autoOpenDiagram && CurrentDiagrams.Any())
-                    {
-                        CurrentDiagrams.First().IsOpen = true;
-                    }
-                }
-                catch
-                {
-                    // TODO: Make async
-                    DownloadProjectDependencies().Wait();
-                    CurrentProjectChanged?.Invoke();
-                    CurrentProject.IsDirty = false;
-                    if (autoOpenDiagram && CurrentDiagrams.Any())
-                    {
-                        CurrentDiagrams.First().IsOpen = true;
-                    }
-                }
-            }
-        }
+        public ProjectModel CurrentProject { get; set; }
+        public IList<DiagramViewModel> DiagramViewModels { get; }
+        public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
         public bool CloseProject()
         {
@@ -155,6 +91,16 @@ namespace DiiagramrAPI.Service
             CurrentProject.AddDiagram(diagram);
         }
 
+        public void CreateProject()
+        {
+            if (CloseProject())
+            {
+                CurrentProject = new ProjectModel();
+                CurrentProjectChanged?.Invoke();
+                CurrentProject.IsDirty = false;
+            }
+        }
+
         public void DeleteDiagram(DiagramModel diagram)
         {
             CurrentProject.RemoveDiagram(diagram);
@@ -165,10 +111,68 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        private void OnCurrentProjectChanged()
+        public IEnumerable<Type> GetSerializeableTypes()
         {
-            DiagramViewModels.Clear();
-            CurrentDiagrams?.ForEach(CreateDiagramViewModel);
+            return _libraryManager.GetSerializeableTypes();
+        }
+
+        public void LoadProject(ProjectModel project, bool autoOpenDiagram = false)
+        {
+            if (CloseProject())
+            {
+                CurrentProject = project;
+                if (CurrentProject == null)
+                {
+                    return;
+                }
+
+                try
+                {
+                    CurrentProjectChanged?.Invoke();
+                    CurrentProject.IsDirty = false;
+                    if (autoOpenDiagram && CurrentDiagrams.Any())
+                    {
+                        CurrentDiagrams.First().IsOpen = true;
+                    }
+                    else if (autoOpenDiagram)
+                    {
+                        CreateDiagram();
+                    }
+                }
+                catch
+                {
+                    // TODO: Make async
+                    DownloadProjectDependencies().Wait();
+                    CurrentProjectChanged?.Invoke();
+                    CurrentProject.IsDirty = false;
+                    if (autoOpenDiagram && CurrentDiagrams.Any())
+                    {
+                        CurrentDiagrams.First().IsOpen = true;
+                    }
+                }
+            }
+        }
+
+        public void LoadProjectButtonHandler()
+        {
+            var project = _projectFileService.LoadProject();
+            LoadProject(project, autoOpenDiagram: true);
+        }
+
+        public void SaveAsProject()
+        {
+            if (_projectFileService.SaveProject(CurrentProject, true))
+            {
+                CurrentProject.IsDirty = false;
+            }
+        }
+
+        public void SaveProject()
+        {
+            if (_projectFileService.SaveProject(CurrentProject, false))
+            {
+                CurrentProject.IsDirty = false;
+            }
         }
 
         private void CreateDiagramViewModel(DiagramModel diagram)
@@ -191,9 +195,10 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        public IEnumerable<Type> GetSerializeableTypes()
+        private void OnCurrentProjectChanged()
         {
-            return _libraryManager.GetSerializeableTypes();
+            DiagramViewModels.Clear();
+            CurrentDiagrams?.ForEach(CreateDiagramViewModel);
         }
     }
 }

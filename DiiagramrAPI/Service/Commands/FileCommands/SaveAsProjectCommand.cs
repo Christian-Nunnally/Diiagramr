@@ -1,17 +1,26 @@
 ﻿using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.ViewModel.VisualDrop;
+using System;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
-    public class SaveAsProjectCommand : DiiagramrCommand
+    public class SaveAsProjectCommand : ToolBarCommand
     {
-        public override string Parent => "File";
         public override string Name => "Save As...";
+        public override string Parent => "Project";
         public override float Weight => .4f;
 
-        public override void Execute(ShellViewModel shell)
+        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
+
+        public SaveAsProjectCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
+        {
+            _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
+        }
+
+        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
         {
             shell.ProjectManager.SaveAsProject();
-            shell.WindowTitle = "Diiagramr" + (shell.ProjectManager.CurrentProject != null ? " - " + shell.ProjectManager.CurrentProject.Name : "");
+            shell.WindowTitle = "Visual Drop" + (shell.ProjectManager.CurrentProject != null ? " - " + shell.ProjectManager.CurrentProject.Name : "");
         }
     }
 }

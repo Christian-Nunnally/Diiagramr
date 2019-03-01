@@ -6,7 +6,6 @@ using System.ComponentModel;
 
 namespace DiiagramrUnitTests.ModelTests
 {
-
     [TestClass]
     public class TerminalModelTest
     {

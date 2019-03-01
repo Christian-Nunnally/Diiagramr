@@ -2,10 +2,10 @@
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProjectLoadSave : IDiiagramrService
+    public interface IProjectLoadSave : IService
     {
-        void Save(ProjectModel project, string fileName);
-
         ProjectModel Open(string fileName);
+
+        void Save(ProjectModel project, string fileName);
     }
 }

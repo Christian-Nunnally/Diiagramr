@@ -16,16 +16,35 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 {
     public class TerminalViewModel : Screen
     {
+        public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
         public static TerminalViewModel SelectedTerminal;
 
-        public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
+        public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
+        public Action<object> DataChanged;
+        private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
+        private static ColorTheme _colorTheme;
+        private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
+        private Adorner _adorner;
+        private object _data;
+        private bool _isSelected;
 
-        public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
+        public TerminalViewModel(TerminalModel terminal)
+        {
+            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
+            Data = TerminalModel.Data;
+            Name = TerminalModel.Name;
+            SetTerminalRotationBasedOnDirection();
+            SetBackgroundBrushWhenColorThemeAndTypeLoad();
+        }
+
+        public event Action<TerminalViewModel, bool> WiringModeChanged;
 
         public static ColorTheme ColorTheme
         {
             get => _colorTheme;
+
             set
             {
                 _colorTheme = value;
@@ -43,41 +62,46 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             }
         }
 
-        public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
-
-        private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
-        private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
-        private static ColorTheme _colorTheme;
-
-        public double TerminalUpWireMinimumLength
+        public Adorner Adorner
         {
-            get => TerminalModel.TerminalUpWireMinimumLength;
-            set => TerminalModel.TerminalUpWireMinimumLength = value;
+            get => _adorner;
+
+            set
+            {
+                RemoveAllAdornersFromTerminal();
+                if (value != null)
+                {
+                    AdornerLayer.GetAdornerLayer(View).Add(value);
+                }
+                _adorner = value;
+            }
         }
 
-        public double TerminalDownWireMinimumLength
+        public virtual object Data
         {
-            get => TerminalModel.TerminalDownWireMinimumLength;
-            set => TerminalModel.TerminalDownWireMinimumLength = value;
+            get => _data;
+
+            set
+            {
+                _data = value;
+                TerminalModel.Data = value;
+                DataChanged?.Invoke(Data);
+            }
         }
 
-        public double TerminalLeftWireMinimumLength
+        public int EdgeIndex
         {
-            get => TerminalModel.TerminalLeftWireMinimumLength;
-            set => TerminalModel.TerminalLeftWireMinimumLength = value;
+            get => TerminalModel.EdgeIndex;
+            set => TerminalModel.EdgeIndex = value;
         }
 
-        public double TerminalRightWireMinimumLength
-        {
-            get => TerminalModel.TerminalRightWireMinimumLength;
-            set => TerminalModel.TerminalRightWireMinimumLength = value;
-        }
-
-        public Brush TerminalBackgroundBrush { get; set; }
+        public virtual bool HighlightVisible { get; set; }
+        public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
 
         public virtual bool IsSelected
         {
             get => _isSelected;
+
             set
             {
                 _isSelected = value;
@@ -105,74 +129,48 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
                 }
 
                 SelectedTerminal = _isSelected ? this : null;
-            }
-        }
-
-        private object _data;
-
-        public TerminalViewModel(TerminalModel terminal)
-        {
-            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
-            Data = TerminalModel.Data;
-            Name = TerminalModel.Name;
-            SetTerminalRotationBasedOnDirection();
-            SetBackgroundBrushWhenColorThemeAndTypeLoad();
-        }
-
-        private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
-        {
-            if (TerminalModel.Type == null)
-            {
-                ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
-            }
-            else
-            {
-                SetBackgroundBrushWhenColorThemeLoads();
-            }
-        }
-
-        private void SetBackgroundBrushWhenColorThemeLoads()
-        {
-            if (ColorTheme == null)
-            {
-                ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
+                if (!_isSelected)
                 {
-                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
-                });
+                    Adorner = null;
+                }
             }
-            else
-            {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
-            }
+        }
+
+        public virtual bool MouseWithin { get; set; }
+
+        public string Name { get; set; }
+
+        public Brush TerminalBackgroundBrush { get; set; }
+
+        public double TerminalDownWireMinimumLength
+        {
+            get => TerminalModel.TerminalDownWireMinimumLength;
+            set => TerminalModel.TerminalDownWireMinimumLength = value;
+        }
+
+        public double TerminalLeftWireMinimumLength
+        {
+            get => TerminalModel.TerminalLeftWireMinimumLength;
+            set => TerminalModel.TerminalLeftWireMinimumLength = value;
         }
 
         public virtual TerminalModel TerminalModel { get; }
 
-        public Action<object> DataChanged;
-        public event Action<TerminalViewModel, bool> WiringModeChanged;
-
-        private bool _isSelected;
-        private Adorner _adorner;
-
-        public string Name { get; set; }
-
-        public virtual bool MouseWithin { get; set; }
-        public virtual bool TitleVisible => MouseWithin || IsSelected;
-        public virtual bool HighlightVisible { get; set; }
+        public double TerminalRightWireMinimumLength
+        {
+            get => TerminalModel.TerminalRightWireMinimumLength;
+            set => TerminalModel.TerminalRightWireMinimumLength = value;
+        }
 
         public float TerminalRotation { get; set; }
 
-        public virtual object Data
+        public double TerminalUpWireMinimumLength
         {
-            get => _data;
-            set
-            {
-                _data = value;
-                TerminalModel.Data = value;
-                DataChanged?.Invoke(Data);
-            }
+            get => TerminalModel.TerminalUpWireMinimumLength;
+            set => TerminalModel.TerminalUpWireMinimumLength = value;
         }
+
+        public virtual bool TitleVisible => MouseWithin || IsSelected;
 
         public double XRelativeToNode
         {
@@ -186,49 +184,14 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             set => TerminalModel.OffsetY = value;
         }
 
-        public int EdgeIndex
+        public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
         {
-            get => TerminalModel.EdgeIndex;
-            set => TerminalModel.EdgeIndex = value;
-        }
+            var terminalViewModel = terminal.Kind == TerminalKind.Input
+                ? (TerminalViewModel)new InputTerminalViewModel(terminal)
+                : (TerminalViewModel)new OutputTerminalViewModel(terminal);
 
-        private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(TerminalModel.Direction))
-            {
-                SetTerminalRotationBasedOnDirection();
-            }
-            else if (e.PropertyName == nameof(Model.TerminalModel.Data))
-            {
-                Data = TerminalModel.Data;
-            }
-            else if (e.PropertyName == nameof(Model.TerminalModel.Type))
-            {
-                if (TerminalModel.Type != null)
-                {
-                    ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
-                    ActionsToTakeWhenTypeIsLoaded.Clear();
-                }
-            }
-        }
-
-        private void SetTerminalRotationBasedOnDirection()
-        {
-            switch (TerminalModel.Direction)
-            {
-                case Direction.North:
-                    TerminalRotation = 0;
-                    break;
-                case Direction.East:
-                    TerminalRotation = 90;
-                    break;
-                case Direction.South:
-                    TerminalRotation = 180;
-                    break;
-                default:
-                    TerminalRotation = 270;
-                    break;
-            }
+            terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
+            return terminalViewModel;
         }
 
         public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
@@ -268,17 +231,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             }
         }
 
-        public void MouseMove(object sender, MouseEventArgs e)
+        public virtual void DisconnectTerminal()
         {
-            //            var uiElement = (UIElement) sender;
-            //            var dataObjectModel = new DataObject(DataFormats.StringFormat, TerminalModel);
-            //            var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
-            //            if (e.LeftButton == MouseButtonState.Pressed)
-            //                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-            //                    DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
-            //                else
-            //                    DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
-            e.Handled = true;
+            TerminalModel.DisconnectWires();
         }
 
         public void DropEventHandler(object sender, DragEventArgs e)
@@ -297,9 +252,67 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             WireToTerminal(terminal);
         }
 
-        public virtual void DisconnectTerminal()
+        public void LostFocus()
         {
-            TerminalModel.DisconnectWires();
+            Adorner = null;
+        }
+
+        public void MouseEntered(object sender, MouseEventArgs e)
+        {
+            if (View != null)
+            {
+                if (!IsSelected)
+                {
+                    SetTerminalAdorner(new ToolTipAdorner(View, this));
+                    View.Focusable = true;
+                    View.IsEnabled = true;
+                    View?.Focus();
+                }
+            }
+            MouseWithin = true;
+        }
+
+        public void MouseLeft(object sender, MouseEventArgs e)
+        {
+            MouseWithin = false;
+            if (!(Adorner is DirectEditTextBoxAdorner))
+            {
+                Adorner = null;
+            }
+        }
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+            //            var uiElement = (UIElement) sender;
+            //            var dataObjectModel = new DataObject(DataFormats.StringFormat, TerminalModel);
+            //            var dataObjectViewModel = new DataObject(DataFormats.StringFormat, this);
+            //            if (e.LeftButton == MouseButtonState.Pressed)
+            //                if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+            //                    DragDrop.DoDragDrop(uiElement, dataObjectViewModel, DragDropEffects.Link);
+            //                else
+            //                    DragDrop.DoDragDrop(uiElement, dataObjectModel, DragDropEffects.Link);
+            e.Handled = true;
+        }
+
+        public virtual void SetTerminalDirection(Direction direction)
+        {
+            TerminalModel.Direction = direction;
+        }
+
+        public virtual void ShowHighlightIfCompatibleType(Type type)
+        {
+            HighlightVisible = TerminalModel.Type.IsAssignableFrom(type);
+        }
+
+        public void TerminalLeftMouseDown()
+        {
+            IsSelected = true;
+        }
+
+        public void TerminalLeftMouseDownHandler(object sender, MouseEventArgs e)
+        {
+            TerminalLeftMouseDown();
+            e.Handled = true;
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)
@@ -324,106 +337,101 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             return true;
         }
 
-        public void TerminalLeftMouseDownHandler(object sender, MouseEventArgs e)
-        {
-            TerminalLeftMouseDown();
-            e.Handled = true;
-        }
-
-        public void TerminalLeftMouseDown()
-        {
-            IsSelected = true;
-        }
-
-        public virtual void SetTerminalDirection(Direction direction)
-        {
-            TerminalModel.Direction = direction;
-        }
-
-        public void MouseEntered(object sender, MouseEventArgs e)
-        {
-            if (View != null)
-            {
-                Adorner = new ToolTipAdorner(View, this);
-                View.Focusable = true;
-                View.IsEnabled = true;
-                View?.Focus();
-            }
-            MouseWithin = true;
-        }
-
-        public void MouseLeft(object sender, MouseEventArgs e)
-        {
-            MouseWithin = false;
-            Adorner = null;
-        }
-
-        public virtual void ShowHighlightIfCompatibleType(Type type)
-        {
-            HighlightVisible = TerminalModel.Type.IsAssignableFrom(type);
-        }
-
-        public static TerminalViewModel CreateTerminalViewModel(TerminalModel terminal)
-        {
-            var terminalViewModel = terminal.Kind == TerminalKind.Input
-                ? (TerminalViewModel)new InputTerminalViewModel(terminal)
-                : (TerminalViewModel)new OutputTerminalViewModel(terminal);
-
-            terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
-            return terminalViewModel;
-
-
-        }
-
-        public Adorner Adorner
-        {
-            get => _adorner;
-            set
-            {
-                if (value == null && _adorner != null)
-                {
-                    RemoveAllAdornersFromTerminal();
-                }
-                else if (value != null)
-                {
-                    AdornerLayer.GetAdornerLayer(View).Add(value);
-                }
-                _adorner = value;
-            }
-        }
-
         private void RemoveAllAdornersFromTerminal()
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(View);
-            Adorner[] toRemoveArray = adornerLayer.GetAdorners(View);
-            if (toRemoveArray != null)
+            if (adornerLayer != null)
             {
-                for (int x = 0; x < toRemoveArray.Length; x++)
+                Adorner[] toRemoveArray = adornerLayer.GetAdorners(View);
+                if (toRemoveArray != null)
                 {
-                    adornerLayer.Remove(toRemoveArray[x]);
+                    for (int x = 0; x < toRemoveArray.Length; x++)
+                    {
+                        adornerLayer.Remove(toRemoveArray[x]);
+                    }
                 }
             }
         }
 
-        public void KeyDown(object sender, KeyEventArgs e)
+        private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
         {
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            if (TerminalModel.Type == null)
             {
-                Adorner = new TerminalDataProbeAdorner(View, this);
+                ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
+            }
+            else
+            {
+                SetBackgroundBrushWhenColorThemeLoads();
             }
         }
 
-        public void KeyUp(object sender, KeyEventArgs e)
+        private void SetBackgroundBrushWhenColorThemeLoads()
         {
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            if (ColorTheme == null)
             {
-                Adorner = null;
+                ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
+                {
+                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
+                });
+            }
+            else
+            {
+                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
             }
         }
 
-        public void LostFocus()
+        private void SetTerminalRotationBasedOnDirection()
         {
-            Adorner = null;
+            switch (TerminalModel.Direction)
+            {
+                case Direction.North:
+                    TerminalRotation = 0;
+                    break;
+
+                case Direction.East:
+                    TerminalRotation = 90;
+                    break;
+
+                case Direction.South:
+                    TerminalRotation = 180;
+                    break;
+
+                default:
+                    TerminalRotation = 270;
+                    break;
+            }
+        }
+
+        private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(TerminalModel.Direction))
+            {
+                SetTerminalRotationBasedOnDirection();
+            }
+            else if (e.PropertyName == nameof(Model.TerminalModel.Data))
+            {
+                Data = TerminalModel.Data;
+            }
+            else if (e.PropertyName == nameof(Model.TerminalModel.Type))
+            {
+                if (TerminalModel.Type != null)
+                {
+                    ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
+                    ActionsToTakeWhenTypeIsLoaded.Clear();
+                }
+            }
+        }
+
+        protected void SetTerminalAdorner(Adorner adorner)
+        {
+            if (adorner is DirectEditTextBoxAdorner)
+            {
+                Adorner = adorner;
+            }
+            else if (Adorner == null)
+            {
+                Adorner = adorner;
+            }
         }
     }
 }

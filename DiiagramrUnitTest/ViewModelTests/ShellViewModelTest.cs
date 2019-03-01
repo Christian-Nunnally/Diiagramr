@@ -54,7 +54,6 @@ namespace DiiagramrUnitTests.ViewModelTests
             _shellViewModel = new ShellViewModel(
                 () => _projectScreenViewModelMoq.Object,
                 () => _libraryManagerViewModelMoq.Object,
-                () => _startScreenViewModelMoq.Object,
                 () => _projectManagerMoq.Object,
                 () => Enumerable.Empty<IDiiagramrCommand>(),
                 () => _contextMenuViewModelMoq.Object);

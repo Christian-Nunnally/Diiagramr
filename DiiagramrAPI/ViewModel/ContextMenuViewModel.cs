@@ -1,6 +1,8 @@
-﻿using DiiagramrAPI.Service.Commands;
+﻿using DiiagramrAPI.Service;
+using DiiagramrAPI.Service.Commands;
 using Stylet;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -9,13 +11,13 @@ namespace DiiagramrAPI.ViewModel
 {
     public class ContextMenuViewModel : Screen
     {
+        public event Action<DiiagramrCommand> ExecuteCommandHandler;
+
+        public ObservableCollection<IDiiagramrCommand> Commands { get; set; } = new ObservableCollection<IDiiagramrCommand>();
         public float MinimumWidth { get; set; } = 150;
+        public bool Visible { get; set; }
         public float X { get; set; } = 0;
         public float Y { get; set; } = 22;
-        public bool Visible { get; set; }
-        public ObservableCollection<IDiiagramrCommand> Commands { get; set; } = new ObservableCollection<IDiiagramrCommand>();
-
-        public event Action<DiiagramrCommand> ExecuteCommandHandler;
 
         public void ExecuteCommand(object sender, MouseEventArgs e)
         {
@@ -29,6 +31,15 @@ namespace DiiagramrAPI.ViewModel
                 Visible = false;
                 ExecuteCommandHandler?.Invoke(command);
             }
+        }
+
+        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        {
+            X = (float)position.X;
+            Y = (float)position.Y;
+            Visible = !Visible;
+            Commands.Clear();
+            commands.ForEach(Commands.Add);
         }
 
         public void MouseLeft()

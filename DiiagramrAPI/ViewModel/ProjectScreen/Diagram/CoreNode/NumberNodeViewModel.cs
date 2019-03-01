@@ -11,18 +11,12 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         public int Value
         {
             get => _value;
+
             set
             {
                 _value = value;
                 OnPropertyChanged(nameof(Value));
             }
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(40, 40);
-            setup.NodeName("Number Node");
-            _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
         }
 
         public void Add1()
@@ -35,6 +29,13 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
         {
             _outputTerminal.Data = Value - 1;
             Value--;
+        }
+
+        protected override void SetupNode(NodeSetup setup)
+        {
+            setup.NodeSize(30, 30);
+            setup.NodeName("Number Node");
+            _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
         }
     }
 }

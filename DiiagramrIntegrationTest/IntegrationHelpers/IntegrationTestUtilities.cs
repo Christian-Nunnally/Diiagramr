@@ -72,7 +72,6 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             return diagramViewModel;
         }
 
-
         // Places the given node at (ptX, ptY) on active diagram and returns new node
         public static PluginNode PlaceNode(this ShellViewModel shell, PluginNode node, int ptX = 0, int ptY = 0)
         {
@@ -85,7 +84,7 @@ namespace DiiagramrIntegrationTest.IntegrationHelpers
             nodeSelector.MousedOverNode = node;
             nodeSelector.SelectNode();
             Assert.AreEqual(node.GetType(), diagramViewModel.InsertingNodeViewModel.GetType());
-            diagramViewModel.MouseMoved(pt);
+            diagramViewModel.PreviewMouseMoved(pt);
             Assert.AreEqual(ptX - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Width / 2, diagramViewModel.InsertingNodeViewModel.X);
             Assert.AreEqual(ptY - DiagramViewModel.NodeBorderWidth - diagramViewModel.InsertingNodeViewModel.Height / 2, diagramViewModel.InsertingNodeViewModel.Y);
             diagramViewModel.PreviewLeftMouseButtonDown(pt);

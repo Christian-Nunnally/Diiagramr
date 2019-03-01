@@ -138,7 +138,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
+            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0), null);
 
             Assert.IsNull(_diagramViewModel.InsertingNodeViewModel);
         }
@@ -153,7 +153,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0));
+            _diagramViewModel.PreviewRightMouseButtonDown(new Point(0, 0), null);
 
             Assert.AreEqual(0, _diagramViewModel.NodeViewModels.Count);
         }
@@ -175,7 +175,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestMouseMoved_NotInsertingNode_DoesNothing()
         {
-            _diagramViewModel.MouseMoved(new Point(0, 0));
+            _diagramViewModel.PreviewMouseMoved(new Point(0, 0));
         }
 
         [TestMethod]
@@ -189,7 +189,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(m => m.Y).Returns(10);
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
 
-            _diagramViewModel.MouseMoved(new Point(5, 5));
+            _diagramViewModel.PreviewMouseMoved(new Point(5, 5));
 
             _pluginNodeMoq.VerifySet(m => m.X = -10);
             _pluginNodeMoq.VerifySet(m => m.Y = -10);
@@ -209,7 +209,7 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
             _diagramViewModel.Zoom = 2;
-            _diagramViewModel.MouseMoved(new Point(5, 5));
+            _diagramViewModel.PreviewMouseMoved(new Point(5, 5));
 
             _pluginNodeMoq.VerifySet(m => m.X = -13.5);
             _pluginNodeMoq.VerifySet(m => m.Y = -13.5);
@@ -250,27 +250,6 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _pluginNodeMoq.VerifySet(m => m.IsSelected = false, Times.Never);
             _pluginNodeMoq.VerifySet(m => m.IsSelected = true);
-        }
-
-        [TestMethod]
-        public void TestIsSnapGridVisible_InsertingNodeViewModelNotNull_ReturnsTrue()
-        {
-            _nodeMoq = new Mock<NodeModel>("node");
-            _pluginNodeMoq = new Mock<PluginNode>();
-            _pluginNodeMoq.SetupGet(m => m.NodeModel).Returns(_nodeMoq.Object);
-            _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-
-            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
-            _diagramViewModel.InsertingNodeViewModel = _pluginNodeMoq.Object;
-            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
-        }
-
-        [TestMethod]
-        public void TestIsSnapGridVisible_NodeBeingDraggedTrue_ReturnsTrue()
-        {
-            Assert.IsFalse(_diagramViewModel.IsSnapGridVisible);
-            _diagramViewModel.NodeBeingDragged = true;
-            Assert.IsTrue(_diagramViewModel.IsSnapGridVisible);
         }
     }
 }

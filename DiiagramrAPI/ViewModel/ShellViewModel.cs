@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Commands;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel.ProjectScreen;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -15,86 +15,95 @@ namespace DiiagramrAPI.ViewModel
 {
     public class ShellViewModel : Conductor<IScreen>.StackNavigation
     {
-        private Dictionary<string, IDiiagramrCommand> _shellCommands = new Dictionary<string, IDiiagramrCommand>();
-
-        public IProjectManager ProjectManager { get; }
-        public LibraryManagerWindowViewModel LibraryManagerWindowViewModel { get; set; }
-        public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
-        public StartScreenViewModel StartScreenViewModel { get; set; }
-        public ContextMenuViewModel ContextMenuViewModel { get; set; }
-        public ObservableCollection<IDiiagramrCommand> TopLevelMenuItems { get; set; }
-
-        public bool CanSaveProject { get; set; }
-        public bool CanSaveAsProject { get; set; }
-
-        public string WindowTitle { get; set; } = "Diiagramr";
-
+        public const string StartCommandId = "start";
         public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
-        public AbstractShellWindow ActiveWindow { get; set; }
-
-        public bool IsWindowOpen => ActiveWindow != null;
+        private Dictionary<string, IDiiagramrCommand> _shellCommands = new Dictionary<string, IDiiagramrCommand>();
+        private const double ShellRelativePositonYOffSet = -22;
+        private const double ShellRelativePositonXOffSet = -5;
+        private const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         public ShellViewModel(
             Func<ProjectScreenViewModel> projectScreenViewModelFactory,
             Func<LibraryManagerWindowViewModel> libraryManagerWindowViewModelFactory,
-            Func<StartScreenViewModel> startScreenScreenViewModelFactory,
             Func<IProjectManager> projectManagerFactory,
             Func<IEnumerable<IDiiagramrCommand>> commandsFactory,
             Func<ContextMenuViewModel> contextMenuViewModelFactory)
         {
+            var commands = commandsFactory.Invoke().OrderBy(c => c.Weight);
             ContextMenuViewModel = contextMenuViewModelFactory.Invoke();
-            SetupMenuItems(commandsFactory.Invoke());
+            SetupCommands(commandsFactory.Invoke());
             ProjectScreenViewModel = projectScreenViewModelFactory.Invoke();
             LibraryManagerWindowViewModel = libraryManagerWindowViewModelFactory.Invoke();
-            StartScreenViewModel = startScreenScreenViewModelFactory.Invoke();
-            StartScreenViewModel.LoadCanceled += () => ShowScreen(StartScreenViewModel);
 
             ProjectManager = projectManagerFactory.Invoke();
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
 
             ShowScreen(ProjectScreenViewModel);
-            ShowScreen(StartScreenViewModel);
+
+            ExecuteCommand(StartCommandId);
         }
 
-        private void SetupMenuItems(IEnumerable<IDiiagramrCommand> menuItems)
+        public AbstractShellWindow ActiveWindow { get; set; }
+        public bool CanSaveAsProject { get; set; }
+        public bool CanSaveProject { get; set; }
+        public ContextMenuViewModel ContextMenuViewModel { get; set; }
+        public bool IsWindowOpen => ActiveWindow != null;
+        public LibraryManagerWindowViewModel LibraryManagerWindowViewModel { get; set; }
+        public IProjectManager ProjectManager { get; }
+        public ProjectScreenViewModel ProjectScreenViewModel { get; set; }
+        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; set; }
+        public string WindowTitle { get; set; } = "Diiagramr";
+        public double Width { get; set; } = 1010;
+        public double Height { get; set; } = 830;
+
+        public void CloseWindow()
         {
-            // TODO: Consider making a "CommandHandler" class, that handles this, or make the commands construct themselves this way.
-            TopLevelMenuItems = new ObservableCollection<IDiiagramrCommand>();
-            var topLevelMenuItems = menuItems.Where(x => x.Parent == null);
-            var nonTopLevelMenuItems = menuItems.Where(x => x.Parent != null);
-            foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
+            if (ActiveWindow != null)
             {
-                TopLevelMenuItems.Add(topLevelMenuItem);
-                foreach (var subMenuItem in nonTopLevelMenuItems.Where(x => x.Parent == topLevelMenuItem.Name).OrderBy(x => x.Weight))
+                ActiveWindow.OpenWindow -= OpenWindow;
+                ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
+            }
+        }
+
+        public void ExecuteCommand(IDiiagramrCommand command)
+        {
+            ExecuteCommand(command, null);
+        }
+
+        public void ExecuteCommand(IDiiagramrCommand command, object parameter)
+        {
+            if (command.CanExecute(this))
+            {
+                command.Execute(this, parameter);
+            }
+        }
+
+        public void ExecuteCommand(string commandID)
+        {
+            if (_shellCommands.ContainsKey(commandID))
+            {
+                ExecuteCommand(_shellCommands[commandID]);
+            }
+        }
+
+        public void ExecuteCommandHandler(object sender, MouseEventArgs e)
+        {
+            var control = sender as Control;
+            if (control?.DataContext is DiiagramrCommand command)
+            {
+                var shellRelativePosition = control.TransformToAncestor(Application.Current.MainWindow);
+                var correctedRelativePosition = shellRelativePosition.Transform(new Point(ShellRelativePositonXOffSet, ShellRelativePositonYOffSet));
+
+                if (View is Window window)
                 {
-                    topLevelMenuItem.SubCommandItems.Add(subMenuItem);
+                    if (window.WindowState == WindowState.Maximized)
+                    {
+                        correctedRelativePosition = new Point(correctedRelativePosition.X + MaximizedWindowChromeRelativePositionAdjustment, correctedRelativePosition.Y + MaximizedWindowChromeRelativePositionAdjustment);
+                    }
                 }
+
+                ExecuteCommand(command, correctedRelativePosition);
             }
-            foreach (var command in menuItems)
-            {
-                var commandPath = GenerateCommandPath(command);
-                if (!_shellCommands.ContainsKey(commandPath))
-                {
-                    _shellCommands.Add(commandPath, command);
-                }
-            }
-
-            ContextMenuViewModel.ExecuteCommandHandler += ExecuteCommand;
-        }
-
-        private string GenerateCommandPath(IDiiagramrCommand command)
-        {
-            if (command.Parent == null)
-            {
-                return command.Name;
-            }
-
-            return $"{command.Parent}:{command.Name}";
-        }
-
-        public void ShowScreen(IScreen screen)
-        {
-            ActiveItem = screen;
         }
 
         public void OpenWindow(AbstractShellWindow window)
@@ -108,24 +117,6 @@ namespace DiiagramrAPI.ViewModel
             ActiveWindow = window;
         }
 
-        public void CloseWindow()
-        {
-            ActiveWindow.OpenWindow -= OpenWindow;
-            ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
-        }
-
-        private void ProjectManagerOnCurrentProjectChanged()
-        {
-            if (ProjectManager.CurrentProject == null)
-            {
-                ShowScreen(StartScreenViewModel);
-            }
-
-            CanSaveProject = ProjectManager.CurrentProject != null;
-            CanSaveAsProject = ProjectManager.CurrentProject != null;
-            WindowTitle = "Diiagramr" + (ProjectManager.CurrentProject != null ? " - " + ProjectManager.CurrentProject.Name : "");
-        }
-
         public override void RequestClose(bool? dialogResult = null)
         {
             if (ProjectManager.CloseProject())
@@ -137,6 +128,25 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
+        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        {
+            ContextMenuViewModel.ShowContextMenu(commands, position);
+        }
+
+        public void ShowContextMenu(IList<IDiiagramrCommand> commands)
+        {
+            ShowContextMenu(commands, new Point(0, 22));
+        }
+
+        public void ShowScreen(IScreen screen)
+        {
+            ActiveItem = screen;
+            if (screen is IShownInShellReaction reaction)
+            {
+                reaction.ShownInShell();
+            }
+        }
+
         public void WindowClosing(object sender, CancelEventArgs e)
         {
             if (!ProjectManager.CloseProject())
@@ -145,36 +155,64 @@ namespace DiiagramrAPI.ViewModel
             }
         }
 
-        public void ExecuteCommandHandler(object sender, MouseEventArgs e)
+        private string GenerateCommandPath(IDiiagramrCommand command)
         {
-            var control = sender as Control;
-            if (control?.DataContext is DiiagramrCommand command)
+            if (command.Parent == null)
             {
-                ExecuteCommand(command);
+                return command.Name;
             }
+
+            return $"{command.Parent}:{command.Name}";
         }
 
-        public void ExecuteCommand(IDiiagramrCommand command)
+        private void ProjectManagerOnCurrentProjectChanged()
         {
-            if (command.CanExecute(this))
+            if (ProjectManager.CurrentProject == null)
             {
-                command.Execute(this);
+                ExecuteCommand(StartCommandId);
             }
+
+            CanSaveProject = ProjectManager.CurrentProject != null;
+            CanSaveAsProject = ProjectManager.CurrentProject != null;
+            WindowTitle = "Diiagramr" + (ProjectManager.CurrentProject != null ? " - " + ProjectManager.CurrentProject.Name : "");
         }
 
-        public void ExecuteCommand(string commandID)
+        private void SetupCommands(IEnumerable<IDiiagramrCommand> commands)
         {
-            if (_shellCommands.ContainsKey(commandID))
+            // TODO: Consider making a "CommandHandler" class, that handles this, or make the commands construct themselves this way.
+            SetupMenuCommands(commands.OfType<ToolBarCommand>());
+            foreach (var command in commands)
             {
-                ExecuteCommand(_shellCommands[commandID]);
+                var commandPath = GenerateCommandPath(command);
+                if (!_shellCommands.ContainsKey(commandPath))
+                {
+                    _shellCommands.Add(commandPath, command);
+                }
+                else
+                {
+                    if (_shellCommands[commandPath].Weight < command.Weight)
+                    {
+                        _shellCommands[commandPath] = command;
+                    }
+                }
             }
+
+            ContextMenuViewModel.ExecuteCommandHandler += ExecuteCommand;
         }
 
-        public void ShowContextMenu(IList<IDiiagramrCommand> commands)
+        private void SetupMenuCommands(IEnumerable<IDiiagramrCommand> commands)
         {
-            ContextMenuViewModel.Visible = !ContextMenuViewModel.Visible;
-            ContextMenuViewModel.Commands.Clear();
-            commands.ForEach(ContextMenuViewModel.Commands.Add);
+            TopLevelMenuItems = new ObservableCollection<TopLevelToolBarCommand>();
+            var topLevelMenuItems = commands.OfType<TopLevelToolBarCommand>();
+            var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
+            foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
+            {
+                TopLevelMenuItems.Add(topLevelMenuItem);
+                foreach (var subMenuItem in nonTopLevelMenuItems.Where(x => x.Parent == topLevelMenuItem.Name).OrderBy(x => x.Weight))
+                {
+                    topLevelMenuItem.SubCommandItems.Add(subMenuItem);
+                }
+            }
         }
     }
 }

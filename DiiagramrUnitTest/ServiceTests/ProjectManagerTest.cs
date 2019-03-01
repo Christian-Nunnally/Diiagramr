@@ -146,16 +146,14 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void LoadProjectTest_CurrentProjectSet()
         {
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(new ProjectModel());
             Assert.IsNotNull(_projectManager.CurrentProject);
         }
 
         [TestMethod]
         public void LoadProjectTest_ProjectChanged()
         {
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(new ProjectModel());
             Assert.IsTrue(_currentProjectChanged);
         }
 
@@ -166,7 +164,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(new ProjectModel());
             Assert.AreEqual("testProj", _projectManager.CurrentProject.Name);
         }
 
@@ -174,11 +172,10 @@ namespace DiiagramrUnitTests.ServiceTests
         public void LoadProjectTest_ConfirmSaveNo()
         {
             _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.No);
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
 
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(new ProjectModel());
             Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
         }
 
@@ -187,11 +184,10 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _projectFileServiceMoq.Setup(m => m.ConfirmProjectClose()).Returns(MessageBoxResult.Yes);
             _projectFileServiceMoq.Setup(m => m.SaveProject(It.IsAny<ProjectModel>(), false)).Returns(true);
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(new ProjectModel());
 
             _projectManager.CreateProject();
             _projectManager.CurrentProject.Name = "testProj";
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(new ProjectModel());
             Assert.AreEqual("NewProject", _projectManager.CurrentProject.Name);
         }
 
@@ -205,9 +201,8 @@ namespace DiiagramrUnitTests.ServiceTests
             diagramMoq.SetupGet(d => d.Nodes).Returns(nodes);
             diagrams.Add(diagramMoq.Object);
             projectMoq.SetupGet(p => p.Diagrams).Returns(diagrams);
-            _projectFileServiceMoq.Setup(m => m.LoadProject()).Returns(projectMoq.Object);
 
-            _projectManager.LoadProject();
+            _projectManager.LoadProject(projectMoq.Object);
             Assert.AreEqual(diagramMoq.Object, _projectManager.DiagramViewModels.First().Diagram);
         }
 

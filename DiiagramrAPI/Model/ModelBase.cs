@@ -7,20 +7,23 @@ namespace DiiagramrAPI.Model
     [DataContract(IsReference = true)]
     public class ModelBase : INotifyPropertyChanged
     {
+        private string _name;
+
         public ModelBase()
         {
             Id = StaticId++;
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         [DataMember]
         public int Id { get; set; }
-
-        private string _name;
 
         [DataMember]
         public virtual string Name
         {
             get => _name;
+
             set
             {
                 if (_name != value)
@@ -33,8 +36,6 @@ namespace DiiagramrAPI.Model
         }
 
         private static int StaticId { get; set; }
-
-        public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnModelPropertyChanged([CallerMemberName] string propertyName = null)
         {

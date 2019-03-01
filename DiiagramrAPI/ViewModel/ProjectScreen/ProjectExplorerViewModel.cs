@@ -19,85 +19,12 @@ namespace DiiagramrAPI.ViewModel
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
         }
 
-        public IProjectManager ProjectManager { get; set; }
-
-        public bool IsAddDiagramButtonVisible { get; set; }
-
-        public ProjectModel Project { get; set; }
-
-        public ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
-
-        public DiagramModel SelectedDiagram { get; set; }
-
         public bool CanDeleteDiagram => SelectedDiagram != null;
-
-        private void ProjectManagerOnCurrentProjectChanged()
-        {
-            IsAddDiagramButtonVisible = ProjectManager?.CurrentProject != null;
-            Project = ProjectManager?.CurrentProject;
-            Diagrams = ProjectManager?.CurrentDiagrams;
-        }
-
-        public void MouseMoveHandler(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton != MouseButtonState.Pressed || SelectedDiagram == null)
-            {
-                return;
-            }
-
-            var dataObjectForDiagram = new DataObject(DataFormats.StringFormat, SelectedDiagram);
-            DragDrop.DoDragDrop((UIElement)sender, dataObjectForDiagram, DragDropEffects.Copy);
-        }
-
-        public void DiagramProjectItemMouseUp()
-        {
-            foreach (var diagramModel in Diagrams)
-            {
-                diagramModel.IsOpen = false;
-            }
-
-            if (SelectedDiagram == null)
-            {
-                return;
-            }
-
-            SelectedDiagram.IsOpen = true;
-        }
-
-        public void PreviewMouseDown(object sender, RoutedEventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            textBox.SelectAll();
-            textBox.Focus();
-            e.Handled = true;
-        }
-
-        public void EditNameTextBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                var textBox = (TextBox)sender;
-                var diagram = (DiagramModel)textBox.DataContext;
-                diagram.NameEditMode = false;
-            }
-        }
-
-        public void EditNameTetBoxFocusLost(object sender, EventArgs e)
-        {
-            var textBox = (TextBox)sender;
-            var diagram = (DiagramModel)textBox.DataContext;
-            diagram.NameEditMode = false;
-        }
-
-        public void EditNameTextBoxIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue)
-            {
-                var textBox = (TextBox)sender;
-                textBox.SelectAll();
-                textBox.Focus();
-            }
-        }
+        public ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
+        public bool IsAddDiagramButtonVisible { get; set; }
+        public ProjectModel Project { get; set; }
+        public IProjectManager ProjectManager { get; set; }
+        public DiagramModel SelectedDiagram { get; set; }
 
         public void CopyDiagram()
         {
@@ -122,10 +49,78 @@ namespace DiiagramrAPI.ViewModel
             ProjectManager.DeleteDiagram(selectedDiagram);
         }
 
+        public void DiagramProjectItemMouseUp()
+        {
+            foreach (var diagramModel in Diagrams)
+            {
+                diagramModel.IsOpen = false;
+            }
+
+            if (SelectedDiagram == null)
+            {
+                return;
+            }
+
+            SelectedDiagram.IsOpen = true;
+        }
+
+        public void EditNameTetBoxFocusLost(object sender, EventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            var diagram = (DiagramModel)textBox.DataContext;
+            diagram.NameEditMode = false;
+        }
+
+        public void EditNameTextBoxIsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            if ((bool)e.NewValue)
+            {
+                var textBox = (TextBox)sender;
+                textBox.SelectAll();
+                textBox.Focus();
+            }
+        }
+
+        public void EditNameTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                var textBox = (TextBox)sender;
+                var diagram = (DiagramModel)textBox.DataContext;
+                diagram.NameEditMode = false;
+            }
+        }
+
+        public void MouseMoveHandler(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton != MouseButtonState.Pressed || SelectedDiagram == null)
+            {
+                return;
+            }
+
+            var dataObjectForDiagram = new DataObject(DataFormats.StringFormat, SelectedDiagram);
+            DragDrop.DoDragDrop((UIElement)sender, dataObjectForDiagram, DragDropEffects.Copy);
+        }
+
+        public void PreviewMouseDown(object sender, RoutedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            textBox.SelectAll();
+            textBox.Focus();
+            e.Handled = true;
+        }
+
         public void RenameDiagram()
         {
             Diagrams.ForEach(d => d.NameEditMode = false);
             SelectedDiagram.NameEditMode = true;
+        }
+
+        private void ProjectManagerOnCurrentProjectChanged()
+        {
+            IsAddDiagramButtonVisible = ProjectManager?.CurrentProject != null;
+            Project = ProjectManager?.CurrentProject;
+            Diagrams = ProjectManager?.CurrentDiagrams;
         }
     }
 }

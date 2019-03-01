@@ -8,23 +8,29 @@ namespace DiiagramrAPI.Service
 {
     public class ToolTipAdorner : Adorner
     {
-        private VisualCollection visualChildren;
+        private readonly double MarginAroundLabel = 4.0;
+        private readonly double MarginFromTerminal = 5.0;
         private Border border;
         private TextBlock label;
-        private readonly double MarginFromTerminal = 5.0;
-        private readonly double MarginAroundLabel = 4.0;
+        private VisualCollection visualChildren;
 
-        public TerminalViewModel AdornedTerminal { get; set; }
         public ToolTipAdorner(UIElement adornedElement, TerminalViewModel adornedTerminal) : base(adornedElement)
         {
-            if (adornedTerminal == null) return;
+            if (adornedTerminal == null)
+            {
+                return;
+            }
+
             AdornedTerminal = adornedTerminal;
             visualChildren = new VisualCollection(this);
+            var text = AdornedTerminal.Data != null && AdornedTerminal.Data.ToString().Length < 8
+                ? AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString()
+                : AdornedTerminal.Name;
 
             label = new TextBlock
             {
                 IsHitTestVisible = false,
-                Text = AdornedTerminal.Name,
+                Text = text,
                 Margin = new Thickness(0),
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
@@ -48,6 +54,9 @@ namespace DiiagramrAPI.Service
             visualChildren.Add(border);
         }
 
+        public TerminalViewModel AdornedTerminal { get; set; }
+        protected override int VisualChildrenCount => visualChildren.Count;
+
         protected override Size ArrangeOverride(Size finalSize)
         {
             double width = border.Width;
@@ -59,13 +68,18 @@ namespace DiiagramrAPI.Service
             return finalSize;
         }
 
+        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
+
         private double GetRelativeXBasedOnTerminalDirection(double width)
         {
-            switch (AdornedTerminal.TerminalRotation) {
+            switch (AdornedTerminal.TerminalRotation)
+            {
                 case 90:
                     return MarginFromTerminal + TerminalViewModel.TerminalDiameter;
+
                 case 270:
                     return -width - MarginFromTerminal;
+
                 default:
                     return (TerminalViewModel.TerminalDiameter / 2) - (width / 2);
             }
@@ -77,14 +91,13 @@ namespace DiiagramrAPI.Service
             {
                 case 0:
                     return -MarginFromTerminal - height;
+
                 case 180:
                     return MarginFromTerminal + TerminalViewModel.TerminalDiameter;
+
                 default:
                     return (TerminalViewModel.TerminalDiameter / 2) - (height / 2);
             }
         }
-
-        protected override int VisualChildrenCount { get { return visualChildren.Count; } }
-        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
     }
 }

@@ -12,7 +12,7 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
 
         protected override void SetupNode(NodeSetup setup)
         {
-            setup.NodeSize(40, 40);
+            setup.NodeSize(30, 30);
             setup.NodeName("Add Node");
             setup.EnableResize();
             _inputTerminal1 = setup.InputTerminal<int>("Input", Direction.East);

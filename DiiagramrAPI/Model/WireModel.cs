@@ -9,14 +9,7 @@ namespace DiiagramrAPI.Model
     [AddINotifyPropertyChangedInterface]
     public class WireModel : ModelBase
     {
-        [IgnoreDataMember]
-        public bool UserWiredFromInput { get; }
-
         private bool _isActive;
-
-        private WireModel()
-        {
-        }
 
         public WireModel(TerminalModel terminal1, TerminalModel terminal2)
         {
@@ -55,23 +48,46 @@ namespace DiiagramrAPI.Model
             UserWiredFromInput = terminal1 == SourceTerminal;
         }
 
-        [DataMember]
-        public TerminalModel SourceTerminal { get; set; }
+        private WireModel()
+        {
+        }
 
         [DataMember]
         public TerminalModel SinkTerminal { get; set; }
 
         [DataMember]
-        public virtual double X1 { get; set; }
+        public TerminalModel SourceTerminal { get; set; }
+
+        [IgnoreDataMember]
+        public bool UserWiredFromInput { get; }
 
         [DataMember]
-        public virtual double Y1 { get; set; }
+        public virtual double X1 { get; set; }
 
         [DataMember]
         public virtual double X2 { get; set; }
 
         [DataMember]
+        public virtual double Y1 { get; set; }
+
+        [DataMember]
         public virtual double Y2 { get; set; }
+
+        public virtual void DisableWire()
+        {
+            _isActive = false;
+        }
+
+        public virtual void DisconnectWire()
+        {
+            SourceTerminal.PropertyChanged -= SourceTerminalOnPropertyChanged;
+            SinkTerminal.PropertyChanged -= SinkTerminalOnPropertyChanged;
+            SourceTerminal.DisconnectWire(this);
+            SinkTerminal.Data = null;
+            SinkTerminal.DisconnectWire(this);
+            SourceTerminal = null;
+            SinkTerminal = null;
+        }
 
         public virtual void EnableWire()
         {
@@ -79,14 +95,40 @@ namespace DiiagramrAPI.Model
             SinkTerminal.Data = SourceTerminal.Data;
         }
 
-        public virtual void DisableWire()
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
         {
-            _isActive = false;
+            SetupTerminalPropertyChangeNotifications();
+            SinkTerminal.Data = SourceTerminal.Data;
         }
 
         public virtual void ResetWire()
         {
             SinkTerminal.Data = null;
+        }
+
+        private void SetupTerminalPropertyChangeNotifications()
+        {
+            SourceTerminal.PropertyChanged += SourceTerminalOnPropertyChanged;
+            SinkTerminal.PropertyChanged += SinkTerminalOnPropertyChanged;
+
+            X1 = SinkTerminal.X;
+            Y1 = SinkTerminal.Y;
+            X2 = SourceTerminal.X;
+            Y2 = SourceTerminal.Y;
+        }
+
+        private void SinkTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            var sink = (TerminalModel)sender;
+            if (e.PropertyName.Equals(nameof(TerminalModel.X)))
+            {
+                X1 = sink.X;
+            }
+            else if (e.PropertyName.Equals(nameof(TerminalModel.Y)))
+            {
+                Y1 = sink.Y;
+            }
         }
 
         private void SourceTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -108,48 +150,6 @@ namespace DiiagramrAPI.Model
             {
                 SinkTerminal.Data = source.Data;
             }
-        }
-
-        private void SinkTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var sink = (TerminalModel)sender;
-            if (e.PropertyName.Equals(nameof(TerminalModel.X)))
-            {
-                X1 = sink.X;
-            }
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Y)))
-            {
-                Y1 = sink.Y;
-            }
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            SetupTerminalPropertyChangeNotifications();
-            SinkTerminal.Data = SourceTerminal.Data;
-        }
-
-        private void SetupTerminalPropertyChangeNotifications()
-        {
-            SourceTerminal.PropertyChanged += SourceTerminalOnPropertyChanged;
-            SinkTerminal.PropertyChanged += SinkTerminalOnPropertyChanged;
-
-            X1 = SinkTerminal.X;
-            Y1 = SinkTerminal.Y;
-            X2 = SourceTerminal.X;
-            Y2 = SourceTerminal.Y;
-        }
-
-        public virtual void DisconnectWire()
-        {
-            SourceTerminal.PropertyChanged -= SourceTerminalOnPropertyChanged;
-            SinkTerminal.PropertyChanged -= SinkTerminalOnPropertyChanged;
-            SourceTerminal.DisconnectWire(this);
-            SinkTerminal.Data = null;
-            SinkTerminal.DisconnectWire(this);
-            SourceTerminal = null;
-            SinkTerminal = null;
         }
     }
 }

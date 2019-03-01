@@ -6,10 +6,9 @@ namespace DiiagramrAPI.Service
 {
     public class ColorTheme
     {
-        private readonly Dictionary<Type, Color> _wireColorToTypeMap = new Dictionary<Type, Color>();
-        private readonly Dictionary<Type, Color> _terminalColorToTypeMap = new Dictionary<Type, Color>();
-
         private readonly Color _defaultColor = Color.FromRgb(100, 100, 100);
+        private readonly Dictionary<Type, Color> _terminalColorToTypeMap = new Dictionary<Type, Color>();
+        private readonly Dictionary<Type, Color> _wireColorToTypeMap = new Dictionary<Type, Color>();
 
         public ColorTheme()
         {
@@ -30,23 +29,7 @@ namespace DiiagramrAPI.Service
             NodeBorderOnMouseOverColor = Colors.LightBlue;
         }
 
-        public Color GetWireColorForType(Type type)
-        {
-            if (type == null)
-            {
-                return _defaultColor;
-            }
-
-            return _wireColorToTypeMap.ContainsKey(type) ? _wireColorToTypeMap[type] : _defaultColor;
-        }
-
-        public void RegisterWireColorForType(Type type, Color color)
-        {
-            if (!_wireColorToTypeMap.ContainsKey(type))
-            {
-                _wireColorToTypeMap.Add(type, color);
-            }
-        }
+        public Color NodeBorderOnMouseOverColor { get; set; }
 
         public Color GetTerminalColorForType(Type type)
         {
@@ -58,6 +41,16 @@ namespace DiiagramrAPI.Service
             return _terminalColorToTypeMap.ContainsKey(type) ? _terminalColorToTypeMap[type] : _defaultColor;
         }
 
+        public Color GetWireColorForType(Type type)
+        {
+            if (type == null)
+            {
+                return _defaultColor;
+            }
+
+            return _wireColorToTypeMap.ContainsKey(type) ? _wireColorToTypeMap[type] : _defaultColor;
+        }
+
         public void RegisterTerminalColorForType(Type type, Color color)
         {
             if (!_terminalColorToTypeMap.ContainsKey(type))
@@ -66,6 +59,12 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        public Color NodeBorderOnMouseOverColor { get; set; }
+        public void RegisterWireColorForType(Type type, Color color)
+        {
+            if (!_wireColorToTypeMap.ContainsKey(type))
+            {
+                _wireColorToTypeMap.Add(type, color);
+            }
+        }
     }
 }

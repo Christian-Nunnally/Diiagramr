@@ -16,19 +16,19 @@ namespace DiiagramrAPI.Service
             _pluginLoader = pluginLoaderFactory.Invoke();
         }
 
-        public ProjectModel Open(string fileName)
+        public ProjectModel Open(string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), _pluginLoader.SerializeableTypes);
-            using (var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
+            using (var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
                 return (ProjectModel)serializer.ReadObject(stream);
             }
         }
 
-        public void Save(ProjectModel project, string fileName)
+        public void Save(ProjectModel project, string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), _pluginLoader.SerializeableTypes);
-            using (var writer = new FileStream(fileName, FileMode.Create, FileAccess.ReadWrite))
+            using (var writer = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite))
             {
                 using (var w = XmlWriter.Create(writer))
                 {

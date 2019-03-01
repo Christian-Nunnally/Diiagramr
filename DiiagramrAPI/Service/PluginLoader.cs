@@ -12,8 +12,8 @@ namespace DiiagramrAPI.Service
 {
     public class PluginLoader : IPluginLoader
     {
-        private readonly IProvideNodes _nodeProvider;
         private readonly IDirectoryService _directoryService;
+        private readonly IProvideNodes _nodeProvider;
         private readonly string _pluginDirectory;
         private List<Type> _serializeableTypes = new List<Type>();
 
@@ -21,7 +21,6 @@ namespace DiiagramrAPI.Service
             Func<IProvideNodes> nodeProviderFactory,
             Func<IDirectoryService> directoryServiceFactory)
         {
-
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
@@ -49,17 +48,6 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        private IEnumerable<Assembly> GetPluginAssemblies(string directory)
-        {
-            return _directoryService.GetFiles(directory, "*.dll", SearchOption.AllDirectories).Select(Assembly.LoadFile);
-        }
-
-        private void GetInstalledPlugins()
-        {
-            var directories = _directoryService.GetDirectories(_pluginDirectory);
-            directories.ForEach(d => AddPluginFromDirectory(d, CreateLibraryDescriptionFromNuspec(d)));
-        }
-
         private NodeLibrary CreateLibraryDescriptionFromNuspec(string directory)
         {
             var nuspec = _directoryService.ReadAllText(_directoryService.GetFiles(directory, "*.nuspec").First());
@@ -71,10 +59,27 @@ namespace DiiagramrAPI.Service
             return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
         }
 
+        private void GetInstalledPlugins()
+        {
+            var directories = _directoryService.GetDirectories(_pluginDirectory);
+            directories.ForEach(d => AddPluginFromDirectory(d, CreateLibraryDescriptionFromNuspec(d)));
+        }
+
+        private IEnumerable<Assembly> GetPluginAssemblies(string directory)
+        {
+            return _directoryService.GetFiles(directory, "*.dll", SearchOption.AllDirectories).Select(Assembly.LoadFile);
+        }
+
         private void LoadAssembly(Assembly assembly, NodeLibrary nodeLibrary)
         {
             RegisterPluginNodesFromAssembly(assembly, nodeLibrary);
             LoadSerializeableTypesFromAssembly(assembly);
+        }
+
+        private void LoadNonPluginDll()
+        {
+            var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
+            dlls.ForEach(dll => LoadAssembly(dll, new NodeLibrary()));
         }
 
         private void LoadSerializeableTypesFromAssembly(Assembly assembly)
@@ -109,12 +114,6 @@ namespace DiiagramrAPI.Service
             {
                 Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
             }
-        }
-
-        private void LoadNonPluginDll()
-        {
-            var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
-            dlls.ForEach(dll => LoadAssembly(dll, new NodeLibrary()));
         }
     }
 }

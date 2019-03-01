@@ -1,17 +1,16 @@
-﻿using System;
-using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Model;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
 
 namespace DiiagramrAPI.Service
 {
     public class DiagramViewModelFactory
     {
+        private readonly ColorTheme _colorTheme;
         private readonly IProvideNodes _nodeProvidor;
         private readonly Func<NodeSelectorViewModel> _nodeSelectorViewModelFactory;
-        private readonly ColorTheme _colorTheme;
 
         public DiagramViewModelFactory(Func<IProvideNodes> nodeProvidorFactory, Func<NodeSelectorViewModel> nodeSelectorViewModelFactory, ColorTheme colorTheme)
         {

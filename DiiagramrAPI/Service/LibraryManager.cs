@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
@@ -16,9 +15,9 @@ namespace DiiagramrAPI.Service
         private const string PluginsDirectory = "Plugins\\";
         private readonly IDirectoryService _directoryService;
         private readonly IPluginLoader _pluginLoader;
+        private readonly bool _sourcesLoaded = false;
         private readonly IFetchWebResource _webResourceFetcher;
         private bool _shouldSourcesBeLoaded = false;
-        private readonly bool _sourcesLoaded = false;
 
         public LibraryManager(
             Func<IPluginLoader> pluginLoaderFactory,
@@ -32,9 +31,9 @@ namespace DiiagramrAPI.Service
             UpdateInstalledLibraries();
         }
 
-        public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
-        public ObservableCollection<string> InstalledLibraryNames { get; } = new ObservableCollection<string>();
         public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
+        public ObservableCollection<string> InstalledLibraryNames { get; } = new ObservableCollection<string>();
+        public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
 
         public bool AddSource(string sourceUrl)
         {
@@ -50,51 +49,6 @@ namespace DiiagramrAPI.Service
         public IEnumerable<Type> GetSerializeableTypes()
         {
             return _pluginLoader.SerializeableTypes;
-        }
-
-        public async Task LoadSourcesAsync()
-        {
-            _shouldSourcesBeLoaded = true;
-            if (_sourcesLoaded)
-            {
-                return;
-            }
-            foreach(var source in Sources)
-            {
-                await LoadSourceAsync(source);
-            }
-        }
-
-        private async Task LoadSourceAsync(string sourceUrl)
-        {
-            if (!_shouldSourcesBeLoaded)
-            {
-                return;
-            }
-
-            var packagesString = await _webResourceFetcher.DownloadStringAsync(sourceUrl);
-            if (packagesString == null)
-            {
-                return;
-            }
-            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
-            AddToAvailableLibrariesFromPaths(libraryPaths);
-        }
-
-        public bool RemoveSource(string sourceUrl)
-        {
-            if (!Sources.Contains(sourceUrl))
-            {
-                return false;
-            }
-
-            Sources.Remove(sourceUrl);
-
-            var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
-            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
-            RemoveFromAvailableLibrariesFromPaths(libraryPaths);
-
-            return true;
         }
 
         public async Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription)
@@ -137,25 +91,52 @@ namespace DiiagramrAPI.Service
             return true;
         }
 
-        private void RemoveFromAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
+        public async Task LoadSourcesAsync()
         {
-            foreach (var libraryPath in libraryPaths)
+            _shouldSourcesBeLoaded = true;
+            if (_sourcesLoaded)
             {
-                var library = CreateLibraryFromPath(libraryPath);
-                if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
-                {
-                    AvailableLibraries.Remove(otherLibrary);
-                }
+                return;
+            }
+            foreach (var source in Sources)
+            {
+                await LoadSourceAsync(source);
             }
         }
 
-        private void AddToAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
+        public bool RemoveSource(string sourceUrl)
         {
-            foreach (var libraryPath in libraryPaths)
+            if (!Sources.Contains(sourceUrl))
             {
-                var library = CreateLibraryFromPath(libraryPath);
-                AddLibraryToAvailableIfNewest(library);
+                return false;
             }
+
+            Sources.Remove(sourceUrl);
+
+            var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
+            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+            RemoveFromAvailableLibrariesFromPaths(libraryPaths);
+
+            return true;
+        }
+
+        private static NodeLibrary CreateLibraryFromPath(string libraryPath)
+        {
+            var splitPath = libraryPath.Split('/');
+            var libraryName = splitPath[splitPath.Length - 2];
+            var libraryVersion = splitPath[splitPath.Length - 1];
+            var splitVersion = libraryVersion.Split('.');
+            var majorVersion = int.Parse(splitVersion[0]);
+            var minorVersion = int.Parse(splitVersion[1]);
+            var patch = int.Parse(splitVersion[2]);
+            return new NodeLibrary(libraryName, libraryPath, majorVersion, minorVersion, patch);
+        }
+
+        private static IEnumerable<string> GetLibraryPathsFromPackagesXml(string packagesXml)
+        {
+            const string searchString = "{http://www.w3.org/2005/Atom}content";
+            var xmlElement = XElement.Parse(packagesXml);
+            return xmlElement.Descendants(searchString).Select(descendant => descendant.LastAttribute.Value).ToList();
         }
 
         private void AddLibraryToAvailableIfNewest(NodeLibrary library)
@@ -173,6 +154,43 @@ namespace DiiagramrAPI.Service
             else
             {
                 AvailableLibraries.Add(library);
+            }
+        }
+
+        private void AddToAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
+        {
+            foreach (var libraryPath in libraryPaths)
+            {
+                var library = CreateLibraryFromPath(libraryPath);
+                AddLibraryToAvailableIfNewest(library);
+            }
+        }
+
+        private async Task LoadSourceAsync(string sourceUrl)
+        {
+            if (!_shouldSourcesBeLoaded)
+            {
+                return;
+            }
+
+            var packagesString = await _webResourceFetcher.DownloadStringAsync(sourceUrl);
+            if (packagesString == null)
+            {
+                return;
+            }
+            var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
+            AddToAvailableLibrariesFromPaths(libraryPaths);
+        }
+
+        private void RemoveFromAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
+        {
+            foreach (var libraryPath in libraryPaths)
+            {
+                var library = CreateLibraryFromPath(libraryPath);
+                if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
+                {
+                    AvailableLibraries.Remove(otherLibrary);
+                }
             }
         }
 
@@ -201,28 +219,5 @@ namespace DiiagramrAPI.Service
                 InstalledLibraryNames.Add(directoryName);
             }
         }
-
-        #region Static Helper Methods
-
-        private static NodeLibrary CreateLibraryFromPath(string libraryPath)
-        {
-            var splitPath = libraryPath.Split('/');
-            var libraryName = splitPath[splitPath.Length - 2];
-            var libraryVersion = splitPath[splitPath.Length - 1];
-            var splitVersion = libraryVersion.Split('.');
-            var majorVersion = int.Parse(splitVersion[0]);
-            var minorVersion = int.Parse(splitVersion[1]);
-            var patch = int.Parse(splitVersion[2]);
-            return new NodeLibrary(libraryName, libraryPath, majorVersion, minorVersion, patch);
-        }
-
-        private static IEnumerable<string> GetLibraryPathsFromPackagesXml(string packagesXml)
-        {
-            const string searchString = "{http://www.w3.org/2005/Atom}content";
-            var xmlElement = XElement.Parse(packagesXml);
-            return xmlElement.Descendants(searchString).Select(descendant => descendant.LastAttribute.Value).ToList();
-        }
-
-        #endregion
     }
 }

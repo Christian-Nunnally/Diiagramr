@@ -6,7 +6,6 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
     {
         public Terminal<object> InputTerminal;
 
-        private event TerminalDataChangedDelegate<object> _dataChanged;
         public event TerminalDataChangedDelegate<object> DataChanged
         {
             add
@@ -19,6 +18,8 @@ namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
                 _dataChanged -= value;
             }
         }
+
+        private event TerminalDataChangedDelegate<object> _dataChanged;
 
         protected override void SetupNode(NodeSetup setup)
         {

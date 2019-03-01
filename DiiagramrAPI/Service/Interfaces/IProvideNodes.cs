@@ -5,14 +5,14 @@ using System.ComponentModel;
 
 namespace DiiagramrAPI.Service.Interfaces
 {
-    public interface IProvideNodes : INotifyPropertyChanged, IDiiagramrService
+    public interface IProvideNodes : INotifyPropertyChanged, IService
     {
-        void RegisterNode(PluginNode node, NodeLibrary library);
-
-        PluginNode LoadNodeViewModelFromNode(NodeModel node);
-
         PluginNode CreateNodeViewModelFromName(string typeFullName);
 
         IEnumerable<PluginNode> GetRegisteredNodes();
+
+        PluginNode LoadNodeViewModelFromNode(NodeModel node);
+
+        void RegisterNode(PluginNode node, NodeLibrary library);
     }
 }

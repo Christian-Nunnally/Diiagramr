@@ -14,24 +14,24 @@ namespace DiiagramrAPI.Model
             Name = "";
         }
 
-        public virtual bool IsOpen { get; set; }
-
-        public bool NameEditMode { get; set; } = false;
-
-        public bool NotNameEditMode => !NameEditMode;
-
-        [DataMember]
-        public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();
+        /// <summary>
+        ///     Notifies listeners when the appearance of this diagram have changed.
+        /// </summary>
+        public event Action PresentationChanged;
 
         /// <summary>
         ///     Notifies listeners when the sematics of this diagram have changed.
         /// </summary>
         public event Action SemanticsChanged;
 
-        /// <summary>
-        ///     Notifies listeners when the appearance of this diagram have changed.
-        /// </summary>
-        public event Action PresentationChanged;
+        public virtual bool IsOpen { get; set; }
+
+        public bool NameEditMode { get; set; } = false;
+
+        [DataMember]
+        public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();
+
+        public bool NotNameEditMode => !NameEditMode;
 
         public virtual void AddNode(NodeModel nodeModel)
         {
@@ -46,14 +46,26 @@ namespace DiiagramrAPI.Model
             NodeSematicsChanged();
         }
 
-        private void NodeSematicsChanged()
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
         {
-            SemanticsChanged?.Invoke();
+            Nodes.ForEach(n => n.SemanticsChanged += NodeSematicsChanged);
         }
 
-        private void NodePresentationChanged()
+        public virtual void Pause()
         {
-            PresentationChanged?.Invoke();
+            Nodes.ForEach(n => n.DisableTerminals());
+        }
+
+        public virtual void Play()
+        {
+            Nodes.ForEach(n => n.EnableTerminals());
+        }
+
+        public virtual void Open()
+        {
+            IsOpen = false;
+            IsOpen = true;
         }
 
         public virtual void RemoveNode(NodeModel nodeModel)
@@ -69,25 +81,19 @@ namespace DiiagramrAPI.Model
             NodeSematicsChanged();
         }
 
-        public virtual void Play()
-        {
-            Nodes.ForEach(n => n.EnableTerminals());
-        }
-
-        public virtual void Pause()
-        {
-            Nodes.ForEach(n => n.DisableTerminals());
-        }
-
         public virtual void Stop()
         {
             Nodes.ForEach(n => n.ResetTerminals());
         }
 
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
+        private void NodePresentationChanged()
         {
-            Nodes.ForEach(n => n.SemanticsChanged += NodeSematicsChanged);
+            PresentationChanged?.Invoke();
+        }
+
+        private void NodeSematicsChanged()
+        {
+            SemanticsChanged?.Invoke();
         }
     }
 }
