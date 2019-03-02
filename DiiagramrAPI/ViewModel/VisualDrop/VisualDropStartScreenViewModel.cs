@@ -19,7 +19,6 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
 
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
-        private IProjectManager _projectManager;
         private IProjectFileService _projectFileService;
 
         public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; set; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
@@ -40,11 +39,8 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
             ? RecentProject3.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
             : RecentProject3;
 
-        public event Action LoadCanceled;
-
-        public VisualDropStartScreenViewModel(Func<IProjectManager> projectManagerFactory, Func<IProjectFileService> projectFileServiceFactory)
+        public VisualDropStartScreenViewModel(Func<IProjectFileService> projectFileServiceFactory)
         {
-            _projectManager = projectManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _projectFileService.ProjectSaved += ProjectSavedHandler;
             PopulateTargetSpectrumValues();

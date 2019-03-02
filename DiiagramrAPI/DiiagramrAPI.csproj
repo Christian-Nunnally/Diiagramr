@@ -88,7 +88,7 @@
     <Compile Include="Service\Commands\FileCommands\SaveAsProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\NewProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\OpenProjectCommand.cs" />
-    <Compile Include="Service\Commands\StartupCommands\VisualDropStartScreenCommand2.cs" />
+    <Compile Include="Service\Commands\StartupCommands\VisualDropStartScreenCommand.cs" />
     <Compile Include="Service\Commands\StartupCommands\DiiagramrStartScreenCommand.cs" />
     <Compile Include="Service\Commands\TopLevelToolBarCommand.cs" />
     <Compile Include="Service\Commands\ToolBarCommand.cs" />

@@ -1,15 +1,14 @@
 ﻿using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.VisualDrop;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.StartupCommands
 {
-    public class VisualDropStartScreenCommand2 : DiiagramrCommand
+    public class VisualDropStartScreenCommand : DiiagramrCommand
     {
         private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 
-        public VisualDropStartScreenCommand2(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
+        public VisualDropStartScreenCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
         {
             _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
         }
@@ -22,7 +21,6 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
         {
             shell.ShowScreen(_visualDropStartScreenViewModel);
             shell.SetWindowTitle("Visual Drop");
-            _visualDropStartScreenViewModel.LoadCanceled += () => shell.ShowScreen(_visualDropStartScreenViewModel);
         }
     }
 }

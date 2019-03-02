@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DiiagramrAPI.Shell
 {
@@ -31,6 +29,7 @@ namespace DiiagramrAPI.Shell
             ContextMenuViewModel = contextMenuViewModelFactory.Invoke();
             ProjectManager = projectManagerFactory.Invoke();
             ToolbarViewModel = toolbarViewModelFactory.Invoke();
+            ShellCommand.Execute(StartCommandId);
         }
 
         public bool CanSaveAsProject { get; set; }

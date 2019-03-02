@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.PluginNodeApi
 {
-    public abstract class PluginNode : Screen
+    public abstract class PluginNode : Screen, IDisposable
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
@@ -438,5 +438,36 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             TerminalWiringModeChanged?.Invoke(terminalViewModel, enabled);
         }
+
+        #region IDisposable Support
+        private bool disposed = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                if (disposing)
+                {
+                    CleanupResources();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposed = true;
+            }
+        }
+
+        protected virtual void CleanupResources()
+        {
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }
