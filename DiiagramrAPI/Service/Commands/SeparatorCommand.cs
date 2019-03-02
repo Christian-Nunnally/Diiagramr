@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 
 namespace DiiagramrAPI.Service.Commands
 {
@@ -18,7 +19,7 @@ namespace DiiagramrAPI.Service.Commands
     {
         public override string Name => "";
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
         }
     }

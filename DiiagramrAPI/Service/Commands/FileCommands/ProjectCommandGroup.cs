@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 using System.Windows;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
@@ -7,7 +8,7 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
     {
         public override string Name => "Project";
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
             if (parameter is Point point)
             {

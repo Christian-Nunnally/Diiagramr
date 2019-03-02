@@ -63,13 +63,13 @@
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />
     <Compile Include="CustomControls\ZoomBorder.cs" />
-    <Compile Include="Model\DiagramModel.cs" />
-    <Compile Include="Model\NodeLibrary.cs" />
-    <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\NodeModel.cs" />
-    <Compile Include="Model\ProjectModel.cs" />
-    <Compile Include="Model\TerminalModel.cs" />
-    <Compile Include="Model\WireModel.cs" />
+    <Compile Include="DiagramModel\DiagramModel.cs" />
+    <Compile Include="DiagramModel\NodeLibrary.cs" />
+    <Compile Include="DiagramModel\ModelBase.cs" />
+    <Compile Include="DiagramModel\NodeModel.cs" />
+    <Compile Include="DiagramModel\ProjectModel.cs" />
+    <Compile Include="DiagramModel\TerminalModel.cs" />
+    <Compile Include="DiagramModel\WireModel.cs" />
     <Compile Include="PluginNodeApi\CoreUilities.cs" />
     <Compile Include="PluginNodeApi\Direction.cs" />
     <Compile Include="PluginNodeApi\NodeSetup.cs" />
@@ -83,6 +83,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Service\CommandManager.cs" />
     <Compile Include="Service\Commands\FileCommands\VisualDropCloseProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\SaveAsProjectCommand.cs" />
     <Compile Include="Service\Commands\FileCommands\NewProjectCommand.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Service\Commands\IDiiagramrCommand.cs" />
     <Compile Include="Service\Interfaces\IDiiagramrService.cs" />
     <Compile Include="Service\Interfaces\IKeyedDiiagramrService.cs" />
+    <Compile Include="Service\Interfaces\IScreenDisplayService.cs" />
     <Compile Include="Service\Interfaces\IProvideTestImplementation.cs" />
     <Compile Include="Service\DirectEditTextBoxAdorner.cs" />
     <Compile Include="Service\Interfaces\IShownInShellReaction.cs" />
@@ -127,6 +129,10 @@
     <Compile Include="Service\ProjectLoadSave.cs" />
     <Compile Include="Service\ProjectManager.cs" />
     <Compile Include="Service\WebResourceFetcher.cs" />
+    <Compile Include="Shell\IShell.cs" />
+    <Compile Include="Shell\Shell.cs" />
+    <Compile Include="Shell\ShellCommand.cs" />
+    <Compile Include="Shell\ToolbarViewModel.cs" />
     <Compile Include="ViewModel\AbstractShellWindow.cs" />
     <Compile Include="ViewModel\ContextMenuViewModel.cs" />
     <Compile Include="ViewModel\VisualDrop\VisualDropStartScreenViewModel.cs" />
@@ -150,7 +156,7 @@
     <Compile Include="ViewModel\ProjectScreen\ProjectExplorerViewModel.cs" />
     <Compile Include="ViewModel\ProjectScreen\ProjectScreenViewModel.cs" />
     <Compile Include="ViewModel\StartScreenViewModel.cs" />
-    <Compile Include="ViewModel\ShellViewModel.cs" />
+    <Compile Include="Shell\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -165,6 +171,7 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 using DiiagramrAPI.ViewModel.VisualDrop;
 using System;
 
@@ -17,10 +18,10 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
 
         public override float Weight => 0.2f;
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
             shell.ShowScreen(_visualDropStartScreenViewModel);
-            shell.WindowTitle = "Visual Drop";
+            shell.SetWindowTitle("Visual Drop");
             _visualDropStartScreenViewModel.LoadCanceled += () => shell.ShowScreen(_visualDropStartScreenViewModel);
         }
     }

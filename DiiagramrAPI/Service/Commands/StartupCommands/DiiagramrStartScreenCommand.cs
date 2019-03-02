@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.StartupCommands
@@ -14,7 +15,7 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
 
         public override string Name => ShellViewModel.StartCommandId + "DISABLED";
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
             shell.ShowScreen(_startScreenViewModel);
             _startScreenViewModel.LoadCanceled += () => shell.ShowScreen(_startScreenViewModel);

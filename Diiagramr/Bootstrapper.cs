@@ -1,5 +1,6 @@
 using DiiagramrAPI;
 using DiiagramrAPI.Service;
+using DiiagramrAPI.Shell;
 using DiiagramrAPI.ViewModel;
 using Stylet;
 using StyletIoC;
@@ -17,6 +18,7 @@ namespace Diiagramr
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<ColorTheme>().To<ColorTheme>().InSingletonScope();
             builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
+            builder.Bind<IShell>().To<DiiagramrAPI.Shell.Shell>().InSingletonScope();
         }
     }
 }

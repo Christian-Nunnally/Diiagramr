@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.ToolCommands
@@ -16,7 +17,7 @@ namespace DiiagramrAPI.Service.Commands.ToolCommands
         public override string Parent => "Tools";
         public override float Weight => .5f;
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
             shell.OpenWindow(_libraryManagerWindowViewModel);
         }

@@ -11,7 +11,12 @@ namespace DiiagramrAPI.ViewModel
 {
     public class ContextMenuViewModel : Screen
     {
-        public event Action<DiiagramrCommand> ExecuteCommandHandler;
+        private readonly Service.CommandManager _commandManager;
+
+        public ContextMenuViewModel(Func<Service.CommandManager> commandManagerFactory)
+        {
+            _commandManager = commandManagerFactory.Invoke();
+        }
 
         public ObservableCollection<IDiiagramrCommand> Commands { get; set; } = new ObservableCollection<IDiiagramrCommand>();
         public float MinimumWidth { get; set; } = 150;
@@ -24,12 +29,8 @@ namespace DiiagramrAPI.ViewModel
             var control = sender as FrameworkElement;
             if (control?.DataContext is DiiagramrCommand command)
             {
-                if (ExecuteCommandHandler == null)
-                {
-                    throw new InvalidOperationException("No command handler asssigned for the context menu view model");
-                }
                 Visible = false;
-                ExecuteCommandHandler?.Invoke(command);
+                _commandManager.ExecuteCommand(command);
             }
         }
 

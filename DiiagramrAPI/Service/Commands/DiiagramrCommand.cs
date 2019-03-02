@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.ViewModel;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.ViewModel;
 using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands
@@ -10,14 +11,14 @@ namespace DiiagramrAPI.Service.Commands
         public IList<IDiiagramrCommand> SubCommandItems { get; set; } = new List<IDiiagramrCommand>();
         public virtual float Weight => 0f;
 
-        public bool CanExecute(ShellViewModel shell)
+        public bool CanExecute(IShell shell)
         {
             return true;
         }
 
-        internal abstract void ExecuteInternal(ShellViewModel shell, object parameter);
+        internal abstract void ExecuteInternal(IShell shell, object parameter);
 
-        public void Execute(ShellViewModel shell, object parameter)
+        public void Execute(IShell shell, object parameter)
         {
             if (CanExecute(shell))
             {

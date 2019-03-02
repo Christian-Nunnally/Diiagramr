@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell;
 using DiiagramrAPI.ViewModel;
 using System.Collections.Generic;
 
@@ -11,8 +12,8 @@ namespace DiiagramrAPI.Service.Commands
         IList<IDiiagramrCommand> SubCommandItems { get; set; }
         float Weight { get; }
 
-        bool CanExecute(ShellViewModel shell);
+        bool CanExecute(IShell shell);
 
-        void Execute(ShellViewModel shell, object parameter);
+        void Execute(IShell shell, object parameter);
     }
 }

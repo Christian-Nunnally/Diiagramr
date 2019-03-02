@@ -1,32 +1,55 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.Shell;
+using DiiagramrAPI.Model;
 using System;
+using System.IO;
 using System.Linq;
+using DiiagramrAPI.ViewModel.ProjectScreen;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
     public class OpenProjectCommand : ToolBarCommand
     {
-        private IProjectFileService _projectFileService;
+        private readonly IProjectFileService _projectFileService;
+        private readonly IProjectManager _projectManager;
+        private readonly ProjectScreenViewModel _projectScreen;
 
         public override string Name => "Open";
         public override string Parent => "Project";
         public override float Weight => .9f;
 
-        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory)
+        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory, Func<IProjectManager> projectManagerFactory, Func<ProjectScreenViewModel> projectScreenViewModelFactory)
         {
             _projectFileService = projectFileServiceFactory.Invoke();
+            _projectManager = projectManagerFactory.Invoke();
+            _projectScreen = projectScreenViewModelFactory.Invoke();
         }
 
-        internal override void ExecuteInternal(ShellViewModel shell, object parameter)
+        internal override void ExecuteInternal(IShell shell, object parameter)
         {
-            var project = _projectFileService.LoadProject();
-            shell.ProjectManager.LoadProject(project);
-            var firstDiagram = shell.ProjectManager.CurrentDiagrams.FirstOrDefault();
+            ProjectModel project;
+            if (parameter is string projectName)
+            {
+                projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
+                var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
+                project = _projectFileService.LoadProject(projectPath);
+
+            } else
+            {
+                project = _projectFileService.LoadProject();
+            }
+            LoadProject(shell, project);
+        }
+
+        private void LoadProject(IShell shell, ProjectModel project)
+        {
+            _projectManager.LoadProject(project);
+            var firstDiagram = _projectManager.CurrentDiagrams.FirstOrDefault();
             if (firstDiagram != null)
             {
                 firstDiagram.Open();
             }
+            shell.ShowScreen(_projectScreen);
         }
     }
 }

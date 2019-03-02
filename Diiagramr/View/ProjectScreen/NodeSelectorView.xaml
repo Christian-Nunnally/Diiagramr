@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
                         <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
@@ -73,9 +73,11 @@
     </UserControl.Resources>
     <Canvas Background="#50181818" MouseDown="{s:Action BackgroundMouseDown}">
         <Grid
+            Margin="-20"
             Canvas.Left="{Binding RightPosition}"
             Canvas.Top="{Binding TopPosition}"
             Background="Transparent"
+            IsHitTestVisible="True"
             MouseLeave="{s:Action MouseLeftSelector}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
@@ -83,7 +85,7 @@
                 <ColumnDefinition Width="100" />
             </Grid.ColumnDefinitions>
 
-            <ItemsControl ItemsSource="{Binding VisibleLibrariesList}">
+            <ItemsControl Margin="20,20,0,20" ItemsSource="{Binding VisibleLibrariesList}">
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
                         <Setter Property="ContentTemplate">
@@ -116,7 +118,7 @@
                 </ItemsControl.ItemContainerStyle>
             </ItemsControl>
 
-            <ItemsControl Grid.Column="1" ItemsSource="{Binding VisibleNodesList}">
+            <ItemsControl Margin="0,20,0,20" Grid.Column="1" ItemsSource="{Binding VisibleNodesList}">
                 <ItemsControl.ItemContainerStyle>
                     <Style TargetType="ContentPresenter">
                         <Setter Property="ContentTemplate">

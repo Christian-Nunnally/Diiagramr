@@ -8,9 +8,9 @@ namespace DiiagramrAPI
 {
     public static class BootstrapperUtilities
     {
-        public static void BindEverythingThatImplementsTheInterface(Type intreface, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
+        public static void BindEverythingThatImplementsInterface(Type interfaceType, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
         {
-            var serviceImplementations = loadedTypes.Where(t => t.IsClass && t.GetInterface(intreface.Name) != null && !t.IsAbstract);
+            var serviceImplementations = loadedTypes.Where(t => t.IsClass && t.GetInterface(interfaceType.Name) != null && !t.IsAbstract);
             foreach (var serviceImplementation in serviceImplementations)
             {
                 var typeToBind = typeReplacementMap.ContainsKey(serviceImplementation)
@@ -20,11 +20,11 @@ namespace DiiagramrAPI
                 if (serviceImplementation.GetInterface(nameof(IKeyedService)) != null)
                 {
                     var keyedService = (IKeyedService)Activator.CreateInstance(serviceImplementation);
-                    builder.Bind(intreface).To(typeToBind).WithKey(keyedService.ServiceBindingKey);
+                    builder.Bind(interfaceType).To(typeToBind).WithKey(keyedService.ServiceBindingKey);
                 }
                 else
                 {
-                    builder.Bind(intreface).To(typeToBind).InSingletonScope();
+                    builder.Bind(interfaceType).To(typeToBind).InSingletonScope();
                 }
             }
         }
@@ -39,7 +39,7 @@ namespace DiiagramrAPI
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
-                BindEverythingThatImplementsTheInterface(loadedService, builder, loadedTypes, new Dictionary<Type, Type>());
+                BindEverythingThatImplementsInterface(loadedService, builder, loadedTypes, new Dictionary<Type, Type>());
             }
         }
 
@@ -68,7 +68,7 @@ namespace DiiagramrAPI
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
-                BindEverythingThatImplementsTheInterface(loadedService, builder, loadedTypes, realToFakeTypeDictionary);
+                BindEverythingThatImplementsInterface(loadedService, builder, loadedTypes, realToFakeTypeDictionary);
             }
         }
     }

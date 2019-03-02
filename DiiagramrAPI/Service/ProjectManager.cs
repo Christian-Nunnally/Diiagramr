@@ -153,12 +153,6 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        public void LoadProjectButtonHandler()
-        {
-            var project = _projectFileService.LoadProject();
-            LoadProject(project, autoOpenDiagram: true);
-        }
-
         public void SaveAsProject()
         {
             if (_projectFileService.SaveProject(CurrentProject, true))

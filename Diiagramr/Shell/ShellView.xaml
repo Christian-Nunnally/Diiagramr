@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.Shell;assembly=DiiagramrAPI"
     Title="{Binding WindowTitle}"
     Width="{Binding Width}"
     Height="{Binding Height}"
@@ -20,7 +20,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\WindowStyle.xaml" />
-                <ResourceDictionary Source="DarkTheme.xaml" />
+                <ResourceDictionary Source="..\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
@@ -29,41 +29,12 @@
     </Window.Resources>
     <Grid>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <ItemsControl
-                Height="22"
-                VerticalAlignment="Top"
+            <ContentControl
+                s:View.Model="{Binding ToolbarViewModel}"
                 Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
-                DockPanel.Dock="Top"
-                Foreground="White"
-                ItemsSource="{Binding TopLevelMenuItems}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Label
-                            Padding="5,0"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="{Binding Name}"
-                            Foreground="White"
-                            IsHitTestVisible="True"
-                            MouseDown="{s:Action ExecuteCommandHandler}">
-                            <Label.Style>
-                                <Style TargetType="Label">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#3E3E40" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Label.Style>
-                        </Label>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-            </ItemsControl>
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                DockPanel.Dock="Top"/>
             <Grid>
                 <ContentControl s:View.Model="{Binding ActiveItem}" />
                 <Border MouseDown="{s:Action CloseWindow}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">

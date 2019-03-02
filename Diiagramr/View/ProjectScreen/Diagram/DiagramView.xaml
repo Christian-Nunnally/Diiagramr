@@ -18,7 +18,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\..\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
                         <Setter Property="Fill" Value="Transparent" />

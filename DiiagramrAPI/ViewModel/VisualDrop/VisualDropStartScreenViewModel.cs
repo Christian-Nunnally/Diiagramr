@@ -1,12 +1,10 @@
 ﻿using DiiagramrAPI.Model;
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell;
 using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 
@@ -15,8 +13,8 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
     public class VisualDropStartScreenViewModel : Screen, IShownInShellReaction
     {
         private const int _recentProjectMaxCharacterLength = 10;
-        private const int _frames = 100;
         private const int _dripEffectDelay = 30;
+        private const int _frames = 100;
         private const int _quadrents = 1;
 
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
@@ -49,13 +47,7 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
             _projectManager = projectManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _projectFileService.ProjectSaved += ProjectSavedHandler;
-
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(188, 47, 51))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(46, new SolidColorBrush(Color.FromRgb(183, 108, 87))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(195, 153, 93))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(166, 185, 151))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(38, new SolidColorBrush(Color.FromRgb(98, 147, 104))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(66, 80, 116))));
+            PopulateTargetSpectrumValues();
 
             for (int i = 0; i < _targetSpectrumLogoValues.Count; i++)
             {
@@ -71,6 +63,16 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
             RecentProject2 = string.IsNullOrWhiteSpace(RecentProject2) ? "Recent #2" : RecentProject2;
             RecentProject3 = string.IsNullOrWhiteSpace(RecentProject3) ? "Recent #3" : RecentProject3;
             UpdateRecentProjects(string.Empty);
+        }
+
+        private void PopulateTargetSpectrumValues()
+        {
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(188, 47, 51))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(46, new SolidColorBrush(Color.FromRgb(183, 108, 87))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(195, 153, 93))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(166, 185, 151))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(38, new SolidColorBrush(Color.FromRgb(98, 147, 104))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(66, 80, 116))));
         }
 
         private void ProjectSavedHandler(ProjectModel project)
@@ -163,43 +165,17 @@ namespace DiiagramrAPI.ViewModel.VisualDrop
 
         public void NewButtonPressed()
         {
-            if (Parent != null)
-            {
-                RequestClose();
-            }
-
-            _projectManager.CreateProject();
-            _projectManager.CreateDiagram();
-            _projectManager.CurrentDiagrams.First().Open();
+            ShellCommand.Execute("Project:New");
         }
 
         public void BrowseButtonPressed()
         {
-            var project = _projectFileService.LoadProject();
-            if (project != null)
-            {
-                LoadProject(project);
-            }
-        }
-
-        private void LoadProject(ProjectModel project)
-        {
-            _projectManager.LoadProject(project, true);
-            _projectManager.CurrentDiagrams.First().Open();
-            if (Parent != null)
-            {
-                RequestClose();
-                return;
-            }
-            LoadCanceled?.Invoke();
+            ShellCommand.Execute("Project:Open");
         }
 
         private void LoadProject(string projectName)
         {
-            projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
-            var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
-            var project = _projectFileService.LoadProject(projectPath);
-            LoadProject(project);
+            ShellCommand.Execute("Project:Open", projectName);
         }
 
         public void UpdateRecentProjects(string name)
