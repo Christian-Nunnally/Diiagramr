@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
@@ -52,6 +53,10 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             DiagramControlViewModel = new DiagramControlViewModel(diagram);
             NodeViewModels = new BindableCollection<PluginNode>();
             WireViewModels = new BindableCollection<WireViewModel>();
+            DiagramInteractorViewModels = new BindableCollection<DiagramInteracter>();
+            DiagramInteractorViewModels.Add(NodeSelectorViewModel);
+            LassoSelectorViewModel = new LassoSelectorViewModel();
+            DiagramInteractorViewModels.Add(LassoSelectorViewModel);
 
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
@@ -78,17 +83,15 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
         public bool NodeBeingDragged { get; set; }
         public NodeSelectorViewModel NodeSelectorViewModel { get; set; }
         public BindableCollection<PluginNode> NodeViewModels { get; set; }
+        public BindableCollection<WireViewModel> WireViewModels { get; set; }
+        public BindableCollection<DiagramInteracter> DiagramInteractorViewModels { get; set; }
         public double PanX { get; set; }
         public double PanY { get; set; }
-        public BindableCollection<WireViewModel> WireViewModels { get; set; }
         public double Zoom { get; set; }
-        public Point DraggingRectangleCorner { get; set; }
 
-        private bool _draggingLasso;
-
-        public Rect DraggingRectangle { get; set; }
         public double ViewWidth { get; set; }
         public double ViewHeight { get; set; }
+        public LassoSelectorViewModel LassoSelectorViewModel { get; private set; }
 
         public void PreviewKeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -100,9 +103,17 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void PreviewKeyUpHandler(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl)
+            var interaction = new InteractionEventArguments();
+            interaction.Interaction = InteractionType.KeyUp;
+            interaction.Key = e.Key;
+
+            var visibleInteracter = DiagramInteractorViewModels.FirstOrDefault(x => x.Visible);
+            if (visibleInteracter != null)
             {
-                _draggingLasso = false;
+                if (visibleInteracter.ShouldInteractionStop(interaction))
+                {
+                    visibleInteracter.Visible = false;
+                }
             }
         }
 
@@ -113,8 +124,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
             {
-                _draggingLasso = true;
-                DraggingRectangle = new Rect(p.X, p.Y, 100, 100);
+                LassoSelectorViewModel.Visible = true;
+                LassoSelectorViewModel.SetStart(p.X, p.Y);
+                LassoSelectorViewModel.SetEnd(p.X, p.Y);
             }
         }
 
@@ -126,10 +138,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
 
         public void PreviewLeftMouseButtonUpHandler(object sender, MouseButtonEventArgs e)
         {
-            if (_draggingLasso)
+            if (LassoSelectorViewModel.Visible)
             {
-                _draggingLasso = false;
-                DraggingRectangle = new Rect(0, 0, 0, 0);
+                LassoSelectorViewModel.Visible = false;
             }
         }
 
@@ -153,11 +164,9 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             }
             else
             {
-                if (_draggingLasso)
+                if (LassoSelectorViewModel.Visible)
                 {
-                    var newWidth = Math.Abs(mouseLocation.X - DraggingRectangle.Left);
-                    var newHeight = Math.Abs(mouseLocation.Y - DraggingRectangle.Top);
-                    DraggingRectangle = new Rect(DraggingRectangle.X, DraggingRectangle.Y, newWidth, newHeight);
+                    LassoSelectorViewModel.SetEnd(mouseLocation.X, mouseLocation.Y);
                 }
             }
 
@@ -450,8 +459,8 @@ namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
             var availableWidth = View != null ? View.RenderSize.Width : 0;
             var availableHeight = View != null ? View.RenderSize.Height : 0;
 
-            NodeSelectorViewModel.RightPosition = point.X < availableWidth - NodeSelectorRightMargin ? point.X : availableWidth - NodeSelectorRightMargin;
-            NodeSelectorViewModel.TopPosition = point.Y < availableHeight - NodeSelectorBottomMargin ? point.Y : availableHeight - NodeSelectorBottomMargin;
+            NodeSelectorViewModel.X = point.X < availableWidth - NodeSelectorRightMargin ? point.X : availableWidth - NodeSelectorRightMargin;
+            NodeSelectorViewModel.Y = point.Y < availableHeight - NodeSelectorBottomMargin ? point.Y : availableHeight - NodeSelectorBottomMargin;
             NodeSelectorViewModel.Show(filter);
         }
 

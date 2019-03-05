@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
@@ -45,7 +46,7 @@ namespace DiiagramrAPI.ViewModel
         }
     }
 
-    public class NodeSelectorViewModel : Screen
+    public class NodeSelectorViewModel : DiagramInteracter
     {
         private IProvideNodes _nodeProvider;
 
@@ -70,10 +71,8 @@ namespace DiiagramrAPI.ViewModel
         public double PreviewNodePositionY { get; set; }
         public double PreviewNodeScaleX { get; set; }
         public double PreviewNodeScaleY { get; set; }
-        public double RightPosition { get; set; }
-        public double TopPosition { get; set; }
 
-        public bool Visible
+        public override bool Visible
         {
             get => _visible;
 
@@ -236,6 +235,16 @@ namespace DiiagramrAPI.ViewModel
 
             PreviewNodePositionX = (workingWidth - newWidth) / 2.0;
             PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
+        }
+
+        public override bool ShouldInteractionStart(InteractionEventArguments interaction)
+        {
+            return false;
+        }
+
+        public override bool ShouldInteractionStop(InteractionEventArguments interaction)
+        {
+            return false;
         }
     }
 }

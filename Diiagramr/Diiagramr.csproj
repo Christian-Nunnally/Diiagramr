@@ -138,7 +138,7 @@
     </Compile>
     <Compile Include="Pages\ShellViewModel.cs" />
     <Compile Include="SeparatorCommandVisibilityConverter.cs" />
-    <Compile Include="View\ProjectScreen\Diagram\PointsToPathConverter.cs" />
+    <Compile Include="Diagram\PointsToPathConverter.cs" />
     <Compile Include="WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>
     </Compile>
@@ -170,6 +170,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Diagram\Interacters\LassoSelectorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -194,35 +198,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramOutputNodeView.xaml">
+    <Page Include="Diagram\CoreNode\DiagramOutputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramInputNodeView.xaml">
+    <Page Include="Diagram\CoreNode\DiagramInputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\DiagramControlView.xaml">
+    <Page Include="Diagram\DiagramControlView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\CoreNode\AddNodeView.xaml">
+    <Page Include="Diagram\CoreNode\AddNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\CoreNode\NumberNodeView.xaml">
+    <Page Include="Diagram\CoreNode\NumberNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\CoreNode\DiagramCallNodeView.xaml">
+    <Page Include="Diagram\CoreNode\DiagramCallNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\TerminalView.xaml">
+    <Page Include="Diagram\TerminalView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\DiagramView.xaml">
+    <Page Include="Diagram\DiagramView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -230,7 +234,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\InputTerminalView.xaml">
+    <Page Include="Diagram\InputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -238,11 +242,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectScreen\NodeSelectorView.xaml">
+    <Page Include="Diagram\Interacters\NodeSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\OutputTerminalView.xaml">
+    <Page Include="Diagram\OutputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -270,7 +274,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\ProjectScreen\Diagram\WireView.xaml">
+    <Page Include="Diagram\WireView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

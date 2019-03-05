@@ -4,7 +4,7 @@ using System;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {
-    public class CloseProjectCommand : DiiagramrCommand
+    internal class CloseProjectCommand : DiiagramrCommand
     {
         private readonly StartScreenViewModel _startScreenViewModel;
         private readonly ProjectManager _projectManager;

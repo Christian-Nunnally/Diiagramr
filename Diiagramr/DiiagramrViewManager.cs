@@ -1,3 +1,4 @@
+using Diiagramr.DiagramInteracters;
 using Diiagramr.Shell;
 using Diiagramr.View;
 using Diiagramr.View.Diagram;
@@ -5,6 +6,7 @@ using Diiagramr.View.Diagram.CoreNode;
 using Diiagramr.View.ShellScreen;
 using Diiagramr.View.ShellScreen.ProjectScreen;
 using Diiagramr.View.VisualDrop;
+using DiiagramrAPI.Diagram.Interacters;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.ViewModel;
@@ -51,6 +53,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(AddNodeViewModel), typeof(AddNodeView));
             _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
+            _viewModelToViewMapping.Add(typeof(LassoSelectorViewModel), typeof(LassoSelectorView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

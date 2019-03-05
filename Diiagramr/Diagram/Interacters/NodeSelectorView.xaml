@@ -71,11 +71,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Canvas Background="#50181818" MouseDown="{s:Action BackgroundMouseDown}">
         <Grid
             Margin="-20"
-            Canvas.Left="{Binding RightPosition}"
-            Canvas.Top="{Binding TopPosition}"
             Background="Transparent"
             IsHitTestVisible="True"
             MouseLeave="{s:Action MouseLeftSelector}">
@@ -180,5 +177,4 @@
                 </Canvas.RenderTransform>
             </Canvas>
         </Grid>
-    </Canvas>
 </UserControl>

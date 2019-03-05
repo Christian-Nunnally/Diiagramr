@@ -7,6 +7,7 @@
     xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
+    xmlns:interacters="clr-namespace:DiiagramrAPI.Diagram.Interacters;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
@@ -351,7 +352,7 @@
             </Grid>
         </customControls:ZoomBorder>
 
-        <Canvas>
+        <!--<Canvas>
             <Rectangle
                 Canvas.Left="{Binding DraggingRectangle.X, Mode=TwoWay}"
                 Canvas.Top="{Binding DraggingRectangle.Y, Mode=TwoWay}"
@@ -362,7 +363,7 @@
                 StrokeThickness="2"
                 RadiusX="3"
                 RadiusY="3"/>
-        </Canvas>
+        </Canvas>-->
 
         <!--<ContentControl
             Margin="2"
@@ -379,6 +380,27 @@
             Foreground="#A4A4A4"
             Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />
 
-        <ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />
+        <!--<ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />-->
+
+        <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding DiagramInteractorViewModels}">
+            <ItemsControl.ItemContainerStyle>
+                <Style TargetType="ContentPresenter">
+                    <Setter Property="Canvas.Left" Value="{Binding X}" />
+                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    <Setter Property="Visibility" Value="{Binding Visible, Converter={StaticResource Btv}}" />
+                    <Setter Property="ContentTemplate">
+                        <Setter.Value>
+                            <DataTemplate DataType="{x:Type interacters:DiagramInteracter}">
+                                <ContentControl
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    s:View.Model="{Binding}"
+                                    IsTabStop="False" />
+                            </DataTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
     </Grid>
 </UserControl>
