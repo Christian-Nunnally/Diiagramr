@@ -29,10 +29,6 @@ Diiagramr is an automation type Visual Programming Language (VPL) where wires tr
 7. Click on a terminal to select it (compatible terminals will also highlight).
 8. Click on a compatible terminal to wire the two terminals together.
 
-
-# API
-<Link to api page on wiki>
-
 # Build and Test
 To build the project:
 1. Open Diiagramr.sln with Visual Studio 2017 Community Edition (https://www.visualstudio.com/downloads/).
