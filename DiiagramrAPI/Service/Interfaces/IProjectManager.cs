@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ namespace DiiagramrAPI.Service.Interfaces
 
         ObservableCollection<DiagramModel> CurrentDiagrams { get; }
         ProjectModel CurrentProject { get; set; }
-
         IList<DiagramViewModel> DiagramViewModels { get; }
         bool IsProjectDirty { get; }
 

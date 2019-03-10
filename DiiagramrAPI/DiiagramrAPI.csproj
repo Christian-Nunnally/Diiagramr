@@ -70,8 +70,11 @@
     <Compile Include="Diagram\DiagramModel\ProjectModel.cs" />
     <Compile Include="Diagram\DiagramModel\TerminalModel.cs" />
     <Compile Include="Diagram\DiagramModel\WireModel.cs" />
+    <Compile Include="Diagram\Interacters\DeleteSelectedNodesInteractorViewModel.cs" />
     <Compile Include="Diagram\Interacters\InteractionEventArguments.cs" />
     <Compile Include="Diagram\Interacters\DiagramInteracter.cs" />
+    <Compile Include="Diagram\Interacters\NodePlacementViewModel.cs" />
+    <Compile Include="Diagram\Interacters\PointSelectorViewModel.cs" />
     <Compile Include="Diagram\Interacters\LassoSelectorViewModel.cs" />
     <Compile Include="PluginNodeApi\CoreUilities.cs" />
     <Compile Include="PluginNodeApi\Direction.cs" />

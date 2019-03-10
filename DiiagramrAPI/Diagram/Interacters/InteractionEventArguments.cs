@@ -1,14 +1,19 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
+using Stylet;
 
 namespace DiiagramrAPI.Diagram.Interacters
 {
-    public struct InteractionEventArguments
+    public class DiagramInteractionEventArguments
     {
-        public InteractionType Interaction;
+        public DiagramViewModel Diagram;
+        public InteractionType Type;
         public Key Key;
-        public bool LeftCtrlKeyDown;
-        public bool RightCtrlKeyDown;
-        public bool CtrlKeyDown => LeftCtrlKeyDown || RightCtrlKeyDown;
+        public Screen ViewModelMouseIsOver;
+        public Point MousePosition;
+        public bool IsCtrlKeyPressed { get; internal set; }
+        public bool IsAltKeyPressed { get; internal set; }
+        public bool IsShiftKeyPressed { get; internal set; }
     }
 
     public enum InteractionType
@@ -18,6 +23,9 @@ namespace DiiagramrAPI.Diagram.Interacters
         RightMouseDown,
         RightMouseUp,
         KeyDown,
-        KeyUp
+        KeyUp,
+        MouseMoved,
+        None,
+        NodeInserted
     }
 }

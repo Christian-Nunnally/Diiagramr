@@ -1,9 +1,9 @@
-﻿using System;
-using System.Windows.Input;
+﻿using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using System;
 
 namespace DiiagramrAPI.Diagram.Interacters
 {
-    public class LassoSelectorViewModel : DiagramInteracter
+    public class LassoSelectorViewModel : DiagramInteractor
     {
         private double _startX;
         private double _startY;
@@ -36,15 +36,48 @@ namespace DiiagramrAPI.Diagram.Interacters
             SetRectangleBounds();
         }
 
-        public override bool ShouldInteractionStart(InteractionEventArguments interaction)
+        public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return false;
+            return interaction.Type == InteractionType.LeftMouseDown && interaction.IsCtrlKeyPressed;
         }
 
-        public override bool ShouldInteractionStop(InteractionEventArguments interaction)
+        public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Interaction == InteractionType.KeyUp 
-                && (interaction.Key == Key.LeftCtrl || interaction.Key == Key.RightCtrl);
+            return interaction.Type == InteractionType.LeftMouseUp;
+        }
+
+        public override void StartInteraction(DiagramInteractionEventArguments interaction)
+        {
+            SetStart(interaction.MousePosition.X, interaction.MousePosition.Y);
+            SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
+        }
+
+        public override void StopInteraction(DiagramInteractionEventArguments interaction)
+        {
+            var diagram = interaction.Diagram;
+            var left = diagram.GetPointRelativeToPanAndZoomX(X);
+            var top = diagram.GetPointRelativeToPanAndZoomY(Y);
+            var right = diagram.GetPointRelativeToPanAndZoomX(X + Width);
+            var bottom = diagram.GetPointRelativeToPanAndZoomY(Y + Height);
+
+            foreach (var node in diagram.NodeViewModels)
+            {
+                if (node.X > left
+                 && node.X + node.Width < right
+                 && node.Y > top
+                 && node.Y + node.Height < bottom)
+                {
+                    node.IsSelected = true;
+                }
+            }
+        }
+
+        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        {
+            if (interaction.Type == InteractionType.MouseMoved)
+            {
+                SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
+            }
         }
     }
 }

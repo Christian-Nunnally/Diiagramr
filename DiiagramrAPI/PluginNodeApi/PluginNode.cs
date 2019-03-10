@@ -9,11 +9,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Input;
 
 namespace DiiagramrAPI.PluginNodeApi
 {
-    public abstract class PluginNode : Screen, IDisposable
+    public abstract class PluginNode : Screen
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
 
@@ -27,13 +26,10 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         public event Action DragStarted;
-
         public event Action DragStopped;
 
         public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
-
         public event Action<WireModel> WireConnectedToTerminal;
-
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
         public virtual bool Dragging { get; set; }
@@ -52,7 +48,6 @@ namespace DiiagramrAPI.PluginNodeApi
                 {
                     Height = MinimumHeight;
                 }
-
                 FixAllTerminals();
             }
         }
@@ -70,7 +65,6 @@ namespace DiiagramrAPI.PluginNodeApi
                 {
                     TerminalViewModels.ForEach(t => t.IsSelected = false);
                 }
-
                 _isSelected = value;
             }
         }
@@ -87,7 +81,7 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual bool ResizeEnabled { get; set; }
         public virtual bool ResizerVisible => ResizeEnabled && IsSelected;
         public virtual IList<TerminalViewModel> TerminalViewModels { get; }
-        public virtual bool TitleVisible => IsSelected || MouseOverBorder;
+        public virtual bool TitleVisible => IsSelected;
 
         public virtual double Width
         {
@@ -108,7 +102,6 @@ namespace DiiagramrAPI.PluginNodeApi
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
         private bool IsInitialized { get; set; }
-        private bool MouseOverBorder { get; set; }
 
         private IEnumerable<PropertyInfo> PluginNodeSettings =>
             GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(PluginNodeSetting)));
@@ -172,16 +165,6 @@ namespace DiiagramrAPI.PluginNodeApi
             var nodeSetterUpper = new NodeSetup(this);
             SetupNode(nodeSetterUpper);
             InitializeWidthAndHeight();
-        }
-
-        public void MouseEntered(object sender, MouseEventArgs mouseEventArgs)
-        {
-            MouseOverBorder = true;
-        }
-
-        public void MouseLeft(object sender, MouseEventArgs mouseEventArgs)
-        {
-            MouseOverBorder = false;
         }
 
         public virtual void RemoveTerminalViewModel(TerminalViewModel terminalViewModel)
@@ -283,7 +266,7 @@ namespace DiiagramrAPI.PluginNodeApi
         {
         }
 
-        private static Exception DynamicTerminalExpection(string methodKey)
+        private static Exception DynamicTerminalExcection(string methodKey)
         {
             var errorString = $"RegisterDynamicTerminalMethod never received key '{methodKey}'.";
             return new InvalidOperationException(errorString);
@@ -438,36 +421,5 @@ namespace DiiagramrAPI.PluginNodeApi
         {
             TerminalWiringModeChanged?.Invoke(terminalViewModel, enabled);
         }
-
-        #region IDisposable Support
-        private bool disposed = false; // To detect redundant calls
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposed)
-            {
-                if (disposing)
-                {
-                    CleanupResources();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
-                disposed = true;
-            }
-        }
-
-        protected virtual void CleanupResources()
-        {
-        }
-
-        // This code added to correctly implement the disposable pattern.
-        public void Dispose()
-        {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
-        #endregion
     }
 }

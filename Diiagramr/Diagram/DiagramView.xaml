@@ -4,7 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customControls="clr-namespace:DiiagramrAPI.CustomControls;assembly=DiiagramrAPI"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:diagram="clr-namespace:DiiagramrAPI.ViewModel.ProjectScreen.Diagram;assembly=DiiagramrAPI"
+    xmlns:diagram="clr-namespace:DiiagramrAPI.Diagram;assembly=DiiagramrAPI"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:pluginNodeApi="clr-namespace:DiiagramrAPI.PluginNodeApi;assembly=DiiagramrAPI"
     xmlns:interacters="clr-namespace:DiiagramrAPI.Diagram.Interacters;assembly=DiiagramrAPI"
@@ -12,14 +12,15 @@
     d:DataContext="{d:DesignInstance diagram:DiagramViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="600"
+    Focusable="True"
     PreviewMouseMove="{s:Action PreviewMouseMoveHandler}"
-    PreviewKeyDown="{s:Action PreviewKeyDownHandler}"
-    PreviewKeyUp="{s:Action PreviewKeyUpHandler}"
+    KeyDown="{s:Action KeyDownHandler}"
+    KeyUp="{s:Action KeyUpHandler}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\..\..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
                         <Setter Property="Fill" Value="Transparent" />
@@ -157,16 +158,17 @@
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"
             Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
-            MouseLeftButtonDown="{s:Action LeftMouseButtonDownHandler}"
             PanX="{Binding PanX, Mode=TwoWay}"
             PanY="{Binding PanY, Mode=TwoWay}"
             PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
             PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
             PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
+            PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}"
             Zoom="{Binding Zoom, Mode=OneWayToSource}">
             <Grid>
                 <Canvas>
                     <Border
+                        Visibility="{Binding BoundingBoxVisible, Converter={StaticResource Btv}}"
                         Canvas.Left="{Binding BoundingBox.Left}"
                         Canvas.Top="{Binding BoundingBox.Top}"
                         Width="{Binding BoundingBox.Width}"
@@ -232,9 +234,7 @@
                                                 Grid.ColumnSpan="2"
                                                 Cursor="SizeAll"
                                                 DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                MouseEnter="{s:Action MouseEntered}"
-                                                MouseLeave="{s:Action MouseLeft}"
-                                                PreviewMouseDown="{s:Action PreviewLeftMouseDownOnBorderHandler}"
+                                                PreviewMouseDown="{s:Action PreviewLeftMouseButtonDownHandler}"
                                                 Template="{StaticResource MoveThumbTemplate}" />
 
                                             <Border
@@ -382,15 +382,14 @@
 
         <!--<ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />-->
 
-        <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding DiagramInteractorViewModels}">
+        <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding ActiveDiagramInteractors}">
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="Canvas.Left" Value="{Binding X}" />
                     <Setter Property="Canvas.Top" Value="{Binding Y}" />
-                    <Setter Property="Visibility" Value="{Binding Visible, Converter={StaticResource Btv}}" />
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
-                            <DataTemplate DataType="{x:Type interacters:DiagramInteracter}">
+                            <DataTemplate DataType="{x:Type interacters:DiagramInteractor}">
                                 <ContentControl
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"

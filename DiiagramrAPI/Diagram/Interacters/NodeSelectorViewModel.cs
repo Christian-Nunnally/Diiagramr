@@ -1,10 +1,11 @@
-﻿using DiiagramrAPI.Diagram.Interacters;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Interacters;
 using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.ViewModel.Diagram;
 using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using PropertyChanged;
 using Stylet;
 using System;
@@ -46,9 +47,12 @@ namespace DiiagramrAPI.ViewModel
         }
     }
 
-    public class NodeSelectorViewModel : DiagramInteracter
+    public class NodeSelectorViewModel : DiagramInteractor
     {
+        private const double NodeSelectorBottomMargin = 250;
+        private const double NodeSelectorRightMargin = 400;
         private IProvideNodes _nodeProvider;
+        private DiagramViewModel _diagramViewModel;
 
         private bool _visible;
 
@@ -58,9 +62,8 @@ namespace DiiagramrAPI.ViewModel
         {
             _nodeProvider = nodeProvider.Invoke();
             _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
+            AddNodes();
         }
-
-        public event Action<PluginNode> NodeSelected;
 
         public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
         public List<Library> LibrariesList { get; set; } = new List<Library>();
@@ -72,35 +75,9 @@ namespace DiiagramrAPI.ViewModel
         public double PreviewNodeScaleX { get; set; }
         public double PreviewNodeScaleY { get; set; }
 
-        public override bool Visible
-        {
-            get => _visible;
-
-            set
-            {
-                _visible = value;
-                if (_visible)
-                {
-                    AddNodes();
-                }
-                else
-                {
-                    Filter = x => true;
-                }
-            }
-        }
-
         public BindableCollection<PluginNode> VisibleNodesList { get; set; } = new BindableCollection<PluginNode>();
 
         private Func<PluginNode, bool> Filter = x => true;
-
-        public void Show(Func<PluginNode, bool> filter)
-        {
-            Visible = true;
-            Filter = filter;
-            VisibleLibrariesList.Clear();
-            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
-        }
 
         public void AddNodes()
         {
@@ -147,7 +124,6 @@ namespace DiiagramrAPI.ViewModel
         {
             VisibleNodesList.Clear();
             MousedOverNode = null;
-            Visible = false;
         }
 
         public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
@@ -183,8 +159,8 @@ namespace DiiagramrAPI.ViewModel
 
         public void SelectNode()
         {
-            NodeSelected?.Invoke(MousedOverNode);
-            Visible = false;
+            _diagramViewModel.StopInteractor(this);
+            _diagramViewModel.BeginInsertingNode(MousedOverNode, true);
         }
 
         public void ShowLibrary(Library library)
@@ -237,14 +213,58 @@ namespace DiiagramrAPI.ViewModel
             PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
         }
 
-        public override bool ShouldInteractionStart(InteractionEventArguments interaction)
+        public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return false;
+            return interaction.Type == InteractionType.RightMouseDown;
         }
 
-        public override bool ShouldInteractionStop(InteractionEventArguments interaction)
+        public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return false;
+            return interaction.Type == InteractionType.LeftMouseDown;
+        }
+
+        public override void StartInteraction(DiagramInteractionEventArguments interaction)
+        {
+            _diagramViewModel = interaction.Diagram;
+
+            var availableWidth = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Width : 0;
+            var availableHeight = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Height : 0;
+            X = interaction.MousePosition.X < availableWidth - NodeSelectorRightMargin ? interaction.MousePosition.X : availableWidth - NodeSelectorRightMargin;
+            Y = interaction.MousePosition.Y < availableHeight - NodeSelectorBottomMargin ? interaction.MousePosition.Y : availableHeight - NodeSelectorBottomMargin;
+
+            var mousedOverViewModel = interaction.ViewModelMouseIsOver;
+            ShowWithContextFilter(mousedOverViewModel);
+        }
+
+        private void ShowWithContextFilter(Screen mousedOverViewModel)
+        {
+            if (mousedOverViewModel is InputTerminalViewModel inputTerminalMouseIsOver)
+            {
+                Show(n => n.TerminalViewModels.Any(t => t is OutputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(inputTerminalMouseIsOver.TerminalModel.Type)));
+            }
+            else if (mousedOverViewModel is OutputTerminalViewModel outputTerminalMouseIsOver)
+            {
+                Show(n => n.TerminalViewModels.Any(t => t is InputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(outputTerminalMouseIsOver.TerminalModel.Type)));
+            }
+            else
+            {
+                Show(n => true);
+            }
+        }
+
+        private void Show(Func<PluginNode, bool> filter)
+        {
+            Filter = filter;
+            VisibleLibrariesList.Clear();
+            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
+        }
+
+        public override void StopInteraction(DiagramInteractionEventArguments interaction)
+        {
+        }
+
+        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        {
         }
     }
 }

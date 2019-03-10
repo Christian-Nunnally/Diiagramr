@@ -198,25 +198,6 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         }
 
         [TestMethod]
-        public void TestMouseEntered_TitleVisibleSetToTrue()
-        {
-            var testPluginNode = new TestPluginNode();
-            Assert.IsFalse(testPluginNode.TitleVisible);
-            testPluginNode.MouseEntered(null, null);
-            Assert.IsTrue(testPluginNode.TitleVisible);
-        }
-
-        [TestMethod]
-        public void TestMouseLeft_TitleVisibleSetToFalse()
-        {
-            var testPluginNode = new TestPluginNode();
-            testPluginNode.MouseEntered(null, null);
-            Assert.IsTrue(testPluginNode.TitleVisible);
-            testPluginNode.MouseLeft(null, null);
-            Assert.IsFalse(testPluginNode.TitleVisible);
-        }
-
-        [TestMethod]
         public void TestAddTerminalViewModel_TerminalViewModelAddedToTerminalViewModels()
         {
             var testPluginNode = new TestPluginNode();

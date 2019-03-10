@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.ViewModel.Diagram;

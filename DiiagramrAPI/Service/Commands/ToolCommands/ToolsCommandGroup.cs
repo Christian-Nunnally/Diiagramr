@@ -13,7 +13,7 @@ namespace DiiagramrAPI.Service.Commands.ToolCommands
         {
             if (parameter is Point point)
             {
-                shell.ShowContextMenu(SubCommandItems, new Point(point.X, point.Y + 21));
+                shell.ShowContextMenu(SubCommandItems, new Point(point.X, point.Y + 19));
             }
         }
     }
