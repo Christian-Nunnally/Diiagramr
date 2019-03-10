@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
 using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands

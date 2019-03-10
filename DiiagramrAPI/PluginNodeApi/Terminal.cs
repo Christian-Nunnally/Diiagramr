@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+﻿using DiiagramrAPI.Diagram;
 using System;
 using System.ComponentModel;
 

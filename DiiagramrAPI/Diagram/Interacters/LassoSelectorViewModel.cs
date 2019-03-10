@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
-using System;
+﻿using System;
 
 namespace DiiagramrAPI.Diagram.Interacters
 {

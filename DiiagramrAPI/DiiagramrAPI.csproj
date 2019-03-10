@@ -63,13 +63,13 @@
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />
     <Compile Include="CustomControls\ZoomBorder.cs" />
-    <Compile Include="Diagram\DiagramModel\DiagramModel.cs" />
-    <Compile Include="Diagram\DiagramModel\NodeLibrary.cs" />
-    <Compile Include="Diagram\DiagramModel\ModelBase.cs" />
-    <Compile Include="Diagram\DiagramModel\NodeModel.cs" />
-    <Compile Include="Diagram\DiagramModel\ProjectModel.cs" />
-    <Compile Include="Diagram\DiagramModel\TerminalModel.cs" />
-    <Compile Include="Diagram\DiagramModel\WireModel.cs" />
+    <Compile Include="Diagram\Model\DiagramModel.cs" />
+    <Compile Include="Diagram\Model\NodeLibrary.cs" />
+    <Compile Include="Diagram\Model\ModelBase.cs" />
+    <Compile Include="Diagram\Model\NodeModel.cs" />
+    <Compile Include="Diagram\Model\ProjectModel.cs" />
+    <Compile Include="Diagram\Model\TerminalModel.cs" />
+    <Compile Include="Diagram\Model\WireModel.cs" />
     <Compile Include="Diagram\Interacters\DeleteSelectedNodesInteractorViewModel.cs" />
     <Compile Include="Diagram\Interacters\InteractionEventArguments.cs" />
     <Compile Include="Diagram\Interacters\DiagramInteracter.cs" />
@@ -138,11 +138,11 @@
     <Compile Include="Shell\IShell.cs" />
     <Compile Include="Shell\Shell.cs" />
     <Compile Include="Shell\ShellCommand.cs" />
-    <Compile Include="Shell\ToolbarViewModel.cs" />
-    <Compile Include="ViewModel\AbstractShellWindow.cs" />
-    <Compile Include="ViewModel\ContextMenuViewModel.cs" />
-    <Compile Include="ViewModel\VisualDrop\VisualDropStartScreenViewModel.cs" />
-    <Compile Include="ViewModel\LibrarySourceManagerWindowViewModel.cs" />
+    <Compile Include="Shell\Tools\ToolbarViewModel.cs" />
+    <Compile Include="Shell\AbstractShellWindow.cs" />
+    <Compile Include="Shell\Tools\ContextMenuViewModel.cs" />
+    <Compile Include="Shell\VisualDropStartScreenViewModel.cs" />
+    <Compile Include="Shell\Tools\LibrarySourceManagerWindowViewModel.cs" />
     <Compile Include="Project\DiagramWellViewModel.cs" />
     <Compile Include="Diagram\CoreNode\AddNodeViewModel.cs" />
     <Compile Include="Diagram\CoreNode\DiagramCallNodeViewModel.cs" />
@@ -157,11 +157,11 @@
     <Compile Include="Diagram\TerminalDataProbeAdorner.cs" />
     <Compile Include="Diagram\TerminalViewModel.cs" />
     <Compile Include="Diagram\WireViewModel.cs" />
-    <Compile Include="ViewModel\LibraryManagerWindowViewModel.cs" />
+    <Compile Include="Shell\Tools\LibraryManagerWindowViewModel.cs" />
     <Compile Include="Diagram\Interacters\NodeSelectorViewModel.cs" />
     <Compile Include="Project\ProjectExplorerViewModel.cs" />
     <Compile Include="Project\ProjectScreenViewModel.cs" />
-    <Compile Include="ViewModel\StartScreenViewModel.cs" />
+    <Compile Include="Shell\StartScreenViewModel.cs" />
     <Compile Include="Shell\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>

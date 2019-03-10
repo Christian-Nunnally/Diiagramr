@@ -1,8 +1,8 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Interfaces;
 using Stylet;
 using System;
 
-namespace DiiagramrAPI.ViewModel.ProjectScreen
+namespace DiiagramrAPI.Project
 {
     public class ProjectScreenViewModel : Screen
     {

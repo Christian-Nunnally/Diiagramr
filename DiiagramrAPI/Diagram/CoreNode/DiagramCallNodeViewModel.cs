@@ -1,15 +1,13 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
+namespace DiiagramrAPI.Diagram.CoreNode
 {
     public class DiagramCallNodeViewModel : PluginNode
     {

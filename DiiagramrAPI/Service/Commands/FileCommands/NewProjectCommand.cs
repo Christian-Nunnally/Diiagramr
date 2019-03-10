@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Project;
+using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel.ProjectScreen;
 using System;
 using System.Linq;
 

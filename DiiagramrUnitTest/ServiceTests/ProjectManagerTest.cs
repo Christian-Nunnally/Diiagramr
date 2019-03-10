@@ -1,9 +1,8 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

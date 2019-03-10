@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
 using System.Windows;
 
 namespace DiiagramrAPI.Service.Commands.ToolCommands

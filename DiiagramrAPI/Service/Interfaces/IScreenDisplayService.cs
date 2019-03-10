@@ -1,7 +1,4 @@
-﻿using DiiagramrAPI.Model;
-using Stylet;
-using System;
-using System.Windows;
+﻿using Stylet;
 
 namespace DiiagramrAPI.Service.Interfaces
 {

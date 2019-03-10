@@ -1,6 +1,6 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
 
-namespace DiiagramrAPI.Model
+namespace DiiagramrAPI.Diagram.Model
 {
     [DataContract]
     public class NodeLibrary

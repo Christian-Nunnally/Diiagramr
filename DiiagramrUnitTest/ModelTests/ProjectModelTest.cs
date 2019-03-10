@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace DiiagramrUnitTests.ModelTests

@@ -1,8 +1,7 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.CoreNode;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

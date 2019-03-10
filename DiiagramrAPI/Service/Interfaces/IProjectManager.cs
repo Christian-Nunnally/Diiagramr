@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

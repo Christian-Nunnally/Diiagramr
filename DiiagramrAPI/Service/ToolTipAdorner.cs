@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+﻿using DiiagramrAPI.Diagram;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;

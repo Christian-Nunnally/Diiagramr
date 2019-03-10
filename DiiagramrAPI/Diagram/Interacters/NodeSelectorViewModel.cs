@@ -1,11 +1,8 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interacters;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.CoreNode;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.Diagram.CoreNode;
 using PropertyChanged;
 using Stylet;
 using System;
@@ -17,7 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Diagram.Interacters
 {
     [AddINotifyPropertyChangedInterface]
     public class Library

@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Model;
+using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Stylet;

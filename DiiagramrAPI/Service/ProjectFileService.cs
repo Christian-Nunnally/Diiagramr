@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.CustomControls;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using StyletIoC;
 using System;

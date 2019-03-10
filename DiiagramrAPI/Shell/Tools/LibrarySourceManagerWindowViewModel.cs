@@ -1,7 +1,7 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Interfaces;
 using System;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Shell.Tools
 {
     public class LibrarySourceManagerWindowViewModel : AbstractShellWindow
     {

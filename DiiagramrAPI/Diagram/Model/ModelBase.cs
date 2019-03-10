@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
-namespace DiiagramrAPI.Model
+namespace DiiagramrAPI.Diagram.Model
 {
     [DataContract(IsReference = true)]
     public class ModelBase : INotifyPropertyChanged

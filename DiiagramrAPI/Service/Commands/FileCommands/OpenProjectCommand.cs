@@ -1,10 +1,10 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Diagram.Model;
+using DiiagramrAPI.Project;
+using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell;
-using DiiagramrAPI.Model;
 using System;
 using System.IO;
 using System.Linq;
-using DiiagramrAPI.ViewModel.ProjectScreen;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands
 {

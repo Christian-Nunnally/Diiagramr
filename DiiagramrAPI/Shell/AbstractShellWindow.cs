@@ -1,7 +1,7 @@
-﻿using Stylet;
+using Stylet;
 using System;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Shell
 {
     public abstract class AbstractShellWindow : Screen
     {

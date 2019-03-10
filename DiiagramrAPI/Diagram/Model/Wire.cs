@@ -1,9 +1,9 @@
-﻿using PropertyChanged;
+using PropertyChanged;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
-namespace Diiagramr.Model
+namespace DiiagramrAPI.Diagram.Model
 {
     [DataContract]
     [AddINotifyPropertyChangedInterface]

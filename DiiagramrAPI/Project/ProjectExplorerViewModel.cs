@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
@@ -9,7 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Project
 {
     public class ProjectExplorerViewModel : Screen
     {

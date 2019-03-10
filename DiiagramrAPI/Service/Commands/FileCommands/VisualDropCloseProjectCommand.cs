@@ -1,7 +1,5 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.VisualDrop;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.FileCommands

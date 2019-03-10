@@ -1,10 +1,10 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-namespace DiiagramrAPI.Model
+namespace DiiagramrAPI.Diagram.Model
 {
     [DataContract]
     public class NodeModel : ModelBase

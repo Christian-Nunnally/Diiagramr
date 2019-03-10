@@ -1,8 +1,7 @@
 ﻿using Castle.Core.Internal;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Interacters;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;

@@ -1,11 +1,8 @@
 ﻿using DiiagramrAPI.Diagram.Interacters;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 using System;
 using System.Collections.Generic;

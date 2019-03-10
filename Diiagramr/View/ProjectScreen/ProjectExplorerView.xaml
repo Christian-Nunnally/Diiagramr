@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.Project;assembly=DiiagramrAPI"
     d:DataContext="{d:DesignInstance viewModel:ProjectExplorerViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="150"

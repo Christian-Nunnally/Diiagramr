@@ -6,7 +6,7 @@
     xmlns:local="clr-namespace:Diiagramr.View.ShellScreen"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.ViewModel;assembly=DiiagramrAPI"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.Shell;assembly=DiiagramrAPI"
     d:DataContext="{d:DesignInstance viewModel:StartScreenViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="300"

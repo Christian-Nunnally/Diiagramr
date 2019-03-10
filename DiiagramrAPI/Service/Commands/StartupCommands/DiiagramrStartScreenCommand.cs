@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
 using System;
 
 namespace DiiagramrAPI.Service.Commands.StartupCommands

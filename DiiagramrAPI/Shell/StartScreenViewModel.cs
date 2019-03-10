@@ -1,9 +1,9 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Interfaces;
 using Stylet;
 using System;
 using System.Linq;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Shell
 {
     public class StartScreenViewModel : Screen
     {

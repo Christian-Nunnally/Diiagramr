@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service;
+using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Commands;
 using Stylet;
 using System;
@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Shell.Tools
 {
     public class ContextMenuViewModel : Screen
     {

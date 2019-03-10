@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DiiagramrAPI.Service.Commands;
+using Stylet;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using DiiagramrAPI.Service.Commands;
-using DiiagramrAPI.ViewModel;
-using Stylet;
 
 namespace DiiagramrAPI.Shell
 {

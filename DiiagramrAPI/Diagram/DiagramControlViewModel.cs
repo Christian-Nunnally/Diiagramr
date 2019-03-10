@@ -1,7 +1,7 @@
-﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using Stylet;
 
-namespace DiiagramrAPI.ViewModel.Diagram
+namespace DiiagramrAPI.Diagram
 {
     public class DiagramControlViewModel : Screen
     {

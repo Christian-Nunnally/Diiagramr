@@ -1,7 +1,6 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 using System;
 using System.Collections.ObjectModel;
@@ -9,7 +8,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 
-namespace DiiagramrAPI.ViewModel.ProjectScreen
+namespace DiiagramrAPI.Project
 {
     public class DiagramWellViewModel : Conductor<DiagramViewModel>.Collection.OneActive
     {

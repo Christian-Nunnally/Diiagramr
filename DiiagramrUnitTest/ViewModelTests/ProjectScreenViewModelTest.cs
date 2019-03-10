@@ -1,6 +1,5 @@
-﻿using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
-using DiiagramrAPI.ViewModel.ProjectScreen;
+﻿using DiiagramrAPI.Project;
+using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

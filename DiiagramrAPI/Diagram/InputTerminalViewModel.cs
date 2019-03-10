@@ -1,12 +1,11 @@
-﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.ViewModel.Diagram
+namespace DiiagramrAPI.Diagram
 {
     public class InputTerminalViewModel : TerminalViewModel
     {

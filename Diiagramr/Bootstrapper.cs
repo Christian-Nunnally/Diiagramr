@@ -1,7 +1,7 @@
 using DiiagramrAPI;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
-using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.Shell.Tools;
 using Stylet;
 using StyletIoC;
 using System.Reflection;

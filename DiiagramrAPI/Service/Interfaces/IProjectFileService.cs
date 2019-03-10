@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Model;
 using System;
 using System.Windows;
 

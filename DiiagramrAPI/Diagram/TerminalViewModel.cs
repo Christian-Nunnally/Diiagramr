@@ -1,8 +1,6 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
-using DiiagramrAPI.ViewModel.Diagram;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -13,7 +11,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DiiagramrAPI.ViewModel.ProjectScreen.Diagram
+namespace DiiagramrAPI.Diagram
 {
     public class TerminalViewModel : Screen
     {

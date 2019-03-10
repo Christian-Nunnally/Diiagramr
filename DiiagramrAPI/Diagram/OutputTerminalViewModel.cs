@@ -1,8 +1,7 @@
-﻿using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using System;
 
-namespace DiiagramrAPI.ViewModel.Diagram
+namespace DiiagramrAPI.Diagram
 {
     public class OutputTerminalViewModel : TerminalViewModel
     {

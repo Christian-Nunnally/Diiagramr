@@ -1,6 +1,5 @@
-﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -8,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Windows.Media;
 
-namespace DiiagramrAPI.ViewModel.VisualDrop
+namespace DiiagramrAPI.Shell
 {
     public class VisualDropStartScreenViewModel : Screen, IShownInShellReaction
     {

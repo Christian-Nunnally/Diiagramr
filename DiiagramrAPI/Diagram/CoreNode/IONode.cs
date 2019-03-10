@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 
-namespace DiiagramrAPI.ViewModel.Diagram.CoreNode
+namespace DiiagramrAPI.Diagram.CoreNode
 {
     public abstract class IoNode : PluginNode
     {

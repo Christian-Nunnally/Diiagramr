@@ -1,9 +1,9 @@
-﻿using DiiagramrAPI.Model;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace DiiagramrAPI.ViewModel
+namespace DiiagramrAPI.Shell.Tools
 {
     public class LibraryManagerWindowViewModel : AbstractShellWindow
     {

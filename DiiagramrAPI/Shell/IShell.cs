@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Service.Commands;
-using DiiagramrAPI.ViewModel;
 using Stylet;
 using System.Collections.Generic;
 using System.Windows;

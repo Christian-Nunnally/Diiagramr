@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Model;
 
 namespace DiiagramrAPI.Service.Interfaces
 {

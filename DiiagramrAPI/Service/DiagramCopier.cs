@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System.IO;
 using System.Runtime.Serialization;

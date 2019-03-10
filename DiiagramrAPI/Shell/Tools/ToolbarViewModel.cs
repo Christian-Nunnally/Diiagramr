@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service.Commands;
+using DiiagramrAPI.Service.Commands;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.Shell
+namespace DiiagramrAPI.Shell.Tools
 {
     public class ToolbarViewModel : Screen
     {

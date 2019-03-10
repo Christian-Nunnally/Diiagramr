@@ -1,10 +1,10 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.Serialization;
 
-namespace DiiagramrAPI.Model
+namespace DiiagramrAPI.Diagram.Model
 {
     public enum TerminalKind
     {

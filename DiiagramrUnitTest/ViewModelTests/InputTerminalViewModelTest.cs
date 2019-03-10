@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
-using DiiagramrAPI.ViewModel.Diagram;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 

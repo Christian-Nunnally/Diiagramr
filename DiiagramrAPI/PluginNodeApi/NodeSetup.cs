@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Model;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using System;
 using System.Linq;
 

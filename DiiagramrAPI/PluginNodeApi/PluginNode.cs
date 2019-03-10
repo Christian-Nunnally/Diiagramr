@@ -1,7 +1,6 @@
-﻿using DiiagramrAPI.Model;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
-using DiiagramrAPI.ViewModel.Diagram;
-using DiiagramrAPI.ViewModel.ProjectScreen.Diagram;
 using Stylet;
 using System;
 using System.Collections.Generic;

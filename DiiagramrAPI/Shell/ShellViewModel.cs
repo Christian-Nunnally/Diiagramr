@@ -1,6 +1,6 @@
 using DiiagramrAPI.Service.Commands;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.ViewModel;
+using DiiagramrAPI.Shell.Tools;
 using Stylet;
 using System;
 using System.Collections.Generic;
