@@ -89,18 +89,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestShowLibrary_OtherLibraryExists_OtherLibraryUnselected()
-        {
-            var libraryMoq1 = new Mock<Library>("");
-            var libraryMoq2 = new Mock<Library>("");
-            libraryMoq2.SetupGet(l => l.Nodes).Returns(new List<PluginNode>());
-            _nodeSelectorViewModel.LibrariesList.Add(libraryMoq1.Object);
-            _nodeSelectorViewModel.ShowLibrary(libraryMoq2.Object);
-
-            libraryMoq1.Verify(l => l.Unselect());
-        }
-
-        [TestMethod]
         public void TestShowLibrary_LibrarySelected()
         {
             var libraryMoq1 = new Mock<Library>("");

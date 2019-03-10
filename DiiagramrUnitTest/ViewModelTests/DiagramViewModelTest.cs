@@ -53,13 +53,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a diagram")]
-        public void TestConstructor_NullDiagram_ThrowsArgumentNullException()
-        {
-            new DiagramViewModel(null, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a node provider")]
         public void TestConstructor_NullNodeProvider_ThrowsArgumentNullException()
         {

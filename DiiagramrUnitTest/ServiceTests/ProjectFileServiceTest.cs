@@ -69,27 +69,6 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void SaveProjectTest_SaveAsWithOkDialogResult_ProjectSaved()
-        {
-            string fakeFileName = "Dir\\OtherDir\\ActualProject.xml";
-            _testDialogMoq.Reset();
-            _testDialogMoq.SetupGet(d => d.FileName).Returns(fakeFileName);
-            _testDialogMoq.Setup(f => f.ShowDialog()).Returns(MessageBoxResult.OK);
-            _projectFileService.SaveProject(_projectMoq.Object, true);
-
-            _projectLoadSaveMoq.Verify(l => l.Save(_projectMoq.Object, fakeFileName));
-        }
-
-        [TestMethod]
-        public void SaveProjectTest_SaveAsFalseWithNewName_CallsSaveOnProjectLoadSave()
-        {
-            _projectMoq.SetupGet(p => p.Name).Returns("Project");
-            _projectFileService.SaveProject(_projectMoq.Object, false);
-
-            _projectLoadSaveMoq.Verify(p => p.Save(_projectMoq.Object, It.Is<string>(s => s.EndsWith(".xml"))));
-        }
-
-        [TestMethod]
         public void LoadProjectTest_DirectoryPathMocked_ProjectNameSetToDirectoryPath()
         {
             const string fakeFileName = "Dir\\OtherDir\\ActualProject.xml";

@@ -48,15 +48,5 @@ namespace DiiagramrUnitTests.ViewModelTests
             _startScreenViewModel.NewProject();
             _projectManagerMoq.Verify(m => m.CreateDiagram());
         }
-
-        [TestMethod]
-        public void TestCreateProject_OpensOnlyDiagram()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            var diagrams = new ObservableCollection<DiagramModel> { diagramMoq.Object };
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagrams);
-            _startScreenViewModel.NewProject();
-            diagramMoq.VerifySet(d => d.IsOpen = true);
-        }
     }
 }
