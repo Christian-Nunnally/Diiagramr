@@ -1,0 +1,46 @@
+﻿<UserControl
+    x:Class="Diiagramr.Diagram.Interactors.DiagramInteractionManagerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:interacters="clr-namespace:DiiagramrAPI.Diagram.Interactors;assembly=DiiagramrAPI"
+    xmlns:s="https://github.com/canton7/Stylet"
+    d:DataContext="{d:DesignInstance interacters:DiagramInteractionManager}"
+    d:DesignHeight="300"
+    d:DesignWidth="600"
+    Focusable="True"
+    PreviewMouseMove="{s:Action PreviewMouseMoveHandler}"
+    KeyDown="{s:Action KeyDownHandler}"
+    KeyUp="{s:Action KeyUpHandler}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
+                <Canvas />
+            </ItemsPanelTemplate>
+
+            <BooleanToVisibilityConverter x:Key="Btv" />
+
+            <Style x:Key="DiagramInteractorPresenterStyle" TargetType="ContentPresenter">
+                <Setter Property="Canvas.Left" Value="{Binding X}" />
+                <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="{x:Type interacters:DiagramInteractor}">
+                            <ContentControl
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    s:View.Model="{Binding}"
+                                    IsTabStop="False" />
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ItemsControl 
+        ItemsSource="{Binding ActiveDiagramInteractors}"
+        ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" 
+        ItemContainerStyle="{StaticResource DiagramInteractorPresenterStyle}"/>
+</UserControl>

@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class NodePlacementViewModel : DiagramInteractor
     {

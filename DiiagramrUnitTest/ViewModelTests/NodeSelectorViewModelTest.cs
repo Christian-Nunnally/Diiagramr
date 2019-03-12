@@ -1,5 +1,5 @@
 ﻿using Castle.Core.Internal;
-using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

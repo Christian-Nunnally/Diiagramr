@@ -1,7 +1,7 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 using System.Windows;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class PointSelectorViewModel : DiagramInteractor
     {

@@ -1,8 +1,8 @@
-﻿using Stylet;
+using Stylet;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
-    public abstract class DiagramInteractor : Screen
+    public abstract class DiagramInteractor : Screen, IDiagramInteractorService
     {
         public double X { get; set; }
         public double Y { get; set; }

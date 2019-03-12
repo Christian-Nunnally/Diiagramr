@@ -1,8 +1,8 @@
-﻿using Stylet;
+using Stylet;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class DiagramInteractionEventArguments
     {

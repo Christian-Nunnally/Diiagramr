@@ -6,6 +6,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.CustomControls
 {
+    // TODO: Git rid of this class and use an interactor instead.
     public class NodeResizeThumb : Thumb
     {
         public NodeResizeThumb()
@@ -26,8 +27,6 @@ namespace DiiagramrAPI.CustomControls
                 return;
             }
 
-            node.Dragging = false;
-
             if (Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl))
             {
                 return;
@@ -35,7 +34,6 @@ namespace DiiagramrAPI.CustomControls
 
             node.Width = CoreUilities.RoundToNearest(node.Width, DiagramViewModel.GridSnapInterval);
             node.Height = CoreUilities.RoundToNearest(node.Height, DiagramViewModel.GridSnapInterval);
-            node.Dragging = false;
         }
 
         private void ResizeThumb_DragDelta(object sender, DragDeltaEventArgs e)
@@ -52,7 +50,6 @@ namespace DiiagramrAPI.CustomControls
 
             node.Width += e.HorizontalChange;
             node.Height += e.VerticalChange;
-            node.Dragging = true;
         }
     }
 }

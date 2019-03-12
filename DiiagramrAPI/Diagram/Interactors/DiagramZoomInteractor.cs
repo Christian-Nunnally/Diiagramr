@@ -1,9 +1,11 @@
-﻿namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class DiagramZoomInteractor : DiagramInteractor
     {
         private const double MinimumZoom = 0.4;
         private const double MaximumZoom = 3.0;
+        private const double NumberOfFrames = 3;
+        private const double ZoomAmount = .2;
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -12,7 +14,7 @@
             var abosuluteX = mousePosition.X * diagram.Zoom + diagram.PanX;
             var abosuluteY = mousePosition.Y * diagram.Zoom + diagram.PanY;
 
-            var zoom = interaction.MouseWheelDelta > 0 ? .2 : -.2;
+            var zoom = interaction.MouseWheelDelta > 0 ? ZoomAmount : -ZoomAmount;
             var newZoom = diagram.Zoom + zoom;
             if (newZoom < MinimumZoom)
             {

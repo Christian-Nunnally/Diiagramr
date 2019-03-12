@@ -24,14 +24,9 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
         }
 
-        public event Action DragStarted;
-        public event Action DragStopped;
-
         public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
-
-        public virtual bool Dragging { get; set; }
 
         public virtual IEnumerable<TerminalViewModel> DynamicTerminalViewModels =>
             TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
@@ -228,23 +223,10 @@ namespace DiiagramrAPI.PluginNodeApi
                 NodeModel.Height = Height;
                 FixAllTerminals();
             }
-            else if (propertyName.Equals(nameof(Dragging)))
-            {
-                if (Dragging)
-                {
-                    DragStarted?.Invoke();
-                }
-                else
-                {
-                    DragStopped?.Invoke();
-                }
-            }
-
             if (!_pluginNodeSettingCache.ContainsKey(propertyName))
             {
                 return;
             }
-
             var changedPropertyInfo = _pluginNodeSettingCache[propertyName];
             var value = changedPropertyInfo.GetValue(this);
             NodeModel?.SetVariable(propertyName, value);
@@ -258,17 +240,10 @@ namespace DiiagramrAPI.PluginNodeApi
         }
 
         /// <summary>
-        ///     All node customization such as turning on/off features
-        ///     and setting node geometry happens here.
+        /// All node customization such as turning on/off features and setting node geometry happens here.
         /// </summary>
         protected virtual void SetupNode(NodeSetup setup)
         {
-        }
-
-        private static Exception DynamicTerminalExcection(string methodKey)
-        {
-            var errorString = $"RegisterDynamicTerminalMethod never received key '{methodKey}'.";
-            return new InvalidOperationException(errorString);
         }
 
         private void AddTerminal(TerminalModel terminal)

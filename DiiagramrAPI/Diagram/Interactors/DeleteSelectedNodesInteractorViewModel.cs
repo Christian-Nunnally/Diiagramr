@@ -1,9 +1,9 @@
-﻿using DiiagramrAPI.Service;
+using DiiagramrAPI.Service;
 using System;
 using System.Linq;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class DeleteSelectedNodesInteractorViewModel : DiagramInteractor
     {

@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;

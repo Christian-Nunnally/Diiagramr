@@ -7,7 +7,7 @@ using Diiagramr.Shell.Tools;
 using Diiagramr.View.ShellScreen;
 using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.CoreNode;
-using DiiagramrAPI.Diagram.Interacters;
+using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Shell;
@@ -57,6 +57,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(NodeDragInteractor), typeof(NodeDragInteractorView));
             _viewModelToViewMapping.Add(typeof(DiagramDragInteractor), typeof(DiagramDragInteractorView));
             _viewModelToViewMapping.Add(typeof(DiagramZoomInteractor), typeof(DiagramZoomInteractorView));
+            _viewModelToViewMapping.Add(typeof(DiagramInteractionManager), typeof(DiagramInteractionManagerView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

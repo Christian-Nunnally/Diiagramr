@@ -14,7 +14,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     [AddINotifyPropertyChangedInterface]
     public class Library
@@ -156,9 +156,16 @@ namespace DiiagramrAPI.Diagram.Interacters
 
         public void SelectNode()
         {
-            // TODO: This is an awkward way of 'ending' the interaction from the interactor itself.
-            _diagramViewModel.StopInteractor(this);
-            _diagramViewModel.BeginInsertingNode(MousedOverNode, true);
+            BeginInsertingNode(MousedOverNode, true);
+        }
+
+        public void BeginInsertingNode(PluginNode node, bool insertCopy = false)
+        {
+            var nodeTypeName = node.GetType().FullName;
+            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
+            nodeToInsert.X = X;
+            nodeToInsert.Y = Y;
+            _diagramViewModel.AddNode(nodeToInsert);
         }
 
         public void ShowLibrary(Library library)
@@ -218,7 +225,7 @@ namespace DiiagramrAPI.Diagram.Interacters
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown;
+            return interaction.Type == InteractionType.LeftMouseDown || interaction.Type == InteractionType.NodeInserted;
         }
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)

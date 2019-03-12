@@ -1,8 +1,8 @@
-﻿using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.PluginNodeApi;
 using System.Linq;
 using System.Windows;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class NodeDragInteractor : DiagramInteractor
     {

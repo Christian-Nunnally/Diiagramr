@@ -1,6 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class DiagramDragInteractor : DiagramInteractor
     {

@@ -3,6 +3,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.CustomControls
 {
+    // TODO: Turn this class into a Screen
     public class OpenFileDialog : IFileDialog, IDisposable
     {
         private readonly System.Windows.Forms.OpenFileDialog _dialog;

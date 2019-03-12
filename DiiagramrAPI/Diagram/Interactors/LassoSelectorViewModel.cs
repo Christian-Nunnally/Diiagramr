@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 
-namespace DiiagramrAPI.Diagram.Interacters
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class LassoSelectorViewModel : DiagramInteractor
     {

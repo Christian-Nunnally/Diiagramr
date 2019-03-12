@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Interacters;
+﻿using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service;
@@ -33,24 +33,26 @@ namespace DiiagramrAPI.Diagram
         public const int DiagramMargin = 100;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
+        private DiagramModel object1;
+        private IProvideNodes object2;
+        private object p;
+        private NodeSelectorViewModel object3;
+        private List<DiagramInteractor> list;
         private readonly ColorTheme _colorTheme;
         private readonly IProvideNodes _nodeProvider;
 
-        public DiagramViewModel(DiagramModel diagram, IProvideNodes nodeProvider, ColorTheme colorTheme, NodeSelectorViewModel nodeSelectorViewModel)
+        public DiagramViewModel(
+            DiagramModel diagram, 
+            IProvideNodes nodeProvider, 
+            ColorTheme colorTheme, 
+            NodeSelectorViewModel nodeSelectorViewModel,
+            IEnumerable<DiagramInteractor> diagramInteractors)
         {
             TerminalViewModel.ColorTheme = colorTheme;
             _colorTheme = colorTheme;
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
 
-            DiagramControlViewModel = new DiagramControlViewModel(diagram);
-            DiagramInteractors.Add(nodeSelectorViewModel);
-            DiagramInteractors.Add(new LassoSelectorViewModel());
-            DiagramInteractors.Add(new PointSelectorViewModel());
-            DiagramInteractors.Add(new NodePlacementViewModel());
-            DiagramInteractors.Add(new DeleteSelectedNodesInteractorViewModel());
-            DiagramInteractors.Add(new NodeDragInteractor());
-            DiagramInteractors.Add(new DiagramDragInteractor());
-            DiagramInteractors.Add(new DiagramZoomInteractor());
+            DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);
 
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
@@ -66,17 +68,16 @@ namespace DiiagramrAPI.Diagram
         }
 
         public bool AreInstructionsVisible => !NodeViewModels.Any();
-        public Rect BoundingBox { get; set; }
         public bool BoundingBoxVisible { get; set; }
-        public Rect DefaultBoundingBox { get; } = new Rect(100, 100, 800, 550);
+        public Rect BoundingBox { get; set; }
+        public Rect BoundingBoxDefault { get; } = new Rect(100, 100, 800, 550);
         public DiagramModel Diagram { get; }
-        public DiagramControlViewModel DiagramControlViewModel { get; }
+        public DiagramInteractionManager DiagramInteractionManager { get; set; }
         public string Name => Diagram.Name;
         public bool NodeBeingDragged { get; set; }
         public BindableCollection<PluginNode> NodeViewModels { get; set; } = new BindableCollection<PluginNode>();
         public BindableCollection<WireViewModel> WireViewModels { get; set; } = new BindableCollection<WireViewModel>();
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
-        public IList<DiagramInteractor> DiagramInteractors { get; set; } = new List<DiagramInteractor>();
         public double PanX { get; set; }
         public double PanY { get; set; }
         public double Zoom { get; set; } = 1;
@@ -139,15 +140,6 @@ namespace DiiagramrAPI.Diagram
             DiagramInputHandler(interaction);
         }
 
-        internal void StopInteractor(DiagramInteractor interactor)
-        {
-            if (ActiveDiagramInteractors.Contains(interactor))
-            {
-                ActiveDiagramInteractors.Remove(interactor);
-                interactor.StopInteraction(new DiagramInteractionEventArguments());
-            }
-        }
-
         public void PreviewMouseMoveHandler(object sender, MouseEventArgs e)
         {
             var relativeMousePosition = e.GetPosition((IInputElement)sender);
@@ -155,10 +147,6 @@ namespace DiiagramrAPI.Diagram
             interaction.Type = InteractionType.MouseMoved;
             interaction.MousePosition = relativeMousePosition;
             DiagramInputHandler(interaction);
-            if (NodeBeingDragged)
-            {
-                UpdateDiagramBoundingBox();
-            }
         }
 
         private static Point GetMousePositionRelativeToSender(object sender, MouseButtonEventArgs e)
@@ -167,7 +155,7 @@ namespace DiiagramrAPI.Diagram
             return e.GetPosition(inputElement);
         }
 
-        private void AddNode(PluginNode viewModel)
+        public void AddNode(PluginNode viewModel)
         {
             if (viewModel.NodeModel == null)
             {
@@ -190,8 +178,6 @@ namespace DiiagramrAPI.Diagram
             }
             viewModel.WireConnectedToTerminal += WireAddedToDiagram;
             viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
-            viewModel.DragStarted += NodeDraggingStarted;
-            viewModel.DragStopped += NodeDraggingStopped;
             NodeViewModels.Add(viewModel);
             BoundingBoxVisible = NodeViewModels.Any();
             AddWiresForNode(viewModel);
@@ -220,14 +206,6 @@ namespace DiiagramrAPI.Diagram
             };
             WireViewModels.Add(wireViewModel);
             UnHighlightAllTerminals();
-        }
-
-        public void BeginInsertingNode(PluginNode node, bool insertCopy = false)
-        {
-            var nodeTypeName = node.GetType().FullName;
-            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
-            AddNode(nodeToInsert);
-            nodeToInsert.Dragging = true;
         }
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -261,17 +239,6 @@ namespace DiiagramrAPI.Diagram
                     nodeViewModel.HighlightOutputTerminalsOfType(terminal.Type);
                 }
             }
-        }
-
-        private void NodeDraggingStarted()
-        {
-            NodeBeingDragged = true;
-        }
-
-        private void NodeDraggingStopped()
-        {
-            NodeBeingDragged = false;
-            UpdateDiagramBoundingBox();
         }
 
         private void PluginNodeOnWiringModeChanged(TerminalViewModel terminalViewModel, bool enabled)
@@ -313,10 +280,10 @@ namespace DiiagramrAPI.Diagram
 
         private void UpdateDiagramBoundingBox()
         {
-            var minX = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.X).DefaultIfEmpty(0).Min() - DiagramMargin, DefaultBoundingBox.Left));
-            var minY = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.Y).DefaultIfEmpty(0).Min() - DiagramMargin, DefaultBoundingBox.Top));
-            var maxX = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.X + n.Width).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, DefaultBoundingBox.Right));
-            var maxY = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.Y + n.Height).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, DefaultBoundingBox.Bottom));
+            var minX = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.X).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Left));
+            var minY = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.Y).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Top));
+            var maxX = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.X + n.Width).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, BoundingBoxDefault.Right));
+            var maxY = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.Y + n.Height).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, BoundingBoxDefault.Bottom));
             BoundingBox = new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 
@@ -344,10 +311,11 @@ namespace DiiagramrAPI.Diagram
 
         private void DiagramInputHandler(DiagramInteractionEventArguments interaction)
         {
-            interaction.Diagram = this;
-            PutViewModelMouseIsOverInInteraction(interaction);
-            PutKeyStatesInInteraction(interaction);
-            SendInteractionToInteractors(interaction);
+            DiagramInteractionManager.DiagramInputHandler(interaction, this);
+            //interaction.Diagram = this;
+            //PutViewModelMouseIsOverInInteraction(interaction);
+            //PutKeyStatesInInteraction(interaction);
+            //SendInteractionToInteractors(interaction);
         }
 
         private static void PutViewModelMouseIsOverInInteraction(DiagramInteractionEventArguments interaction)
@@ -402,14 +370,14 @@ namespace DiiagramrAPI.Diagram
 
         private void StartInteractionsThatShouldStart(DiagramInteractionEventArguments interaction)
         {
-            foreach (var interactor in DiagramInteractors)
-            {
-                if (interactor.ShouldStartInteraction(interaction))
-                {
-                    interactor.StartInteraction(interaction);
-                    ActiveDiagramInteractors.Add(interactor);
-                }
-            }
+            //foreach (var interactor in DiagramInteractors)
+            //{
+            //    if (interactor.ShouldStartInteraction(interaction))
+            //    {
+            //        interactor.StartInteraction(interaction);
+            //        ActiveDiagramInteractors.Add(interactor);
+            //    }
+            //}
         }
     }
 }
