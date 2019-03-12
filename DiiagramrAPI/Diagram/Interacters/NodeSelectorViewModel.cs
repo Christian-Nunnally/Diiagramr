@@ -156,6 +156,7 @@ namespace DiiagramrAPI.Diagram.Interacters
 
         public void SelectNode()
         {
+            // TODO: This is an awkward way of 'ending' the interaction from the interactor itself.
             _diagramViewModel.StopInteractor(this);
             _diagramViewModel.BeginInsertingNode(MousedOverNode, true);
         }

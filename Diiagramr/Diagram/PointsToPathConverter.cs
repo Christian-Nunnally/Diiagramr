@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Diiagramr.View.Diagram
+namespace Diiagramr.Diagram
 {
     [ValueConversion(typeof(Point[]), typeof(Geometry))]
     public class PointsToPathConverter : IValueConverter

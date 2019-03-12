@@ -21,6 +21,13 @@ namespace DiiagramrAPI.Diagram
         public const double GridSnapIntervalOffSetCorrection = 13.0;
         public const double NodeBorderWidth = 15.0;
         public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
+
+        internal void PanNotify()
+        {
+            NotifyOfPropertyChange(nameof(PanX));
+            NotifyOfPropertyChange(nameof(PanY));
+        }
+
         public const double NodeSelectorBottomMargin = 250;
         public const double NodeSelectorRightMargin = 400;
         public const int DiagramMargin = 100;
@@ -41,6 +48,9 @@ namespace DiiagramrAPI.Diagram
             DiagramInteractors.Add(new PointSelectorViewModel());
             DiagramInteractors.Add(new NodePlacementViewModel());
             DiagramInteractors.Add(new DeleteSelectedNodesInteractorViewModel());
+            DiagramInteractors.Add(new NodeDragInteractor());
+            DiagramInteractors.Add(new DiagramDragInteractor());
+            DiagramInteractors.Add(new DiagramZoomInteractor());
 
             Diagram = diagram;
             Diagram.PropertyChanged += DiagramOnPropertyChanged;
@@ -69,7 +79,7 @@ namespace DiiagramrAPI.Diagram
         public IList<DiagramInteractor> DiagramInteractors { get; set; } = new List<DiagramInteractor>();
         public double PanX { get; set; }
         public double PanY { get; set; }
-        public double Zoom { get; set; }
+        public double Zoom { get; set; } = 1;
         public double ViewWidth { get; set; }
         public double ViewHeight { get; set; }
 
@@ -116,6 +126,16 @@ namespace DiiagramrAPI.Diagram
             var interaction = new DiagramInteractionEventArguments();
             interaction.Type = interactionType;
             interaction.MousePosition = relativeMousePosition;
+            DiagramInputHandler(interaction);
+        }
+
+        public void MouseWheelHandler(object sender, MouseWheelEventArgs e)
+        {
+            var relativeMousePosition = e.GetPosition((IInputElement)sender);
+            var interaction = new DiagramInteractionEventArguments();
+            interaction.Type = InteractionType.MouseWheel;
+            interaction.MousePosition = relativeMousePosition;
+            interaction.MouseWheelDelta = e.Delta;
             DiagramInputHandler(interaction);
         }
 

@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.View.Diagram.DiagramView"
+    x:Class="Diiagramr.Diagram.DiagramView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:customControls="clr-namespace:DiiagramrAPI.CustomControls;assembly=DiiagramrAPI"
@@ -90,22 +90,6 @@
                         </Setter>
                     </Style>
 
-                    <Style x:Key="DeleteNodeButtonStyle" TargetType="Border">
-                        <Setter Property="Background" Value="IndianRed" />
-                        <Setter Property="CornerRadius" Value="3" />
-                        <Setter Property="Margin" Value="2,0,0,2" />
-                    </Style>
-
-                    <Style x:Key="NodeHelpButtonStyle" TargetType="Border">
-                        <Setter Property="Background" Value="#4585fa" />
-                        <Setter Property="CornerRadius" Value="3" />
-                        <Setter Property="Margin" Value="0,2,2,0" />
-                        <Setter Property="Width" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidthMinus1}" />
-                        <Setter Property="Height" Value="{x:Static diagram:DiagramViewModel.NodeBorderWidthMinus1}" />
-                        <Setter Property="HorizontalAlignment" Value="Left" />
-                        <Setter Property="VerticalAlignment" Value="Bottom" />
-                    </Style>
-
                     <Style x:Key="SelectionStyle" TargetType="Border">
                         <Setter Property="BorderBrush" Value="{StaticResource ResourceKey=NodeSelectionStyleBrush}" />
                         <Setter Property="CornerRadius" Value=".7" />
@@ -148,23 +132,43 @@
                         <Setter Property="Margin" Value="{x:Static diagram:DiagramViewModel.NodeSelectionBorderThickness}" />
                         <Setter Property="IsHitTestVisible" Value="False" />
                     </Style>
+
+                    <Style x:Key="DiagramInteractorPresenterStyle" TargetType="ContentPresenter">
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="{x:Type interacters:DiagramInteractor}">
+                                    <ContentControl
+                                    HorizontalContentAlignment="Stretch"
+                                    VerticalContentAlignment="Stretch"
+                                    s:View.Model="{Binding}"
+                                    IsTabStop="False" />
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
 
-    <Grid>
-        <customControls:ZoomBorder
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
-            PanX="{Binding PanX, Mode=TwoWay}"
-            PanY="{Binding PanY, Mode=TwoWay}"
-            PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
-            PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
-            PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
-            PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}"
-            Zoom="{Binding Zoom, Mode=OneWayToSource}">
+    <Grid
+        HorizontalAlignment="Stretch" 
+        VerticalAlignment="Stretch"
+        Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
+        PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
+        PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
+        PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
+        PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}"
+        MouseWheel="{s:Action MouseWheelHandler}">
+        <Border>
+            <Border.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}"/>
+                    <TranslateTransform X="{Binding PanX}" Y="{Binding PanY}"/>
+                </TransformGroup>
+            </Border.RenderTransform>
             <Grid>
                 <Canvas>
                     <Border
@@ -188,6 +192,7 @@
                     ItemContainerStyle="{StaticResource WireContainerStyle}"
                     ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
                     ItemsSource="{Binding WireViewModels}" />
+
                 <!--  Node Items Control  -->
                 <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding NodeViewModels}">
                     <ItemsControl.ItemContainerStyle>
@@ -199,14 +204,12 @@
                                     <DataTemplate DataType="{x:Type pluginNodeApi:PluginNode}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
-                                                <!--                                                <ColumnDefinition MaxWidth="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition MaxWidth="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                             </Grid.ColumnDefinitions>
                                             <Grid.RowDefinitions>
                                                 <RowDefinition MaxHeight="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />
                                                 <RowDefinition Height="*" />
-                                                <!--                                                <RowDefinition MaxHeight="{x:Static diagram:DiagramViewModel.NodeBorderWidth}" />-->
                                             </Grid.RowDefinitions>
 
                                             <Label
@@ -227,15 +230,14 @@
                                                 </Label.RenderTransform>
                                             </Label>
 
-                                            <customControls:NodeMoveThumb
+                                            <Rectangle
                                                 Grid.Row="0"
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
                                                 Cursor="SizeAll"
                                                 DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                PreviewMouseDown="{s:Action PreviewLeftMouseButtonDownHandler}"
-                                                Template="{StaticResource MoveThumbTemplate}" />
+                                                Style="{StaticResource NodeBorderRectangleStyle}" />
 
                                             <Border
                                                 Grid.Row="0"
@@ -309,39 +311,6 @@
                                                 Grid.ColumnSpan="2"
                                                 Style="{StaticResource SelectionStyle}"
                                                 Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
-
-                                            <!--<Border
-                                                Grid.Row="0"
-                                                Grid.Column="1"
-                                                MouseDown="{s:Action RemoveSelectedNodes}"
-                                                Style="{StaticResource DeleteNodeButtonStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
-                                                <Label
-                                                    Margin="0,0,0,1"
-                                                    Padding="0"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Content="x"
-                                                    FontFamily="Verdana"
-                                                    FontSize="7"
-                                                    Foreground="#202020" />
-                                            </Border>-->
-
-                                            <!--<Border
-                                                Grid.Row="1"
-                                                Grid.Column="0"
-                                                MouseDown="{s:Action NodeHelpPressed}"
-                                                Style="{StaticResource NodeHelpButtonStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}">
-                                                <Label
-                                                    Padding="0"
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    Content="?"
-                                                    FontFamily="Verdana"
-                                                    FontSize="7"
-                                                    Foreground="#202020" />
-                                            </Border>-->
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -350,26 +319,7 @@
                     </ItemsControl.ItemContainerStyle>
                 </ItemsControl>
             </Grid>
-        </customControls:ZoomBorder>
-
-        <!--<Canvas>
-            <Rectangle
-                Canvas.Left="{Binding DraggingRectangle.X, Mode=TwoWay}"
-                Canvas.Top="{Binding DraggingRectangle.Y, Mode=TwoWay}"
-                Width="{Binding DraggingRectangle.Width, Mode=TwoWay}"
-                Height="{Binding DraggingRectangle.Height, Mode=TwoWay}"
-                Stroke="{StaticResource DiagramSelectionRectangleStroke}"
-                Fill="{StaticResource DiagramSelectionRectangleFill}"
-                StrokeThickness="2"
-                RadiusX="3"
-                RadiusY="3"/>
-        </Canvas>-->
-
-        <!--<ContentControl
-            Margin="2"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Top"
-            s:View.Model="{Binding DiagramControlViewModel}" />-->
+        </Border>
 
         <Label
             Padding="0"
@@ -380,26 +330,9 @@
             Foreground="#A4A4A4"
             Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />
 
-        <!--<ContentControl s:View.Model="{Binding NodeSelectorViewModel}" Visibility="{Binding NodeSelectorViewModel.Visible, Converter={StaticResource Btv}}" />-->
-
-        <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding ActiveDiagramInteractors}">
-            <ItemsControl.ItemContainerStyle>
-                <Style TargetType="ContentPresenter">
-                    <Setter Property="Canvas.Left" Value="{Binding X}" />
-                    <Setter Property="Canvas.Top" Value="{Binding Y}" />
-                    <Setter Property="ContentTemplate">
-                        <Setter.Value>
-                            <DataTemplate DataType="{x:Type interacters:DiagramInteractor}">
-                                <ContentControl
-                                    HorizontalContentAlignment="Stretch"
-                                    VerticalContentAlignment="Stretch"
-                                    s:View.Model="{Binding}"
-                                    IsTabStop="False" />
-                            </DataTemplate>
-                        </Setter.Value>
-                    </Setter>
-                </Style>
-            </ItemsControl.ItemContainerStyle>
-        </ItemsControl>
+        <ItemsControl 
+            ItemsSource="{Binding ActiveDiagramInteractors}"
+            ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" 
+            ItemContainerStyle="{StaticResource DiagramInteractorPresenterStyle}"/>
     </Grid>
 </UserControl>

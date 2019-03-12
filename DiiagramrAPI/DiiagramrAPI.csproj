@@ -59,10 +59,11 @@
     <Compile Include="BootstrapperUtilities.cs" />
     <Compile Include="CustomControls\IFileDialog.cs" />
     <Compile Include="CustomControls\NodeResizeThumb.cs" />
-    <Compile Include="CustomControls\NodeMoveThumb.cs" />
     <Compile Include="CustomControls\OpenFileDialog.cs" />
     <Compile Include="CustomControls\SaveFileDialog.cs" />
-    <Compile Include="CustomControls\ZoomBorder.cs" />
+    <Compile Include="Diagram\Interacters\DiagramDragInteractor.cs" />
+    <Compile Include="Diagram\Interacters\DiagramZoomInteractor.cs" />
+    <Compile Include="Diagram\Interacters\NodeDragInteractor.cs" />
     <Compile Include="Diagram\Model\DiagramModel.cs" />
     <Compile Include="Diagram\Model\NodeLibrary.cs" />
     <Compile Include="Diagram\Model\ModelBase.cs" />

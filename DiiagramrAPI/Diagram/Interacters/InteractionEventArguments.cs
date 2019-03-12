@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using Stylet;
+using System.Windows;
 using System.Windows.Input;
-using Stylet;
 
 namespace DiiagramrAPI.Diagram.Interacters
 {
@@ -14,6 +14,7 @@ namespace DiiagramrAPI.Diagram.Interacters
         public bool IsCtrlKeyPressed { get; internal set; }
         public bool IsAltKeyPressed { get; internal set; }
         public bool IsShiftKeyPressed { get; internal set; }
+        public int MouseWheelDelta { get; internal set; }
     }
 
     public enum InteractionType
@@ -26,6 +27,7 @@ namespace DiiagramrAPI.Diagram.Interacters
         KeyUp,
         MouseMoved,
         None,
-        NodeInserted
+        NodeInserted,
+        MouseWheel
     }
 }
