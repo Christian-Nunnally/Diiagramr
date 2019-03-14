@@ -35,29 +35,6 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramWellViewModel.CloseActiveDiagram();
         }
 
-        [TestMethod]
-        public void TestCloseActiveDiagram_OneOpenDiagram_SetsCurrentDiagramIsOpenToFalse()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            diagramMoq.SetupAllProperties();
-            diagramMoq.Object.IsOpen = true;
-            _diagramWellViewModel.ActiveItem = new Mock<DiagramViewModel>(diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorMoq.Object).Object;
-
-            _diagramWellViewModel.CloseActiveDiagram();
-
-            Assert.IsFalse(diagramMoq.Object.IsOpen);
-        }
-
-        [TestMethod]
-        public void TestOpenDiagram_DiagramIsOpenSetToTrue_DiagramBecomesActiveItem()
-        {
-            var diagram = SetupProjectWithSingleDiagram();
-
-            Assert.IsNull(_diagramWellViewModel.ActiveItem);
-            diagram.IsOpen = true;
-            Assert.AreEqual(diagram, _diagramWellViewModel.ActiveItem.Diagram);
-        }
-
         private DiagramModel SetupProjectWithSingleDiagram()
         {
             var diagram = new DiagramModel();

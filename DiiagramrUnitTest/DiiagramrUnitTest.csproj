@@ -93,7 +93,6 @@
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\Diagram\DiagramControlViewModelTest.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTest.cs" />
-    <Compile Include="ServiceTests\ProjectManagerTest.cs" />
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\StartScreenViewModelTest.cs" />
