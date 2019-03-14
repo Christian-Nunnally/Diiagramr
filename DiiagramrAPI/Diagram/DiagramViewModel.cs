@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram
@@ -21,23 +20,11 @@ namespace DiiagramrAPI.Diagram
         public const double GridSnapIntervalOffSetCorrection = 13.0;
         public const double NodeBorderWidth = 15.0;
         public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
-
-        internal void PanNotify()
-        {
-            NotifyOfPropertyChange(nameof(PanX));
-            NotifyOfPropertyChange(nameof(PanY));
-        }
-
         public const double NodeSelectorBottomMargin = 250;
         public const double NodeSelectorRightMargin = 400;
         public const int DiagramMargin = 100;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
-        private DiagramModel object1;
-        private IProvideNodes object2;
-        private object p;
-        private NodeSelectorViewModel object3;
-        private List<DiagramInteractor> list;
         private readonly ColorTheme _colorTheme;
         private readonly IProvideNodes _nodeProvider;
 
@@ -74,10 +61,9 @@ namespace DiiagramrAPI.Diagram
         public DiagramModel Diagram { get; }
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
         public string Name => Diagram.Name;
-        public bool NodeBeingDragged { get; set; }
+        public bool ShowSnapGrid { get; set; }
         public BindableCollection<PluginNode> NodeViewModels { get; set; } = new BindableCollection<PluginNode>();
         public BindableCollection<WireViewModel> WireViewModels { get; set; } = new BindableCollection<WireViewModel>();
-        public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
         public double PanX { get; set; }
         public double PanY { get; set; }
         public double Zoom { get; set; } = 1;
@@ -86,18 +72,19 @@ namespace DiiagramrAPI.Diagram
 
         public void KeyDownHandler(object sender, KeyEventArgs e)
         {
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = InteractionType.KeyDown;
-            interaction.Key = e.Key;
-            DiagramInputHandler(interaction);
+            KeyInputHandler(e, InteractionType.KeyDown);
         }
 
         public void KeyUpHandler(object sender, KeyEventArgs e)
         {
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = InteractionType.KeyUp;
+            KeyInputHandler(e, InteractionType.KeyUp);
+        }
+
+        private void KeyInputHandler(KeyEventArgs e, InteractionType type)
+        {
+            var interaction = new DiagramInteractionEventArguments(type);
             interaction.Key = e.Key;
-            DiagramInputHandler(interaction);
+            DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
         public void PreviewRightMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -121,38 +108,26 @@ namespace DiiagramrAPI.Diagram
             MouseInputHandler(sender, e, InteractionType.LeftMouseUp);
         }
 
-        private void MouseInputHandler(object sender, MouseButtonEventArgs e, InteractionType interactionType)
+        public void PreviewMouseWheelHandler(object sender, MouseWheelEventArgs e)
         {
-            var relativeMousePosition = GetMousePositionRelativeToSender(sender, e);
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = interactionType;
-            interaction.MousePosition = relativeMousePosition;
-            DiagramInputHandler(interaction);
-        }
-
-        public void MouseWheelHandler(object sender, MouseWheelEventArgs e)
-        {
-            var relativeMousePosition = e.GetPosition((IInputElement)sender);
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = InteractionType.MouseWheel;
-            interaction.MousePosition = relativeMousePosition;
-            interaction.MouseWheelDelta = e.Delta;
-            DiagramInputHandler(interaction);
+            MouseInputHandler(sender, e, InteractionType.MouseWheel);
         }
 
         public void PreviewMouseMoveHandler(object sender, MouseEventArgs e)
         {
-            var relativeMousePosition = e.GetPosition((IInputElement)sender);
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = InteractionType.MouseMoved;
-            interaction.MousePosition = relativeMousePosition;
-            DiagramInputHandler(interaction);
+            MouseInputHandler(sender, e, InteractionType.MouseMoved);
         }
 
-        private static Point GetMousePositionRelativeToSender(object sender, MouseButtonEventArgs e)
+        private void MouseInputHandler(object sender, MouseEventArgs e, InteractionType interactionType)
         {
-            var inputElement = (IInputElement)sender;
-            return e.GetPosition(inputElement);
+            var relativeMousePosition = e.GetPosition((IInputElement)sender);
+            var interaction = new DiagramInteractionEventArguments(interactionType);
+            interaction.MousePosition = relativeMousePosition;
+            if (e is MouseWheelEventArgs mouseWheelEventArguments)
+            {
+                interaction.MouseWheelDelta = mouseWheelEventArguments.Delta;
+            }
+            DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
         public void AddNode(PluginNode viewModel)
@@ -165,9 +140,8 @@ namespace DiiagramrAPI.Diagram
             AddNodeViewModel(viewModel);
             viewModel.TerminalWiringModeChanged += PluginNodeOnWiringModeChanged;
 
-            var interaction = new DiagramInteractionEventArguments();
-            interaction.Type = InteractionType.NodeInserted;
-            DiagramInputHandler(interaction);
+            var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
+            DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
         private void AddNodeViewModel(PluginNode viewModel)
@@ -216,14 +190,24 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        public double GetPointRelativeToPanAndZoomX(double x)
+        public double GetDiagramPointFromViewPointX(double x)
         {
             return Zoom == 0 ? x : (x - PanX) / Zoom;
         }
 
-        public double GetPointRelativeToPanAndZoomY(double y)
+        public double GetDiagramPointFromViewPointY(double y)
         {
             return Zoom == 0 ? y : (y - PanY) / Zoom;
+        }
+
+        public double GetViewPointFromDiagramPointX(double x)
+        {
+            return (Zoom * x) + PanX;
+        }
+
+        public double GetViewPointFromDiagramPointY(double y)
+        {
+            return (Zoom * y) + PanY;
         }
 
         private void HighlightTerminalsOfSameType(TerminalModel terminal)
@@ -278,7 +262,7 @@ namespace DiiagramrAPI.Diagram
             NodeViewModels.ForEach(node => node.UnselectTerminals());
         }
 
-        private void UpdateDiagramBoundingBox()
+        public void UpdateDiagramBoundingBox()
         {
             var minX = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.X).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Left));
             var minY = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.Y).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Top));
@@ -307,77 +291,6 @@ namespace DiiagramrAPI.Diagram
             {
                 WireViewModels.Remove(wireToRemove);
             }
-        }
-
-        private void DiagramInputHandler(DiagramInteractionEventArguments interaction)
-        {
-            DiagramInteractionManager.DiagramInputHandler(interaction, this);
-            //interaction.Diagram = this;
-            //PutViewModelMouseIsOverInInteraction(interaction);
-            //PutKeyStatesInInteraction(interaction);
-            //SendInteractionToInteractors(interaction);
-        }
-
-        private static void PutViewModelMouseIsOverInInteraction(DiagramInteractionEventArguments interaction)
-        {
-            var elementMouseIsOver = Mouse.DirectlyOver as FrameworkElement;
-            if (!(elementMouseIsOver?.DataContext is Screen viewModelMouseIsOver))
-            {
-                var contentPresenter = elementMouseIsOver?.DataContext as ContentPresenter;
-                viewModelMouseIsOver = contentPresenter?.DataContext as Screen;
-            }
-            interaction.ViewModelMouseIsOver = viewModelMouseIsOver;
-        }
-
-        private static void PutKeyStatesInInteraction(DiagramInteractionEventArguments interaction)
-        {
-            interaction.IsShiftKeyPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift);
-            interaction.IsCtrlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
-            interaction.IsAltKeyPressed = Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.LeftAlt);
-        }
-
-        private void SendInteractionToInteractors(DiagramInteractionEventArguments interaction)
-        {
-            if (!ActiveDiagramInteractors.Any())
-            {
-                StartInteractionsThatShouldStart(interaction);
-            }
-            SendInteractionToActiveInteractions(interaction);
-            StopActiveInteractionsThatShouldStop(interaction);
-        }
-
-        private void StopActiveInteractionsThatShouldStop(DiagramInteractionEventArguments interaction)
-        {
-            var activeInteractors = ActiveDiagramInteractors.ToArray();
-            foreach (var activeInteractor in activeInteractors)
-            {
-                if (activeInteractor.ShouldStopInteraction(interaction))
-                {
-                    activeInteractor.StopInteraction(interaction);
-                    ActiveDiagramInteractors.Remove(activeInteractor);
-                }
-            }
-        }
-
-        private void SendInteractionToActiveInteractions(DiagramInteractionEventArguments interaction)
-        {
-            var activeInteractors = ActiveDiagramInteractors.ToArray();
-            foreach (var activeInteractor in activeInteractors)
-            {
-                activeInteractor.ProcessInteraction(interaction);
-            }
-        }
-
-        private void StartInteractionsThatShouldStart(DiagramInteractionEventArguments interaction)
-        {
-            //foreach (var interactor in DiagramInteractors)
-            //{
-            //    if (interactor.ShouldStartInteraction(interaction))
-            //    {
-            //        interactor.StartInteraction(interaction);
-            //        ActiveDiagramInteractors.Add(interactor);
-            //    }
-            //}
         }
     }
 }

@@ -20,12 +20,16 @@ namespace DiiagramrAPI.Diagram.Interactors
                     node.Y += deltaY / interaction.Diagram.Zoom;
                 }
                 PreviousMouseLocation = interaction.MousePosition;
+                interaction.Diagram.UpdateDiagramBoundingBox();
+                interaction.Diagram.ShowSnapGrid = true;
             }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelMouseIsOver is PluginNode;
+            return interaction.Type == InteractionType.LeftMouseDown 
+                && interaction.ViewModelMouseIsOver is PluginNode
+                && !interaction.IsCtrlKeyPressed;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
@@ -48,6 +52,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);
                 }
             }
+            interaction.Diagram.ShowSnapGrid = false;
         }
     }
 }

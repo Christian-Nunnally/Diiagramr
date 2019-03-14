@@ -7,17 +7,15 @@
     xmlns:interacters="clr-namespace:DiiagramrAPI.Diagram.Interactors;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     d:DataContext="{d:DesignInstance interacters:DiagramInteractionManager}"
-    d:DesignHeight="300"
-    d:DesignWidth="600"
-    Focusable="True"
-    PreviewMouseMove="{s:Action PreviewMouseMoveHandler}"
-    KeyDown="{s:Action KeyDownHandler}"
-    KeyUp="{s:Action KeyUpHandler}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
             <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
                 <Canvas />
+            </ItemsPanelTemplate>
+
+            <ItemsPanelTemplate x:Key="StackItemsPanelTemplate">
+                <StackPanel />
             </ItemsPanelTemplate>
 
             <BooleanToVisibilityConverter x:Key="Btv" />
@@ -37,10 +35,30 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style x:Key="DiagramInteractorNamePresenterStyle" TargetType="ContentPresenter">
+                <Setter Property="ContentTemplate">
+                    <Setter.Value>
+                        <DataTemplate DataType="{x:Type interacters:DiagramInteractor}">
+                            <Label 
+                                    Foreground="White"
+                                    Content="{Binding}"
+                                    Background="Black"/>
+                        </DataTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <ItemsControl 
-        ItemsSource="{Binding ActiveDiagramInteractors}"
-        ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" 
-        ItemContainerStyle="{StaticResource DiagramInteractorPresenterStyle}"/>
+    <Grid>
+        <ItemsControl 
+            Visibility="{Binding ShowDebugInfo, Converter={StaticResource Btv}}"
+            ItemsSource="{Binding ActiveDiagramInteractorNames}"
+            ItemsPanel="{StaticResource StackItemsPanelTemplate}"
+            ItemContainerStyle="{StaticResource DiagramInteractorNamePresenterStyle}"/>
+        <ItemsControl 
+            ItemsSource="{Binding ActiveDiagramInteractors}"
+            ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" 
+            ItemContainerStyle="{StaticResource DiagramInteractorPresenterStyle}"/>
+    </Grid>
 </UserControl>

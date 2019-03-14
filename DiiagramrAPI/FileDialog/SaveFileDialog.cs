@@ -1,9 +1,8 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Forms;
 
-namespace DiiagramrAPI.CustomControls
+namespace DiiagramrAPI.FileDialog
 {
-    // TODO: Turn this class into a Screen
     public class SaveFileDialog : IFileDialog
     {
         private System.Windows.Forms.SaveFileDialog _dialog;

@@ -4,6 +4,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public abstract class DiagramInteractor : Screen, IDiagramInteractorService
     {
+        public double Weight { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
 

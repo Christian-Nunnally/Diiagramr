@@ -1,7 +1,7 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Interfaces;
 using System.Windows;
 
-namespace DiiagramrAPI.CustomControls
+namespace DiiagramrAPI.FileDialog
 {
     public interface IFileDialog : IService, IKeyedService
     {

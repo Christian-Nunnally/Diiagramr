@@ -5,38 +5,42 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public class PointSelectorViewModel : DiagramInteractor
     {
-        private Point _interactionStartPoint;
-        private bool _cancelInteraction;
+        private Point _mouseDownPoint;
+
+        public PointSelectorViewModel()
+        {
+            Weight = 1;
+        }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown;
+            return interaction.Type == InteractionType.LeftMouseDown
+                || interaction.Type == InteractionType.LeftMouseUp;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type != InteractionType.MouseMoved;
+            return interaction.Type == InteractionType.LeftMouseDown
+                || interaction.Type == InteractionType.LeftMouseUp;
         }
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            _interactionStartPoint = interaction.MousePosition;
-            _cancelInteraction = false;
         }
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (_cancelInteraction)
+        }
+
+        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        {
+            if (interaction.Type == InteractionType.LeftMouseDown)
             {
-                return;
+                ProcessMouseDownInteraction(interaction);
             }
-            if (!(interaction.ViewModelMouseIsOver is TerminalViewModel))
+            else if (interaction.Type == InteractionType.LeftMouseUp)
             {
-                interaction.Diagram.UnselectTerminals();
-            }
-            if (interaction.ViewModelMouseIsOver is DiagramViewModel)
-            {
-                interaction.Diagram.UnselectNodes();
+                ProcessMouseUpInteraction(interaction);
             }
 
             if (interaction.ViewModelMouseIsOver is PluginNode pluginNode)
@@ -52,16 +56,32 @@ namespace DiiagramrAPI.Diagram.Interactors
             }
         }
 
-        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        private void ProcessMouseUpInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (interaction.Type == InteractionType.MouseMoved)
+            if (_mouseDownPoint.Equals(interaction.MousePosition))
             {
-                if (_interactionStartPoint.X - interaction.MousePosition.X > 5
-                 || _interactionStartPoint.Y - interaction.MousePosition.Y > 5)
+                if (interaction.ViewModelMouseIsOver is DiagramViewModel)
                 {
-                    _cancelInteraction = true;
+                    interaction.Diagram.UnselectNodes();
+                    interaction.Diagram.UnselectTerminals();
+                }
+                else if (interaction.ViewModelMouseIsOver is PluginNode pluginNode)
+                {
+                    if (!pluginNode.IsSelected)
+                    {
+                        if (!interaction.IsCtrlKeyPressed)
+                        {
+                            interaction.Diagram.UnselectNodes();
+                        }
+                        pluginNode.IsSelected = true;
+                    }
                 }
             }
+        }
+
+        private void ProcessMouseDownInteraction(DiagramInteractionEventArguments interaction)
+        {
+            _mouseDownPoint = interaction.MousePosition;
         }
     }
 }

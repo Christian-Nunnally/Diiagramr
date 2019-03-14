@@ -57,14 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootstrapperUtilities.cs" />
-    <Compile Include="CustomControls\IFileDialog.cs" />
-    <Compile Include="CustomControls\NodeResizeThumb.cs" />
-    <Compile Include="CustomControls\OpenFileDialog.cs" />
-    <Compile Include="CustomControls\SaveFileDialog.cs" />
+    <Compile Include="FileDialog\IFileDialog.cs" />
+    <Compile Include="FileDialog\OpenFileDialog.cs" />
+    <Compile Include="FileDialog\SaveFileDialog.cs" />
     <Compile Include="Diagram\Interactors\DiagramDragInteractor.cs" />
     <Compile Include="Diagram\Interactors\IDiagramInteractorService.cs" />
     <Compile Include="Diagram\Interactors\DiagramInteractionManager.cs" />
     <Compile Include="Diagram\Interactors\DiagramZoomInteractor.cs" />
+    <Compile Include="Diagram\Interactors\NodeResizeInteractor.cs" />
     <Compile Include="Diagram\Interactors\NodeDragInteractor.cs" />
     <Compile Include="Diagram\Model\DiagramModel.cs" />
     <Compile Include="Diagram\Model\NodeLibrary.cs" />

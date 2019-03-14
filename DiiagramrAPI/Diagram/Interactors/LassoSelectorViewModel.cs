@@ -54,10 +54,10 @@ namespace DiiagramrAPI.Diagram.Interactors
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
-            var left = diagram.GetPointRelativeToPanAndZoomX(X);
-            var top = diagram.GetPointRelativeToPanAndZoomY(Y);
-            var right = diagram.GetPointRelativeToPanAndZoomX(X + Width);
-            var bottom = diagram.GetPointRelativeToPanAndZoomY(Y + Height);
+            var left = diagram.GetDiagramPointFromViewPointX(X);
+            var top = diagram.GetDiagramPointFromViewPointY(Y);
+            var right = diagram.GetDiagramPointFromViewPointX(X + Width);
+            var bottom = diagram.GetDiagramPointFromViewPointY(Y + Height);
 
             foreach (var node in diagram.NodeViewModels)
             {

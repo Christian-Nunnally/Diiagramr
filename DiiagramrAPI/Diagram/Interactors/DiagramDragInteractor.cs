@@ -17,13 +17,14 @@ namespace DiiagramrAPI.Diagram.Interactors
                 var deltaY = interaction.MousePosition.Y - StartMouseLocation.Y;
                 diagram.PanX = StartPanX + deltaX;
                 diagram.PanY = StartPanY + deltaY;
-                diagram.PanNotify();
             }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelMouseIsOver is DiagramViewModel;
+            return interaction.Type == InteractionType.LeftMouseDown 
+                && interaction.ViewModelMouseIsOver is DiagramViewModel
+                && !interaction.IsCtrlKeyPressed;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)

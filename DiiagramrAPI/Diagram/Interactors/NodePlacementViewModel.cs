@@ -1,9 +1,5 @@
 using DiiagramrAPI.PluginNodeApi;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace DiiagramrAPI.Diagram.Interactors
@@ -17,6 +13,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             if (interaction.Type == InteractionType.MouseMoved)
             {
                 MoveInsertingNode(interaction.Diagram, interaction.MousePosition);
+                interaction.Diagram.UpdateDiagramBoundingBox();
             }
         }
 
@@ -24,8 +21,8 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (InsertingNodeViewModel != null)
             {
-                InsertingNodeViewModel.X = diagram.GetPointRelativeToPanAndZoomX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - DiagramViewModel.NodeBorderWidth;
-                InsertingNodeViewModel.Y = diagram.GetPointRelativeToPanAndZoomY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - DiagramViewModel.NodeBorderWidth;
+                InsertingNodeViewModel.X = diagram.GetDiagramPointFromViewPointX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - DiagramViewModel.NodeBorderWidth;
+                InsertingNodeViewModel.Y = diagram.GetDiagramPointFromViewPointY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - DiagramViewModel.NodeBorderWidth;
             }
         }
 
@@ -42,6 +39,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             InsertingNodeViewModel = interaction.Diagram.NodeViewModels.LastOrDefault();
+            interaction.Diagram.ShowSnapGrid = true;
         }
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
@@ -56,6 +54,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 InsertingNodeViewModel.Y = interaction.Diagram.SnapToGrid(InsertingNodeViewModel.Y);
             }
             InsertingNodeViewModel = null;
+            interaction.Diagram.ShowSnapGrid = false;
         }
     }
 }

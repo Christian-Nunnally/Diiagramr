@@ -174,6 +174,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Diagram\Interactors\NodeResizeInteractorView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Diagram\Interactors\DiagramZoomInteractorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
