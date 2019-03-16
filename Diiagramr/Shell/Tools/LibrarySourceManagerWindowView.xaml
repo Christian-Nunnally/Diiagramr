@@ -10,7 +10,17 @@
     d:DesignHeight="200"
     d:DesignWidth="400"
     mc:Ignorable="d">
-    <Grid Background="White">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="{StaticResource WindowBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="34" />
             <RowDefinition />

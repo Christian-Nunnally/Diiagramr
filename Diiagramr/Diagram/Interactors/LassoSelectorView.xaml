@@ -13,7 +13,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>

@@ -63,7 +63,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo32x32_e3S_icon.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\logo32x32_e3S_icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>49060824D492EB4A38BF9BD926EFAAF5B5D8FD10</ManifestCertificateThumbprint>
@@ -131,15 +131,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="DiiagramrViewManager.cs" />
+    <Compile Include="Application\Bootstrapper.cs" />
+    <Compile Include="Application\DiiagramrViewManager.cs" />
     <Compile Include="Pages\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\ShellViewModel.cs" />
-    <Compile Include="SeparatorCommandVisibilityConverter.cs" />
+    <Compile Include="Shell\Tools\SeparatorCommandVisibilityConverter.cs" />
     <Compile Include="Diagram\PointsToPathConverter.cs" />
-    <Compile Include="WindowStyle.xaml.cs">
+    <Compile Include="Application\WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -218,15 +218,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Colors.xaml">
+    <Page Include="Themes\Colors.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LightTheme.xaml">
+    <Page Include="Themes\LightTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="DarkTheme.xaml">
+    <Page Include="Themes\DarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -314,13 +314,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="WindowStyle.xaml">
+    <Page Include="Application\WindowStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="logo32x32_e3S_icon.ico" />
+    <Resource Include="Resources\logo32x32_e3S_icon.ico" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">

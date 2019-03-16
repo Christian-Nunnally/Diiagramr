@@ -15,7 +15,7 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
                         <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />

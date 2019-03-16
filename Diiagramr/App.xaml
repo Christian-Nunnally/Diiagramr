@@ -7,7 +7,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="WindowStyle.xaml" />
+                <ResourceDictionary Source="Application\WindowStyle.xaml" />
                 <s:ApplicationLoader>
                     <s:ApplicationLoader.Bootstrapper>
                         <diiagramr:Bootstrapper />

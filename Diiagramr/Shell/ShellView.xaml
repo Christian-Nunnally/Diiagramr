@@ -19,8 +19,8 @@
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="..\WindowStyle.xaml" />
-                <ResourceDictionary Source="..\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Application\WindowStyle.xaml" />
+                <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
