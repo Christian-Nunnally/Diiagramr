@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BootstrapperUtilities.cs" />
+    <Compile Include="Diagram\Interactors\WireTerminalInteractor.cs" />
     <Compile Include="FileDialog\IFileDialog.cs" />
     <Compile Include="FileDialog\OpenFileDialog.cs" />
     <Compile Include="FileDialog\SaveFileDialog.cs" />

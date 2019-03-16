@@ -24,7 +24,6 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels = new ObservableCollection<TerminalViewModel>();
         }
 
-        public event Action<TerminalViewModel, bool> TerminalWiringModeChanged;
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
@@ -105,7 +104,6 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels.Add(terminalViewModel);
             AddTerminal(terminalViewModel.TerminalModel);
             DropAndArrangeTerminal(terminalViewModel, terminalViewModel.TerminalModel.Direction);
-            terminalViewModel.WiringModeChanged += TerminalWiringEventHandler;
             terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
         }
 
@@ -166,7 +164,6 @@ namespace DiiagramrAPI.PluginNodeApi
             TerminalViewModels.Remove(terminalViewModel);
             RemoveTerminal(terminalViewModel.TerminalModel);
             FixOtherTerminalsOnEdge(terminalViewModel.TerminalModel.Direction);
-            terminalViewModel.WiringModeChanged -= TerminalWiringEventHandler;
         }
 
         public void UnHighlightAllTerminals()
@@ -389,11 +386,6 @@ namespace DiiagramrAPI.PluginNodeApi
         private void TerminalWireDisconnected(WireModel wireModel)
         {
             WireDisconnectedFromTerminal?.Invoke(wireModel);
-        }
-
-        private void TerminalWiringEventHandler(TerminalViewModel terminalViewModel, bool enabled)
-        {
-            TerminalWiringModeChanged?.Invoke(terminalViewModel, enabled);
         }
     }
 }

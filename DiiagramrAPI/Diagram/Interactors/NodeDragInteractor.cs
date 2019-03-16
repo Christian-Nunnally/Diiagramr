@@ -1,6 +1,7 @@
 using DiiagramrAPI.PluginNodeApi;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram.Interactors
 {
@@ -39,6 +40,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
+            Mouse.SetCursor(Cursors.SizeAll);
             PreviousMouseLocation = interaction.MousePosition;
         }
 
@@ -53,6 +55,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 }
             }
             interaction.Diagram.ShowSnapGrid = false;
+            Mouse.SetCursor(Cursors.Arrow);
         }
     }
 }

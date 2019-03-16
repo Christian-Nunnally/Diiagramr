@@ -138,7 +138,6 @@ namespace DiiagramrAPI.Diagram
             }
             Diagram.AddNode(viewModel.NodeModel);
             AddNodeViewModel(viewModel);
-            viewModel.TerminalWiringModeChanged += PluginNodeOnWiringModeChanged;
 
             var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
             DiagramInteractionManager.DiagramInputHandler(interaction, this);
@@ -210,7 +209,7 @@ namespace DiiagramrAPI.Diagram
             return (Zoom * y) + PanY;
         }
 
-        private void HighlightTerminalsOfSameType(TerminalModel terminal)
+        public void HighlightTerminalsOfSameType(TerminalModel terminal)
         {
             foreach (var nodeViewModel in NodeViewModels)
             {
@@ -225,21 +224,10 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        private void PluginNodeOnWiringModeChanged(TerminalViewModel terminalViewModel, bool enabled)
-        {
-            UnHighlightAllTerminals();
-            UnselectNodes();
-            if (enabled)
-            {
-                HighlightTerminalsOfSameType(terminalViewModel.TerminalModel);
-            }
-        }
-
         public void RemoveNode(PluginNode viewModel)
         {
             Diagram.RemoveNode(viewModel.NodeModel);
             NodeViewModels.Remove(viewModel);
-            viewModel.TerminalWiringModeChanged -= PluginNodeOnWiringModeChanged;
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
             UpdateDiagramBoundingBox();
@@ -247,7 +235,7 @@ namespace DiiagramrAPI.Diagram
             NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }
 
-        private void UnHighlightAllTerminals()
+        public void UnHighlightAllTerminals()
         {
             NodeViewModels.ForEach(n => n.UnHighlightAllTerminals());
         }

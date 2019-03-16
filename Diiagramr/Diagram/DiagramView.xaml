@@ -213,7 +213,6 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
-                                                Cursor="SizeAll"
                                                 DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                 Style="{StaticResource NodeBorderRectangleStyle}" />
                                             <ItemsControl

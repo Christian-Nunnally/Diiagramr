@@ -59,6 +59,7 @@ namespace Diiagramr
             _viewModelToViewMapping.Add(typeof(DiagramDragInteractor), typeof(DiagramDragInteractorView));
             _viewModelToViewMapping.Add(typeof(DiagramZoomInteractor), typeof(DiagramZoomInteractorView));
             _viewModelToViewMapping.Add(typeof(DiagramInteractionManager), typeof(DiagramInteractionManagerView));
+            _viewModelToViewMapping.Add(typeof(WireTerminalInteractor), typeof(WireTerminalInteractorView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

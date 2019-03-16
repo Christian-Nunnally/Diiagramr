@@ -16,8 +16,6 @@ namespace DiiagramrAPI.Diagram
     public class TerminalViewModel : Screen
     {
         public const double TerminalDiameter = 2 * DiagramViewModel.NodeBorderWidth;
-        public static TerminalViewModel SelectedTerminal;
-
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
         public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
         public Action<object> DataChanged;
@@ -37,8 +35,6 @@ namespace DiiagramrAPI.Diagram
             SetTerminalRotationBasedOnDirection();
             SetBackgroundBrushWhenColorThemeAndTypeLoad();
         }
-
-        public event Action<TerminalViewModel, bool> WiringModeChanged;
 
         public static ColorTheme ColorTheme
         {
@@ -96,49 +92,9 @@ namespace DiiagramrAPI.Diagram
 
         public virtual bool HighlightVisible { get; set; }
         public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
-
-        public virtual bool IsSelected
-        {
-            get => _isSelected;
-
-            set
-            {
-                _isSelected = value;
-                WiringModeChanged?.Invoke(this, _isSelected);
-
-                if (SelectedTerminal == this)
-                {
-                    SelectedTerminal = null;
-                    _isSelected = false;
-                    return;
-                }
-
-                if (SelectedTerminal != null)
-                {
-                    if (SelectedTerminal.WireToTerminal(TerminalModel))
-                    {
-                        _isSelected = false;
-                        return;
-                    }
-                }
-
-                if (SelectedTerminal != null)
-                {
-                    SelectedTerminal.IsSelected = false;
-                }
-
-                SelectedTerminal = _isSelected ? this : null;
-                if (!_isSelected)
-                {
-                    Adorner = null;
-                }
-            }
-        }
-
+        public virtual bool IsSelected { get; set; }
         public virtual bool MouseWithin { get; set; }
-
         public string Name { get; set; }
-
         public Brush TerminalBackgroundBrush { get; set; }
 
         public double TerminalDownWireMinimumLength
