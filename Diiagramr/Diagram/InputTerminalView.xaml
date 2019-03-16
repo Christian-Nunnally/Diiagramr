@@ -2,16 +2,12 @@
     x:Class="Diiagramr.Diagram.InputTerminalView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:diagram="clr-namespace:DiiagramrAPI.Diagram;assembly=DiiagramrAPI"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
     Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
     Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
-    d:DataContext="{d:DesignInstance diagram:InputTerminalViewModel}"
     FocusVisualStyle="{x:Null}"
-    MouseDoubleClick="{s:Action TerminalDoubleClicked}"
-    mc:Ignorable="d">
+    MouseDoubleClick="{s:Action TerminalDoubleClicked}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
@@ -70,24 +66,5 @@
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
-        <!--<TextBox
-            FocusVisualStyle="{x:Null}"
-            RenderTransformOrigin="0.5 0"
-            HorizontalContentAlignment="Center"
-            VerticalContentAlignment="Center"
-            FontSize="10"
-            FontFamily="Consolas"
-            Height="20"
-            IsVisibleChanged="{s:Action DirectEditTextBoxVisibiliyChanged}"
-            KeyDown="{s:Action DirectEditTextBoxKeyDown}"
-            GotFocus="{s:Action DirectEditTextBoxGotFocus}"
-            Text="{Binding DirectEditTextBoxText, Mode=TwoWay}"
-            Visibility="{Binding IsDirectEditTextBoxVisible, Converter={StaticResource Btv}}">
-            <TextBox.RenderTransform>
-                <TransformGroup>
-                    <TranslateTransform X="0" Y="-46" />
-                </TransformGroup>
-            </TextBox.RenderTransform>
-        </TextBox>-->
     </Grid>
 </UserControl>
