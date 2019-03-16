@@ -10,4 +10,6 @@
     <Color x:Key="Black">#000000</Color>
     <Color x:Key="TransparentBlack">#11000000</Color>
     <Color x:Key="LessTransparentBlack">#55000000</Color>
+    <Color x:Key="ToolWindowBackground">#333337</Color>
+    <Color x:Key="ButtonHoverBlue">#007ACC</Color>
 </ResourceDictionary>

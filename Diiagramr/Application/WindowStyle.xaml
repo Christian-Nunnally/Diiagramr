@@ -73,7 +73,7 @@
                                 VerticalAlignment="Top"
                                 LastChildFill="False">
                                 <StackPanel Orientation="Horizontal">
-                                    <Image Margin="4,8" Source="logo32x32_e3S_icon.ico" />
+                                    <Image Margin="4,8" Source="..\Resources\logo32x32_e3S_icon.ico" />
                                     <TextBlock
                                         Margin="8,0,0,0"
                                         VerticalAlignment="Center"

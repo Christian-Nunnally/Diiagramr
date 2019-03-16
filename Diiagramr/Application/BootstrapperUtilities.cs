@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DiiagramrAPI
+namespace Diiagramr.Application
 {
     public static class BootstrapperUtilities
     {

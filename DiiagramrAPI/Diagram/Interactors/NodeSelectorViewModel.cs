@@ -46,13 +46,11 @@ namespace DiiagramrAPI.Diagram.Interactors
 
     public class NodeSelectorViewModel : DiagramInteractor
     {
+        public const bool AutoWireToContext = true;
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
         private IProvideNodes _nodeProvider;
         private DiagramViewModel _diagramViewModel;
-
-        private bool _visible;
-
         private bool nodesAdded = false;
 
         public NodeSelectorViewModel(Func<IProvideNodes> nodeProvider)
@@ -62,6 +60,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             AddNodes();
         }
 
+        public TerminalViewModel ContextTerminal { get; set; }
         public IEnumerable<PluginNode> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
         public List<Library> LibrariesList { get; set; } = new List<Library>();
         public BindableCollection<Library> VisibleLibrariesList { get; set; } = new BindableCollection<Library>();
@@ -165,7 +164,33 @@ namespace DiiagramrAPI.Diagram.Interactors
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
             nodeToInsert.X = X;
             nodeToInsert.Y = Y;
+            if (ContextTerminal != null)
+            {
+                var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
+                if (terminalsThatCouldBeWired.Count() == 1)
+                {
+                    ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().TerminalModel);
+                }
+            }
             _diagramViewModel.AddNode(nodeToInsert);
+        }
+
+        private IEnumerable<TerminalViewModel> GetWireableTerminals(TerminalViewModel startTerminal, PluginNode node)
+        {
+            if (startTerminal.TerminalModel.Kind == TerminalKind.Input)
+            {
+                return node.TerminalViewModels
+                    .Where(t => t is OutputTerminalViewModel
+                             && t.TerminalModel.Type.IsAssignableFrom(startTerminal.TerminalModel.Type));
+
+            }
+            else if (startTerminal.TerminalModel.Kind == TerminalKind.Output)
+            {
+                return node.TerminalViewModels
+                    .Where(t => t is InputTerminalViewModel
+                        && t.TerminalModel.Type.IsAssignableFrom(startTerminal.TerminalModel.Type));
+            }
+            return Enumerable.Empty<TerminalViewModel>();
         }
 
         public void ShowLibrary(Library library)
@@ -245,10 +270,12 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (mousedOverViewModel is InputTerminalViewModel inputTerminalMouseIsOver)
             {
+                ContextTerminal = inputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is OutputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(inputTerminalMouseIsOver.TerminalModel.Type)));
             }
             else if (mousedOverViewModel is OutputTerminalViewModel outputTerminalMouseIsOver)
             {
+                ContextTerminal = outputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is InputTerminalViewModel && t.TerminalModel.Type.IsAssignableFrom(outputTerminalMouseIsOver.TerminalModel.Type)));
             }
             else

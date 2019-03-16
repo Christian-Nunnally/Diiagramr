@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -33,30 +32,6 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
             _libraryManagerWindowViewModel.ViewSources();
 
             Assert.IsTrue(openedWindow is LibrarySourceManagerWindowViewModel);
-        }
-
-        [TestMethod]
-        public void TestInstallLibrary_SelectedLibraryNullOrEmpty_DoesNothing()
-        {
-            Assert.IsTrue(string.IsNullOrEmpty(_libraryManagerWindowViewModel.SelectedLibrary));
-            _libraryManagerWindowViewModel.InstallSelectedLibrary().Wait();
-            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibraryAsync(It.IsAny<NodeLibrary>()), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestInstallLibrary_InvalidFormat_DoesNothing()
-        {
-            _libraryManagerWindowViewModel.SelectedLibrary = "a 1.0v";
-            _libraryManagerWindowViewModel.InstallSelectedLibrary().Wait();
-            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibraryAsync(It.IsAny<NodeLibrary>()), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestInstallLibrary_ValidFormat_ParsesSelectedLibraryAndCallsInstallLibrary()
-        {
-            _libraryManagerWindowViewModel.SelectedLibrary = "a - 1.0";
-            _libraryManagerWindowViewModel.InstallSelectedLibrary().Wait();
-            _libraryManagerMoq.Verify(m => m.InstallLatestVersionOfLibraryAsync(It.IsAny<NodeLibrary>()), Times.Once);
         }
 
         [TestMethod]

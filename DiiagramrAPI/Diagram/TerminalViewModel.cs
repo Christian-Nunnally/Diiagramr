@@ -24,7 +24,6 @@ namespace DiiagramrAPI.Diagram
         private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
         private Adorner _adorner;
         private object _data;
-        private bool _isSelected;
 
         public TerminalViewModel(TerminalModel terminal)
         {

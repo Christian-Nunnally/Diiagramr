@@ -1,7 +1,8 @@
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System;
-using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Shell.Tools
 {
@@ -18,25 +19,17 @@ namespace DiiagramrAPI.Shell.Tools
         public ILibraryManager LibraryManager { get; set; }
         public override int MaxHeight => 400;
         public override int MaxWidth => 400;
-        public string SelectedLibrary { get; set; }
         public override string Title => "Library Manager";
 
-        public async Task InstallSelectedLibrary()
+        public async void InstallPressed(object sender, MouseEventArgs e)
         {
-            if (string.IsNullOrEmpty(SelectedLibrary))
+            if (sender is Border border)
             {
-                return;
+                if (border.DataContext is NodeLibrary library)
+                {
+                    await LibraryManager.InstallLatestVersionOfLibraryAsync(library);
+                }
             }
-
-            if (SelectedLibrary.Split(' ').Length != 3)
-            {
-                return;
-            }
-
-            var selectedLibraryMajorVersion = int.Parse(SelectedLibrary.Split(' ')[2].Substring(0, 1));
-            var selectedLibraryName = SelectedLibrary.Split(' ')[0];
-            var selectedLibrary = new NodeLibrary(selectedLibraryName, "", selectedLibraryMajorVersion, 0, 0);
-            await LibraryManager.InstallLatestVersionOfLibraryAsync(selectedLibrary);
         }
 
         public void ViewSources()

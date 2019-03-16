@@ -1,4 +1,3 @@
-using DiiagramrAPI;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
