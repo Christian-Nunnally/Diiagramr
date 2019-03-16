@@ -127,7 +127,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="Application\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -167,7 +167,7 @@
     <Resource Include="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="Application\App.config" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Diagram\DiagramInteractorManagerView.xaml">

@@ -1,6 +1,6 @@
-﻿using System.Windows;
+using System.Windows;
 
-namespace WpfApplication
+namespace Diiagramr.Application
 {
     public partial class WindowStyle : ResourceDictionary
     {

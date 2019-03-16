@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Diiagramr
+namespace Diiagramr.Application
 {
     public class DiiagramrViewManager : ViewManager
     {
@@ -28,6 +28,7 @@ namespace Diiagramr
         {
             ViewFactory = Activator.CreateInstance;
 
+            // todo: automate this
             _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
             _viewModelToViewMapping.Add(typeof(ProjectScreenViewModel), typeof(ProjectScreenView));
             _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));

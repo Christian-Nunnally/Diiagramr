@@ -6,7 +6,7 @@ using Stylet;
 using StyletIoC;
 using System.Reflection;
 
-namespace Diiagramr
+namespace Diiagramr.Application
 {
     public class Bootstrapper : Bootstrapper<ShellViewModel>
     {
