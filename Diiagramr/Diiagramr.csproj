@@ -37,7 +37,7 @@
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>0.6.1.%2a</ApplicationVersion>
+    <ApplicationVersion>0.7.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -237,23 +237,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\CoreNode\DiagramOutputNodeView.xaml">
+    <Page Include="Diagram\Nodes\DiagramOutputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\CoreNode\DiagramInputNodeView.xaml">
+    <Page Include="Diagram\Nodes\DiagramInputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\CoreNode\AddNodeView.xaml">
+    <Page Include="Diagram\Nodes\AddNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\CoreNode\NumberNodeView.xaml">
+    <Page Include="Diagram\Nodes\NumberNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\CoreNode\DiagramCallNodeView.xaml">
+    <Page Include="Diagram\Nodes\DiagramCallNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

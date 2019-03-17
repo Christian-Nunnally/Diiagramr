@@ -251,6 +251,11 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 Show(n => true);
             }
+            
+            if (ContextTerminal != null)
+            {
+                ContextTerminal.SetAdorner(null);
+            }
         }
 
         private void Show(Func<Node, bool> filter)

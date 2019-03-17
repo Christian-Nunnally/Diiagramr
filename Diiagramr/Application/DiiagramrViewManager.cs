@@ -1,6 +1,6 @@
 using Diiagramr.Diagram;
-using Diiagramr.Diagram.CoreNode;
 using Diiagramr.Diagram.Interactors;
+using Diiagramr.Diagram.Nodes;
 using Diiagramr.Project;
 using Diiagramr.Shell;
 using Diiagramr.Shell.Tools;

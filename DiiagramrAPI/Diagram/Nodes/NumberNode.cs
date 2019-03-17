@@ -1,39 +1,46 @@
+using System.Windows;
+using System.Windows.Input;
+
 namespace DiiagramrAPI.Diagram.Nodes
 {
     public class NumberNode : Node
     {
-        private TypedTerminal<int> _outputTerminal;
-        private int _value;
+        private TypedTerminal<float> _outputTerminal;
 
-        [NodeSetting]
-        public int Value
+        public string StringValue
         {
-            get => _value;
+            get => _outputTerminal.Data.ToString();
 
             set
             {
-                _value = value;
-                OnPropertyChanged(nameof(Value));
+                if (float.TryParse(value, out float result))
+                {
+                    Value = result;
+                    _outputTerminal.Data = Value;
+                }
             }
         }
 
-        public void Add1()
-        {
-            _outputTerminal.Data = Value + 1;
-            Value++;
-        }
-
-        public void Sub1()
-        {
-            _outputTerminal.Data = Value - 1;
-            Value--;
-        }
+        [NodeSetting]
+        public float Value { get; set; }
 
         protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(30, 30);
-            setup.NodeName("Number Node");
-            _outputTerminal = setup.OutputTerminal<int>("Output", Direction.South);
+            setup.NodeName("Number");
+            _outputTerminal = setup.OutputTerminal<float>("Number", Direction.South);
+            _outputTerminal.Data = Value;
+        }
+
+        public void PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (View != null)
+                {
+                    (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
         }
     }
 }
