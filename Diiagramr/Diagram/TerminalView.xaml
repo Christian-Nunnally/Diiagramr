@@ -7,10 +7,7 @@
     Height="14">
     <Border
         AllowDrop="True"
-        CornerRadius="2"
-        Drop="{s:Action DropEventHandler}"
-        MouseDown="{s:Action TerminalMouseDown}"
-        MouseMove="{s:Action MouseMove}">
+        CornerRadius="2">
         <Border.Style>
             <Style>
                 <Setter Property="Border.Background" Value="LightSteelBlue" />

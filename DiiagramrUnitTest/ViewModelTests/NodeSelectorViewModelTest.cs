@@ -1,6 +1,6 @@
 ﻿using Castle.Core.Internal;
+using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.PluginNodeApi;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -13,19 +13,19 @@ namespace DiiagramrUnitTests.ViewModelTests
     [TestClass]
     public class NodeSelectorViewModelTest
     {
-        private Mock<PluginNode> _nodeMoq1;
-        private Mock<PluginNode> _nodeMoq2;
+        private Mock<Node> _nodeMoq1;
+        private Mock<Node> _nodeMoq2;
         private Mock<IProvideNodes> _nodeProvidorMoq;
-        private NodeSelectorViewModel _nodeSelectorViewModel;
+        private NodePalette _nodeSelectorViewModel;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _nodeProvidorMoq = new Mock<IProvideNodes>();
-            _nodeMoq1 = new Mock<PluginNode>();
-            _nodeMoq2 = new Mock<PluginNode>();
+            _nodeMoq1 = new Mock<Node>();
+            _nodeMoq2 = new Mock<Node>();
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
-            _nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            _nodeSelectorViewModel = new NodePalette(NodeProvidorFactory);
         }
 
         [TestMethod]
@@ -39,10 +39,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestConstructor_ProviderReturnsNoNode_NoLibrariesInLibraryList()
         {
-            _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(new List<PluginNode>());
+            _nodeProvidorMoq.Setup(p => p.GetRegisteredNodes()).Returns(new List<Node>());
             IProvideNodes NodeProvidorFactory() => _nodeProvidorMoq.Object;
 
-            var nodeSelectorViewModel = new NodeSelectorViewModel(NodeProvidorFactory);
+            var nodeSelectorViewModel = new NodePalette(NodeProvidorFactory);
 
             Assert.AreEqual(0, nodeSelectorViewModel.LibrariesList.Count);
         }
@@ -70,8 +70,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestShowLibrary_NodeAlreadyInVisibleNodes_VisibleNodesCleared()
         {
             _nodeSelectorViewModel.VisibleNodesList.Add(_nodeMoq1.Object);
-            var libraryMoq = new Mock<Library>("");
-            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode>());
+            var libraryMoq = new Mock<NodePaletteLibrary>("");
+            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<Node>());
             _nodeSelectorViewModel.ShowLibrary(libraryMoq.Object);
 
             Assert.IsTrue(_nodeSelectorViewModel.VisibleNodesList.IsNullOrEmpty());
@@ -80,8 +80,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestShowLibrary_NodeInLibrary_NodeAddedToVisibleNodes()
         {
-            var libraryMoq = new Mock<Library>("");
-            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<PluginNode> { _nodeMoq1.Object });
+            var libraryMoq = new Mock<NodePaletteLibrary>("");
+            libraryMoq.SetupGet(l => l.Nodes).Returns(new List<Node> { _nodeMoq1.Object });
             _nodeSelectorViewModel.ShowLibrary(libraryMoq.Object);
 
             Assert.AreEqual(_nodeMoq1.Object, _nodeSelectorViewModel.VisibleNodesList.First());
@@ -90,8 +90,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestShowLibrary_LibrarySelected()
         {
-            var libraryMoq1 = new Mock<Library>("");
-            libraryMoq1.SetupGet(l => l.Nodes).Returns(new List<PluginNode>());
+            var libraryMoq1 = new Mock<NodePaletteLibrary>("");
+            libraryMoq1.SetupGet(l => l.Nodes).Returns(new List<Node>());
             _nodeSelectorViewModel.ShowLibrary(libraryMoq1.Object);
 
             libraryMoq1.Verify(l => l.Select());
@@ -101,8 +101,8 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestShowLibrary_NodeMousedOver_MousedOverNodeSetToNull()
         {
             _nodeSelectorViewModel.MousedOverNode = _nodeMoq1.Object;
-            var libraryMoq1 = new Mock<Library>("");
-            libraryMoq1.SetupGet(l => l.Nodes).Returns(new List<PluginNode>());
+            var libraryMoq1 = new Mock<NodePaletteLibrary>("");
+            libraryMoq1.SetupGet(l => l.Nodes).Returns(new List<Node>());
             _nodeSelectorViewModel.ShowLibrary(libraryMoq1.Object);
 
             Assert.IsNull(_nodeSelectorViewModel.MousedOverNode);
@@ -112,7 +112,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestMouseLeftSelector_LibraryExists_LibrariesUnselected()
         {
             _nodeSelectorViewModel.MousedOverNode = _nodeMoq1.Object;
-            var libraryMoq1 = new Mock<Library>("");
+            var libraryMoq1 = new Mock<NodePaletteLibrary>("");
             _nodeSelectorViewModel.LibrariesList.Add(libraryMoq1.Object);
 
             _nodeSelectorViewModel.MouseLeftSelector();
@@ -144,7 +144,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestLibrarySelect_SetsBackgroundColorToNonWhite()
         {
-            var library = new Library("");
+            var library = new NodePaletteLibrary("");
             library.Select();
             var brush = (SolidColorBrush)library.BackgroundBrush;
             Assert.IsFalse(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
@@ -153,7 +153,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [TestMethod]
         public void TestLibraryUnselect_SetsBackgroundColorToWhite()
         {
-            var library = new Library("");
+            var library = new NodePaletteLibrary("");
             library.Unselect();
             var brush = (SolidColorBrush)library.BackgroundBrush;
             Assert.IsTrue(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);

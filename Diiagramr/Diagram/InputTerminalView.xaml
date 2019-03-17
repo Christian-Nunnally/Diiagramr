@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:diagram="clr-namespace:DiiagramrAPI.Diagram;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
-    Width="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
-    Height="{x:Static diagram:TerminalViewModel.TerminalDiameter}"
+    Width="{x:Static diagram:Terminal.TerminalDiameter}"
+    Height="{x:Static diagram:Terminal.TerminalDiameter}"
     FocusVisualStyle="{x:Null}"
     MouseDoubleClick="{s:Action TerminalDoubleClicked}">
     <UserControl.Resources>
@@ -17,13 +17,11 @@
         </Grid.RenderTransform>
         <Border
             AllowDrop="True"
-            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalCornerRadius}"
+            CornerRadius="{x:Static diagram:Terminal.TerminalCornerRadius}"
             Drop="{s:Action DropEventHandler}"
             FocusVisualStyle="{x:Null}"
             MouseEnter="{s:Action MouseEntered}"
-            MouseLeave="{s:Action MouseLeft}"
-            MouseLeftButtonDown="{s:Action TerminalLeftMouseDownHandler}"
-            MouseMove="{s:Action MouseMove}">
+            MouseLeave="{s:Action MouseLeft}">
             <Border.Style>
                 <Style>
                     <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
@@ -38,7 +36,7 @@
         <Border
             Background="#007ACC"
             BorderThickness="1"
-            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
@@ -56,13 +54,13 @@
         <Border
             BorderBrush="#101010"
             BorderThickness="1"
-            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False" />
         <Border
             BorderBrush="#007ACC"
             BorderThickness="1"
-            CornerRadius="{x:Static diagram:TerminalViewModel.TerminalBorderCornerRadius}"
+            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />

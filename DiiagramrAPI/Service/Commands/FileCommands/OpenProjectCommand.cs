@@ -12,13 +12,13 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
     {
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
-        private readonly ProjectScreenViewModel _projectScreen;
+        private readonly ProjectScreen _projectScreen;
 
         public override string Name => "Open";
         public override string Parent => "Project";
         public override float Weight => .9f;
 
-        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory, Func<IProjectManager> projectManagerFactory, Func<ProjectScreenViewModel> projectScreenViewModelFactory)
+        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory, Func<IProjectManager> projectManagerFactory, Func<ProjectScreen> projectScreenViewModelFactory)
         {
             _projectFileService = projectFileServiceFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();

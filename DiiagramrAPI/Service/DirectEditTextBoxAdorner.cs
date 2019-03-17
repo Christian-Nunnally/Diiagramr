@@ -22,7 +22,7 @@ namespace DiiagramrAPI.Service
         public bool IsIntType => AdornedTerminal.TerminalModel.Type == typeof(int);
         public bool IsStringType => AdornedTerminal.TerminalModel.Type == typeof(string);
 
-        public DirectEditTextBoxAdorner(UIElement adornedElement, TerminalViewModel adornedTerminal) : base(adornedElement)
+        public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal) : base(adornedElement)
         {
             if (adornedTerminal == null)
             {
@@ -60,11 +60,11 @@ namespace DiiagramrAPI.Service
         {
             if (e.Key == Key.Enter)
             {
-                AdornedTerminal.Adorner = null;
+                AdornedTerminal.SetAdorner(null);
             }
         }
 
-        public TerminalViewModel AdornedTerminal { get; set; }
+        public Terminal AdornedTerminal { get; set; }
         protected override int VisualChildrenCount => visualChildren.Count;
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -85,13 +85,13 @@ namespace DiiagramrAPI.Service
             switch (AdornedTerminal.TerminalRotation)
             {
                 case 90:
-                    return MarginFromTerminal + TerminalViewModel.TerminalDiameter;
+                    return MarginFromTerminal + Terminal.TerminalDiameter;
 
                 case 270:
                     return -width - MarginFromTerminal;
 
                 default:
-                    return (TerminalViewModel.TerminalDiameter / 2) - (width / 2);
+                    return (Terminal.TerminalDiameter / 2) - (width / 2);
             }
         }
 
@@ -103,10 +103,10 @@ namespace DiiagramrAPI.Service
                     return -MarginFromTerminal - height;
 
                 case 180:
-                    return MarginFromTerminal + TerminalViewModel.TerminalDiameter;
+                    return MarginFromTerminal + Terminal.TerminalDiameter;
 
                 default:
-                    return (TerminalViewModel.TerminalDiameter / 2) - (height / 2);
+                    return (Terminal.TerminalDiameter / 2) - (height / 2);
             }
         }
 

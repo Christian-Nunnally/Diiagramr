@@ -10,9 +10,9 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class ProjectScreenViewModelTest
     {
         private Mock<DiagramWellViewModel> _diagramWellViewModelMoq;
-        private Mock<ProjectExplorerViewModel> _projectExplorerViewModelMoq;
+        private Mock<ProjectExplorer> _projectExplorerViewModelMoq;
         private Mock<IProjectManager> _projectManagerMoq;
-        private ProjectScreenViewModel _projectScreenViewModel;
+        private ProjectScreen _projectScreenViewModel;
 
         [TestInitialize]
         public void TestInitialize()
@@ -20,9 +20,9 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq = new Mock<IProjectManager>();
             _diagramWellViewModelMoq = new Mock<DiagramWellViewModel>(
                 (Func<IProjectManager>)(() => _projectManagerMoq.Object));
-            _projectExplorerViewModelMoq = new Mock<ProjectExplorerViewModel>(
+            _projectExplorerViewModelMoq = new Mock<ProjectExplorer>(
                 (Func<IProjectManager>)(() => _projectManagerMoq.Object));
-            _projectScreenViewModel = new ProjectScreenViewModel(
+            _projectScreenViewModel = new ProjectScreen(
                 () => _projectExplorerViewModelMoq.Object,
                 () => _diagramWellViewModelMoq.Object,
                 () => _projectManagerMoq.Object);

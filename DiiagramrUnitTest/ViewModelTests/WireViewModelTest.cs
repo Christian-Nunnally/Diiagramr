@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -24,7 +23,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestConstructor_WireNull_ThrowsException()
         {
-            new WireViewModel(null);
+            new Wire(null);
         }
 
         [TestMethod]
@@ -35,28 +34,28 @@ namespace DiiagramrUnitTests.ViewModelTests
             wireMoq.SetupGet(m => m.Y1).Returns(2);
             wireMoq.SetupGet(m => m.X2).Returns(3);
             wireMoq.SetupGet(m => m.Y2).Returns(4);
-            var wireViewModel = new WireViewModel(wireMoq.Object);
+            var wireViewModel = new Wire(wireMoq.Object);
 
-            Assert.AreEqual(wireMoq.Object.X1 + DiagramViewModel.NodeBorderWidth, wireViewModel.X1);
-            Assert.AreEqual(wireMoq.Object.Y1 + DiagramViewModel.NodeBorderWidth, wireViewModel.Y1);
-            Assert.AreEqual(wireMoq.Object.X2 + DiagramViewModel.NodeBorderWidth, wireViewModel.X2);
-            Assert.AreEqual(wireMoq.Object.Y2 + DiagramViewModel.NodeBorderWidth, wireViewModel.Y2);
+            Assert.AreEqual(wireMoq.Object.X1 + DiiagramrAPI.Diagram.Diagram.NodeBorderWidth, wireViewModel.X1);
+            Assert.AreEqual(wireMoq.Object.Y1 + DiiagramrAPI.Diagram.Diagram.NodeBorderWidth, wireViewModel.Y1);
+            Assert.AreEqual(wireMoq.Object.X2 + DiiagramrAPI.Diagram.Diagram.NodeBorderWidth, wireViewModel.X2);
+            Assert.AreEqual(wireMoq.Object.Y2 + DiiagramrAPI.Diagram.Diagram.NodeBorderWidth, wireViewModel.Y2);
         }
 
         [TestMethod]
         public void TestConstructor_WireModelSet()
         {
             var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);
-            var wireViewModel = new WireViewModel(wireMoq.Object);
+            var wireViewModel = new Wire(wireMoq.Object);
 
-            Assert.AreEqual(wireMoq.Object, wireViewModel.WireModel);
+            Assert.AreEqual(wireMoq.Object, wireViewModel.Model);
         }
 
         [TestMethod]
         public void TestWireMouseDown_WireModelDisconnectTerminalInvoked()
         {
             var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);
-            var wireViewModel = new WireViewModel(wireMoq.Object);
+            var wireViewModel = new Wire(wireMoq.Object);
 
             wireViewModel.WireMouseDown(null, null);
             wireMoq.Verify(m => m.DisconnectWire());
@@ -66,7 +65,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestDisconnectWire_WireModelDisconnectTerminalInvoked()
         {
             var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);
-            var wireViewModel = new WireViewModel(wireMoq.Object);
+            var wireViewModel = new Wire(wireMoq.Object);
 
             wireViewModel.DisconnectWire();
             wireMoq.Verify(m => m.DisconnectWire());

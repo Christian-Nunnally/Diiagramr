@@ -6,9 +6,8 @@ using Diiagramr.Shell;
 using Diiagramr.Shell.Tools;
 using Diiagramr.View.ShellScreen;
 using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.CoreNode;
 using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.PluginNodeApi;
+using DiiagramrAPI.Diagram.Nodes;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
@@ -30,37 +29,36 @@ namespace Diiagramr.Application
 
             // todo: automate this
             _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
-            _viewModelToViewMapping.Add(typeof(ProjectScreenViewModel), typeof(ProjectScreenView));
+            _viewModelToViewMapping.Add(typeof(ProjectScreen), typeof(ProjectScreenView));
             _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));
             _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindowViewModel), typeof(LibrarySourceManagerWindowView));
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
             _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel), typeof(VisualDropStartScreenView));
-            _viewModelToViewMapping.Add(typeof(ProjectExplorerViewModel), typeof(ProjectExplorerView));
-            _viewModelToViewMapping.Add(typeof(NodeSelectorViewModel), typeof(NodeSelectorView));
+            _viewModelToViewMapping.Add(typeof(ProjectExplorer), typeof(ProjectExplorerView));
+            _viewModelToViewMapping.Add(typeof(NodePalette), typeof(NodeSelectorView));
             _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));
-            _viewModelToViewMapping.Add(typeof(WireViewModel), typeof(WireView));
-            _viewModelToViewMapping.Add(typeof(TerminalViewModel), typeof(TerminalView));
-            _viewModelToViewMapping.Add(typeof(OutputTerminalViewModel), typeof(OutputTerminalView));
-            _viewModelToViewMapping.Add(typeof(InputTerminalViewModel), typeof(InputTerminalView));
-            _viewModelToViewMapping.Add(typeof(DiagramViewModel), typeof(DiagramView));
-            _viewModelToViewMapping.Add(typeof(DiagramControlViewModel), typeof(DiagramControlView));
-            _viewModelToViewMapping.Add(typeof(NumberNodeViewModel), typeof(NumberNodeView));
-            _viewModelToViewMapping.Add(typeof(DiagramOutputNodeViewModel), typeof(DiagramOutputNodeView));
-            _viewModelToViewMapping.Add(typeof(DiagramInputNodeViewModel), typeof(DiagramInputNodeView));
-            _viewModelToViewMapping.Add(typeof(DiagramCallNodeViewModel), typeof(DiagramCallNodeView));
-            _viewModelToViewMapping.Add(typeof(AddNodeViewModel), typeof(AddNodeView));
+            _viewModelToViewMapping.Add(typeof(Wire), typeof(WireView));
+            _viewModelToViewMapping.Add(typeof(Terminal), typeof(TerminalView));
+            _viewModelToViewMapping.Add(typeof(OutputTerminal), typeof(OutputTerminalView));
+            _viewModelToViewMapping.Add(typeof(InputTerminal), typeof(InputTerminalView));
+            _viewModelToViewMapping.Add(typeof(DiiagramrAPI.Diagram.Diagram), typeof(DiagramView));
+            _viewModelToViewMapping.Add(typeof(NumberNode), typeof(NumberNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramOutputNode), typeof(DiagramOutputNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramInputNode), typeof(DiagramInputNodeView));
+            _viewModelToViewMapping.Add(typeof(DiagramCallNode), typeof(DiagramCallNodeView));
+            _viewModelToViewMapping.Add(typeof(AddNode), typeof(AddNodeView));
             _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
-            _viewModelToViewMapping.Add(typeof(LassoSelectorViewModel), typeof(LassoSelectorView));
-            _viewModelToViewMapping.Add(typeof(PointSelectorViewModel), typeof(PointSelectorView));
-            _viewModelToViewMapping.Add(typeof(NodePlacementViewModel), typeof(NodePlacementView));
-            _viewModelToViewMapping.Add(typeof(DeleteSelectedNodesInteractorViewModel), typeof(DeleteSelectedNodesInteractorView));
-            _viewModelToViewMapping.Add(typeof(NodeDragInteractor), typeof(NodeDragInteractorView));
-            _viewModelToViewMapping.Add(typeof(NodeResizeInteractor), typeof(NodeResizeInteractorView));
-            _viewModelToViewMapping.Add(typeof(DiagramDragInteractor), typeof(DiagramDragInteractorView));
-            _viewModelToViewMapping.Add(typeof(DiagramZoomInteractor), typeof(DiagramZoomInteractorView));
+            _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoSelectorView));
+            _viewModelToViewMapping.Add(typeof(PointSelector), typeof(PointSelectorView));
+            _viewModelToViewMapping.Add(typeof(NodePlacer), typeof(NodePlacementView));
+            _viewModelToViewMapping.Add(typeof(NodeDeleter), typeof(DeleteSelectedNodesInteractorView));
+            _viewModelToViewMapping.Add(typeof(NodeDragger), typeof(NodeDragInteractorView));
+            _viewModelToViewMapping.Add(typeof(NodeResizer), typeof(NodeResizeInteractorView));
+            _viewModelToViewMapping.Add(typeof(DiagramPanner), typeof(DiagramDragInteractorView));
+            _viewModelToViewMapping.Add(typeof(DiagramZoomer), typeof(DiagramZoomInteractorView));
             _viewModelToViewMapping.Add(typeof(DiagramInteractionManager), typeof(DiagramInteractionManagerView));
-            _viewModelToViewMapping.Add(typeof(WireTerminalInteractor), typeof(WireTerminalInteractorView));
+            _viewModelToViewMapping.Add(typeof(TerminalWirer), typeof(WireTerminalInteractorView));
         }
 
         protected override Type LocateViewForModel(Type modelType)
@@ -70,7 +68,7 @@ namespace Diiagramr.Application
                 return _viewModelToViewMapping[modelType];
             }
 
-            if (!typeof(PluginNode).IsAssignableFrom(modelType))
+            if (!typeof(Node).IsAssignableFrom(modelType))
             {
                 throw new ViewNotFoundException(modelType.FullName);
             }

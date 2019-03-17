@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -13,27 +12,27 @@ namespace DiiagramrUnitTests.ViewModelTests
         [ExpectedException(typeof(ArgumentNullException))]
         public void TestConstructor_NullTerminal_ThrowsException()
         {
-            new InputTerminalViewModel(null);
+            new InputTerminal(null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructor_TerminalKindOutput_ThrowsException()
         {
-            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0));
+            new InputTerminal(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0));
         }
 
         [TestMethod]
         public void TestConstructor_TerminalKindInput_Passes()
         {
-            new InputTerminalViewModel(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0));
+            new InputTerminal(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0));
         }
 
         [TestMethod]
         public void TestWireToTerminal_WireToInput_ReturnsFalse()
         {
             var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            var inputTerminalViewModel = new InputTerminalViewModel(terminalModel);
+            var inputTerminalViewModel = new InputTerminal(terminalModel);
             var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
             Assert.IsFalse(inputTerminalViewModel.WireToTerminal(otherTerminal));
         }
@@ -42,7 +41,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestWireToTerminal_WireToOutput_ReturnsTrue()
         {
             var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            var inputTerminalViewModel = new InputTerminalViewModel(terminalModel);
+            var inputTerminalViewModel = new InputTerminal(terminalModel);
             var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
             Assert.IsTrue(inputTerminalViewModel.WireToTerminal(otherTerminal));
         }

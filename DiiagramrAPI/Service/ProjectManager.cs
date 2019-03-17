@@ -1,6 +1,5 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.CoreNode;
-using DiiagramrAPI.Diagram.Model;
+﻿using DiiagramrAPI.Diagram.Model;
+using DiiagramrAPI.Diagram.Nodes;
 using DiiagramrAPI.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -13,20 +12,20 @@ namespace DiiagramrAPI.Service
 {
     public class ProjectManager : IProjectManager
     {
-        private readonly DiagramViewModelFactory _diagramViewModelFactory;
+        private readonly DiagramFactory _diagramViewModelFactory;
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
 
         public ProjectManager(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<ILibraryManager> libraryManagerFactory,
-            Func<DiagramViewModelFactory> diagramViewModelFactoryFactory)
+            Func<DiagramFactory> diagramViewModelFactoryFactory)
         {
-            DiagramViewModels = new List<DiagramViewModel>();
+            DiagramViewModels = new List<Diagram.Diagram>();
             _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
-            DiagramCallNodeViewModel.ProjectManager = this;
+            DiagramCallNode.ProjectManager = this;
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
@@ -34,7 +33,7 @@ namespace DiiagramrAPI.Service
 
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
         public ProjectModel CurrentProject { get; set; }
-        public IList<DiagramViewModel> DiagramViewModels { get; }
+        public IList<Diagram.Diagram> DiagramViewModels { get; }
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
         public bool CloseProject()
@@ -104,7 +103,7 @@ namespace DiiagramrAPI.Service
         public void DeleteDiagram(DiagramModel diagram)
         {
             CurrentProject.RemoveDiagram(diagram);
-            var diagramViewModel = DiagramViewModels.FirstOrDefault(m => m.Diagram == diagram);
+            var diagramViewModel = DiagramViewModels.FirstOrDefault(m => m.Model == diagram);
             if (diagramViewModel != null)
             {
                 DiagramViewModels.Remove(diagramViewModel);

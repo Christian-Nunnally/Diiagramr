@@ -1,4 +1,3 @@
-using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
@@ -10,7 +9,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Project
 {
-    public class DiagramWellViewModel : Conductor<DiagramViewModel>.Collection.OneActive
+    public class DiagramWellViewModel : Conductor<Diagram.Diagram>.Collection.OneActive
     {
         private readonly IProjectManager _projectManager;
 
@@ -26,7 +25,7 @@ namespace DiiagramrAPI.Project
         {
             if (ActiveItem != null)
             {
-                ActiveItem.Diagram.IsOpen = false;
+                ActiveItem.Model.IsOpen = false;
             }
         }
 
@@ -42,7 +41,7 @@ namespace DiiagramrAPI.Project
 
         private void CloseDiagram(DiagramModel diagram)
         {
-            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Diagram == diagram);
+            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Model == diagram);
             if (diagramViewModel != null)
             {
                 CloseItem(diagramViewModel);
@@ -87,8 +86,8 @@ namespace DiiagramrAPI.Project
 
         private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var diagramViewModelSender = (DiagramViewModel)sender;
-            if (e.PropertyName.Equals(nameof(DiagramViewModel.Name)))
+            var diagramViewModelSender = (Diagram.Diagram)sender;
+            if (e.PropertyName.Equals(nameof(Diagram.Diagram.Name)))
             {
                 var oldActiveItem = ActiveItem;
                 ActiveItem = diagramViewModelSender;
@@ -116,7 +115,7 @@ namespace DiiagramrAPI.Project
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = _projectManager.DiagramViewModels.First(m => m.Diagram == diagram);
+            var diagramViewModel = _projectManager.DiagramViewModels.First(m => m.Model == diagram);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Insert(0, diagramViewModel);
 

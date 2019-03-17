@@ -1,6 +1,6 @@
 ﻿using Castle.Core.Internal;
+using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.ComponentModel;
@@ -192,7 +192,7 @@ namespace DiiagramrUnitTests.ModelTests
         [TestMethod]
         public void TestSetNodeViewModel_InitializePluginNodeSettingsInvokedOnViewModel()
         {
-            var nodeViewModelMoq = new Mock<PluginNode>();
+            var nodeViewModelMoq = new Mock<Node>();
             _node.NodeViewModel = nodeViewModelMoq.Object;
             nodeViewModelMoq.Verify(n => n.InitializePluginNodeSettings());
         }

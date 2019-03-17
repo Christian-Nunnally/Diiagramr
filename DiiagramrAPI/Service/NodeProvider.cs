@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -11,21 +11,21 @@ namespace DiiagramrAPI.Service
 {
     public class NodeProvider : IProvideNodes
     {
-        private readonly IList<PluginNode> _availableNodeViewModels;
+        private readonly IList<Node> _availableNodeViewModels;
         private readonly IDictionary<string, NodeLibrary> _dependencyMap;
         private readonly HashSet<Assembly> _loadedAssemblies = new HashSet<Assembly>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
 
         public NodeProvider()
         {
-            _availableNodeViewModels = new List<PluginNode>();
+            _availableNodeViewModels = new List<Node>();
             _nodeNameToViewModelMap = new Dictionary<string, Type>();
             _dependencyMap = new Dictionary<string, NodeLibrary>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public PluginNode CreateNodeViewModelFromName(string typeFullName)
+        public Node CreateNodeViewModelFromName(string typeFullName)
         {
             if (!_dependencyMap.ContainsKey(typeFullName))
             {
@@ -36,12 +36,12 @@ namespace DiiagramrAPI.Service
             return LoadNodeViewModelFromNode(node);
         }
 
-        public IEnumerable<PluginNode> GetRegisteredNodes()
+        public IEnumerable<Node> GetRegisteredNodes()
         {
             return _availableNodeViewModels.ToArray();
         }
 
-        public PluginNode LoadNodeViewModelFromNode(NodeModel node)
+        public Node LoadNodeViewModelFromNode(NodeModel node)
         {
             var fullName = node.Name;
 
@@ -50,7 +50,7 @@ namespace DiiagramrAPI.Service
                 return null;
             }
 
-            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is PluginNode viewModel))
+            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is Node viewModel))
             {
                 throw NoViewModelException(fullName);
             }
@@ -60,7 +60,7 @@ namespace DiiagramrAPI.Service
             return viewModel;
         }
 
-        public void RegisterNode(PluginNode node, NodeLibrary dependency)
+        public void RegisterNode(Node node, NodeLibrary dependency)
         {
             _loadedAssemblies.Add(node.GetType().Assembly);
             var fullName = node.GetType().FullName ?? "";
@@ -112,7 +112,7 @@ namespace DiiagramrAPI.Service
                 ?? Type.GetType(terminal.TypeName, AssemblyResolver, TypeResolver);
         }
 
-        private void ResolveTerminalTypes(PluginNode viewModel)
+        private void ResolveTerminalTypes(Node viewModel)
         {
             viewModel.TerminalViewModels.Select(t => t.TerminalModel).ForEach(ResolveTerminalType);
         }

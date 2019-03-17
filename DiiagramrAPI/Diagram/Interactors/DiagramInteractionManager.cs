@@ -23,7 +23,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
         public BindableCollection<string> ActiveDiagramInteractorNames { get; set; } = new BindableCollection<string>();
 
-        public void DiagramInputHandler(DiagramInteractionEventArguments interaction, DiagramViewModel diagram)
+        public void DiagramInputHandler(DiagramInteractionEventArguments interaction, Diagram diagram)
         {
             interaction.Diagram = diagram;
             PutViewModelMouseIsOverInInteraction(interaction);

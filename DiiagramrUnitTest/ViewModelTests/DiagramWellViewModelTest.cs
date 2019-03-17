@@ -16,7 +16,7 @@ namespace DiiagramrUnitTests.ViewModelTests
     {
         private DiagramWellViewModel _diagramWellViewModel;
         private Mock<IProvideNodes> _nodeProviderMoq;
-        private Mock<NodeSelectorViewModel> _nodeSelectorMoq;
+        private Mock<NodePalette> _nodeSelectorMoq;
         private Mock<IProjectManager> _projectManagerMoq;
 
         [TestInitialize]
@@ -24,7 +24,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             _projectManagerMoq = new Mock<IProjectManager>();
             _nodeProviderMoq = new Mock<IProvideNodes>();
-            _nodeSelectorMoq = new Mock<NodeSelectorViewModel>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
+            _nodeSelectorMoq = new Mock<NodePalette>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
 
             _diagramWellViewModel = new DiagramWellViewModel(() => _projectManagerMoq.Object);
         }
@@ -40,8 +40,8 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagram = new DiagramModel();
             var project = new ProjectModel();
             var nodeProviderMoq = new Mock<IProvideNodes>();
-            var diagramViewModelMoq = new Mock<DiagramViewModel>(diagram, nodeProviderMoq.Object, null, _nodeSelectorMoq.Object);
-            var diagramViewModelList = new List<DiagramViewModel> { diagramViewModelMoq.Object };
+            var diagramViewModelMoq = new Mock<DiiagramrAPI.Diagram.Diagram>(diagram, nodeProviderMoq.Object, null, _nodeSelectorMoq.Object);
+            var diagramViewModelList = new List<DiiagramrAPI.Diagram.Diagram> { diagramViewModelMoq.Object };
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;

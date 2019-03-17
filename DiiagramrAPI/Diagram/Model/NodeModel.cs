@@ -1,4 +1,3 @@
-using DiiagramrAPI.PluginNodeApi;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -14,7 +13,7 @@ namespace DiiagramrAPI.Diagram.Model
 
         private double _height;
 
-        private PluginNode _nodeViewModel;
+        private Node _nodeViewModel;
 
         private double _width;
 
@@ -70,7 +69,7 @@ namespace DiiagramrAPI.Diagram.Model
             }
         }
 
-        public virtual PluginNode NodeViewModel
+        public virtual Node NodeViewModel
         {
             get => _nodeViewModel;
 

@@ -1,9 +1,8 @@
-using Stylet;
 using System;
 
 namespace DiiagramrAPI.Shell
 {
-    public abstract class AbstractShellWindow : Screen
+    public abstract class AbstractShellWindow : ViewModel
     {
         public event Action<AbstractShellWindow> OpenWindow;
 

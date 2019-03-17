@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.ComponentModel;

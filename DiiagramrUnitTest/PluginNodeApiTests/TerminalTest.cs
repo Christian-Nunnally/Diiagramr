@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -9,23 +8,23 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
     [TestClass]
     public class TerminalTest
     {
-        private Terminal<int> _terminal;
+        private TypedTerminal<int> _terminal;
         private TerminalModel _terminalModel;
-        private TerminalViewModel _terminalViewModel;
+        private Terminal _terminalViewModel;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            _terminalViewModel = new TerminalViewModel(_terminalModel);
-            _terminal = new Terminal<int>(_terminalViewModel);
+            _terminalViewModel = new Terminal(_terminalModel);
+            _terminal = new TypedTerminal<int>(_terminalViewModel);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException), "Terminal should not allow null underlyingTerminal")]
         public void TestConstructor_NullArguments_ThrowsException()
         {
-            new Terminal<int>(null);
+            new TypedTerminal<int>(null);
         }
 
         [TestMethod]
@@ -65,7 +64,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public void TestSetData_UnderlyingTerminalViewModelDataNullIntSet()
         {
             _terminalViewModel.Data = null;
-            var terminal = new Terminal<int>(_terminalViewModel);
+            var terminal = new TypedTerminal<int>(_terminalViewModel);
             Assert.AreEqual(terminal.Data, 0);
         }
 
@@ -73,14 +72,14 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         public void TestSetData_UnderlyingTerminalViewModelDataNullStringSet()
         {
             _terminalViewModel.Data = null;
-            var terminal = new Terminal<string>(_terminalViewModel);
+            var terminal = new TypedTerminal<string>(_terminalViewModel);
             Assert.IsNull(terminal.Data);
         }
 
         [TestMethod]
         public void TestChangeTerminalData_SetsTerminalData()
         {
-            var terminal = new Terminal<string>(_terminalViewModel);
+            var terminal = new TypedTerminal<string>(_terminalViewModel);
             terminal.ChangeTerminalData("Hello");
             Assert.AreEqual(terminal.Data, "Hello");
         }

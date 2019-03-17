@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -97,7 +97,7 @@ namespace DiiagramrAPI.Service
         {
             foreach (var exportedType in assembly.ExportedTypes)
             {
-                if (typeof(PluginNode).IsAssignableFrom(exportedType) && !exportedType.IsAbstract)
+                if (typeof(Node).IsAssignableFrom(exportedType) && !exportedType.IsAbstract)
                 {
                     TryRegisterNode(libraryDependency, exportedType);
                 }
@@ -108,7 +108,7 @@ namespace DiiagramrAPI.Service
         {
             try
             {
-                _nodeProvider.RegisterNode((PluginNode)Activator.CreateInstance(exportedType), libraryDependency);
+                _nodeProvider.RegisterNode((Node)Activator.CreateInstance(exportedType), libraryDependency);
             }
             catch (MissingMethodException)
             {

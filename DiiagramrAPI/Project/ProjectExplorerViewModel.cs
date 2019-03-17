@@ -1,6 +1,7 @@
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell;
 using Stylet;
 using System;
 using System.Collections.ObjectModel;
@@ -11,9 +12,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Project
 {
-    public class ProjectExplorerViewModel : Screen
+    public class ProjectExplorer : ViewModel
     {
-        public ProjectExplorerViewModel(Func<IProjectManager> projectManagerFactory)
+        public ProjectExplorer(Func<IProjectManager> projectManagerFactory)
         {
             ProjectManager = projectManagerFactory.Invoke();
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;

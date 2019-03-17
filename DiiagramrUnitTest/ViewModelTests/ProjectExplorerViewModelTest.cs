@@ -10,14 +10,14 @@ namespace DiiagramrUnitTests.ViewModelTests
     [TestClass]
     public class ProjectExplorerViewModelTest
     {
-        private ProjectExplorerViewModel _projectExplorerViewModel;
+        private ProjectExplorer _projectExplorerViewModel;
         private Mock<IProjectManager> _projectManagerMoq;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _projectManagerMoq = new Mock<IProjectManager>();
-            _projectExplorerViewModel = new ProjectExplorerViewModel(() => _projectManagerMoq.Object);
+            _projectExplorerViewModel = new ProjectExplorer(() => _projectManagerMoq.Object);
         }
 
         [TestMethod]

@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
     xmlns:viewModel="clr-namespace:DiiagramrAPI.Project;assembly=DiiagramrAPI"
-    d:DataContext="{d:DesignInstance viewModel:ProjectExplorerViewModel}"
+    d:DataContext="{d:DesignInstance viewModel:ProjectExplorer}"
     d:DesignHeight="300"
     d:DesignWidth="150"
     mc:Ignorable="d">

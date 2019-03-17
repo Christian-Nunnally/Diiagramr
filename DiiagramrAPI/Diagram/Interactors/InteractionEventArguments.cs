@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public class DiagramInteractionEventArguments
     {
-        public DiagramViewModel Diagram;
+        public Diagram Diagram;
         public InteractionType Type;
         public Key Key;
         public Screen ViewModelMouseIsOver;

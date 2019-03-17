@@ -9,13 +9,13 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
     public class NewProjectCommand : ToolBarCommand
     {
         private readonly IProjectManager _projectManager;
-        private readonly ProjectScreenViewModel _projectScreenViewModel;
+        private readonly ProjectScreen _projectScreenViewModel;
 
         public override string Name => "New";
         public override string Parent => "Project";
         public override float Weight => 1.0f;
 
-        public NewProjectCommand(Func<ProjectScreenViewModel> projectScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
+        public NewProjectCommand(Func<ProjectScreen> projectScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
         {
             _projectManager = projectManagerFactory.Invoke();
             _projectScreenViewModel = projectScreenViewModelFactory.Invoke();

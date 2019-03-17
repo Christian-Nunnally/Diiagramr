@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.PluginNodeApi;
+﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -11,14 +11,14 @@ namespace DiiagramrUnitTests.ServiceTests
     public class NodeProviderTest
     {
         private NodeProvider _nodeProvider;
-        private Mock<PluginNode> _nodeViewModelMoq;
+        private Mock<Node> _nodeViewModelMoq;
         private NodeModel _testNode;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _nodeProvider = new NodeProvider();
-            _nodeViewModelMoq = new Mock<PluginNode>
+            _nodeViewModelMoq = new Mock<Node>
             {
                 CallBase = false
             };
@@ -48,7 +48,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [TestMethod]
         public void TestRegisterNode_RegisterTwoNodeWithSameFullyQualifiedName_OnlyOneNodeReturnedByGetRegisteredNodes()
         {
-            var otherNodeViewModel = new Mock<PluginNode>();
+            var otherNodeViewModel = new Mock<Node>();
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
             _nodeProvider.RegisterNode(otherNodeViewModel.Object, new NodeLibrary());
             Assert.AreEqual(1, _nodeProvider.GetRegisteredNodes().Count(m => m == _nodeViewModelMoq.Object));
@@ -91,7 +91,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
-            Assert.AreEqual(nodeViewModel.NodeModel, _testNode);
+            Assert.AreEqual(nodeViewModel.Model, _testNode);
         }
 
         [TestMethod]
@@ -160,7 +160,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
-            Assert.AreEqual(nodeViewModel, nodeViewModel.NodeModel.NodeViewModel);
+            Assert.AreEqual(nodeViewModel, nodeViewModel.Model.NodeViewModel);
         }
 
         [TestMethod]
@@ -170,7 +170,7 @@ namespace DiiagramrUnitTests.ServiceTests
 
             var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
-            Assert.IsNotNull(nodeViewModel.NodeModel);
+            Assert.IsNotNull(nodeViewModel.Model);
         }
 
         [TestMethod]
@@ -182,8 +182,8 @@ namespace DiiagramrUnitTests.ServiceTests
             nodeViewModel.X++;
             nodeViewModel.Y++;
 
-            Assert.AreEqual(nodeViewModel.NodeModel.X, nodeViewModel.X);
-            Assert.AreEqual(nodeViewModel.NodeModel.Y, nodeViewModel.Y);
+            Assert.AreEqual(nodeViewModel.Model.X, nodeViewModel.X);
+            Assert.AreEqual(nodeViewModel.Model.Y, nodeViewModel.Y);
         }
     }
 }

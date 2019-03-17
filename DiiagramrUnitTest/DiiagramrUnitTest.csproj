@@ -91,7 +91,6 @@
     <Compile Include="ServiceTests\LibraryManagerTest.cs" />
     <Compile Include="ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
-    <Compile Include="ViewModelTests\Diagram\DiagramControlViewModelTest.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTest.cs" />
     <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
@@ -118,6 +117,9 @@
       <Link>Resources.resx</Link>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModelTests\Diagram\" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
