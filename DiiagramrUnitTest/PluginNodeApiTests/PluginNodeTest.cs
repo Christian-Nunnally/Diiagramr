@@ -89,7 +89,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             };
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalViewModelMoq = new Mock<Terminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.UnHighlightAllTerminals();
@@ -103,7 +103,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(int));
@@ -117,7 +117,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
@@ -131,7 +131,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalViewModelMoq = new Mock<InputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightOutputTerminalsOfType(typeof(string));
@@ -145,7 +145,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalViewModelMoq = new Mock<InputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(int));
@@ -159,7 +159,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
             var terminalViewModelMoq = new Mock<InputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(string));
@@ -173,7 +173,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.HighlightInputTerminalsOfType(typeof(string));
@@ -187,7 +187,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
             testPluginNode.DisconnectAllTerminals();
@@ -201,7 +201,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             var nodeMoq = new Mock<NodeModel>("");
             testPluginNode.Model = nodeMoq.Object;
 
@@ -216,7 +216,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             var nodeMoq = new Mock<NodeModel>("");
             testPluginNode.Model = nodeMoq.Object;
 
@@ -231,7 +231,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             var nodeMoq = new Mock<NodeModel>("");
             testPluginNode.Model = nodeMoq.Object;
 
@@ -247,7 +247,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var testPluginNode = new TestPluginNode();
             var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Output, 0);
             var terminalViewModelMoq = new Mock<OutputTerminal>(terminalMoq.Object);
-            terminalViewModelMoq.SetupGet(n => n.TerminalModel).Returns(terminalMoq.Object);
+            terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             var nodeMoq = new Mock<NodeModel>("");
             testPluginNode.Model = nodeMoq.Object;
 

@@ -62,7 +62,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            if ((interaction.Type == InteractionType.LeftMouseDown 
+            if ((interaction.Type == InteractionType.LeftMouseDown
               || interaction.Type == InteractionType.MouseMoved)
               && interaction.ViewModelMouseIsOver is Node node)
             {

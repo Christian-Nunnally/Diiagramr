@@ -14,10 +14,10 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 var deltaX = interaction.MousePosition.X - PreviousMouseLocation.X;
                 var deltaY = interaction.MousePosition.Y - PreviousMouseLocation.Y;
-                foreach (var node in interaction.Diagram.NodeViewModels.Where(n => n.IsSelected))
+                foreach (var otherNode in interaction.Diagram.NodeViewModels.Where(n => n.IsSelected))
                 {
-                    node.X += deltaX / interaction.Diagram.Zoom;
-                    node.Y += deltaY / interaction.Diagram.Zoom;
+                    otherNode.X += deltaX / interaction.Diagram.Zoom;
+                    otherNode.Y += deltaY / interaction.Diagram.Zoom;
                 }
                 PreviousMouseLocation = interaction.MousePosition;
                 interaction.Diagram.UpdateDiagramBoundingBox();
@@ -27,9 +27,28 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown 
-                && interaction.ViewModelMouseIsOver is Node
-                && !interaction.IsCtrlKeyPressed;
+            if (interaction.Type == InteractionType.LeftMouseDown
+                && interaction.ViewModelMouseIsOver is Node node
+                && !interaction.IsCtrlKeyPressed)
+            {
+                var mouseX = interaction.MousePosition.X;
+                var mouseY = interaction.MousePosition.Y;
+                var diagram = interaction.Diagram;
+                var nodeLeft = diagram.GetViewPointFromDiagramPointX(node.X + Diagram.NodeBorderWidth);
+                var nodeTop = diagram.GetViewPointFromDiagramPointY(node.Y + Diagram.NodeBorderWidth);
+                var nodeRight = diagram.GetViewPointFromDiagramPointX(node.X + node.Width + Diagram.NodeBorderWidth);
+                var nodeBottom = diagram.GetViewPointFromDiagramPointY(node.Y + node.Height + Diagram.NodeBorderWidth);
+
+                if (mouseX > nodeLeft && mouseX < nodeRight)
+                {
+                    if (mouseY > nodeTop && mouseY < nodeBottom)
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)

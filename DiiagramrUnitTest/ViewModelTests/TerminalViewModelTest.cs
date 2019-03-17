@@ -22,7 +22,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestConstructor_ValidTerminal_SetsTerminalModel()
         {
             var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            Assert.AreEqual(_terminalModelMoq.Object, terminalViewModel.TerminalModel);
+            Assert.AreEqual(_terminalModelMoq.Object, terminalViewModel.Model);
         }
 
         [TestMethod]

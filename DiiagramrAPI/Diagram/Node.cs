@@ -28,7 +28,7 @@ namespace DiiagramrAPI.Diagram
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
         public virtual IEnumerable<Terminal> DynamicTerminalViewModels =>
-            TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.TerminalModel.MethodKey));
+            TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.Model.MethodKey));
 
         public virtual double Height
         {
@@ -107,8 +107,8 @@ namespace DiiagramrAPI.Diagram
         public virtual void AddTerminalViewModel(Terminal terminalViewModel)
         {
             TerminalViewModels.Add(terminalViewModel);
-            AddTerminal(terminalViewModel.TerminalModel);
-            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.TerminalModel.Direction);
+            AddTerminal(terminalViewModel.Model);
+            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.Model.Direction);
             terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
         }
 
@@ -167,8 +167,8 @@ namespace DiiagramrAPI.Diagram
         public virtual void RemoveTerminalViewModel(Terminal terminalViewModel)
         {
             TerminalViewModels.Remove(terminalViewModel);
-            RemoveTerminal(terminalViewModel.TerminalModel);
-            FixOtherTerminalsOnEdge(terminalViewModel.TerminalModel.Direction);
+            RemoveTerminal(terminalViewModel.Model);
+            FixOtherTerminalsOnEdge(terminalViewModel.Model.Direction);
         }
 
         public void UnHighlightAllTerminals()
@@ -333,7 +333,7 @@ namespace DiiagramrAPI.Diagram
         private void FixOtherTerminalsOnEdge(Direction edge)
         {
             var otherTerminalsInDirection = TerminalViewModels
-                .Where(t => t.TerminalModel.Direction == edge).ToArray();
+                .Where(t => t.Model.Direction == edge).ToArray();
 
             var inc = 1 / (otherTerminalsInDirection.Length + 1.0f);
             for (var i = 0; i < otherTerminalsInDirection.Length; i++)

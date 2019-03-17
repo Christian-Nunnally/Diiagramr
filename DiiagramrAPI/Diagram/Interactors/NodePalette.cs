@@ -138,7 +138,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
                 if (terminalsThatCouldBeWired.Count() == 1)
                 {
-                    ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().TerminalModel);
+                    ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().Model);
                 }
             }
             _diagramViewModel.AddNode(nodeToInsert);
@@ -146,18 +146,18 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
         {
-            if (startTerminal.TerminalModel.Kind == TerminalKind.Input)
+            if (startTerminal.Model.Kind == TerminalKind.Input)
             {
                 return node.TerminalViewModels
                     .Where(t => t is OutputTerminal
-                             && t.TerminalModel.Type.IsAssignableFrom(startTerminal.TerminalModel.Type));
+                             && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
 
             }
-            else if (startTerminal.TerminalModel.Kind == TerminalKind.Output)
+            else if (startTerminal.Model.Kind == TerminalKind.Output)
             {
                 return node.TerminalViewModels
                     .Where(t => t is InputTerminal
-                        && t.TerminalModel.Type.IsAssignableFrom(startTerminal.TerminalModel.Type));
+                        && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
             }
             return Enumerable.Empty<Terminal>();
         }
@@ -240,12 +240,12 @@ namespace DiiagramrAPI.Diagram.Interactors
             if (mousedOverViewModel is InputTerminal inputTerminalMouseIsOver)
             {
                 ContextTerminal = inputTerminalMouseIsOver;
-                Show(n => n.TerminalViewModels.Any(t => t is OutputTerminal && t.TerminalModel.Type.IsAssignableFrom(inputTerminalMouseIsOver.TerminalModel.Type)));
+                Show(n => n.TerminalViewModels.Any(t => t is OutputTerminal && t.Model.Type.IsAssignableFrom(inputTerminalMouseIsOver.Model.Type)));
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
-                Show(n => n.TerminalViewModels.Any(t => t is InputTerminal && t.TerminalModel.Type.IsAssignableFrom(outputTerminalMouseIsOver.TerminalModel.Type)));
+                Show(n => n.TerminalViewModels.Any(t => t is InputTerminal && t.Model.Type.IsAssignableFrom(outputTerminalMouseIsOver.Model.Type)));
             }
             else
             {

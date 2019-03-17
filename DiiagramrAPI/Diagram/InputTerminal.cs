@@ -59,13 +59,13 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        public bool IsBoolType => TerminalModel.Type == typeof(bool);
-        public bool IsCharType => TerminalModel.Type == typeof(char);
+        public bool IsBoolType => Model.Type == typeof(bool);
+        public bool IsCharType => Model.Type == typeof(char);
         public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
         public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
-        public bool IsFloatType => TerminalModel.Type == typeof(float);
-        public bool IsIntType => TerminalModel.Type == typeof(int);
-        public bool IsStringType => TerminalModel.Type == typeof(string);
+        public bool IsFloatType => Model.Type == typeof(float);
+        public bool IsIntType => Model.Type == typeof(int);
+        public bool IsStringType => Model.Type == typeof(string);
 
         public void DirectEditTextBoxGotFocus(object sender, RoutedEventArgs e)
         {
@@ -126,7 +126,7 @@ namespace DiiagramrAPI.Diagram
                 }
                 else
                 {
-                    SetAdorner(null);
+                    SetTerminalAdorner(null);
                 }
             }
         }

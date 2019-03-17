@@ -25,15 +25,14 @@ namespace DiiagramrAPI.Diagram.Interactors
                             terminal.IsSelected = false;
                             return;
                         }
-                        selectedTerminal.WireToTerminal(terminal.TerminalModel);
+                        selectedTerminal.WireToTerminal(terminal.Model);
                         diagram.UnHighlightAllTerminals();
                         diagram.UnselectTerminals();
                         return;
                     }
                     diagram.UnselectTerminals();
                     terminal.IsSelected = true;
-                    terminal.SetAdorner(null);
-                    diagram.HighlightTerminalsOfSameType(terminal.TerminalModel);
+                    diagram.HighlightTerminalsOfSameType(terminal.Model);
                 }
                 diagram.UnHighlightAllTerminals();
                 diagram.UnselectNodes();

@@ -10,6 +10,7 @@ namespace DiiagramrAPI.Shell
         public void SetAdorner(Adorner adorner)
         {
             RemoveAllAdornersFromTerminal();
+            Adorner = adorner;
             if (adorner != null)
             {
                 AdornerLayer.GetAdornerLayer(View).Add(adorner);

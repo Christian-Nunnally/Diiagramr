@@ -114,7 +114,7 @@ namespace DiiagramrAPI.Service
 
         private void ResolveTerminalTypes(Node viewModel)
         {
-            viewModel.TerminalViewModels.Select(t => t.TerminalModel).ForEach(ResolveTerminalType);
+            viewModel.TerminalViewModels.Select(t => t.Model).ForEach(ResolveTerminalType);
         }
 
         private Type TypeResolver(Assembly assembly, string name, bool ignore)

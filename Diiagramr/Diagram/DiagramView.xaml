@@ -8,7 +8,7 @@
     Focusable="True"
     KeyDown="{s:Action KeyDownHandler}"
     KeyUp="{s:Action KeyUpHandler}"
-    PreviewMouseMove="{s:Action PreviewMouseMoveHandler}">
+    MouseMove="{s:Action PreviewMouseMoveHandler}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

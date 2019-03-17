@@ -117,7 +117,7 @@ namespace DiiagramrAPI.Diagram
 
         private Terminal FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalKind kind)
         {
-            var terminalViewModel = _nodeViewModel.TerminalViewModels.FirstOrDefault(viewModel => viewModel.TerminalModel.TerminalIndex == _terminalIndex);
+            var terminalViewModel = _nodeViewModel.TerminalViewModels.FirstOrDefault(viewModel => viewModel.Model.TerminalIndex == _terminalIndex);
             if (terminalViewModel != null)
             {
                 return terminalViewModel;

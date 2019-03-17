@@ -25,10 +25,10 @@ namespace DiiagramrAPI.Diagram
 
         public Terminal(TerminalModel terminal)
         {
-            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
-            Data = TerminalModel.Data;
-            Name = TerminalModel.Name;
+            Model = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            Model.PropertyChanged += TerminalOnPropertyChanged;
+            Data = Model.Data;
+            Name = Model.Name;
             SetTerminalRotationBasedOnDirection();
             SetBackgroundBrushWhenColorThemeAndTypeLoad();
         }
@@ -61,19 +61,19 @@ namespace DiiagramrAPI.Diagram
             set
             {
                 _data = value;
-                TerminalModel.Data = value;
+                Model.Data = value;
                 DataChanged?.Invoke(Data);
             }
         }
 
         public int EdgeIndex
         {
-            get => TerminalModel.EdgeIndex;
-            set => TerminalModel.EdgeIndex = value;
+            get => Model.EdgeIndex;
+            set => Model.EdgeIndex = value;
         }
 
         public virtual bool HighlightVisible { get; set; }
-        public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
+        public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
         public virtual bool IsSelected { get; set; }
         public virtual bool MouseWithin { get; set; }
         public string Name { get; set; }
@@ -81,44 +81,44 @@ namespace DiiagramrAPI.Diagram
 
         public double TerminalDownWireMinimumLength
         {
-            get => TerminalModel.TerminalDownWireMinimumLength;
-            set => TerminalModel.TerminalDownWireMinimumLength = value;
+            get => Model.TerminalDownWireMinimumLength;
+            set => Model.TerminalDownWireMinimumLength = value;
         }
 
         public double TerminalLeftWireMinimumLength
         {
-            get => TerminalModel.TerminalLeftWireMinimumLength;
-            set => TerminalModel.TerminalLeftWireMinimumLength = value;
+            get => Model.TerminalLeftWireMinimumLength;
+            set => Model.TerminalLeftWireMinimumLength = value;
         }
 
-        public virtual TerminalModel TerminalModel { get; }
+        public virtual TerminalModel Model { get; }
 
         public double TerminalRightWireMinimumLength
         {
-            get => TerminalModel.TerminalRightWireMinimumLength;
-            set => TerminalModel.TerminalRightWireMinimumLength = value;
+            get => Model.TerminalRightWireMinimumLength;
+            set => Model.TerminalRightWireMinimumLength = value;
         }
 
         public float TerminalRotation { get; set; }
 
         public double TerminalUpWireMinimumLength
         {
-            get => TerminalModel.TerminalUpWireMinimumLength;
-            set => TerminalModel.TerminalUpWireMinimumLength = value;
+            get => Model.TerminalUpWireMinimumLength;
+            set => Model.TerminalUpWireMinimumLength = value;
         }
 
         public virtual bool TitleVisible => MouseWithin || IsSelected;
 
         public double XRelativeToNode
         {
-            get => TerminalModel.OffsetX;
-            set => TerminalModel.OffsetX = value;
+            get => Model.OffsetX;
+            set => Model.OffsetX = value;
         }
 
         public double YRelativeToNode
         {
-            get => TerminalModel.OffsetY;
-            set => TerminalModel.OffsetY = value;
+            get => Model.OffsetY;
+            set => Model.OffsetY = value;
         }
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
@@ -134,9 +134,9 @@ namespace DiiagramrAPI.Diagram
         public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
         {
             const double marginFromEdgeOfNode = Diagram.NodeBorderWidth + 10;
-            var offsetX = TerminalModel.OffsetX;
-            var offsetY = TerminalModel.OffsetY;
-            var terminalDirection = TerminalModel.Direction;
+            var offsetX = Model.OffsetX;
+            var offsetY = Model.OffsetY;
+            var terminalDirection = Model.Direction;
 
             if (terminalDirection == Direction.North)
             {
@@ -170,7 +170,7 @@ namespace DiiagramrAPI.Diagram
 
         public virtual void DisconnectTerminal()
         {
-            TerminalModel.DisconnectWires();
+            Model.DisconnectWires();
         }
 
         public void DropEventHandler(object sender, DragEventArgs e)
@@ -191,7 +191,7 @@ namespace DiiagramrAPI.Diagram
 
         public void LostFocus()
         {
-            SetAdorner(null);
+            SetTerminalAdorner(null);
         }
 
         public void MouseEntered(object sender, MouseEventArgs e)
@@ -214,18 +214,18 @@ namespace DiiagramrAPI.Diagram
             MouseWithin = false;
             if (!(Adorner is DirectEditTextBoxAdorner))
             {
-                SetAdorner(null);
+                SetTerminalAdorner(null);
             }
         }
 
         public virtual void SetTerminalDirection(Direction direction)
         {
-            TerminalModel.Direction = direction;
+            Model.Direction = direction;
         }
 
         public virtual void ShowHighlightIfCompatibleType(Type type)
         {
-            HighlightVisible = TerminalModel.Type.IsAssignableFrom(type);
+            HighlightVisible = Model.Type.IsAssignableFrom(type);
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)
@@ -235,24 +235,24 @@ namespace DiiagramrAPI.Diagram
                 return false;
             }
 
-            if (terminal.Kind == TerminalModel.Kind)
+            if (terminal.Kind == Model.Kind)
             {
                 return false;
             }
 
             if (terminal.ConnectedWires != null && terminal.ConnectedWires
-                .Any(connectedWire => TerminalModel.ConnectedWires.Contains(connectedWire)))
+                .Any(connectedWire => Model.ConnectedWires.Contains(connectedWire)))
             {
                 return false;
             }
 
-            new WireModel(TerminalModel, terminal);
+            new WireModel(Model, terminal);
             return true;
         }
 
         private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
         {
-            if (TerminalModel.Type == null)
+            if (Model.Type == null)
             {
                 ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
             }
@@ -268,18 +268,18 @@ namespace DiiagramrAPI.Diagram
             {
                 ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
                 {
-                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
+                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
                 });
             }
             else
             {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(TerminalModel.Type));
+                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
             }
         }
 
         private void SetTerminalRotationBasedOnDirection()
         {
-            switch (TerminalModel.Direction)
+            switch (Model.Direction)
             {
                 case Direction.North:
                     TerminalRotation = 0;
@@ -301,17 +301,17 @@ namespace DiiagramrAPI.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(TerminalModel.Direction))
+            if (e.PropertyName == nameof(Model.Direction))
             {
                 SetTerminalRotationBasedOnDirection();
             }
-            else if (e.PropertyName == nameof(Model.TerminalModel.Data))
+            else if (e.PropertyName == nameof(DiiagramrAPI.Diagram.Model.TerminalModel.Data))
             {
-                Data = TerminalModel.Data;
+                Data = Model.Data;
             }
-            else if (e.PropertyName == nameof(Model.TerminalModel.Type))
+            else if (e.PropertyName == nameof(DiiagramrAPI.Diagram.Model.TerminalModel.Type))
             {
-                if (TerminalModel.Type != null)
+                if (Model.Type != null)
                 {
                     ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
                     ActionsToTakeWhenTypeIsLoaded.Clear();
@@ -326,6 +326,10 @@ namespace DiiagramrAPI.Diagram
                 SetAdorner(adorner);
             }
             else if (Adorner == null)
+            {
+                SetAdorner(adorner);
+            }
+            else if (adorner == null)
             {
                 SetAdorner(adorner);
             }
