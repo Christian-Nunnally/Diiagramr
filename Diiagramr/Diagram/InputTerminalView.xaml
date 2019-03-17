@@ -16,18 +16,15 @@
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
         <Border
-            AllowDrop="True"
+            Margin="1"
             CornerRadius="{x:Static diagram:Terminal.TerminalCornerRadius}"
-            Drop="{s:Action DropEventHandler}"
-            FocusVisualStyle="{x:Null}"
-            MouseEnter="{s:Action MouseEntered}"
-            MouseLeave="{s:Action MouseLeft}">
+            FocusVisualStyle="{x:Null}">
             <Border.Style>
                 <Style>
                     <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
                     <Style.Triggers>
                         <Trigger Property="Border.IsMouseOver" Value="True">
-                            <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />
+                            <Setter Property="Border.Background" Value="{Binding TerminalBackgroundMouseOverBrush}" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -40,29 +37,27 @@
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
             Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
-        <Line
-            Width="10"
-            Margin="10,1,0,0"
+        <Polygon
             HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0,-8,0,0"
+            Fill="#007ACC"
+            Points="0,0 3,0 3,-3, 5,-3, 5,0 8,0 4,5"
+            Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}"/>
+        <Polygon
             IsHitTestVisible="False"
-            Stroke="#101010"
-            StrokeEndLineCap="Triangle"
-            StrokeStartLineCap="Flat"
-            StrokeThickness="6"
-            Y1="2"
-            Y2="4" />
-        <Border
-            BorderBrush="#101010"
-            BorderThickness="1"
-            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
-            FocusVisualStyle="{x:Null}"
-            IsHitTestVisible="False" />
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Margin="0,5,0,0"
+            Fill="#191919"
+            Points="0,0 8,0 4,5" />
         <Border
             BorderBrush="#007ACC"
             BorderThickness="1"
-            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
+            CornerRadius="5"
             FocusVisualStyle="{x:Null}"
             IsHitTestVisible="False"
+            Margin="-1"
             Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
     </Grid>
 </UserControl>

@@ -1,3 +1,4 @@
+using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
@@ -7,12 +8,11 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DiiagramrAPI.Diagram
 {
-    public class Terminal : ViewModel
+    public class Terminal : ViewModel, IMouseEnterLeaveReaction
     {
         public const double TerminalDiameter = 2 * Diagram.NodeBorderWidth;
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
@@ -75,9 +75,9 @@ namespace DiiagramrAPI.Diagram
         public virtual bool HighlightVisible { get; set; }
         public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
         public virtual bool IsSelected { get; set; }
-        public virtual bool MouseWithin { get; set; }
         public string Name { get; set; }
-        public Brush TerminalBackgroundBrush { get; set; }
+        public SolidColorBrush TerminalBackgroundBrush { get; set; }
+        public SolidColorBrush TerminalBackgroundMouseOverBrush { get; set; }
 
         public double TerminalDownWireMinimumLength
         {
@@ -106,8 +106,6 @@ namespace DiiagramrAPI.Diagram
             get => Model.TerminalUpWireMinimumLength;
             set => Model.TerminalUpWireMinimumLength = value;
         }
-
-        public virtual bool TitleVisible => MouseWithin || IsSelected;
 
         public double XRelativeToNode
         {
@@ -173,49 +171,9 @@ namespace DiiagramrAPI.Diagram
             Model.DisconnectWires();
         }
 
-        public void DropEventHandler(object sender, DragEventArgs e)
-        {
-            var o = e.Data.GetData(DataFormats.StringFormat);
-            DropObject(o);
-        }
-
-        public virtual void DropObject(object o)
-        {
-            if (!(o is TerminalModel terminal))
-            {
-                return;
-            }
-
-            WireToTerminal(terminal);
-        }
-
         public void LostFocus()
         {
             SetTerminalAdorner(null);
-        }
-
-        public void MouseEntered(object sender, MouseEventArgs e)
-        {
-            if (View != null)
-            {
-                if (!IsSelected)
-                {
-                    SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
-                    View.Focusable = true;
-                    View.IsEnabled = true;
-                    View?.Focus();
-                }
-            }
-            MouseWithin = true;
-        }
-
-        public void MouseLeft(object sender, MouseEventArgs e)
-        {
-            MouseWithin = false;
-            if (!(Adorner is DirectEditTextBoxAdorner))
-            {
-                SetTerminalAdorner(null);
-            }
         }
 
         public virtual void SetTerminalDirection(Direction direction)
@@ -226,6 +184,7 @@ namespace DiiagramrAPI.Diagram
         public virtual void ShowHighlightIfCompatibleType(Type type)
         {
             HighlightVisible = Model.Type.IsAssignableFrom(type);
+            NotifyOfPropertyChange(nameof(HighlightVisible));
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)
@@ -269,12 +228,37 @@ namespace DiiagramrAPI.Diagram
                 ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
                 {
                     TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
+                    TerminalBackgroundMouseOverBrush = new SolidColorBrush(ChangeColorBrightness(TerminalBackgroundBrush.Color, 0.5f));
                 });
             }
             else
             {
                 TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
+                TerminalBackgroundMouseOverBrush = new SolidColorBrush(ChangeColorBrightness(TerminalBackgroundBrush.Color, 0.5f));
             }
+        }
+
+        public static Color ChangeColorBrightness(Color color, float correctionFactor)
+        {
+            float red = color.R / 255.0f;
+            float green = color.G / 255.0f;
+            float blue = color.B / 255.0f;
+
+            if (correctionFactor < 0)
+            {
+                correctionFactor = 1 + correctionFactor;
+                red *= correctionFactor;
+                green *= correctionFactor;
+                blue *= correctionFactor;
+            }
+            else
+            {
+                red = (1f - red) * correctionFactor + red;
+                green = (1f - green) * correctionFactor + green;
+                blue = (1f - blue) * correctionFactor + blue;
+            }
+
+            return Color.FromArgb(color.A, (byte)(red * 255.0), (byte)(green * 255.0), (byte)(blue * 255.0));
         }
 
         private void SetTerminalRotationBasedOnDirection()
@@ -305,11 +289,11 @@ namespace DiiagramrAPI.Diagram
             {
                 SetTerminalRotationBasedOnDirection();
             }
-            else if (e.PropertyName == nameof(DiiagramrAPI.Diagram.Model.TerminalModel.Data))
+            else if (e.PropertyName == nameof(TerminalModel.Data))
             {
                 Data = Model.Data;
             }
-            else if (e.PropertyName == nameof(DiiagramrAPI.Diagram.Model.TerminalModel.Type))
+            else if (e.PropertyName == nameof(TerminalModel.Type))
             {
                 if (Model.Type != null)
                 {
@@ -332,6 +316,22 @@ namespace DiiagramrAPI.Diagram
             else if (adorner == null)
             {
                 SetAdorner(adorner);
+            }
+        }
+
+        public void MouseEntered()
+        {
+            SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
+            View.Focusable = true;
+            View.IsEnabled = true;
+            View?.Focus();
+        }
+
+        public void MouseLeft()
+        {
+            if (!(Adorner is DirectEditTextBoxAdorner))
+            {
+                SetTerminalAdorner(null);
             }
         }
     }

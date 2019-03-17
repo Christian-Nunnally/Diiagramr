@@ -22,12 +22,14 @@ namespace DiiagramrAPI.Diagram.Interactors
                 PreviousMouseLocation = interaction.MousePosition;
                 interaction.Diagram.UpdateDiagramBoundingBox();
                 interaction.Diagram.ShowSnapGrid = true;
+                Mouse.SetCursor(Cursors.SizeAll);
             }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (interaction.Type == InteractionType.LeftMouseDown
+            if ((interaction.Type == InteractionType.LeftMouseDown
+                || interaction.Type == InteractionType.MouseMoved)
                 && interaction.ViewModelMouseIsOver is Node node
                 && !interaction.IsCtrlKeyPressed)
             {
@@ -46,7 +48,8 @@ namespace DiiagramrAPI.Diagram.Interactors
                         return false;
                     }
                 }
-                return true;
+                Mouse.SetCursor(Cursors.SizeAll);
+                return interaction.Type == InteractionType.LeftMouseDown;
             }
             return false;
         }

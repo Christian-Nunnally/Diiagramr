@@ -63,6 +63,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagram\Interactors\IMouseEnterLeaveReaction.cs" />
+    <Compile Include="Diagram\Interactors\MouseEnterLeaveInteractor.cs" />
     <Compile Include="Diagram\Interactors\NodePaletteLibrary.cs" />
     <Compile Include="Diagram\Interactors\TerminalWirer.cs" />
     <Compile Include="FileDialog\IFileDialog.cs" />

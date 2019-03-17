@@ -31,11 +31,15 @@ namespace DiiagramrAPI.Diagram.Interactors
                         return;
                     }
                     diagram.UnselectTerminals();
+                    diagram.UnselectNodes();
                     terminal.IsSelected = true;
                     diagram.HighlightTerminalsOfSameType(terminal.Model);
                 }
-                diagram.UnHighlightAllTerminals();
-                diagram.UnselectNodes();
+                else
+                {
+                    diagram.UnHighlightAllTerminals();
+                    diagram.UnselectNodes();
+                }
             }
         }
 

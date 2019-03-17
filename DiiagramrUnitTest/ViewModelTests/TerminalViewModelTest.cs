@@ -113,13 +113,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestDropObject_DroppingNonTerminal_DoesNothing()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            terminalViewModel.DropObject(new object());
-        }
-
-        [TestMethod]
         public void TestWireToTerminal_TerminalSameKind_ReturnsFalse()
         {
             var terminalViewModel = new Terminal(_terminalModelMoq.Object);
@@ -152,15 +145,6 @@ namespace DiiagramrUnitTests.ViewModelTests
             var terminalViewModel = new Terminal(_terminalModelMoq.Object);
             terminalViewModel.SetTerminalDirection(Direction.South);
             _terminalModelMoq.VerifySet(t => t.Direction = Direction.South);
-        }
-
-        [TestMethod]
-        public void TestMouseEntered_TitleVisibleSetToTrue()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            Assert.IsFalse(terminalViewModel.MouseWithin);
-            terminalViewModel.MouseEntered(null, null);
-            Assert.IsTrue(terminalViewModel.MouseWithin);
         }
 
         [TestMethod]

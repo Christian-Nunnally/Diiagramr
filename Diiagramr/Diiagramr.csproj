@@ -177,35 +177,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodeResizeInteractorView.xaml">
+    <Page Include="Diagram\Interactors\NodeResizerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DiagramZoomInteractorView.xaml">
+    <Page Include="Diagram\Interactors\DiagramZoomerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\LassoSelectorView.xaml">
+    <Page Include="Diagram\Interactors\LassoNodeSelectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DeleteSelectedNodesInteractorView.xaml">
+    <Page Include="Diagram\Interactors\NodeDeleterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DiagramDragInteractorView.xaml">
+    <Page Include="Diagram\Interactors\DiagramPannerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodePlacementView.xaml">
+    <Page Include="Diagram\Interactors\NodePlacerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodeDragInteractorView.xaml">
+    <Page Include="Diagram\Interactors\NodeDraggerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\WireTerminalInteractorView.xaml">
+    <Page Include="Diagram\Interactors\TerminalWirerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -277,7 +277,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Diagram\Interactors\NodeSelectorView.xaml">
+    <Page Include="Diagram\Interactors\NodePaletteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

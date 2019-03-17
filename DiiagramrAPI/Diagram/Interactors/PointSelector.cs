@@ -50,6 +50,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                     {
                         interaction.Diagram.UnselectNodes();
                     }
+                    interaction.Diagram.UnselectTerminals();
                     pluginNode.IsSelected = true;
                 }
             }
@@ -72,6 +73,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                         {
                             interaction.Diagram.UnselectNodes();
                         }
+                        interaction.Diagram.UnselectTerminals();
                         pluginNode.IsSelected = true;
                     }
                 }

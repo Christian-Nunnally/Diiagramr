@@ -23,7 +23,7 @@ namespace DiiagramrAPI.Service
 
             AdornedNode = adornedNode;
             visualChildren = new VisualCollection(this);
-            var text = AdornedNode.Name;
+            var text = AdornedNode.Name + " Node";
 
             label = new TextBlock
             {
@@ -61,7 +61,7 @@ namespace DiiagramrAPI.Service
             double height = border.Height;
 
             double x = (AdornedNode.Width / 2.0) - (width / 2.0);
-            double y = - height - MarginFromNode;
+            double y = -height - MarginFromNode;
             border.Arrange(new Rect(x, y, width, height));
             return finalSize;
         }

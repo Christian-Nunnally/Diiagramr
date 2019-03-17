@@ -35,7 +35,7 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
             _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel), typeof(VisualDropStartScreenView));
             _viewModelToViewMapping.Add(typeof(ProjectExplorer), typeof(ProjectExplorerView));
-            _viewModelToViewMapping.Add(typeof(NodePalette), typeof(NodeSelectorView));
+            _viewModelToViewMapping.Add(typeof(NodePalette), typeof(NodePaletteView));
             _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));
             _viewModelToViewMapping.Add(typeof(Wire), typeof(WireView));
             _viewModelToViewMapping.Add(typeof(Terminal), typeof(TerminalView));
@@ -49,16 +49,16 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(AddNode), typeof(AddNodeView));
             _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
-            _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoSelectorView));
+            _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoNodeSelectorView));
             _viewModelToViewMapping.Add(typeof(PointSelector), typeof(PointSelectorView));
-            _viewModelToViewMapping.Add(typeof(NodePlacer), typeof(NodePlacementView));
-            _viewModelToViewMapping.Add(typeof(NodeDeleter), typeof(DeleteSelectedNodesInteractorView));
-            _viewModelToViewMapping.Add(typeof(NodeDragger), typeof(NodeDragInteractorView));
-            _viewModelToViewMapping.Add(typeof(NodeResizer), typeof(NodeResizeInteractorView));
-            _viewModelToViewMapping.Add(typeof(DiagramPanner), typeof(DiagramDragInteractorView));
-            _viewModelToViewMapping.Add(typeof(DiagramZoomer), typeof(DiagramZoomInteractorView));
+            _viewModelToViewMapping.Add(typeof(NodePlacer), typeof(NodePlacerView));
+            _viewModelToViewMapping.Add(typeof(NodeDeleter), typeof(NodeDeleterView));
+            _viewModelToViewMapping.Add(typeof(NodeDragger), typeof(NodeDraggerView));
+            _viewModelToViewMapping.Add(typeof(NodeResizer), typeof(NodeResizerView));
+            _viewModelToViewMapping.Add(typeof(DiagramPanner), typeof(DiagramPannerView));
+            _viewModelToViewMapping.Add(typeof(DiagramZoomer), typeof(DiagramZoomerView));
             _viewModelToViewMapping.Add(typeof(DiagramInteractionManager), typeof(DiagramInteractionManagerView));
-            _viewModelToViewMapping.Add(typeof(TerminalWirer), typeof(WireTerminalInteractorView));
+            _viewModelToViewMapping.Add(typeof(TerminalWirer), typeof(TerminalWirerView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

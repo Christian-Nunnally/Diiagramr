@@ -1,4 +1,4 @@
-using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
@@ -11,13 +11,10 @@ using System.Windows;
 
 namespace DiiagramrAPI.Diagram
 {
-    public abstract class Node : ViewModel
+    public abstract class Node : ViewModel, IMouseEnterLeaveReaction
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
-
         private readonly List<Action> _viewLoadedActions = new List<Action>();
-
-        private bool _isSelected;
 
         public Node()
         {
@@ -48,25 +45,7 @@ namespace DiiagramrAPI.Diagram
         public IEnumerable<InputTerminal> InputTerminalViewModels =>
             TerminalViewModels.OfType<InputTerminal>();
 
-        public virtual bool IsSelected
-        {
-            get => _isSelected;
-
-            set
-            {
-                if (value)
-                {
-                    SetAdorner(new NodeNameAdornernment(View, this));
-                    TerminalViewModels.ForEach(t => t.IsSelected = false);
-                }
-                else
-                {
-                    SetAdorner(null);
-                }
-                _isSelected = value;
-            }
-        }
-
+        public virtual bool IsSelected { get; set; }
         public virtual double MinimumHeight { get; set; }
         public virtual double MinimumWidth { get; set; }
         public virtual string Name { get; set; } = "Node";
@@ -351,7 +330,6 @@ namespace DiiagramrAPI.Diagram
             {
                 Width = Model.Width;
             }
-
             if (Model.Height > 1)
             {
                 Height = Model.Height;
@@ -391,6 +369,16 @@ namespace DiiagramrAPI.Diagram
         private void TerminalWireDisconnected(WireModel wireModel)
         {
             WireDisconnectedFromTerminal?.Invoke(wireModel);
+        }
+
+        public void MouseEntered()
+        {
+            SetAdorner(new NodeNameAdornernment(View, this));
+        }
+
+        public void MouseLeft()
+        {
+            SetAdorner(null);
         }
     }
 }

@@ -6,9 +6,11 @@
     xmlns:s="https://github.com/canton7/Stylet"
     s:View.ActionTarget="{Binding}"
     Focusable="True"
+    SnapsToDevicePixels="True"
     KeyDown="{s:Action KeyDownHandler}"
     KeyUp="{s:Action KeyUpHandler}"
-    MouseMove="{s:Action PreviewMouseMoveHandler}">
+    MouseMove="{s:Action PreviewMouseMoveHandler}"
+    PreviewMouseWheel="{s:Action PreviewMouseWheelHandler}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -16,8 +18,8 @@
                 <ResourceDictionary>
                     <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
                         <Setter Property="Fill" Value="Transparent" />
-                        <Setter Property="RadiusX" Value="3" />
-                        <Setter Property="RadiusY" Value="3" />
+                        <Setter Property="RadiusX" Value=".5" />
+                        <Setter Property="RadiusY" Value=".5" />
                         <Style.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="Fill" Value="#264F78" />
@@ -53,8 +55,8 @@
 
                     <Style x:Key="SelectionStyle" TargetType="Border">
                         <Setter Property="BorderBrush" Value="{StaticResource ResourceKey=NodeSelectionStyleBrush}" />
-                        <Setter Property="CornerRadius" Value=".7" />
-                        <Setter Property="BorderThickness" Value="2" />
+                        <Setter Property="CornerRadius" Value="1" />
+                        <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeSelectionBorderThickness}" />
                         <Setter Property="IsHitTestVisible" Value="False" />
                     </Style>
@@ -90,7 +92,7 @@
                         <Setter Property="Fill" Value="#3E3E42" />
                         <Setter Property="RadiusX" Value="2" />
                         <Setter Property="RadiusY" Value="2" />
-                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeSelectionBorderThickness}" />
+                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeBorderExtenderThickness}" />
                         <Setter Property="IsHitTestVisible" Value="False" />
                     </Style>
                 </ResourceDictionary>
@@ -105,8 +107,7 @@
         PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
         PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
         PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
-        PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}"
-        PreviewMouseWheel="{s:Action PreviewMouseWheelHandler}">
+        PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}">
         <Border>
             <Border.RenderTransform>
                 <TransformGroup>
@@ -163,6 +164,13 @@
                                                 Grid.ColumnSpan="2"
                                                 DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
                                                 Style="{StaticResource NodeBorderRectangleStyle}" />
+                                            <Border
+                                                Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                Grid.Column="0"
+                                                Grid.ColumnSpan="2"
+                                                Style="{StaticResource SelectionStyle}"
+                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
                                             <ItemsControl
                                                 Grid.Row="0"
                                                 Grid.RowSpan="2"
@@ -189,13 +197,6 @@
                                                     s:View.Model="{Binding}"
                                                     IsTabStop="False" />
                                             </Border>
-                                            <Border
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                Style="{StaticResource SelectionStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>

@@ -2,6 +2,7 @@
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram
 {
-    public class Diagram : Screen
+    public class Diagram : ViewModel, IMouseEnterLeaveReaction
     {
         public const double DiagramBorderThickness = 2.0;
         public const double GridSnapInterval = 30.0;
@@ -23,14 +24,15 @@ namespace DiiagramrAPI.Diagram
         public const double NodeSelectorRightMargin = 400;
         public const int DiagramMargin = 100;
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
-        public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 1);
+        public static Thickness NodeBorderExtenderThickness = new Thickness(NodeBorderWidth - 1);
+        public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 16);
         private readonly ColorTheme _colorTheme;
         private readonly IProvideNodes _nodeProvider;
 
         public Diagram(
-            DiagramModel diagram, 
-            IProvideNodes nodeProvider, 
-            ColorTheme colorTheme, 
+            DiagramModel diagram,
+            IProvideNodes nodeProvider,
+            ColorTheme colorTheme,
             NodePalette nodeSelectorViewModel,
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
@@ -81,8 +83,10 @@ namespace DiiagramrAPI.Diagram
 
         private void KeyInputHandler(KeyEventArgs e, InteractionType type)
         {
-            var interaction = new DiagramInteractionEventArguments(type);
-            interaction.Key = e.Key;
+            var interaction = new DiagramInteractionEventArguments(type)
+            {
+                Key = e.Key
+            };
             DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
@@ -120,8 +124,10 @@ namespace DiiagramrAPI.Diagram
         private void MouseInputHandler(object sender, MouseEventArgs e, InteractionType interactionType)
         {
             var relativeMousePosition = e.GetPosition((IInputElement)sender);
-            var interaction = new DiagramInteractionEventArguments(interactionType);
-            interaction.MousePosition = relativeMousePosition;
+            var interaction = new DiagramInteractionEventArguments(interactionType)
+            {
+                MousePosition = relativeMousePosition
+            };
             if (e is MouseWheelEventArgs mouseWheelEventArguments)
             {
                 interaction.MouseWheelDelta = mouseWheelEventArguments.Delta;
@@ -278,6 +284,14 @@ namespace DiiagramrAPI.Diagram
             {
                 WireViewModels.Remove(wireToRemove);
             }
+        }
+
+        public void MouseEntered()
+        {
+        }
+
+        public void MouseLeft()
+        {
         }
     }
 }
