@@ -74,6 +74,19 @@ namespace DiiagramrAPI.Service
         {
             RegisterPluginNodesFromAssembly(assembly, nodeLibrary);
             LoadSerializeableTypesFromAssembly(assembly);
+            LoadColorsFromAssembly(assembly);
+        }
+
+        private void LoadColorsFromAssembly(Assembly assembly)
+        {
+            foreach (var wireableType in assembly.GetExportedTypes()
+                .Where(t => t.GetInterface("IWireableType") != null)
+                .Where(t => t.IsClass && !t.IsAbstract))
+            {
+                var wireableInstance = (IWireableType)Activator.CreateInstance(wireableType);
+                var color = wireableInstance.GetTypeColor();
+                TypeColorProvider.Instance.RegisterColorForType(wireableType, color);
+            }
         }
 
         private void LoadNonPluginDll()

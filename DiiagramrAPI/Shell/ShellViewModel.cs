@@ -13,8 +13,6 @@ namespace DiiagramrAPI.Shell
     {
         public const string StartCommandId = "start";
         public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
-        public const double ShellRelativePositonYOffSet = -22;
-        public const double ShellRelativePositonXOffSet = -5;
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         public ShellViewModel(
@@ -97,7 +95,7 @@ namespace DiiagramrAPI.Shell
 
         private void CloseCurrentScreens()
         {
-            while(ActiveItem != null)
+            while (ActiveItem != null)
             {
                 ActiveItem.RequestClose();
             }

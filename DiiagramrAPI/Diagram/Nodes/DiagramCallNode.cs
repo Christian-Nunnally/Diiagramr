@@ -150,7 +150,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
             DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new Diagram(InternalDiagramModel, _nodeProvider, null, null, null);
+            InternalDiagramViewModel = new Diagram(InternalDiagramModel, _nodeProvider, null, null);
             DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 

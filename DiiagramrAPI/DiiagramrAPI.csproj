@@ -63,10 +63,12 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagram\Interactors\HotkeyHelp.cs" />
     <Compile Include="Diagram\Interactors\IMouseEnterLeaveReaction.cs" />
     <Compile Include="Diagram\Interactors\MouseEnterLeaveInteractor.cs" />
     <Compile Include="Diagram\Interactors\NodePaletteLibrary.cs" />
     <Compile Include="Diagram\Interactors\TerminalWirer.cs" />
+    <Compile Include="Diagram\IWireableType.cs" />
     <Compile Include="FileDialog\IFileDialog.cs" />
     <Compile Include="FileDialog\OpenFileDialog.cs" />
     <Compile Include="FileDialog\SaveFileDialog.cs" />
@@ -129,7 +131,7 @@
     <Compile Include="Service\Interfaces\IShownInShellReaction.cs" />
     <Compile Include="Service\NodeNameAdornernment.cs" />
     <Compile Include="Service\TerminalToolTipAdorner.cs" />
-    <Compile Include="Service\ColorTheme.cs" />
+    <Compile Include="Service\TypeColorProvider.cs" />
     <Compile Include="Service\DiagramCopier.cs" />
     <Compile Include="Service\DiagramFactory.cs" />
     <Compile Include="Service\DirectoryService.cs" />

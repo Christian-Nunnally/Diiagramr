@@ -1,7 +1,6 @@
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
-using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,9 +16,9 @@ namespace DiiagramrAPI.Diagram
         private const int WireAnimationFrameDelay = 15;
         private const double WireDistanceOutOfTerminal = 25.0;
         private const double WireEdgeIndexSpacing = 0.0;
-        private ColorTheme _colorTheme;
         private bool _configuringWirePoints;
         private bool _uTurned = false;
+        private const int MinimimDistanceToCalculateWire = 50;
 
         public Wire(WireModel wire)
         {
@@ -30,20 +29,14 @@ namespace DiiagramrAPI.Diagram
             X2 = wire.X2 + Diagram.NodeBorderWidth;
             Y1 = wire.Y1 + Diagram.NodeBorderWidth;
             Y2 = wire.Y2 + Diagram.NodeBorderWidth;
-        }
 
-        public ColorTheme ColorTheme
-        {
-            private get => _colorTheme;
-
-            set
-            {
-                _colorTheme = value;
-                if (ColorTheme != null)
-                {
-                    LineColorBrush = new SolidColorBrush(ColorTheme.GetWireColorForType(Model.SinkTerminal.Type));
-                }
-            }
+            var terminalToGetColorFrom = Model.SinkTerminal.Type == typeof(object)
+                ? Model.SourceTerminal
+                : Model.SinkTerminal;
+            var typeToGetColorOf = terminalToGetColorFrom.Type;
+            var color = TypeColorProvider.Instance.GetColorForType(typeToGetColorOf);
+            var darkenedColor = CoreUilities.ChangeColorBrightness(color, -0.3f);
+            LineColorBrush = new SolidColorBrush(darkenedColor);
         }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
@@ -201,15 +194,16 @@ namespace DiiagramrAPI.Diagram
             var endEdgeIndexExtensionLength = Model.SourceTerminal.EdgeIndex * WireEdgeIndexSpacing;
             var stubStart = TranslatePointInDirection(start, Model.SinkTerminal.Direction, WireDistanceOutOfTerminal + startEdgeIndexExtensionLength);
             var stubEnd = TranslatePointInDirection(end, Model.SourceTerminal.Direction, WireDistanceOutOfTerminal + endEdgeIndexExtensionLength);
-
-            var backwardPoints = new List<Point>
-            {
-                end
-            };
             var bannedDirectionForStart = OppositeDirection(Model.SinkTerminal.Direction);
             var bannedDirectionForEnd = OppositeDirection(Model.SourceTerminal.Direction);
 
+            if (StubsAreTooCloseTogether(stubStart, stubEnd))
+            {
+                return new Point[] { start, stubStart, stubEnd, end };
+            }
+
             _uTurned = false;
+            var backwardPoints = new List<Point> { end };
             WireTwoPoints(stubEnd, stubStart, bannedDirectionForEnd, bannedDirectionForStart, backwardPoints, 2, true);
             if (_uTurned)
             {
@@ -217,20 +211,20 @@ namespace DiiagramrAPI.Diagram
                 stubEnd = backwardPoints[2];
             }
 
-            var points = new List<Point>
-            {
-                start
-            };
+            var points = new List<Point> { start };
             WireTwoPoints(stubStart, stubEnd, bannedDirectionForStart, bannedDirectionForEnd, points);
 
             if (_uTurned)
             {
                 points.Add(backwardPoints[1]);
             }
-
             points.Add(end);
-
             return points.ToArray();
+        }
+
+        private bool StubsAreTooCloseTogether(Point stubStart, Point stubEnd)
+        {
+            return MinimimDistanceToCalculateWire > Math.Abs(stubStart.X - stubEnd.X) + Math.Abs(stubStart.Y - stubEnd.Y);
         }
 
         private Direction OppositeDirection(Direction direction)
@@ -253,7 +247,7 @@ namespace DiiagramrAPI.Diagram
             return Direction.East;
         }
 
-        private IList<Point> UTurn(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
+        private List<Point> UTurn(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, List<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
             _uTurned = true;
             if (uturnCount++ > 10)
@@ -306,7 +300,7 @@ namespace DiiagramrAPI.Diagram
             return WireTwoPoints(newPoint, end, newBannedDirection, pointsSoFar, bannedDirectionForEnd, uturnCount, maxNumberOfPoints, fromSourceTerminal);
         }
 
-        private IList<Point> WireHorizontiallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
+        private List<Point> WireHorizontiallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, List<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
             var bannedStart = start.X < end.X ? Direction.West : Direction.East;
             var newPoint = new Point(end.X, start.Y);
@@ -347,17 +341,17 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar)
+        private List<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, List<Point> pointsSoFar)
         {
             return WireTwoPoints(start, end, bannedDirectionForStart, pointsSoFar, bannedDirectionForEnd, 0, -1, false);
         }
 
-        private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int maxNumberOfPoints, bool fromSourceTerminal)
+        private List<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, List<Point> pointsSoFar, int maxNumberOfPoints, bool fromSourceTerminal)
         {
             return WireTwoPoints(start, end, bannedDirectionForStart, pointsSoFar, bannedDirectionForEnd, 0, maxNumberOfPoints, fromSourceTerminal);
         }
 
-        private IList<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, IList<Point> pointsSoFar, Direction bannedDirectionForEnd, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
+        private List<Point> WireTwoPoints(Point start, Point end, Direction bannedDirectionForStart, List<Point> pointsSoFar, Direction bannedDirectionForEnd, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
             pointsSoFar.Add(start);
 
@@ -502,7 +496,7 @@ namespace DiiagramrAPI.Diagram
             return UTurn(start, end, bannedDirectionForStart, bannedDirectionForEnd, pointsSoFar, uturnCount, maxNumberOfPoints, fromSourceTerminal);
         }
 
-        private IList<Point> WireVerticallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, IList<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
+        private List<Point> WireVerticallyTowardsEnd(Point start, Point end, Direction bannedDirectionForEnd, List<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
         {
             var bannedStart = start.Y < end.Y ? Direction.North : Direction.South;
             var newPoint = new Point(start.X, end.Y);

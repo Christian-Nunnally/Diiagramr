@@ -26,18 +26,14 @@ namespace DiiagramrAPI.Diagram
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeBorderExtenderThickness = new Thickness(NodeBorderWidth - 1);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 16);
-        private readonly ColorTheme _colorTheme;
         private readonly IProvideNodes _nodeProvider;
 
         public Diagram(
             DiagramModel diagram,
             IProvideNodes nodeProvider,
-            ColorTheme colorTheme,
             NodePalette nodeSelectorViewModel,
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
-            Terminal.ColorTheme = colorTheme;
-            _colorTheme = colorTheme;
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
 
             DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);
@@ -178,10 +174,7 @@ namespace DiiagramrAPI.Diagram
             {
                 return;
             }
-            var wireViewModel = new Wire(wire)
-            {
-                ColorTheme = _colorTheme
-            };
+            var wireViewModel = new Wire(wire);
             WireViewModels.Add(wireViewModel);
             UnHighlightAllTerminals();
         }
@@ -292,6 +285,12 @@ namespace DiiagramrAPI.Diagram
 
         public void MouseLeft()
         {
+        }
+
+        public void ViewSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            ViewWidth = e.NewSize.Width;
+            ViewHeight = e.NewSize.Height;
         }
     }
 }

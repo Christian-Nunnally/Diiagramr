@@ -3,7 +3,6 @@ using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -18,9 +17,6 @@ namespace DiiagramrAPI.Diagram
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
         public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
         public Action<object> DataChanged;
-        private static readonly List<Action> ActionsToTakeWhenColorThemeIsLoaded = new List<Action>();
-        private static ColorTheme _colorTheme;
-        private readonly List<Action> ActionsToTakeWhenTypeIsLoaded = new List<Action>();
         private object _data;
 
         public Terminal(TerminalModel terminal)
@@ -30,28 +26,7 @@ namespace DiiagramrAPI.Diagram
             Data = Model.Data;
             Name = Model.Name;
             SetTerminalRotationBasedOnDirection();
-            SetBackgroundBrushWhenColorThemeAndTypeLoad();
-        }
-
-        public static ColorTheme ColorTheme
-        {
-            get => _colorTheme;
-
-            set
-            {
-                _colorTheme = value;
-                if (_colorTheme == null)
-                {
-                    return;
-                }
-
-                foreach (var action in ActionsToTakeWhenColorThemeIsLoaded)
-                {
-                    action.Invoke();
-                }
-
-                ActionsToTakeWhenColorThemeIsLoaded.Clear();
-            }
+            SetTerminalColor();
         }
 
         public virtual object Data
@@ -121,12 +96,9 @@ namespace DiiagramrAPI.Diagram
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
         {
-            var terminalViewModel = terminal.Kind == TerminalKind.Input
+            return terminal.Kind == TerminalKind.Input
                 ? (Terminal)new InputTerminal(terminal)
                 : (Terminal)new OutputTerminal(terminal);
-
-            terminalViewModel.SetBackgroundBrushWhenColorThemeAndTypeLoad();
-            return terminalViewModel;
         }
 
         public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
@@ -209,56 +181,11 @@ namespace DiiagramrAPI.Diagram
             return true;
         }
 
-        private void SetBackgroundBrushWhenColorThemeAndTypeLoad()
+        private void SetTerminalColor()
         {
-            if (Model.Type == null)
-            {
-                ActionsToTakeWhenTypeIsLoaded.Add(SetBackgroundBrushWhenColorThemeLoads);
-            }
-            else
-            {
-                SetBackgroundBrushWhenColorThemeLoads();
-            }
-        }
-
-        private void SetBackgroundBrushWhenColorThemeLoads()
-        {
-            if (ColorTheme == null)
-            {
-                ActionsToTakeWhenColorThemeIsLoaded.Add(() =>
-                {
-                    TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
-                    TerminalBackgroundMouseOverBrush = new SolidColorBrush(ChangeColorBrightness(TerminalBackgroundBrush.Color, 0.5f));
-                });
-            }
-            else
-            {
-                TerminalBackgroundBrush = new SolidColorBrush(ColorTheme.GetTerminalColorForType(Model.Type));
-                TerminalBackgroundMouseOverBrush = new SolidColorBrush(ChangeColorBrightness(TerminalBackgroundBrush.Color, 0.5f));
-            }
-        }
-
-        public static Color ChangeColorBrightness(Color color, float correctionFactor)
-        {
-            float red = color.R / 255.0f;
-            float green = color.G / 255.0f;
-            float blue = color.B / 255.0f;
-
-            if (correctionFactor < 0)
-            {
-                correctionFactor = 1 + correctionFactor;
-                red *= correctionFactor;
-                green *= correctionFactor;
-                blue *= correctionFactor;
-            }
-            else
-            {
-                red = (1f - red) * correctionFactor + red;
-                green = (1f - green) * correctionFactor + green;
-                blue = (1f - blue) * correctionFactor + blue;
-            }
-
-            return Color.FromArgb(color.A, (byte)(red * 255.0), (byte)(green * 255.0), (byte)(blue * 255.0));
+            var color = TypeColorProvider.Instance.GetColorForType(Model.Type);
+            TerminalBackgroundBrush = new SolidColorBrush(color);
+            TerminalBackgroundMouseOverBrush = new SolidColorBrush(CoreUilities.ChangeColorBrightness(color, 0.5f));
         }
 
         private void SetTerminalRotationBasedOnDirection()
@@ -295,11 +222,7 @@ namespace DiiagramrAPI.Diagram
             }
             else if (e.PropertyName == nameof(TerminalModel.Type))
             {
-                if (Model.Type != null)
-                {
-                    ActionsToTakeWhenTypeIsLoaded.ForEach(x => x.Invoke());
-                    ActionsToTakeWhenTypeIsLoaded.Clear();
-                }
+                SetTerminalColor();
             }
         }
 

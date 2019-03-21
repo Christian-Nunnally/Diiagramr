@@ -9,6 +9,7 @@
     SnapsToDevicePixels="True"
     KeyDown="{s:Action KeyDownHandler}"
     KeyUp="{s:Action KeyUpHandler}"
+    SizeChanged="{s:Action ViewSizeChanged}"
     MouseMove="{s:Action PreviewMouseMoveHandler}"
     PreviewMouseWheel="{s:Action PreviewMouseWheelHandler}">
     <UserControl.Resources>
@@ -210,7 +211,7 @@
             Padding="0"
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
-            Content="Right Click to Insert a Node."
+            Content="Press '/' key for help"
             FontSize="11"
             Foreground="#A4A4A4"
             Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />

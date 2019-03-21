@@ -20,6 +20,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         private const double NodeSelectorRightMargin = 400;
         private IProvideNodes _nodeProvider;
         private Diagram _diagramViewModel;
+        private Terminal _contextTerminal;
         private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
@@ -224,15 +225,6 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            _diagramViewModel = interaction.Diagram;
-
-            var availableWidth = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Width : 0;
-            var availableHeight = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Height : 0;
-            X = interaction.MousePosition.X < availableWidth - NodeSelectorRightMargin ? interaction.MousePosition.X : availableWidth - NodeSelectorRightMargin;
-            Y = interaction.MousePosition.Y < availableHeight - NodeSelectorBottomMargin ? interaction.MousePosition.Y : availableHeight - NodeSelectorBottomMargin;
-
-            var mousedOverViewModel = interaction.ViewModelMouseIsOver;
-            ShowWithContextFilter(mousedOverViewModel);
         }
 
         private void ShowWithContextFilter(Screen mousedOverViewModel)
@@ -241,17 +233,21 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 ContextTerminal = inputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is OutputTerminal && t.Model.Type.IsAssignableFrom(inputTerminalMouseIsOver.Model.Type)));
+                inputTerminalMouseIsOver.HighlightVisible = true;
+                _contextTerminal = inputTerminalMouseIsOver;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is InputTerminal && t.Model.Type.IsAssignableFrom(outputTerminalMouseIsOver.Model.Type)));
+                outputTerminalMouseIsOver.HighlightVisible = true;
+                _contextTerminal = outputTerminalMouseIsOver;
             }
             else
             {
                 Show(n => true);
             }
-            
+
             if (ContextTerminal != null)
             {
                 ContextTerminal.SetAdorner(null);
@@ -267,10 +263,34 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
+            if (_contextTerminal != null)
+            {
+                _contextTerminal.HighlightVisible = false;
+            }
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
+            if (interaction.Type == InteractionType.RightMouseDown)
+            {
+                _diagramViewModel = interaction.Diagram;
+
+                var availableWidth = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Width : 0;
+                var availableHeight = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Height : 0;
+                X = Math.Min(interaction.MousePosition.X, availableWidth - NodeSelectorRightMargin);
+                Y = Math.Min(interaction.MousePosition.Y, availableHeight - NodeSelectorBottomMargin);
+
+                var mousedOverViewModel = interaction.ViewModelMouseIsOver;
+
+                if (mousedOverViewModel is Terminal terminal)
+                {
+                    if (terminal.Model.Direction != Direction.West)
+                    {
+                        X += Terminal.TerminalDiameter;
+                    }
+                }
+                ShowWithContextFilter(mousedOverViewModel);
+            }
         }
     }
 }

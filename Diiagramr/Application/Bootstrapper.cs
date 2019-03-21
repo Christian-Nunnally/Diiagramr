@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
 using Stylet;
@@ -12,10 +11,10 @@ namespace Diiagramr.Application
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             BootstrapperUtilities.BindServices(builder);
+            BootstrapperUtilities.LoadColorInformation();
 
             builder.Bind<IViewManager>().To<DiiagramrViewManager>().InSingletonScope();
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
-            builder.Bind<ColorTheme>().To<ColorTheme>().InSingletonScope();
             builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
             builder.Bind<IShell>().To<DiiagramrAPI.Shell.Shell>().InSingletonScope();
         }

@@ -13,7 +13,7 @@ namespace DiiagramrUnitTests.ViewModelTests
     public class DiagramViewModelTest
     {
         private Mock<DiagramModel> _diagramMoq;
-        private DiiagramrAPI.Diagram.Diagram _diagramViewModel;
+        private Diagram _diagramViewModel;
         private Mock<NodeModel> _nodeMoq;
         private Mock<IProvideNodes> _nodeProviderMoq;
         private Mock<NodePalette> _nodeSelectorViewModelMoq;
@@ -26,7 +26,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _diagramMoq.Setup(d => d.AddNode(It.IsAny<NodeModel>())).Verifiable();
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorViewModelMoq = new Mock<NodePalette>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
-            _diagramViewModel = new DiiagramrAPI.Diagram.Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
+            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a node provider")]
         public void TestConstructor_NullNodeProvider_ThrowsArgumentNullException()
         {
-            new DiiagramrAPI.Diagram.Diagram(_diagramMoq.Object, null, null, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
+            new Diagram(_diagramMoq.Object, null, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
         }
 
         private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
@@ -56,7 +56,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _pluginNodeMoq.SetupGet(n => n.Model).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
-            _diagramViewModel = new DiiagramrAPI.Diagram.Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, null, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
+            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, _nodeSelectorViewModelMoq.Object, new List<DiagramInteractor>());
         }
 
         [TestMethod]

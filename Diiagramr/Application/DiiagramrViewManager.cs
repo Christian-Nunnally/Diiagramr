@@ -59,6 +59,7 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(DiagramZoomer), typeof(DiagramZoomerView));
             _viewModelToViewMapping.Add(typeof(DiagramInteractionManager), typeof(DiagramInteractionManagerView));
             _viewModelToViewMapping.Add(typeof(TerminalWirer), typeof(TerminalWirerView));
+            _viewModelToViewMapping.Add(typeof(HotkeyHelp), typeof(HotkeyHelpView));
         }
 
         protected override Type LocateViewForModel(Type modelType)

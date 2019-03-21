@@ -26,6 +26,7 @@
         <Style x:Key="StartScreenLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="#a0a0a0" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="Padding" Value="0" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontFamily" Value="{StaticResource AldrichRegular}" />
@@ -43,11 +44,11 @@
     </UserControl.Resources>
     <Grid Background="#101010">
         <Grid.RowDefinitions>
-            <RowDefinition Height="4*" />
-            <RowDefinition Height="200" />
-            <RowDefinition Height="5*" />
-            <RowDefinition Height="200" />
-            <RowDefinition Height="5*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="80" />
+            <RowDefinition Height="20" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="20" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -60,11 +61,11 @@
         <Border
             Grid.Row="3"
             Grid.Column="1"
+            MaxHeight="120"
             MouseDown="{s:Action NewButtonPressed}"
             Style="{StaticResource StartPageButtonBorderStyle}">
             <Label
                 Grid.Row="1"
-                Margin="0,-6,0,0"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="NEW"
@@ -74,7 +75,7 @@
         </Border>
 
         <Grid
-            Grid.Row="2"
+            Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="5"
             Width="1000"

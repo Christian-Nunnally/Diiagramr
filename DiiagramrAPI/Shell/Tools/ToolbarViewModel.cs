@@ -43,8 +43,8 @@ namespace DiiagramrAPI.Shell.Tools
             var control = sender as Control;
             if (control?.DataContext is DiiagramrCommand command)
             {
-                var shellRelativePosition = control.TransformToAncestor(Application.Current.MainWindow);
-                var correctedRelativePosition = shellRelativePosition.Transform(new Point(ShellViewModel.ShellRelativePositonXOffSet, ShellViewModel.ShellRelativePositonYOffSet));
+                var shellRelativePosition = control.TransformToAncestor(View);
+                var correctedRelativePosition = shellRelativePosition.Transform(new Point(0, 2));
 
                 if (View is Window window)
                 {
