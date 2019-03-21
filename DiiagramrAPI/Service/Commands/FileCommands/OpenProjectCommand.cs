@@ -34,7 +34,8 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
                 var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
                 project = _projectFileService.LoadProject(projectPath);
 
-            } else
+            }
+            else
             {
                 project = _projectFileService.LoadProject();
             }
@@ -44,7 +45,7 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
         private void LoadProject(IShell shell, ProjectModel project)
         {
             _projectManager.LoadProject(project);
-            var firstDiagram = _projectManager.CurrentDiagrams.FirstOrDefault();
+            var firstDiagram = _projectManager?.CurrentDiagrams?.FirstOrDefault();
             if (firstDiagram != null)
             {
                 firstDiagram.Open();

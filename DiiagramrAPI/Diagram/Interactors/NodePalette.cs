@@ -20,7 +20,6 @@ namespace DiiagramrAPI.Diagram.Interactors
         private const double NodeSelectorRightMargin = 400;
         private IProvideNodes _nodeProvider;
         private Diagram _diagramViewModel;
-        private Terminal _contextTerminal;
         private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
@@ -132,8 +131,8 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
-            nodeToInsert.X = X;
-            nodeToInsert.Y = Y;
+            nodeToInsert.X = _diagramViewModel.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Y = _diagramViewModel.GetDiagramPointFromViewPointX(Y);
             if (ContextTerminal != null)
             {
                 var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
@@ -234,14 +233,12 @@ namespace DiiagramrAPI.Diagram.Interactors
                 ContextTerminal = inputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is OutputTerminal && t.Model.Type.IsAssignableFrom(inputTerminalMouseIsOver.Model.Type)));
                 inputTerminalMouseIsOver.HighlightVisible = true;
-                _contextTerminal = inputTerminalMouseIsOver;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
                 Show(n => n.TerminalViewModels.Any(t => t is InputTerminal && t.Model.Type.IsAssignableFrom(outputTerminalMouseIsOver.Model.Type)));
                 outputTerminalMouseIsOver.HighlightVisible = true;
-                _contextTerminal = outputTerminalMouseIsOver;
             }
             else
             {
@@ -263,9 +260,10 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (_contextTerminal != null)
+            if (ContextTerminal != null)
             {
-                _contextTerminal.HighlightVisible = false;
+                ContextTerminal.HighlightVisible = false;
+                ContextTerminal = null;
             }
         }
 

@@ -54,7 +54,7 @@ namespace DiiagramrAPI.Diagram
         public bool AreInstructionsVisible => !NodeViewModels.Any();
         public bool BoundingBoxVisible { get; set; }
         public Rect BoundingBox { get; set; }
-        public Rect BoundingBoxDefault { get; } = new Rect(100, 100, 800, 550);
+        public Rect BoundingBoxDefault { get; } = new Rect(-400, -275, 800, 550);
         public DiagramModel Model { get; }
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
         public string Name => Model.Name;
@@ -291,6 +291,17 @@ namespace DiiagramrAPI.Diagram
         {
             ViewWidth = e.NewSize.Width;
             ViewHeight = e.NewSize.Height;
+            if (!BoundingBoxVisible)
+            {
+                ResetPanAndZoom();
+            }
+        }
+
+        public void ResetPanAndZoom()
+        {
+            Zoom = 1;
+            PanX = ViewWidth / 2;
+            PanY = ViewHeight / 2;
         }
     }
 }

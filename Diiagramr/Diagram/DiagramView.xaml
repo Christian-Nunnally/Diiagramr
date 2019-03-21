@@ -141,7 +141,7 @@
                     ItemsSource="{Binding WireViewModels}" />
 
                 <!--  Node Items Control  -->
-                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding NodeViewModels}">
+                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding NodeViewModels}" >
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
                             <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}" />

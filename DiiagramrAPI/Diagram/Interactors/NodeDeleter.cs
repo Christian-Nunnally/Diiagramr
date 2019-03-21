@@ -8,8 +8,13 @@ namespace DiiagramrAPI.Diagram.Interactors
     {
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
-            var selectedNodes = interaction.Diagram.NodeViewModels.Where(n => n.IsSelected);
-            selectedNodes.ForEach(interaction.Diagram.RemoveNode);
+            var diagram = interaction.Diagram;
+            var selectedNodes = diagram.NodeViewModels.Where(n => n.IsSelected);
+            selectedNodes.ForEach(diagram.RemoveNode);
+            if (!diagram.NodeViewModels.Any())
+            {
+                diagram.ResetPanAndZoom();
+            }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
