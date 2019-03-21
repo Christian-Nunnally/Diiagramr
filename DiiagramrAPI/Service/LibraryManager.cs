@@ -78,17 +78,20 @@ namespace DiiagramrAPI.Service
             var toPath = PluginsDirectory + library;
 
             Task.Run(() => _webResourceFetcher.DownloadFileAsync(library.DownloadPath, zipPath)).Wait();
+            ExtractDllFromZip(zipPath, extractPath, toPath);
+            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
+            UpdateInstalledLibraries();
+            return true;
+        }
 
+        private void ExtractDllFromZip(string zipPath, string extractPath, string toPath)
+        {
             if (!_directoryService.Exists(toPath))
             {
                 _directoryService.ExtractToDirectory(zipPath, extractPath);
                 _directoryService.Move(extractPath, toPath);
                 _directoryService.Delete(zipPath, false);
             }
-
-            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
-            UpdateInstalledLibraries();
-            return true;
         }
 
         public async Task LoadSourcesAsync()

@@ -37,6 +37,11 @@ namespace DiiagramrAPI.Shell.Tools
             OpenOtherWindow(_librarySourceManagerViewModel);
         }
 
+        public void OpenPluginsDirectory()
+        {
+            System.Diagnostics.Process.Start("explorer.exe", "Plugins");
+        }
+
         protected override void OnViewLoaded()
         {
             base.OnViewLoaded();

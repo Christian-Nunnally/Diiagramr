@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Shell
 {
@@ -13,6 +14,7 @@ namespace DiiagramrAPI.Shell
     {
         public const string StartCommandId = "start";
         public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
+        private TimeSpan _lastMouseDownTime;
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         public ShellViewModel(
@@ -41,6 +43,19 @@ namespace DiiagramrAPI.Shell
         public double Width { get; set; } = 1010;
         public double Height { get; set; } = 830;
         public IShell Shell { get; }
+
+        public void MouseDownHandler()
+        {
+            _lastMouseDownTime = DateTime.Now.TimeOfDay;
+        }
+
+        public void MouseUpHandler()
+        {
+            if (DateTime.Now.TimeOfDay.Subtract(_lastMouseDownTime).TotalMilliseconds < 700)
+            {
+                CloseWindow();
+            }
+        }
 
         public void CloseWindow()
         {
@@ -107,6 +122,11 @@ namespace DiiagramrAPI.Shell
             {
                 e.Cancel = true;
             }
+        }
+
+        public void MouseDownHandled(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

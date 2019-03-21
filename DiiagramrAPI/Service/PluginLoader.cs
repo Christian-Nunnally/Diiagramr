@@ -40,11 +40,19 @@ namespace DiiagramrAPI.Service
             set => _serializeableTypes = value.ToList();
         }
 
-        public void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
+        public bool AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
         {
-            foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
+            try
             {
-                LoadAssembly(pluginAssembly, libraryDependency);
+                foreach (var pluginAssembly in GetPluginAssemblies(dirPath))
+                {
+                    LoadAssembly(pluginAssembly, libraryDependency);
+                }
+                return true;
+            }
+            catch (TypeLoadException e)
+            {
+                return false;
             }
         }
 
@@ -122,6 +130,10 @@ namespace DiiagramrAPI.Service
             try
             {
                 _nodeProvider.RegisterNode((Node)Activator.CreateInstance(exportedType), libraryDependency);
+            }
+            catch (TypeLoadException e)
+            {
+                Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
             }
             catch (MissingMethodException)
             {

@@ -8,6 +8,6 @@ namespace DiiagramrAPI.Service.Interfaces
     {
         IEnumerable<Type> SerializeableTypes { get; set; }
 
-        void AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency);
+        bool AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency);
     }
 }

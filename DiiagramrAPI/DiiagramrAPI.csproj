@@ -69,6 +69,7 @@
     <Compile Include="Diagram\Interactors\NodePaletteLibrary.cs" />
     <Compile Include="Diagram\Interactors\TerminalWirer.cs" />
     <Compile Include="Diagram\IWireableType.cs" />
+    <Compile Include="Diagram\WirePathingAlgorithum.cs" />
     <Compile Include="FileDialog\IFileDialog.cs" />
     <Compile Include="FileDialog\OpenFileDialog.cs" />
     <Compile Include="FileDialog\SaveFileDialog.cs" />
@@ -95,7 +96,7 @@
     <Compile Include="Diagram\Direction.cs" />
     <Compile Include="Diagram\NodeSetup.cs" />
     <Compile Include="Diagram\Node.cs" />
-    <Compile Include="Diagram\HideFromNodeSelector.cs" />
+    <Compile Include="Diagram\Interactors\HideFromNodeSelector.cs" />
     <Compile Include="Diagram\NodeSetting.cs" />
     <Compile Include="Diagram\TypedTerminal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
