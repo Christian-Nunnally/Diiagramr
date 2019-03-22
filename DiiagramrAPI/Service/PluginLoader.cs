@@ -50,7 +50,7 @@ namespace DiiagramrAPI.Service
                 }
                 return true;
             }
-            catch (TypeLoadException e)
+            catch (TypeLoadException)
             {
                 return false;
             }
@@ -131,7 +131,7 @@ namespace DiiagramrAPI.Service
             {
                 _nodeProvider.RegisterNode((Node)Activator.CreateInstance(exportedType), libraryDependency);
             }
-            catch (TypeLoadException e)
+            catch (TypeLoadException)
             {
                 Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
             }

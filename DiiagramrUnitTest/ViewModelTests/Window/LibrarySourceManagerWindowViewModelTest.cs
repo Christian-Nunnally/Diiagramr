@@ -35,21 +35,6 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         }
 
         [TestMethod]
-        public void TestRemoveSelectedSource_NoSourceSelected_DoesNotRemoveSource()
-        {
-            _librarySourceManagerWindowViewModel.RemoveSelectedSource();
-            _libraryManagerMoq.Verify(l => l.RemoveSource(It.IsAny<string>()), Times.Never);
-        }
-
-        [TestMethod]
-        public void TestRemoveSelected_SourceSelected_RemovesSelectedSource()
-        {
-            _librarySourceManagerWindowViewModel.SelectedSource = "test";
-            _librarySourceManagerWindowViewModel.RemoveSelectedSource();
-            _libraryManagerMoq.Verify(l => l.RemoveSource("test"));
-        }
-
-        [TestMethod]
         public void TestAddSource_NonEmptySource_ClearsSourceTextBox()
         {
             _librarySourceManagerWindowViewModel.SourceTextBoxText = "test";

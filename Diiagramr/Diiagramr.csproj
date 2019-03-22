@@ -136,10 +136,6 @@
     <Compile Include="Application\Bootstrapper.cs" />
     <Compile Include="Application\DiiagramrViewManager.cs" />
     <Compile Include="Application\BootstrapperUtilities.cs" />
-    <Compile Include="Pages\ShellView.xaml.cs">
-      <DependentUpon>ShellView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Pages\ShellViewModel.cs" />
     <Compile Include="Shell\Tools\SeparatorCommandVisibilityConverter.cs" />
     <Compile Include="Diagram\PointsToPathConverter.cs" />
     <Compile Include="Application\WindowStyle.xaml.cs">
@@ -214,10 +210,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Diagram\Interactors\PointSelectorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Pages\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

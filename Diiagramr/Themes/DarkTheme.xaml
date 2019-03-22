@@ -16,6 +16,7 @@
             <SolidColorBrush x:Key="WindowBorderBackgroundBrush" Color="{StaticResource ResourceKey=ToolWindowBackground}" />
             <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=ButtonHoverBlue}" />
             <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=LightGray}" />
+            <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=HighlightedGray}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

@@ -1,5 +1,7 @@
 using DiiagramrAPI.Service.Interfaces;
 using System;
+using System.Windows;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Shell.Tools
 {
@@ -15,7 +17,7 @@ namespace DiiagramrAPI.Shell.Tools
         public override int MaxHeight => 400;
         public override int MaxWidth => 400;
         public string SelectedSource { get; set; }
-        public string SourceTextBoxText { get; set; }
+        public string SourceTextBoxText { get; set; } = "http://";
         public override string Title => "Library Source Manager";
 
         public void AddSource()
@@ -26,17 +28,21 @@ namespace DiiagramrAPI.Shell.Tools
             }
 
             LibraryManager.AddSource(SourceTextBoxText);
-            SourceTextBoxText = "";
+            SourceTextBoxText = "http://";
         }
 
-        public void RemoveSelectedSource()
+        public void RemoveSource(object sender, MouseButtonEventArgs e)
         {
-            if (string.IsNullOrEmpty(SelectedSource))
+            if (sender is FrameworkElement frameworkElement)
             {
-                return;
-            }
+                if (frameworkElement.DataContext is string source)
+                {
+                    if (LibraryManager.RemoveSource(source))
+                    {
 
-            LibraryManager.RemoveSource(SelectedSource);
+                    }
+                }
+            }
         }
     }
 }

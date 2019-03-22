@@ -50,8 +50,8 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border Background="Black" IsHitTestVisible="True">
-        <Grid Background="{StaticResource ToolbarBackgroundBrush}" IsHitTestVisible="True">
+    <Border>
+        <Grid Background="{StaticResource ToolbarBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition />
@@ -75,7 +75,7 @@
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
+                VerticalAlignment="Stretch"
                 VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding LibraryManager.AvailableLibraries}">
                     <ItemsControl.ItemTemplate>
@@ -101,7 +101,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
+                VerticalAlignment="Stretch"
                 VerticalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding LibraryManager.InstalledLibraryNames}">
                     <ItemsControl.ItemTemplate>
