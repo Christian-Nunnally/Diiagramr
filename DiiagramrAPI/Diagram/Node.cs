@@ -18,19 +18,18 @@ namespace DiiagramrAPI.Diagram
 
         public Node()
         {
-            TerminalViewModels = new ObservableCollection<Terminal>();
+            Terminals = new ObservableCollection<Terminal>();
         }
 
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
-        public virtual IList<Terminal> TerminalViewModels { get; }
-        public IEnumerable<InputTerminal> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminal>();
-        public IEnumerable<OutputTerminal> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminal>();
+        public virtual IList<Terminal> Terminals { get; }
+        public IEnumerable<InputTerminal> InputTerminalViewModels => Terminals.OfType<InputTerminal>();
+        public IEnumerable<OutputTerminal> OutputTerminalViewModels => Terminals.OfType<OutputTerminal>();
         private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
 
         public virtual NodeModel Model { get; set; }
-        public virtual bool Visible { get; set; }
         public virtual bool IsSelected { get; set; }
         public virtual bool ResizeEnabled { get; set; }
         private bool IsInitialized { get; set; }
@@ -74,7 +73,7 @@ namespace DiiagramrAPI.Diagram
 
         public virtual void AddTerminalViewModel(Terminal terminalViewModel)
         {
-            TerminalViewModels.Add(terminalViewModel);
+            Terminals.Add(terminalViewModel);
             AddTerminal(terminalViewModel.Model);
             DropAndArrangeTerminal(terminalViewModel, terminalViewModel.Model.Direction);
             terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
@@ -82,7 +81,7 @@ namespace DiiagramrAPI.Diagram
 
         public void DisconnectAllTerminals()
         {
-            TerminalViewModels.ForEach(t => t.DisconnectTerminal());
+            Terminals.ForEach(t => t.DisconnectTerminal());
         }
 
         public void DropEventHandler(object sender, DragEventArgs e)
@@ -134,14 +133,14 @@ namespace DiiagramrAPI.Diagram
 
         public virtual void RemoveTerminalViewModel(Terminal terminalViewModel)
         {
-            TerminalViewModels.Remove(terminalViewModel);
+            Terminals.Remove(terminalViewModel);
             RemoveTerminal(terminalViewModel.Model);
             FixOtherTerminalsOnEdge(terminalViewModel.Model.Direction);
         }
 
         public void UnhighlightTerminals()
         {
-            TerminalViewModels.ForEach(t => t.HighlightVisible = false);
+            Terminals.ForEach(t => t.HighlightVisible = false);
         }
 
         public virtual void Uninitialize()
@@ -150,7 +149,7 @@ namespace DiiagramrAPI.Diagram
 
         public void UnselectTerminals()
         {
-            TerminalViewModels.ForEach(terminal =>
+            Terminals.ForEach(terminal =>
             {
                 terminal.IsSelected = false;
                 terminal.HighlightVisible = false;
@@ -300,7 +299,7 @@ namespace DiiagramrAPI.Diagram
 
         private void FixOtherTerminalsOnEdge(Direction edge)
         {
-            var otherTerminalsInDirection = TerminalViewModels
+            var otherTerminalsInDirection = Terminals
                 .Where(t => t.Model.Direction == edge).ToArray();
 
             var inc = 1 / (otherTerminalsInDirection.Length + 1.0f);
@@ -334,7 +333,7 @@ namespace DiiagramrAPI.Diagram
             {
                 terminal.WireConnected += TerminalWireConnected;
                 terminal.WireDisconnected += TerminalWireDisconnected;
-                TerminalViewModels.Add(Terminal.CreateTerminalViewModel(terminal));
+                Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
             }
         }
 
@@ -347,7 +346,7 @@ namespace DiiagramrAPI.Diagram
 
         private void SetUTurnLimitForTerminals()
         {
-            TerminalViewModels.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
+            Terminals.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
         }
 
         private void TerminalWireConnected(WireModel wireModel)

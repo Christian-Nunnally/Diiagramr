@@ -179,7 +179,7 @@
                                                 Grid.ColumnSpan="2"
                                                 ItemContainerStyle="{StaticResource TerminalContainerStyle}"
                                                 ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
-                                                ItemsSource="{Binding TerminalViewModels}" />
+                                                ItemsSource="{Binding Terminals}" />
                                             <Rectangle
                                                 Grid.Row="0"
                                                 Grid.RowSpan="2"
@@ -191,8 +191,11 @@
                                                 Grid.RowSpan="2"
                                                 Grid.Column="0"
                                                 Grid.ColumnSpan="2"
+                                                ForceCursor="False"
+                                                Cursor="SizeAll"
                                                 Style="{StaticResource NodeBorderStyle}">
                                                 <ContentControl
+                                                    Cursor="Arrow"
                                                     HorizontalContentAlignment="Stretch"
                                                     VerticalContentAlignment="Stretch"
                                                     s:View.Model="{Binding}"

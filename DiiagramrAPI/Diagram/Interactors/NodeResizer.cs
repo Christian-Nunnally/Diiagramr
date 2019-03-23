@@ -82,29 +82,35 @@ namespace DiiagramrAPI.Diagram.Interactors
                 var bottomRightCorner = new Point(absoluteRight, absoluteBottom);
                 var scaledMargin = ResizeBorderMargin * diagram.Zoom;
 
-                if (scaledMargin > DistanceFromPointToLine(mousePosition, topLeftCorner, topRightCorner))
+                if (mousePosition.X > absoluteLeft && mousePosition.X < absoluteRight)
                 {
-                    Mode = ResizeMode.Top;
-                    Mouse.SetCursor(Cursors.SizeNS);
-                }
-                else if (scaledMargin > DistanceFromPointToLine(mousePosition, topRightCorner, bottomRightCorner))
-                {
-                    Mode = ResizeMode.Right;
-                    Mouse.SetCursor(Cursors.SizeWE);
-                }
-                else if (scaledMargin > DistanceFromPointToLine(mousePosition, bottomRightCorner, bottomLeftCorner))
-                {
-                    Mode = ResizeMode.Bottom;
-                    Mouse.SetCursor(Cursors.SizeNS);
-                }
-                else if (scaledMargin > DistanceFromPointToLine(mousePosition, bottomLeftCorner, topLeftCorner))
-                {
-                    Mode = ResizeMode.Left;
-                    Mouse.SetCursor(Cursors.SizeWE);
-                }
-                else
-                {
-                    return false;
+                    if (mousePosition.Y > absoluteTop && mousePosition.Y < absoluteBottom)
+                    {
+                        if (scaledMargin > DistanceFromPointToLine(mousePosition, topLeftCorner, topRightCorner))
+                        {
+                            Mode = ResizeMode.Top;
+                            Mouse.SetCursor(Cursors.SizeNS);
+                        }
+                        else if (scaledMargin > DistanceFromPointToLine(mousePosition, topRightCorner, bottomRightCorner))
+                        {
+                            Mode = ResizeMode.Right;
+                            Mouse.SetCursor(Cursors.SizeWE);
+                        }
+                        else if (scaledMargin > DistanceFromPointToLine(mousePosition, bottomRightCorner, bottomLeftCorner))
+                        {
+                            Mode = ResizeMode.Bottom;
+                            Mouse.SetCursor(Cursors.SizeNS);
+                        }
+                        else if (scaledMargin > DistanceFromPointToLine(mousePosition, bottomLeftCorner, topLeftCorner))
+                        {
+                            Mode = ResizeMode.Left;
+                            Mouse.SetCursor(Cursors.SizeWE);
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
                 }
                 return interaction.Type == InteractionType.LeftMouseDown;
             }

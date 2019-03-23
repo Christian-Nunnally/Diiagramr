@@ -151,7 +151,7 @@
                                 VerticalAlignment="Stretch"
                                 ItemContainerStyle="{StaticResource TerminalContainerStyle}"
                                 ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
-                                ItemsSource="{Binding MousedOverNode.TerminalViewModels}" />
+                                ItemsSource="{Binding MousedOverNode.Terminals}" />
 
                             <Border
                                 HorizontalAlignment="Left"

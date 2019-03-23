@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Diagram
 
         public TypedTerminal<T> CreateClientTerminal<T>(Terminal terminalViewModel)
         {
-            if (!_nodeViewModel.TerminalViewModels.Contains(terminalViewModel))
+            if (!_nodeViewModel.Terminals.Contains(terminalViewModel))
             {
                 throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
             }
@@ -117,7 +117,7 @@ namespace DiiagramrAPI.Diagram
 
         private Terminal FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalKind kind)
         {
-            var terminalViewModel = _nodeViewModel.TerminalViewModels.FirstOrDefault(viewModel => viewModel.Model.TerminalIndex == _terminalIndex);
+            var terminalViewModel = _nodeViewModel.Terminals.FirstOrDefault(viewModel => viewModel.Model.TerminalIndex == _terminalIndex);
             if (terminalViewModel != null)
             {
                 return terminalViewModel;

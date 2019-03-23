@@ -153,14 +153,14 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (startTerminal.Model.Kind == TerminalKind.Input)
             {
-                return node.TerminalViewModels
+                return node.Terminals
                     .Where(t => t is OutputTerminal
                              && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
 
             }
             else if (startTerminal.Model.Kind == TerminalKind.Output)
             {
-                return node.TerminalViewModels
+                return node.Terminals
                     .Where(t => t is InputTerminal
                         && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
             }
@@ -236,13 +236,13 @@ namespace DiiagramrAPI.Diagram.Interactors
             if (mousedOverViewModel is InputTerminal inputTerminalMouseIsOver)
             {
                 ContextTerminal = inputTerminalMouseIsOver;
-                Show(n => n.TerminalViewModels.Any(t => t is OutputTerminal && t.Model.Type.IsAssignableFrom(inputTerminalMouseIsOver.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is OutputTerminal && t.Model.Type.IsAssignableFrom(inputTerminalMouseIsOver.Model.Type)));
                 inputTerminalMouseIsOver.HighlightVisible = true;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
-                Show(n => n.TerminalViewModels.Any(t => t is InputTerminal && t.Model.Type.IsAssignableFrom(outputTerminalMouseIsOver.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is InputTerminal && t.Model.Type.IsAssignableFrom(outputTerminalMouseIsOver.Model.Type)));
                 outputTerminalMouseIsOver.HighlightVisible = true;
             }
             else

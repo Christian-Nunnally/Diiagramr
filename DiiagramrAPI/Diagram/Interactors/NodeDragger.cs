@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram.Interactors
 {
@@ -22,7 +21,6 @@ namespace DiiagramrAPI.Diagram.Interactors
                 PreviousMouseLocation = interaction.MousePosition;
                 interaction.Diagram.UpdateDiagramBoundingBox();
                 interaction.Diagram.ShowSnapGrid = true;
-                Mouse.SetCursor(Cursors.SizeAll);
             }
         }
 
@@ -48,7 +46,6 @@ namespace DiiagramrAPI.Diagram.Interactors
                         return false;
                     }
                 }
-                Mouse.SetCursor(Cursors.SizeAll);
                 return interaction.Type == InteractionType.LeftMouseDown;
             }
             return false;
@@ -61,7 +58,6 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            Mouse.SetCursor(Cursors.SizeAll);
             PreviousMouseLocation = interaction.MousePosition;
         }
 
@@ -76,7 +72,6 @@ namespace DiiagramrAPI.Diagram.Interactors
                 }
             }
             interaction.Diagram.ShowSnapGrid = false;
-            Mouse.SetCursor(Cursors.Arrow);
         }
     }
 }

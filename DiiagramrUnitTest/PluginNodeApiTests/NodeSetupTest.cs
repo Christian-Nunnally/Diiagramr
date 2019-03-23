@@ -54,7 +54,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.InputTerminal<int>(string.Empty, Direction.East);
 
@@ -66,7 +66,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.InputTerminal<int>(string.Empty, Direction.South);
 
@@ -78,7 +78,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.InputTerminal<int>("lala", Direction.South);
 
@@ -90,7 +90,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             Assert.IsNotNull(nodeSetup.InputTerminal<int>("lala", Direction.South));
         }
@@ -100,7 +100,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.OutputTerminal<int>(string.Empty, Direction.East);
 
@@ -112,7 +112,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.OutputTerminal<int>(string.Empty, Direction.South);
 
@@ -124,7 +124,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.OutputTerminal<int>("lala", Direction.South);
 
@@ -136,7 +136,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
         {
             var nodeViewModelMoq = new Mock<Node>();
             nodeViewModelMoq.SetupGet(n => n.Model).Returns(new Mock<NodeModel>(string.Empty).Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             Assert.IsNotNull(nodeSetup.OutputTerminal<int>("lala", Direction.South));
         }
@@ -148,7 +148,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var nodeViewModelMoq = new Mock<Node>();
             var terminalViewModelMoq = new Mock<Terminal>(new Mock<TerminalModel>().Object);
             terminalViewModelMoq.SetupGet(model => model.Model).Returns(new Mock<TerminalModel>().Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal>());
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
 
             nodeSetup.CreateClientTerminal<int>(terminalViewModelMoq.Object);
@@ -160,7 +160,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var nodeViewModelMoq = new Mock<Node>();
             var terminalViewModelMoq = new Mock<Terminal>(new Mock<TerminalModel>().Object);
             terminalViewModelMoq.SetupGet(model => model.Model).Returns(new Mock<TerminalModel>().Object);
-            nodeViewModelMoq.SetupGet(n => n.TerminalViewModels).Returns(new List<Terminal> { terminalViewModelMoq.Object });
+            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal> { terminalViewModelMoq.Object });
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
 
             Assert.IsNotNull(nodeSetup.CreateClientTerminal<int>(terminalViewModelMoq.Object));
