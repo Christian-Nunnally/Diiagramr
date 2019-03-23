@@ -81,14 +81,14 @@ namespace DiiagramrAPI.Diagram.Model
         [DataMember]
         public virtual double OffsetY { get; set; }
 
-        [DataMember]
-        public double TerminalDownWireMinimumLength { get; set; }
-
         /// <summary>
         ///     The index of the terminal. The first terminal added to a node gets index 0.
         /// </summary>
         [DataMember]
         public int TerminalIndex { get; set; }
+
+        [DataMember]
+        public double TerminalDownWireMinimumLength { get; set; }
 
         [DataMember]
         public double TerminalLeftWireMinimumLength { get; set; }
@@ -110,13 +110,13 @@ namespace DiiagramrAPI.Diagram.Model
         }
 
         /// <summary>
-        ///     Gets the overall x posiion of the terminal on the diagram.  NodeX + offsetX.
+        ///     Gets the overall x position of the terminal on the diagram.  NodeX + offsetX.
         /// </summary>
         [DataMember]
         public virtual double X { get; set; }
 
         /// <summary>
-        ///     Gets the overall y posiion of the terminal on the diagram.  NodeY + offsetY.
+        ///     Gets the overall y position of the terminal on the diagram.  NodeY + offsetY.
         /// </summary>
         [DataMember]
         public virtual double Y { get; set; }

@@ -13,6 +13,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 MoveInsertingNode(interaction.Diagram, interaction.MousePosition);
                 interaction.Diagram.UpdateDiagramBoundingBox();
+                InsertingNodeViewModel.Visible = true;
             }
         }
 
@@ -37,7 +38,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            InsertingNodeViewModel = interaction.Diagram.NodeViewModels.LastOrDefault();
+            InsertingNodeViewModel = interaction.Diagram.Nodes.LastOrDefault();
             interaction.Diagram.ShowSnapGrid = true;
         }
 

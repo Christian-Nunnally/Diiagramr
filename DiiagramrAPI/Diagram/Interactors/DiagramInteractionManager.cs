@@ -23,6 +23,12 @@ namespace DiiagramrAPI.Diagram.Interactors
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
         public BindableCollection<string> ActiveDiagramInteractorNames { get; set; } = new BindableCollection<string>();
 
+        public void DiagramInputHandler(InteractionType type, Diagram diagram)
+        {
+            var interaction = new DiagramInteractionEventArguments(type);
+            DiagramInputHandler(interaction, diagram);
+        }
+
         public void DiagramInputHandler(DiagramInteractionEventArguments interaction, Diagram diagram)
         {
             interaction.Diagram = diagram;

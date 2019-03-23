@@ -12,25 +12,30 @@ namespace DiiagramrAPI.Diagram
         private const int MinimimDistanceToCalculateWire = 50;
         private WireModel _wireModel;
 
-        private double DownUTurnLengthSink => _wireModel.SinkTerminal.TerminalDownWireMinimumLength;
-        private double DownUTurnLengthSource => _wireModel.SourceTerminal.TerminalDownWireMinimumLength;
-        private double LeftUTurnLengthSink => _wireModel.SinkTerminal.TerminalLeftWireMinimumLength;
-        private double LeftUTurnLengthSource => _wireModel.SourceTerminal.TerminalLeftWireMinimumLength;
-        private double RightUTurnLengthSink => _wireModel.SinkTerminal.TerminalRightWireMinimumLength;
-        private double RightUTurnLengthSource => _wireModel.SourceTerminal.TerminalRightWireMinimumLength;
-        private double UpUTurnLengthSink => _wireModel.SinkTerminal.TerminalUpWireMinimumLength;
-        private double UpUTurnLengthSource => _wireModel.SourceTerminal.TerminalUpWireMinimumLength;
+        private double DownUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
+        private double DownUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalDownWireMinimumLength : 0;
+        private double LeftUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
+        private double LeftUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalLeftWireMinimumLength : 0;
+        private double RightUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
+        private double RightUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalRightWireMinimumLength : 0;
+        private double UpUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
+        private double UpUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalUpWireMinimumLength : 0;
 
-        public Point[] GetWirePoints(WireModel model, double x1, double y1, double x2, double y2)
+        public Point[] GetWirePoints(WireModel model, double x1, double y1, double x2, double y2, Direction bannedDirectionForStart, Direction bannedDirectionForEnd)
         {
             _wireModel = model;
             var start = new Point(x1, y1);
             var end = new Point(x2, y2);
-            var stubStart = TranslatePointInDirection(start, _wireModel.SinkTerminal.Direction, WireDistanceOutOfTerminal);
-            var stubEnd = TranslatePointInDirection(end, _wireModel.SourceTerminal.Direction, WireDistanceOutOfTerminal);
-            var bannedDirectionForStart = DirectionHelpers.OppositeDirection(_wireModel.SinkTerminal.Direction);
-            var bannedDirectionForEnd = DirectionHelpers.OppositeDirection(_wireModel.SourceTerminal.Direction);
 
+            var stubStart = TranslatePointInDirection(start, DirectionHelpers.OppositeDirection(bannedDirectionForStart), WireDistanceOutOfTerminal);
+            var stubEnd = TranslatePointInDirection(end, DirectionHelpers.OppositeDirection(bannedDirectionForEnd), WireDistanceOutOfTerminal);
+            if (_wireModel != null)
+            {
+                bannedDirectionForStart = DirectionHelpers.OppositeDirection(_wireModel.SinkTerminal.Direction);
+                bannedDirectionForEnd = DirectionHelpers.OppositeDirection(_wireModel.SourceTerminal.Direction);
+                stubStart = TranslatePointInDirection(start, _wireModel.SinkTerminal.Direction, WireDistanceOutOfTerminal);
+                stubEnd = TranslatePointInDirection(end, _wireModel.SourceTerminal.Direction, WireDistanceOutOfTerminal);
+            }
             if (StubsAreTooCloseTogether(stubStart, stubEnd))
             {
                 return new Point[] { start, stubStart, stubEnd, end };
@@ -55,6 +60,9 @@ namespace DiiagramrAPI.Diagram
             points.Add(end);
             return points.ToArray();
         }
+
+        public Terminal FallbackSourceTerminal { get; internal set; }
+        public Terminal FallbackSinkTerminal { get; internal set; }
 
         private bool StubsAreTooCloseTogether(Point stubStart, Point stubEnd)
         {
@@ -307,7 +315,12 @@ namespace DiiagramrAPI.Diagram
                 return new Point(p.X, p.Y + amount);
             }
 
-            return direction == Direction.East ? new Point(p.X + amount, p.Y) : new Point(p.X - amount, p.Y);
+            if (direction == Direction.East)
+            {
+                return new Point(p.X + amount, p.Y);
+            }
+
+            return direction == Direction.West ? new Point(p.X - amount, p.Y) : new Point(p.X, p.Y);
         }
     }
 }

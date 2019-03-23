@@ -66,7 +66,7 @@ namespace DiiagramrAPI.Diagram.Nodes
                 return;
             }
 
-            if (InternalDiagramViewModel.NodeViewModels.OfType<DiagramCallNode>().Any(diagramCallNodeViewModel => diagramCallNodeViewModel.BrokenDueToRecursion))
+            if (InternalDiagramViewModel.Nodes.OfType<DiagramCallNode>().Any(diagramCallNodeViewModel => diagramCallNodeViewModel.BrokenDueToRecursion))
             {
                 BrokenDueToRecursion = true;
                 Uninitialize();
@@ -150,7 +150,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
             DiagramsCopiedDuringCallNodeCreation.Add(ReferencingDiagramModel.Name);
             InternalDiagramModel = _diagramCopier.Copy(ReferencingDiagramModel);
-            InternalDiagramViewModel = new Diagram(InternalDiagramModel, _nodeProvider, null, null);
+            InternalDiagramViewModel = new Diagram(InternalDiagramModel, _nodeProvider, null);
             DiagramsCopiedDuringCallNodeCreation.Remove(ReferencingDiagramModel.Name);
         }
 
@@ -201,7 +201,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
         private void RemoveTerminalsForNoLongerExistingIoNodes()
         {
-            var existingNodeIds = InternalDiagramViewModel.NodeViewModels.OfType<IoNode>().Select(n => n.Model.Id);
+            var existingNodeIds = InternalDiagramViewModel.Nodes.OfType<IoNode>().Select(n => n.Model.Id);
             foreach (var noLongerExistingIoNodeId in _ioNodeIdToTerminalViewModel.Keys.Except(existingNodeIds))
             {
                 RemoveTerminalViewModel(_ioNodeIdToTerminalViewModel[noLongerExistingIoNodeId]);
@@ -237,7 +237,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
         private void SyncTerminals()
         {
-            foreach (var ioNode in InternalDiagramViewModel.NodeViewModels.OfType<IoNode>())
+            foreach (var ioNode in InternalDiagramViewModel.Nodes.OfType<IoNode>())
             {
                 var terminal = GetTerminalForNodeIfItAlreadyExists(ioNode);
 

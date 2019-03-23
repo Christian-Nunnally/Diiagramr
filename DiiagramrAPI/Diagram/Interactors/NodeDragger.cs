@@ -14,7 +14,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 var deltaX = interaction.MousePosition.X - PreviousMouseLocation.X;
                 var deltaY = interaction.MousePosition.Y - PreviousMouseLocation.Y;
-                foreach (var otherNode in interaction.Diagram.NodeViewModels.Where(n => n.IsSelected))
+                foreach (var otherNode in interaction.Diagram.Nodes.Where(n => n.IsSelected))
                 {
                     otherNode.X += deltaX / interaction.Diagram.Zoom;
                     otherNode.Y += deltaY / interaction.Diagram.Zoom;
@@ -69,7 +69,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (!interaction.IsCtrlKeyPressed)
             {
-                foreach (var node in interaction.Diagram.NodeViewModels.Where(n => n.IsSelected))
+                foreach (var node in interaction.Diagram.Nodes.Where(n => n.IsSelected))
                 {
                     node.X = interaction.Diagram.SnapToGrid(node.X);
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);

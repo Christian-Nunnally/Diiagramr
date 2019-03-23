@@ -30,13 +30,6 @@
                 </Style>
             </Border.Style>
         </Border>
-        <Border
-            Background="#007ACC"
-            BorderThickness="1"
-            CornerRadius="{x:Static diagram:Terminal.TerminalBorderCornerRadius}"
-            FocusVisualStyle="{x:Null}"
-            IsHitTestVisible="False"
-            Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
         <Polygon
             HorizontalAlignment="Center"
             VerticalAlignment="Top"

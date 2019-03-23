@@ -26,12 +26,12 @@ namespace DiiagramrAPI.Diagram
         public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
         public static Thickness NodeBorderExtenderThickness = new Thickness(NodeBorderWidth - 1);
         public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 16);
+        private static readonly Rect BoundingBoxDefault = new Rect(-400, -275, 800, 550);
         private readonly IProvideNodes _nodeProvider;
 
         public Diagram(
             DiagramModel diagram,
             IProvideNodes nodeProvider,
-            NodePalette nodeSelectorViewModel,
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
             _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
@@ -51,21 +51,21 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        public bool AreInstructionsVisible => !NodeViewModels.Any();
-        public bool BoundingBoxVisible { get; set; }
-        public Rect BoundingBox { get; set; }
-        public Rect BoundingBoxDefault { get; } = new Rect(-400, -275, 800, 550);
         public DiagramModel Model { get; }
+        public BindableCollection<Node> Nodes { get; set; } = new BindableCollection<Node>();
+        public BindableCollection<Wire> Wires { get; set; } = new BindableCollection<Wire>();
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
-        public string Name => Model.Name;
+
+        public bool AreInstructionsVisible => !Nodes.Any();
+        public bool BoundingBoxVisible { get; set; }
         public bool ShowSnapGrid { get; set; }
-        public BindableCollection<Node> NodeViewModels { get; set; } = new BindableCollection<Node>();
-        public BindableCollection<Wire> WireViewModels { get; set; } = new BindableCollection<Wire>();
         public double PanX { get; set; }
         public double PanY { get; set; }
         public double Zoom { get; set; } = 1;
         public double ViewWidth { get; set; }
         public double ViewHeight { get; set; }
+        public Rect BoundingBox { get; set; }
+        public string Name => Model.Name;
 
         public void KeyDownHandler(object sender, KeyEventArgs e)
         {
@@ -79,10 +79,7 @@ namespace DiiagramrAPI.Diagram
 
         private void KeyInputHandler(KeyEventArgs e, InteractionType type)
         {
-            var interaction = new DiagramInteractionEventArguments(type)
-            {
-                Key = e.Key
-            };
+            var interaction = new DiagramInteractionEventArguments(type) { Key = e.Key };
             DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
@@ -131,14 +128,14 @@ namespace DiiagramrAPI.Diagram
             DiagramInteractionManager.DiagramInputHandler(interaction, this);
         }
 
-        public void AddNode(Node viewModel)
+        public void AddNode(Node node)
         {
-            if (viewModel.Model == null)
+            if (node.Model == null)
             {
                 throw new InvalidOperationException("Can not add a node to the diagram before it has been initialized");
             }
-            Model.AddNode(viewModel.Model);
-            AddNodeViewModel(viewModel);
+            Model.AddNode(node.Model);
+            AddNodeViewModel(node);
 
             var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
             DiagramInteractionManager.DiagramInputHandler(interaction, this);
@@ -146,14 +143,10 @@ namespace DiiagramrAPI.Diagram
 
         private void AddNodeViewModel(Node viewModel)
         {
-            if (!Model.Nodes.Contains(viewModel.Model))
-            {
-                throw new InvalidOperationException("Can not add a view model for a node model that does not exist in the model.");
-            }
             viewModel.WireConnectedToTerminal += WireAddedToDiagram;
             viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
-            NodeViewModels.Add(viewModel);
-            BoundingBoxVisible = NodeViewModels.Any();
+            Nodes.Add(viewModel);
+            BoundingBoxVisible = Nodes.Any();
             AddWiresForNode(viewModel);
             viewModel.Initialize();
             UpdateDiagramBoundingBox();
@@ -164,19 +157,26 @@ namespace DiiagramrAPI.Diagram
         {
             foreach (var inputTerminal in viewModel.Model.Terminals.Where(t => t.Kind == TerminalKind.Input))
             {
-                inputTerminal.ConnectedWires.ForEach(AddWireViewModel);
+                inputTerminal.ConnectedWires
+                    .Select(w => new Wire(w))
+                    .ForEach(AddWire);
             }
         }
 
-        private void AddWireViewModel(WireModel wire)
+        public void RemoveWire(Wire wire)
         {
-            if (WireViewModels.Any(x => x.Model == wire))
+            if (Wires.Contains(wire))
             {
-                return;
+                Wires.Remove(wire);
             }
-            var wireViewModel = new Wire(wire);
-            WireViewModels.Add(wireViewModel);
-            UnHighlightAllTerminals();
+        }
+
+        public void AddWire(Wire wire)
+        {
+            if (!Wires.Any(w => w == wire || w.Model == wire.Model))
+            {
+                Wires.Add(wire);
+            }
         }
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -207,9 +207,14 @@ namespace DiiagramrAPI.Diagram
             return (Zoom * y) + PanY;
         }
 
+        public double SnapToGrid(double value)
+        {
+            return CoreUilities.RoundToNearest(value, GridSnapInterval);
+        }
+
         public void HighlightTerminalsOfSameType(TerminalModel terminal)
         {
-            foreach (var nodeViewModel in NodeViewModels)
+            foreach (var nodeViewModel in Nodes)
             {
                 if (terminal.Kind == TerminalKind.Output)
                 {
@@ -225,66 +230,58 @@ namespace DiiagramrAPI.Diagram
         public void RemoveNode(Node viewModel)
         {
             Model.RemoveNode(viewModel.Model);
-            NodeViewModels.Remove(viewModel);
+            Nodes.Remove(viewModel);
             viewModel.DisconnectAllTerminals();
             viewModel.Uninitialize();
             UpdateDiagramBoundingBox();
-            BoundingBoxVisible = NodeViewModels.Any();
+            BoundingBoxVisible = Nodes.Any();
             NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }
 
-        public void UnHighlightAllTerminals()
+        public void UnhighlightTerminals()
         {
-            NodeViewModels.ForEach(n => n.UnHighlightAllTerminals());
+            Nodes.ForEach(n => n.UnhighlightTerminals());
         }
 
         public void UnselectNodes()
         {
-            NodeViewModels.Where(node => node.IsSelected).ForEach(node => node.IsSelected = false);
+            Nodes.Where(node => node.IsSelected).ForEach(node => node.IsSelected = false);
         }
 
         public void UnselectTerminals()
         {
-            NodeViewModels.ForEach(node => node.UnselectTerminals());
+            Nodes.ForEach(node => node.UnselectTerminals());
         }
 
         public void UpdateDiagramBoundingBox()
         {
-            var minX = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.X).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Left));
-            var minY = SnapToGrid(Math.Min(NodeViewModels.Select(n => n.Y).DefaultIfEmpty(0).Min() - DiagramMargin, BoundingBoxDefault.Top));
-            var maxX = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.X + n.Width).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, BoundingBoxDefault.Right));
-            var maxY = SnapToGrid(Math.Max(NodeViewModels.Select(n => n.Y + n.Height).DefaultIfEmpty(0).Max() + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, BoundingBoxDefault.Bottom));
+            var visibleNodes = Nodes.Where(x => x.Visible);
+            var leftmostNodeLeft = visibleNodes.Select(n => n.X).DefaultIfEmpty(0).Min();
+            var topmostNodeTop = visibleNodes.Select(n => n.Y).DefaultIfEmpty(0).Min();
+            var rightmostNodeRight = visibleNodes.Select(n => n.X + n.Width).DefaultIfEmpty(0).Max();
+            var bottommostNodeBottom = visibleNodes.Select(n => n.Y + n.Height).DefaultIfEmpty(0).Max();
+
+            var minX = SnapToGrid(Math.Min(leftmostNodeLeft - DiagramMargin, BoundingBoxDefault.Left));
+            var minY = SnapToGrid(Math.Min(topmostNodeTop - DiagramMargin, BoundingBoxDefault.Top));
+            var maxX = SnapToGrid(Math.Max(rightmostNodeRight + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, BoundingBoxDefault.Right));
+            var maxY = SnapToGrid(Math.Max(bottommostNodeBottom + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, BoundingBoxDefault.Bottom));
             BoundingBox = new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 
-        public double SnapToGrid(double value)
+        // TODO: remove.
+        private void WireAddedToDiagram(WireModel model)
         {
-            return CoreUilities.RoundToNearest(value, GridSnapInterval);
+            AddWire(new Wire(model));
         }
 
-        private void WireAddedToDiagram(WireModel wireModel)
-        {
-            if (!WireViewModels.Any(x => x.Model == wireModel))
-            {
-                AddWireViewModel(wireModel);
-            }
-        }
-
+        // TODO: remove.
         private void WireRemovedFromDiagram(WireModel wireModel)
         {
-            var wireToRemove = WireViewModels.FirstOrDefault(wire => wire.Model == wireModel);
+            var wireToRemove = Wires.FirstOrDefault(wire => wire.Model == wireModel);
             if (wireToRemove != null)
             {
-                WireViewModels.Remove(wireToRemove);
+                Wires.Remove(wireToRemove);
             }
-        }
-
-        public void MouseEntered()
-        {
-        }
-
-        public void MouseLeft()
-        {
         }
 
         public void ViewSizeChanged(object sender, SizeChangedEventArgs e)
@@ -302,6 +299,14 @@ namespace DiiagramrAPI.Diagram
             Zoom = 1;
             PanX = ViewWidth / 2;
             PanY = ViewHeight / 2;
+        }
+
+        public void MouseEntered()
+        {
+        }
+
+        public void MouseLeft()
+        {
         }
     }
 }

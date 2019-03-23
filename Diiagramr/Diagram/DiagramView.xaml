@@ -138,10 +138,10 @@
                 <ItemsControl
                     ItemContainerStyle="{StaticResource WireContainerStyle}"
                     ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
-                    ItemsSource="{Binding WireViewModels}" />
+                    ItemsSource="{Binding Wires}" />
 
                 <!--  Node Items Control  -->
-                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding NodeViewModels}" >
+                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding Nodes}" >
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
                             <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}" />
@@ -149,7 +149,7 @@
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate DataType="{x:Type diagram:Node}">
-                                        <Grid>
+                                        <Grid Visibility="{Binding Visible, Converter={StaticResource Btv}}">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*" />
                                                 <ColumnDefinition MaxWidth="{x:Static diagram:Diagram.NodeBorderWidth}" />

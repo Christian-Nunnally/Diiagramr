@@ -11,15 +11,7 @@ namespace DiiagramrAPI.Diagram.Model
         [DataMember]
         public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
 
-        private double _height;
-
         private Node _nodeViewModel;
-
-        private double _width;
-
-        private double _x;
-
-        private double _y;
 
         public NodeModel(string nodeTypeFullName)
         {
@@ -53,21 +45,7 @@ namespace DiiagramrAPI.Diagram.Model
         public virtual NodeLibrary Dependency { get; set; }
 
         [DataMember]
-        public virtual double Height
-        {
-            get => _height;
-
-            set
-            {
-                if (Math.Abs(_height - value) < 0.001)
-                {
-                    return;
-                }
-
-                _height = value;
-                PresentationChanged?.Invoke();
-            }
-        }
+        public virtual double Height { get; set; }
 
         public virtual Node NodeViewModel
         {
@@ -85,55 +63,13 @@ namespace DiiagramrAPI.Diagram.Model
         public List<TerminalModel> Terminals { get; set; }
 
         [DataMember]
-        public virtual double Width
-        {
-            get => _width;
-
-            set
-            {
-                if (Math.Abs(_width - value) < 0.001)
-                {
-                    return;
-                }
-
-                _width = value;
-                PresentationChanged?.Invoke();
-            }
-        }
+        public virtual double Width { get; set; }
 
         [DataMember]
-        public virtual double X
-        {
-            get => _x;
-
-            set
-            {
-                if (Math.Abs(_x - value) < 0.001)
-                {
-                    return;
-                }
-
-                _x = value;
-                PresentationChanged?.Invoke();
-            }
-        }
+        public virtual double X { get; set; }
 
         [DataMember]
-        public virtual double Y
-        {
-            get => _y;
-
-            set
-            {
-                if (Math.Abs(_y - value) < 0.001)
-                {
-                    return;
-                }
-
-                _y = value;
-                PresentationChanged?.Invoke();
-            }
-        }
+        public virtual double Y { get; set; }
 
         public virtual void AddTerminal(TerminalModel terminal)
         {

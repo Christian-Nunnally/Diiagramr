@@ -9,20 +9,10 @@ namespace DiiagramrAPI.Diagram.Model
     [AddINotifyPropertyChangedInterface]
     public class WireModel : ModelBase
     {
-        private bool _isActive;
+        private bool _isActive = true;
 
         public WireModel(TerminalModel terminal1, TerminalModel terminal2)
         {
-            if (terminal1 == null)
-            {
-                throw new ArgumentNullException(nameof(terminal1));
-            }
-
-            if (terminal2 == null)
-            {
-                throw new ArgumentNullException(nameof(terminal2));
-            }
-
             if (terminal1.Kind == terminal2.Kind)
             {
                 throw new ArgumentException("Wires require one input terminal and one output terminal");
@@ -42,14 +32,8 @@ namespace DiiagramrAPI.Diagram.Model
             SourceTerminal.ConnectWire(this);
             SinkTerminal.ConnectWire(this);
             SetupTerminalPropertyChangeNotifications();
-            SinkTerminal.Data = SourceTerminal.Data;
-            _isActive = true;
-
             UserWiredFromInput = terminal1 == SourceTerminal;
-        }
-
-        private WireModel()
-        {
+            SinkTerminal.Data = SourceTerminal.Data;
         }
 
         [DataMember]
@@ -134,6 +118,15 @@ namespace DiiagramrAPI.Diagram.Model
         private void SourceTerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var source = (TerminalModel)sender;
+            if (_isActive)
+            {
+                if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
+                {
+                    SinkTerminal.Data = source.Data;
+                    return;
+                }
+            }
+
             if (e.PropertyName.Equals(nameof(TerminalModel.X)))
             {
                 X2 = source.X;
@@ -141,14 +134,6 @@ namespace DiiagramrAPI.Diagram.Model
             else if (e.PropertyName.Equals(nameof(TerminalModel.Y)))
             {
                 Y2 = source.Y;
-            }
-            else if (!_isActive)
-            {
-                return;
-            }
-            else if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
-            {
-                SinkTerminal.Data = source.Data;
             }
         }
     }

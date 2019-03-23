@@ -92,7 +92,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             terminalViewModelMoq.SetupGet(n => n.Model).Returns(terminalMoq.Object);
             testPluginNode.TerminalViewModels.Add(terminalViewModelMoq.Object);
 
-            testPluginNode.UnHighlightAllTerminals();
+            testPluginNode.UnhighlightTerminals();
 
             terminalViewModelMoq.VerifySet(model => model.HighlightVisible = false);
         }

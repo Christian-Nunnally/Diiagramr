@@ -131,17 +131,22 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
-            nodeToInsert.X = _diagramViewModel.GetDiagramPointFromViewPointX(X);
-            nodeToInsert.Y = _diagramViewModel.GetDiagramPointFromViewPointX(Y);
-            if (ContextTerminal != null)
-            {
-                var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
-                if (terminalsThatCouldBeWired.Count() == 1)
-                {
-                    ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().Model);
-                }
-            }
+            AutoWireTerminals(nodeToInsert);
+            nodeToInsert.Visible = false;
+            nodeToInsert.Model.X = _diagramViewModel.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Model.Y = _diagramViewModel.GetDiagramPointFromViewPointX(Y);
             _diagramViewModel.AddNode(nodeToInsert);
+            ContextTerminal = null;
+        }
+
+        private void AutoWireTerminals(Node nodeToInsert)
+        {
+            if (ContextTerminal == null) return;
+            var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
+            if (terminalsThatCouldBeWired.Count() == 1)
+            {
+                ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().Model);
+            }
         }
 
         private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
@@ -263,7 +268,6 @@ namespace DiiagramrAPI.Diagram.Interactors
             if (ContextTerminal != null)
             {
                 ContextTerminal.HighlightVisible = false;
-                ContextTerminal = null;
             }
         }
 

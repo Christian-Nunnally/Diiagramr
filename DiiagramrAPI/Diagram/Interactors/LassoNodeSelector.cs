@@ -59,7 +59,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             var right = diagram.GetDiagramPointFromViewPointX(X + Width);
             var bottom = diagram.GetDiagramPointFromViewPointY(Y + Height);
 
-            foreach (var node in diagram.NodeViewModels)
+            foreach (var node in diagram.Nodes)
             {
                 if (node.X > left
                  && node.X + node.Width < right

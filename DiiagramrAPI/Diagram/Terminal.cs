@@ -143,11 +143,6 @@ namespace DiiagramrAPI.Diagram
             Model.DisconnectWires();
         }
 
-        public void LostFocus()
-        {
-            SetTerminalAdorner(null);
-        }
-
         public virtual void SetTerminalDirection(Direction direction)
         {
             Model.Direction = direction;
@@ -155,8 +150,11 @@ namespace DiiagramrAPI.Diagram
 
         public virtual void ShowHighlightIfCompatibleType(Type type)
         {
-            HighlightVisible = Model.Type.IsAssignableFrom(type);
-            NotifyOfPropertyChange(nameof(HighlightVisible));
+            if (!IsConnected)
+            {
+                HighlightVisible = Model.Type.IsAssignableFrom(type);
+                NotifyOfPropertyChange(nameof(HighlightVisible));
+            }
         }
 
         public virtual bool WireToTerminal(TerminalModel terminal)
@@ -245,9 +243,6 @@ namespace DiiagramrAPI.Diagram
         public void MouseEntered()
         {
             SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
-            View.Focusable = true;
-            View.IsEnabled = true;
-            View?.Focus();
         }
 
         public void MouseLeft()

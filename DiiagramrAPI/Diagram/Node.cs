@@ -24,41 +24,22 @@ namespace DiiagramrAPI.Diagram
         public event Action<WireModel> WireConnectedToTerminal;
         public event Action<WireModel> WireDisconnectedFromTerminal;
 
-        public virtual IEnumerable<Terminal> DynamicTerminalViewModels =>
-            TerminalViewModels.Where(vm => !string.IsNullOrEmpty(vm.Model.MethodKey));
+        public virtual IList<Terminal> TerminalViewModels { get; }
+        public IEnumerable<InputTerminal> InputTerminalViewModels => TerminalViewModels.OfType<InputTerminal>();
+        public IEnumerable<OutputTerminal> OutputTerminalViewModels => TerminalViewModels.OfType<OutputTerminal>();
+        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
 
-        public virtual double Height
-        {
-            get => Model.Height;
-
-            set
-            {
-                Model.Height = value;
-                if (Height < MinimumHeight - 0.05)
-                {
-                    Height = MinimumHeight;
-                }
-                FixAllTerminals();
-            }
-        }
-
-        public IEnumerable<InputTerminal> InputTerminalViewModels =>
-            TerminalViewModels.OfType<InputTerminal>();
-
+        public virtual NodeModel Model { get; set; }
+        public virtual bool Visible { get; set; }
         public virtual bool IsSelected { get; set; }
+        public virtual bool ResizeEnabled { get; set; }
+        private bool IsInitialized { get; set; }
         public virtual double MinimumHeight { get; set; }
         public virtual double MinimumWidth { get; set; }
         public virtual string Name { get; set; } = "Node";
-        public virtual NodeModel Model { get; set; }
-
-        public IEnumerable<OutputTerminal> OutputTerminalViewModels =>
-            TerminalViewModels.OfType<OutputTerminal>();
-
         public virtual float Weight { get; set; }
-        public virtual bool ResizeEnabled { get; set; }
-        public virtual bool ResizerVisible => ResizeEnabled && IsSelected;
-        public virtual IList<Terminal> TerminalViewModels { get; }
-        public virtual bool TitleVisible => IsSelected;
+        public virtual double X { get; set; }
+        public virtual double Y { get; set; }
 
         public virtual double Width
         {
@@ -76,12 +57,20 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        public virtual double X { get; set; }
-        public virtual double Y { get; set; }
-        private bool IsInitialized { get; set; }
+        public virtual double Height
+        {
+            get => Model.Height;
 
-        private IEnumerable<PropertyInfo> PluginNodeSettings =>
-            GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
+            set
+            {
+                Model.Height = value;
+                if (Height < MinimumHeight - 0.05)
+                {
+                    Height = MinimumHeight;
+                }
+                FixAllTerminals();
+            }
+        }
 
         public virtual void AddTerminalViewModel(Terminal terminalViewModel)
         {
@@ -150,7 +139,7 @@ namespace DiiagramrAPI.Diagram
             FixOtherTerminalsOnEdge(terminalViewModel.Model.Direction);
         }
 
-        public void UnHighlightAllTerminals()
+        public void UnhighlightTerminals()
         {
             TerminalViewModels.ForEach(t => t.HighlightVisible = false);
         }

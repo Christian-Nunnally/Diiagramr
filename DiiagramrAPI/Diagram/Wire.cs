@@ -14,23 +14,45 @@ namespace DiiagramrAPI.Diagram
     public class Wire : ViewModel
     {
         private const int WireAnimationFrameDelay = 15;
+        private const float DimWireColorAmount = -0.3f;
+        private const int WireAnimationFrames = 15;
         private bool _configuringWirePoints;
         private WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
 
         public Wire(WireModel wire)
         {
             Model = wire ?? throw new ArgumentNullException(nameof(wire));
-            wire.PropertyChanged += WireOnPropertyChanged;
+            wire.PropertyChanged += ModelPropertyChanged;
+            IsAttachedToModel = true;
             SetWireColor();
+        }
+
+        /// <summary>
+        /// Creates a wire that's unattched to a model.
+        /// </summary>
+        public Wire(Terminal startTerminal, double x2, double y2)
+        {
+            X1 = startTerminal.Model.X + Terminal.TerminalDiameter / 2;
+            Y1 = startTerminal.Model.Y + Terminal.TerminalDiameter / 2;
+            BannedDirectionForStart = DirectionHelpers.OppositeDirection(startTerminal.Model.Direction);
+            BannedDirectionForEnd = Direction.None;
+            X2 = x2;
+            Y2 = y2;
+            _wirePathingAlgorithum.FallbackSourceTerminal = startTerminal.Model.Kind == TerminalKind.Input ? startTerminal : null;
+            _wirePathingAlgorithum.FallbackSinkTerminal = startTerminal.Model.Kind == TerminalKind.Output ? startTerminal : null;
+            LineColorBrush = new SolidColorBrush(Colors.White);
         }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
         public Point[] Points { get; set; }
         public WireModel Model { get; private set; }
-        public double X1 { get; private set; }
-        public double X2 { get; private set; }
-        public double Y1 { get; private set; }
-        public double Y2 { get; private set; }
+        public double X1 { get; set; }
+        public double X2 { get; set; }
+        public double Y1 { get; set; }
+        public double Y2 { get; set; }
+        public Direction BannedDirectionForStart { get; set; }
+        public Direction BannedDirectionForEnd { get; set; }
+        public bool IsAttachedToModel { get; set; } = false;
 
         private void SetWireColor()
         {
@@ -39,47 +61,52 @@ namespace DiiagramrAPI.Diagram
                             : Model.SinkTerminal;
             var typeToGetColorOf = terminalToGetColorFrom.Type;
             var color = TypeColorProvider.Instance.GetColorForType(typeToGetColorOf);
-            var darkenedColor = CoreUilities.ChangeColorBrightness(color, -0.3f);
+            var darkenedColor = CoreUilities.ChangeColorBrightness(color, DimWireColorAmount);
             LineColorBrush = new SolidColorBrush(darkenedColor);
         }
 
-        private void WireOnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName.Equals(nameof(X1))
+             || propertyName.Equals(nameof(X2))
+             || propertyName.Equals(nameof(Y1))
+             || propertyName.Equals(nameof(Y2)))
+            {
+                if (View != null)
+                {
+                    Points = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2, BannedDirectionForStart, BannedDirectionForEnd);
+                }
+            }
+            base.OnPropertyChanged(propertyName);
+        }
+
+        private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName.Equals(nameof(Model.X1)))
             {
                 X1 = Model.X1 + Diagram.NodeBorderWidth;
             }
-
-            if (e.PropertyName.Equals(nameof(Model.X2)))
+            else if (e.PropertyName.Equals(nameof(Model.X2)))
             {
                 X2 = Model.X2 + Diagram.NodeBorderWidth;
             }
-
-            if (e.PropertyName.Equals(nameof(Model.Y1)))
+            else if (e.PropertyName.Equals(nameof(Model.Y1)))
             {
                 Y1 = Model.Y1 + Diagram.NodeBorderWidth;
             }
-
-            if (e.PropertyName.Equals(nameof(Model.Y2)))
+            else if (e.PropertyName.Equals(nameof(Model.Y2)))
             {
                 Y2 = Model.Y2 + Diagram.NodeBorderWidth;
             }
-
-            if (e.PropertyName.Equals(nameof(Model.SourceTerminal)) || e.PropertyName.Equals(nameof(Model.SinkTerminal)))
+            else if (e.PropertyName.Equals(nameof(Model.SourceTerminal)) || e.PropertyName.Equals(nameof(Model.SinkTerminal)))
             {
-                Model.PropertyChanged -= WireOnPropertyChanged;
-                return;
-            }
-
-            if (View != null)
-            {
-                Points = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2);
+                Model.PropertyChanged -= ModelPropertyChanged;
             }
         }
 
         public void DisconnectWire()
         {
-            Model.DisconnectWire();
+            Model?.DisconnectWire();
         }
 
         public void WireMouseDown(object sender, MouseEventArgs e)
@@ -94,7 +121,7 @@ namespace DiiagramrAPI.Diagram
 
         private void AnimateAndConfigureWirePoints()
         {
-            if (_configuringWirePoints)
+            if (_configuringWirePoints || Model == null)
             {
                 return;
             }
@@ -110,7 +137,7 @@ namespace DiiagramrAPI.Diagram
 
         private void AnimateWirePointsOnUiThread(int frameDelay)
         {
-            var wirePoints = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2);
+            var wirePoints = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2, BannedDirectionForStart, BannedDirectionForEnd);
             if (Model.UserWiredFromInput)
             {
                 Array.Reverse(wirePoints);
@@ -135,11 +162,10 @@ namespace DiiagramrAPI.Diagram
                 return new List<Point[]>();
             }
 
-            const int frames = 15;
             var animation = new List<Point[]>();
             var totalLength = GetLengthOfWire(originalPoints);
 
-            for (int frameNumber = 0; frameNumber < frames; frameNumber++)
+            for (int frameNumber = 0; frameNumber < WireAnimationFrames; frameNumber++)
             {
                 var frame = new List<Point> { originalPoints[0] };
                 var lengthSoFar = 0.0;
@@ -148,7 +174,7 @@ namespace DiiagramrAPI.Diagram
                 {
                     frame.Add(originalPoints[j]);
                     var nextLength = Point.Subtract(originalPoints[j], originalPoints[j + 1]).Length;
-                    var targetLength = totalLength * Math.Sin((double)frameNumber / frames * (Math.PI / 2.0));
+                    var targetLength = totalLength * Math.Sin((double)frameNumber / WireAnimationFrames * (Math.PI / 2.0));
                     if (lengthSoFar + nextLength > targetLength)
                     {
                         var diff_X = originalPoints[j + 1].X - originalPoints[j].X;

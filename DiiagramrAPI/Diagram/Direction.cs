@@ -8,7 +8,8 @@ namespace DiiagramrAPI.Diagram
         North,
         East,
         South,
-        West
+        West,
+        None
     }
 
     public static class DirectionHelpers
@@ -19,18 +20,19 @@ namespace DiiagramrAPI.Diagram
             {
                 return Direction.South;
             }
-
             if (direction == Direction.South)
             {
                 return Direction.North;
             }
-
             if (direction == Direction.East)
             {
                 return Direction.West;
             }
-
-            return Direction.East;
+            if (direction == Direction.West)
+            {
+                return Direction.East;
+            }
+            return Direction.None;
         }
     }
 }
