@@ -19,27 +19,11 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         }
 
         [TestMethod]
-        public void TestAddSource_EmptySource_DoesNotAddSource()
-        {
-            _libraryManagerMoq.Invocations.Clear();
-            _librarySourceManagerWindowViewModel.AddSource();
-            _libraryManagerMoq.Verify(l => l.AddSource(It.IsAny<string>()), Times.Never);
-        }
-
-        [TestMethod]
         public void TestAddSource_NonEmptySource_AddsSource()
         {
             _librarySourceManagerWindowViewModel.SourceTextBoxText = "test";
             _librarySourceManagerWindowViewModel.AddSource();
             _libraryManagerMoq.Verify(l => l.AddSource("test"));
-        }
-
-        [TestMethod]
-        public void TestAddSource_NonEmptySource_ClearsSourceTextBox()
-        {
-            _librarySourceManagerWindowViewModel.SourceTextBoxText = "test";
-            _librarySourceManagerWindowViewModel.AddSource();
-            Assert.AreEqual("", _librarySourceManagerWindowViewModel.SourceTextBoxText);
         }
 
         [TestMethod]

@@ -110,9 +110,9 @@ namespace DiiagramrAPI.Diagram.Interactors
                         {
                             return false;
                         }
+                        return interaction.Type == InteractionType.LeftMouseDown;
                     }
                 }
-                return interaction.Type == InteractionType.LeftMouseDown;
             }
             return false;
         }

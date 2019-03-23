@@ -20,20 +20,6 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestConstructor_NullFirstArgument_ThrowsException()
-        {
-            new WireModel(null, _outputTerminalMoq.Object);
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
-        public void TestConstructor_NullSecondArgument_ThrowsException()
-        {
-            new WireModel(_inputTerminalMoq.Object, null);
-        }
-
-        [TestMethod]
         [ExpectedException(typeof(ArgumentException))]
         public void TestConstructor_TwoInputTerminalsPassedIn_ThrowsException()
         {

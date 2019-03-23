@@ -20,24 +20,24 @@ namespace DiiagramrAPI.Diagram.Interactors
             var diagram = interaction.Diagram;
             var mousePosition = interaction.MousePosition;
             if (interaction.Type == InteractionType.MouseMoved) {
-                _previewWire.X2 = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
-                _previewWire.Y2 = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
+                _previewWire.X1 = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
+                _previewWire.Y1 = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
 
                 if (interaction.ViewModelMouseIsOver is Terminal terminal && terminal != _wiringTerminal && terminal.HighlightVisible)
                 {
-                    _previewWire.X2 = terminal.Model.X + Terminal.TerminalDiameter / 2;
-                    _previewWire.Y2 = terminal.Model.Y + Terminal.TerminalDiameter / 2;
+                    _previewWire.X1 = terminal.Model.X + Terminal.TerminalDiameter / 2;
+                    _previewWire.Y1 = terminal.Model.Y + Terminal.TerminalDiameter / 2;
                     var terminalColor = terminal.TerminalBackgroundBrush.Color;
                     var R = terminalColor.R;
                     var G = terminalColor.G;
                     var B = terminalColor.B;
                     _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
-                    _previewWire.BannedDirectionForEnd = DirectionHelpers.OppositeDirection(terminal.Model.Direction);
+                    _previewWire.BannedDirectionForStart = DirectionHelpers.OppositeDirection(terminal.Model.Direction);
                 }
                 else
                 {
                     _previewWire.LineColorBrush = _ghostWireBrush;
-                    _previewWire.BannedDirectionForEnd = Direction.None;
+                    _previewWire.BannedDirectionForStart = Direction.None;
                 }
             }
         }

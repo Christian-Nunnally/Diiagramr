@@ -12,14 +12,14 @@ namespace DiiagramrAPI.Diagram
         private const int MinimimDistanceToCalculateWire = 50;
         private WireModel _wireModel;
 
-        private double DownUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
-        private double DownUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalDownWireMinimumLength : 0;
-        private double LeftUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
-        private double LeftUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalLeftWireMinimumLength : 0;
-        private double RightUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
-        private double RightUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalRightWireMinimumLength : 0;
-        private double UpUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
-        private double UpUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalUpWireMinimumLength : 0;
+        private double DownUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalDownWireMinimumLength : 0;
+        private double DownUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
+        private double LeftUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalLeftWireMinimumLength : 0;
+        private double LeftUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
+        private double RightUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalRightWireMinimumLength : 0;
+        private double RightUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
+        private double UpUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalUpWireMinimumLength : 0;
+        private double UpUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
 
         public Point[] GetWirePoints(WireModel model, double x1, double y1, double x2, double y2, Direction bannedDirectionForStart, Direction bannedDirectionForEnd)
         {

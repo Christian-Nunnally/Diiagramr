@@ -25,19 +25,23 @@ namespace DiiagramrAPI.Diagram
             wire.PropertyChanged += ModelPropertyChanged;
             IsAttachedToModel = true;
             SetWireColor();
+            X1 = Model.X1 + Diagram.NodeBorderWidth;
+            Y1 = Model.Y1 + Diagram.NodeBorderWidth;
+            X2 = Model.X2 + Diagram.NodeBorderWidth;
+            Y2 = Model.Y2 + Diagram.NodeBorderWidth;
         }
 
         /// <summary>
         /// Creates a wire that's unattched to a model.
         /// </summary>
-        public Wire(Terminal startTerminal, double x2, double y2)
+        public Wire(Terminal startTerminal, double x1, double y1)
         {
-            X1 = startTerminal.Model.X + Terminal.TerminalDiameter / 2;
-            Y1 = startTerminal.Model.Y + Terminal.TerminalDiameter / 2;
-            BannedDirectionForStart = DirectionHelpers.OppositeDirection(startTerminal.Model.Direction);
-            BannedDirectionForEnd = Direction.None;
-            X2 = x2;
-            Y2 = y2;
+            X2 = startTerminal.Model.X + Terminal.TerminalDiameter / 2;
+            Y2 = startTerminal.Model.Y + Terminal.TerminalDiameter / 2;
+            BannedDirectionForEnd = DirectionHelpers.OppositeDirection(startTerminal.Model.Direction);
+            BannedDirectionForStart = Direction.None;
+            X1 = x1;
+            Y1 = y1;
             _wirePathingAlgorithum.FallbackSourceTerminal = startTerminal.Model.Kind == TerminalKind.Input ? startTerminal : null;
             _wirePathingAlgorithum.FallbackSinkTerminal = startTerminal.Model.Kind == TerminalKind.Output ? startTerminal : null;
             LineColorBrush = new SolidColorBrush(Colors.White);
