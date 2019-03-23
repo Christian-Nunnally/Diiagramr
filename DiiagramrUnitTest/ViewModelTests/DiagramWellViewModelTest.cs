@@ -46,7 +46,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;
             _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(project.Diagrams);
-            _projectManagerMoq.SetupGet(m => m.DiagramViewModels).Returns(diagramViewModelList);
+            _projectManagerMoq.SetupGet(m => m.Diagrams).Returns(diagramViewModelList);
             _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
             project.Diagrams.Add(diagram);
             return diagram;

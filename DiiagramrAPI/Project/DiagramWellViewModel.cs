@@ -115,7 +115,7 @@ namespace DiiagramrAPI.Project
                 ActiveItem = Items.First(x => x.Name == diagram.Name);
                 return;
             }
-            var diagramViewModel = _projectManager.DiagramViewModels.First(m => m.Model == diagram);
+            var diagramViewModel = _projectManager.Diagrams.First(m => m.Model == diagram);
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Insert(0, diagramViewModel);
 

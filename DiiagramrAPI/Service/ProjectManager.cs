@@ -21,7 +21,7 @@ namespace DiiagramrAPI.Service
             Func<ILibraryManager> libraryManagerFactory,
             Func<DiagramFactory> diagramViewModelFactoryFactory)
         {
-            DiagramViewModels = new List<Diagram.Diagram>();
+            Diagrams = new List<Diagram.Diagram>();
             _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
@@ -33,7 +33,7 @@ namespace DiiagramrAPI.Service
 
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
         public ProjectModel CurrentProject { get; set; }
-        public IList<Diagram.Diagram> DiagramViewModels { get; }
+        public IList<Diagram.Diagram> Diagrams { get; }
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
         public bool CloseProject()
@@ -103,10 +103,10 @@ namespace DiiagramrAPI.Service
         public void DeleteDiagram(DiagramModel diagram)
         {
             CurrentProject.RemoveDiagram(diagram);
-            var diagramViewModel = DiagramViewModels.FirstOrDefault(m => m.Model == diagram);
+            var diagramViewModel = Diagrams.FirstOrDefault(m => m.Model == diagram);
             if (diagramViewModel != null)
             {
-                DiagramViewModels.Remove(diagramViewModel);
+                Diagrams.Remove(diagramViewModel);
             }
         }
 
@@ -171,7 +171,7 @@ namespace DiiagramrAPI.Service
         private void CreateDiagramViewModel(DiagramModel diagram)
         {
             var diagramViewModel = _diagramViewModelFactory.CreateDiagramViewModel(diagram);
-            DiagramViewModels.Add(diagramViewModel);
+            Diagrams.Add(diagramViewModel);
         }
 
         private async Task DownloadProjectDependencies()
@@ -190,7 +190,7 @@ namespace DiiagramrAPI.Service
 
         private void OnCurrentProjectChanged()
         {
-            DiagramViewModels.Clear();
+            Diagrams.Clear();
             CurrentDiagrams?.ForEach(CreateDiagramViewModel);
         }
     }

@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Service.Interfaces
 
         ObservableCollection<DiagramModel> CurrentDiagrams { get; }
         ProjectModel CurrentProject { get; set; }
-        IList<Diagram.Diagram> DiagramViewModels { get; }
+        IList<Diagram.Diagram> Diagrams { get; }
         bool IsProjectDirty { get; }
 
         bool CloseProject();

@@ -57,6 +57,7 @@ namespace DiiagramrAPI.Diagram
         public Direction BannedDirectionForStart { get; set; }
         public Direction BannedDirectionForEnd { get; set; }
         public bool IsAttachedToModel { get; set; } = false;
+        public bool DoAnimationWhenViewIsLoaded { get; set; } = true;
 
         private void SetWireColor()
         {
@@ -120,7 +121,10 @@ namespace DiiagramrAPI.Diagram
 
         protected override void OnViewLoaded()
         {
-            AnimateAndConfigureWirePoints();
+            if (DoAnimationWhenViewIsLoaded)
+            {
+                AnimateAndConfigureWirePoints();
+            }
         }
 
         private void AnimateAndConfigureWirePoints()
