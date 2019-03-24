@@ -21,9 +21,6 @@ namespace DiiagramrAPI.Diagram
             Terminals = new ObservableCollection<Terminal>();
         }
 
-        public event Action<WireModel> WireConnectedToTerminal;
-        public event Action<WireModel> WireDisconnectedFromTerminal;
-
         public virtual IList<Terminal> Terminals { get; }
         public IEnumerable<InputTerminal> InputTerminalViewModels => Terminals.OfType<InputTerminal>();
         public IEnumerable<OutputTerminal> OutputTerminalViewModels => Terminals.OfType<OutputTerminal>();
@@ -217,8 +214,6 @@ namespace DiiagramrAPI.Diagram
 
         private void AddTerminal(TerminalModel terminal)
         {
-            terminal.WireConnected += TerminalWireConnected;
-            terminal.WireDisconnected += TerminalWireDisconnected;
             Model.AddTerminal(terminal);
         }
 
@@ -326,37 +321,20 @@ namespace DiiagramrAPI.Diagram
 
         private void LoadTerminalViewModels()
         {
-            var nondynamicTerminals = Model.Terminals
-                .Where(t => string.IsNullOrEmpty(t.MethodKey)).ToArray();
-
-            foreach (var terminal in nondynamicTerminals)
+            foreach (var terminal in Model.Terminals)
             {
-                terminal.WireConnected += TerminalWireConnected;
-                terminal.WireDisconnected += TerminalWireDisconnected;
                 Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
             }
         }
 
         private void RemoveTerminal(TerminalModel terminal)
         {
-            terminal.WireConnected += TerminalWireConnected;
-            terminal.WireDisconnected += TerminalWireDisconnected;
             Model.RemoveTerminal(terminal);
         }
 
         private void SetUTurnLimitForTerminals()
         {
             Terminals.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
-        }
-
-        private void TerminalWireConnected(WireModel wireModel)
-        {
-            WireConnectedToTerminal?.Invoke(wireModel);
-        }
-
-        private void TerminalWireDisconnected(WireModel wireModel)
-        {
-            WireDisconnectedFromTerminal?.Invoke(wireModel);
         }
 
         public void MouseEntered()

@@ -12,15 +12,5 @@ namespace DiiagramrAPI.Diagram
                 throw new ArgumentException("Terminal must be output kind for OutputTerminalViewModel");
             }
         }
-
-        public sealed override bool WireToTerminal(TerminalModel terminal)
-        {
-            if (terminal.Kind != TerminalKind.Input)
-            {
-                return false;
-            }
-
-            return base.WireToTerminal(terminal);
-        }
     }
 }

@@ -25,7 +25,7 @@
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (interaction.ViewModelMouseIsOver is IMouseEnterLeaveReaction reaction)
+            if (interaction.ViewModelUnderMouse is IMouseEnterLeaveReaction reaction)
             {
                 if (reaction != ReactionMouseIsCurrentlyIn)
                 {

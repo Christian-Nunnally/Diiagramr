@@ -1,9 +1,6 @@
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Service;
 using System;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram
 {
@@ -67,67 +64,11 @@ namespace DiiagramrAPI.Diagram
         public bool IsIntType => Model.Type == typeof(int);
         public bool IsStringType => Model.Type == typeof(string);
 
-        public void DirectEditTextBoxGotFocus(object sender, RoutedEventArgs e)
-        {
-            TextBox inputTextBox = (TextBox)e.OriginalSource;
-            DirectEditTextBoxText = Data?.ToString();
-            inputTextBox.Dispatcher.BeginInvoke(
-                new Action(delegate
-                {
-                    inputTextBox.SelectAll();
-                }), System.Windows.Threading.DispatcherPriority.ApplicationIdle);
-        }
-
-        public void DirectEditTextBoxKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                IsSelected = false;
-            }
-        }
-
-        public void DirectEditTextBoxVisibiliyChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            TextBox inputTextBox = (TextBox)sender;
-
-            DirectEditTextBoxText = Data?.ToString();
-        }
-
         public void TerminalDoubleClicked()
         {
             if (IsBoolType)
             {
                 Data = !(bool)(Data ?? false);
-            }
-        }
-
-        public sealed override bool WireToTerminal(TerminalModel terminal)
-        {
-            if (terminal.Kind != TerminalKind.Output)
-            {
-                return false;
-            }
-
-            return base.WireToTerminal(terminal);
-        }
-
-        protected override void OnPropertyChanged(string propertyName)
-        {
-            base.OnPropertyChanged(propertyName);
-            if (propertyName == nameof(IsSelected))
-            {
-                OnPropertyChanged(nameof(IsDirectEditTextBoxVisible));
-            }
-            else if (propertyName == nameof(IsDirectEditTextBoxVisible))
-            {
-                if (IsDirectEditTextBoxVisible)
-                {
-                    SetTerminalAdorner(new DirectEditTextBoxAdorner(View, this));
-                }
-                else
-                {
-                    SetTerminalAdorner(null);
-                }
             }
         }
     }

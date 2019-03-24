@@ -16,31 +16,42 @@ namespace DiiagramrAPI.Diagram.Interactors
             var diagram = interaction.Diagram;
             if (interaction.Type == InteractionType.MouseMoved)
             {
-                var deltaX = interaction.MousePosition.X - StartMouseLocation.X;
-                var deltaY = interaction.MousePosition.Y - StartMouseLocation.Y;
-
-                if (!_reachedMinimunMouseDeltaToStartPanning)
-                {
-                    var distance = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-                    _reachedMinimunMouseDeltaToStartPanning = distance > MinimumMouseDeltaToStartPanning;
-                }
-                if (_reachedMinimunMouseDeltaToStartPanning)
-                {
-                    diagram.PanX = StartPanX + deltaX;
-                    diagram.PanY = StartPanY + deltaY;
-                }
+                var mousePosition = interaction.MousePosition;
+                ProcessMouseMoved(diagram, mousePosition);
             }
             else if (interaction.Type == InteractionType.LeftMouseUp && !_reachedMinimunMouseDeltaToStartPanning)
             {
-                diagram.UnselectNodes();
-                diagram.UnselectTerminals();
+                ProcessMouseMouseUpAfterNotPanning(diagram);
+            }
+        }
+
+        private static void ProcessMouseMouseUpAfterNotPanning(Diagram diagram)
+        {
+            diagram.UnselectNodes();
+            diagram.UnselectTerminals();
+        }
+
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
+        {
+            var deltaX = mousePosition.X - StartMouseLocation.X;
+            var deltaY = mousePosition.Y - StartMouseLocation.Y;
+
+            if (!_reachedMinimunMouseDeltaToStartPanning)
+            {
+                var distance = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+                _reachedMinimunMouseDeltaToStartPanning = distance > MinimumMouseDeltaToStartPanning;
+            }
+            if (_reachedMinimunMouseDeltaToStartPanning)
+            {
+                diagram.PanX = StartPanX + deltaX;
+                diagram.PanY = StartPanY + deltaY;
             }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
-                && interaction.ViewModelMouseIsOver is Diagram
+                && interaction.ViewModelUnderMouse is Diagram
                 && !interaction.IsCtrlKeyPressed;
         }
 

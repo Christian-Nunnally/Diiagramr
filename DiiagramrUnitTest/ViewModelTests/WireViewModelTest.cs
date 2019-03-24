@@ -52,16 +52,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestWireMouseDown_WireModelDisconnectTerminalInvoked()
-        {
-            var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);
-            var wireViewModel = new Wire(wireMoq.Object);
-
-            wireViewModel.WireMouseDown(null, null);
-            wireMoq.Verify(m => m.DisconnectWire());
-        }
-
-        [TestMethod]
         public void TestDisconnectWire_WireModelDisconnectTerminalInvoked()
         {
             var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);

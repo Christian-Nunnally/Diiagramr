@@ -140,7 +140,7 @@ namespace DiiagramrUnitTests.ServiceTests
         [ExpectedException(typeof(ProviderException), "No registered view model for given node.")]
         public void TestCreateNodeViewModelFromName_ViewModelNotRegistered_ThrowsException()
         {
-            _nodeProvider.CreateNodeViewModelFromName("");
+            _nodeProvider.CreateNodeFromName("");
         }
 
         [TestMethod]
@@ -148,7 +148,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
+            var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.AreNotEqual(_nodeViewModelMoq.Object, nodeViewModel);
         }
@@ -158,7 +158,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
+            var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.AreEqual(nodeViewModel, nodeViewModel.Model.NodeViewModel);
         }
@@ -168,7 +168,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
+            var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.IsNotNull(nodeViewModel.Model);
         }
@@ -178,7 +178,7 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
 
-            var nodeViewModel = _nodeProvider.CreateNodeViewModelFromName(_nodeViewModelMoq.Object.GetType().FullName);
+            var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
             nodeViewModel.X++;
             nodeViewModel.Y++;
 

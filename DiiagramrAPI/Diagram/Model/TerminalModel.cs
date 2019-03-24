@@ -14,10 +14,6 @@ namespace DiiagramrAPI.Diagram.Model
     [DataContract(IsReference = true)]
     public class TerminalModel : ModelBase
     {
-        public Action<WireModel> WireConnected;
-
-        public Action<WireModel> WireDisconnected;
-
         private string _typeName;
 
         public TerminalModel(string name, Type type, Direction defaultDirection, TerminalKind kind, int index)
@@ -53,9 +49,6 @@ namespace DiiagramrAPI.Diagram.Model
 
         [DataMember]
         public TerminalKind Kind { get; set; }
-
-        [DataMember]
-        public string MethodKey { get; set; }
 
         /// <summary>
         ///     The x position of the node this terminal belongs to.
@@ -136,7 +129,6 @@ namespace DiiagramrAPI.Diagram.Model
             }
 
             ConnectedWires.Add(wire);
-            WireConnected?.Invoke(wire);
             SemanticsChanged?.Invoke();
         }
 
@@ -151,7 +143,6 @@ namespace DiiagramrAPI.Diagram.Model
         public virtual void DisconnectWire(WireModel wire)
         {
             ConnectedWires.Remove(wire);
-            WireDisconnected?.Invoke(wire);
             SemanticsChanged?.Invoke();
         }
 

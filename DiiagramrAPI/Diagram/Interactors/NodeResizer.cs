@@ -28,43 +28,50 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (interaction.Type == InteractionType.MouseMoved)
             {
-                var deltaX = interaction.MousePosition.X - PreviousMouseLocation.X;
-                var deltaY = interaction.MousePosition.Y - PreviousMouseLocation.Y;
-                foreach (var node in interaction.Diagram.Nodes.Where(n => n.IsSelected))
-                {
-                    if (Mode == ResizeMode.Right)
-                    {
-                        var widthChange = deltaX / interaction.Diagram.Zoom;
-                        node.Width += widthChange;
-                    }
-                    else if (Mode == ResizeMode.Top)
-                    {
-                        var heightChange = deltaY / interaction.Diagram.Zoom;
-                        node.Height -= heightChange;
-                        node.Y += heightChange;
-                    }
-                    else if (Mode == ResizeMode.Left)
-                    {
-                        var widthChange = deltaX / interaction.Diagram.Zoom;
-                        node.Width -= widthChange;
-                        node.X += widthChange;
-                    }
-                    else if (Mode == ResizeMode.Bottom)
-                    {
-                        var heightChange = deltaY / interaction.Diagram.Zoom;
-                        node.Height += heightChange;
-                    }
-                }
-                PreviousMouseLocation = interaction.MousePosition;
-                interaction.Diagram.UpdateDiagramBoundingBox();
+                var diagram = interaction.Diagram;
+                var mousePosition = interaction.MousePosition;
+                ProcessMouseMoved(diagram, mousePosition);
             }
+        }
+
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
+        {
+            var deltaX = mousePosition.X - PreviousMouseLocation.X;
+            var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
+            foreach (var node in diagram.Nodes.Where(n => n.IsSelected))
+            {
+                if (Mode == ResizeMode.Right)
+                {
+                    var widthChange = deltaX / diagram.Zoom;
+                    node.Width += widthChange;
+                }
+                else if (Mode == ResizeMode.Top)
+                {
+                    var heightChange = deltaY / diagram.Zoom;
+                    node.Height -= heightChange;
+                    node.Y += heightChange;
+                }
+                else if (Mode == ResizeMode.Left)
+                {
+                    var widthChange = deltaX / diagram.Zoom;
+                    node.Width -= widthChange;
+                    node.X += widthChange;
+                }
+                else if (Mode == ResizeMode.Bottom)
+                {
+                    var heightChange = deltaY / diagram.Zoom;
+                    node.Height += heightChange;
+                }
+            }
+            PreviousMouseLocation = mousePosition;
+            diagram.UpdateDiagramBoundingBox();
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             if ((interaction.Type == InteractionType.LeftMouseDown
               || interaction.Type == InteractionType.MouseMoved)
-              && interaction.ViewModelMouseIsOver is Node node)
+              && interaction.ViewModelUnderMouse is Node node)
             {
                 if (!node.ResizeEnabled)
                 {

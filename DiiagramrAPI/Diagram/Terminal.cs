@@ -157,28 +157,6 @@ namespace DiiagramrAPI.Diagram
             }
         }
 
-        public virtual bool WireToTerminal(TerminalModel terminal)
-        {
-            if (terminal == null)
-            {
-                return false;
-            }
-
-            if (terminal.Kind == Model.Kind)
-            {
-                return false;
-            }
-
-            if (terminal.ConnectedWires != null && terminal.ConnectedWires
-                .Any(connectedWire => Model.ConnectedWires.Contains(connectedWire)))
-            {
-                return false;
-            }
-
-            new WireModel(Model, terminal);
-            return true;
-        }
-
         private void SetTerminalColor()
         {
             var color = TypeColorProvider.Instance.GetColorForType(Model.Type);

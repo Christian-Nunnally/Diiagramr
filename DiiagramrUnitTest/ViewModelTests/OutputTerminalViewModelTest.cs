@@ -27,23 +27,5 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             new OutputTerminal(new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0));
         }
-
-        [TestMethod]
-        public void TestWireToTerminal_WireToOutput_ReturnsFalse()
-        {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
-            var inputTerminalViewModel = new OutputTerminal(terminalModel);
-            var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
-            Assert.IsFalse(inputTerminalViewModel.WireToTerminal(otherTerminal));
-        }
-
-        [TestMethod]
-        public void TestWireToTerminal_WireToInput_ReturnsTrue()
-        {
-            var terminalModel = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Output, 0);
-            var inputTerminalViewModel = new OutputTerminal(terminalModel);
-            var otherTerminal = new TerminalModel("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            Assert.IsTrue(inputTerminalViewModel.WireToTerminal(otherTerminal));
-        }
     }
 }

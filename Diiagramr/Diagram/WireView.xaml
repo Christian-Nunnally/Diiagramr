@@ -9,7 +9,6 @@
     </UserControl.Resources>
     <Path
         Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
-        MouseDown="{s:Action WireMouseDown}"
         Stroke="{Binding LineColorBrush}"
         StrokeLineJoin="Miter"
         StrokeMiterLimit="1"

@@ -11,28 +11,20 @@ namespace DiiagramrAPI.Diagram.Model
     {
         private bool _isActive = true;
 
-        public WireModel(TerminalModel terminal1, TerminalModel terminal2)
+        public WireModel(TerminalModel startTerminal, TerminalModel endTerminal)
         {
-            if (terminal1.Kind == terminal2.Kind)
+            if (startTerminal.Kind == endTerminal.Kind)
             {
                 throw new ArgumentException("Wires require one input terminal and one output terminal");
             }
 
-            SinkTerminal = terminal1.Kind == TerminalKind.Input ? terminal1 : terminal2;
-            SourceTerminal = terminal1.Kind == TerminalKind.Output ? terminal1 : terminal2;
-
-            if (!SourceTerminal.Type.IsSubclassOf(SinkTerminal.Type) && SourceTerminal.Type != SinkTerminal.Type)
-            {
-                if (SourceTerminal.Type != typeof(object))
-                {
-                    return;
-                }
-            }
-
+            SinkTerminal = startTerminal.Kind == TerminalKind.Input ? startTerminal : endTerminal;
+            SourceTerminal = startTerminal.Kind == TerminalKind.Output ? startTerminal : endTerminal;
             SourceTerminal.ConnectWire(this);
             SinkTerminal.ConnectWire(this);
+
             SetupTerminalPropertyChangeNotifications();
-            UserWiredFromInput = terminal1 == SourceTerminal;
+            UserWiredFromInput = startTerminal == SourceTerminal;
             SinkTerminal.Data = SourceTerminal.Data;
         }
 

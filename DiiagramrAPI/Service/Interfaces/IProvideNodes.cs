@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Service.Interfaces
 {
     public interface IProvideNodes : INotifyPropertyChanged, IService
     {
-        Node CreateNodeViewModelFromName(string typeFullName);
+        Node CreateNodeFromName(string typeFullName);
 
         IEnumerable<Node> GetRegisteredNodes();
 

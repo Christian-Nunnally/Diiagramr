@@ -14,25 +14,30 @@ namespace DiiagramrAPI.Diagram.Interactors
             var diagramStartX = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
             var diagramStartY = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
 
-            var zoom = interaction.MouseWheelDelta > 0 ? ZoomAmount : -ZoomAmount;
-            var newZoom = diagram.Zoom + zoom;
-            if (newZoom < MinimumZoom)
-            {
-                diagram.Zoom = MinimumZoom;
-                return;
-            }
-            else if (newZoom > MaximumZoom)
-            {
-                diagram.Zoom = MaximumZoom;
-                return;
-            }
-            interaction.Diagram.Zoom += zoom;
+            var zoom = interaction.MouseWheelDelta > 0 ? 1.0 + ZoomAmount : 1.0 - ZoomAmount;
+            var newZoom = diagram.Zoom * zoom;
+            SetZoom(diagram, newZoom);
 
             var diagramEndX = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
             var diagramEndY = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
 
             diagram.PanX -= diagramStartX - diagramEndX;
             diagram.PanY -= diagramStartY - diagramEndY;
+        }
+
+        private void SetZoom(Diagram diagram, double zoom)
+        {
+            if (zoom < MinimumZoom)
+            {
+                diagram.Zoom = MinimumZoom;
+                return;
+            }
+            else if (zoom > MaximumZoom)
+            {
+                diagram.Zoom = MaximumZoom;
+                return;
+            }
+            diagram.Zoom = zoom;
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)

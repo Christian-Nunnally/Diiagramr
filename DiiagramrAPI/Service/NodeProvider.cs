@@ -25,7 +25,7 @@ namespace DiiagramrAPI.Service
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Node CreateNodeViewModelFromName(string typeFullName)
+        public Node CreateNodeFromName(string typeFullName)
         {
             if (!_dependencyMap.ContainsKey(typeFullName))
             {

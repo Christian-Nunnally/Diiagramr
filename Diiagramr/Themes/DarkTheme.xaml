@@ -6,6 +6,7 @@
         <ResourceDictionary>
             <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="{StaticResource ResourceKey=DarkGray}" />
             <SolidColorBrush x:Key="NodeSelectionStyleBrush" Color="{StaticResource ResourceKey=SelectionBlue}" />
+            <SolidColorBrush x:Key="NodeDragAreaStyleBrush" Color="{StaticResource ResourceKey=NodeDragBorderTransparentBlue}" />
             <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffWhite}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />

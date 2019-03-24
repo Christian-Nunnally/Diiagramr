@@ -32,7 +32,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestConstructor_CollectionsInitialized()
         {
             Assert.IsNotNull(_nodeSelectorViewModel.LibrariesList);
-            Assert.IsNotNull(_nodeSelectorViewModel.AvailableNodeViewModels);
+            Assert.IsNotNull(_nodeSelectorViewModel.AvailableNodes);
             Assert.IsNotNull(_nodeSelectorViewModel.VisibleNodesList);
         }
 

@@ -113,33 +113,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestWireToTerminal_TerminalSameKind_ReturnsFalse()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            var droppingTerminalMoq = new Mock<TerminalModel>(string.Empty, typeof(int), Direction.North, TerminalKind.Input, 0);
-            Assert.IsFalse(terminalViewModel.WireToTerminal(droppingTerminalMoq.Object));
-        }
-
-        [TestMethod]
-        public void TestWireToTerminal_TerminalNull_ReturnsFalse()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            Assert.IsFalse(terminalViewModel.WireToTerminal(null));
-        }
-
-        [TestMethod]
-        public void TestWireToTerminal_TerminalValid_WiresTerminals()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            var droppingTerminalMoq = new Mock<TerminalModel>(string.Empty, typeof(int), Direction.North, TerminalKind.Output, 0);
-
-            terminalViewModel.WireToTerminal(droppingTerminalMoq.Object);
-
-            _terminalModelMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
-            droppingTerminalMoq.Verify(t => t.ConnectWire(It.IsAny<WireModel>()));
-        }
-
-        [TestMethod]
         public void TestSetTerminalDirection_TerminalDirectionSet()
         {
             var terminalViewModel = new Terminal(_terminalModelMoq.Object);

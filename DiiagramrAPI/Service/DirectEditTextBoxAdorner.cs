@@ -53,7 +53,15 @@ namespace DiiagramrAPI.Service
             };
             textBox.SetBinding(TextBox.TextProperty, binding);
             textBox.KeyDown += KeyDownHandler;
+            textBox.LostFocus += LostFocusHandler;
+            textBox.LostKeyboardFocus += LostFocusHandler;
+            textBox.AutoWordSelection = true;
             visualChildren.Add(textBox);
+        }
+
+        private void LostFocusHandler(object sender, RoutedEventArgs e)
+        {
+            AdornedTerminal.SetAdorner(null);
         }
 
         private void KeyDownHandler(object sender, KeyEventArgs e)

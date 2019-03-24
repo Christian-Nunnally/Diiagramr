@@ -8,6 +8,16 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Diagram.Interactors
 {
+    /// <summary>
+    /// A <see cref="DiagramInteractionManager"/> manages a list of <see cref="DiagramInteractor"/> objects and handles 
+    /// user interactions forwarded by a <see cref="Diagram"/>. The manager controls the lifecycle of interactor in the list
+    /// and activates them when the appropriate user interactions are received.
+    /// 
+    /// When input is received through a call to <see cref="HandleDiagramInput"/> the manager gives each interactor a chance
+    /// to start interacting in order of thier weights. If an interactor chooses to begin its interaction, the manager stops 
+    /// progressing through the list of lower weighted interactors. When an interactor has begun interacting, it exclusively
+    /// receives all user input until it has stopped interacting.
+    /// </summary>
     public class DiagramInteractionManager : Screen
     {
         public bool ShowDebugInfo { get; set; } = false;
@@ -23,13 +33,13 @@ namespace DiiagramrAPI.Diagram.Interactors
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
         public BindableCollection<string> ActiveDiagramInteractorNames { get; set; } = new BindableCollection<string>();
 
-        public void DiagramInputHandler(InteractionType type, Diagram diagram)
+        public void HandleDiagramInput(InteractionType type, Diagram diagram)
         {
             var interaction = new DiagramInteractionEventArguments(type);
-            DiagramInputHandler(interaction, diagram);
+            HandleDiagramInput(interaction, diagram);
         }
 
-        public void DiagramInputHandler(DiagramInteractionEventArguments interaction, Diagram diagram)
+        public void HandleDiagramInput(DiagramInteractionEventArguments interaction, Diagram diagram)
         {
             interaction.Diagram = diagram;
             PutViewModelMouseIsOverInInteraction(interaction);
@@ -45,12 +55,12 @@ namespace DiiagramrAPI.Diagram.Interactors
                 var contentPresenter = elementMouseIsOver?.DataContext as ContentPresenter;
                 viewModelMouseIsOver = contentPresenter?.DataContext as Screen;
             }
-            interaction.ViewModelMouseIsOver = viewModelMouseIsOver;
+            interaction.ViewModelUnderMouse = viewModelMouseIsOver;
         }
 
         private static void PutKeyStatesInInteraction(DiagramInteractionEventArguments interaction)
         {
-            interaction.IsShiftKeyPressed = Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift);
+            interaction.IsShiftKeyPressed = Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift);
             interaction.IsCtrlKeyPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
             interaction.IsAltKeyPressed = Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.LeftAlt);
         }

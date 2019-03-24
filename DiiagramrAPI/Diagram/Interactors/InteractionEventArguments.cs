@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         public Diagram Diagram;
         public InteractionType Type;
         public Key Key;
-        public Screen ViewModelMouseIsOver;
+        public Screen ViewModelUnderMouse;
         public Point MousePosition;
 
         public DiagramInteractionEventArguments(InteractionType type)

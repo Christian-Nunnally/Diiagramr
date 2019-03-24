@@ -19,7 +19,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
         private IProvideNodes _nodeProvider;
-        private Diagram _diagramViewModel;
+        private Diagram _diagram;
         private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
@@ -30,7 +30,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         }
 
         public Terminal ContextTerminal { get; set; }
-        public IEnumerable<Node> AvailableNodeViewModels => LibrariesList.SelectMany(l => l.Nodes);
+        public IEnumerable<Node> AvailableNodes => LibrariesList.SelectMany(l => l.Nodes);
         public List<NodePaletteLibrary> LibrariesList { get; set; } = new List<NodePaletteLibrary>();
         public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; set; } = new BindableCollection<NodePaletteLibrary>();
         public Node MousedOverNode { get; set; }
@@ -50,39 +50,51 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 return;
             }
-
             nodesAdded = true;
-            foreach (var nodeViewModel in _nodeProvider.GetRegisteredNodes())
+
+            foreach (var Node in _nodeProvider.GetRegisteredNodes())
             {
-                if (nodeViewModel is DiagramCallNode)
+                if (CanAddNodeToPalette(Node))
                 {
-                    continue;
-                }
-
-                if (IsHiddenFromSelector(nodeViewModel))
-                {
-                    continue;
-                }
-
-                var fullTypeName = nodeViewModel.GetType().FullName;
-                var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
-                var library = GetOrCreateLibrary(libraryName);
-                if (library.Nodes.Any(n => n.Equals(nodeViewModel)))
-                {
-                    continue;
-                }
-
-                var nodeModel = new NodeModel("");
-                try
-                {
-                    nodeViewModel.InitializeWithNode(nodeModel);
-                    library.Nodes.Add(nodeViewModel);
-                }
-                catch (FileNotFoundException e)
-                {
-                    Console.Error.WriteLine($"Error in '{fullTypeName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
+                    TryAddingNode(Node);
                 }
             }
+        }
+
+        private bool CanAddNodeToPalette(Node node)
+        {
+            if (node is DiagramCallNode)
+            {
+                return false;
+            }
+            if (IsHiddenFromSelector(node))
+            {
+                return false;
+            }
+            var library = GetOrCreateLibrary(node);
+            return !library.Nodes.Any(n => n.Equals(node));
+        }
+
+        private void TryAddingNode(Node node)
+        {
+            try
+            {
+                AddNode(node);
+            }
+            // TODO: Catch more specific exception.
+            catch (Exception e)
+            {
+                Console.Error.WriteLine($"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
+            }
+        }
+
+        private void AddNode(Node node)
+        {
+            NodeModel nodeModel = new NodeModel("");
+            // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
+            node.InitializeWithNode(nodeModel);
+            var library = GetOrCreateLibrary(node);
+            library.Nodes.Add(node);
         }
 
         public void BackgroundMouseDown()
@@ -130,22 +142,24 @@ namespace DiiagramrAPI.Diagram.Interactors
         public void BeginInsertingNode(Node node, bool insertCopy = false)
         {
             var nodeTypeName = node.GetType().FullName;
-            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeViewModelFromName(nodeTypeName) : node;
+            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
             AutoWireTerminals(nodeToInsert);
             nodeToInsert.Visible = false;
-            nodeToInsert.Model.X = _diagramViewModel.GetDiagramPointFromViewPointX(X);
-            nodeToInsert.Model.Y = _diagramViewModel.GetDiagramPointFromViewPointX(Y);
-            _diagramViewModel.AddNode(nodeToInsert);
+            nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
+            _diagram.AddNode(nodeToInsert);
             ContextTerminal = null;
         }
 
         private void AutoWireTerminals(Node nodeToInsert)
         {
-            if (ContextTerminal == null) return;
-            var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
-            if (terminalsThatCouldBeWired.Count() == 1)
+            if (ContextTerminal != null)
             {
-                ContextTerminal.WireToTerminal(terminalsThatCouldBeWired.First().Model);
+                var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
+                if (terminalsThatCouldBeWired.Count() == 1)
+                {
+                    TerminalWirer.TryWireTwoTerminalsOnDiagram(_diagram, ContextTerminal, terminalsThatCouldBeWired.First(), false);
+                }
             }
         }
 
@@ -176,6 +190,13 @@ namespace DiiagramrAPI.Diagram.Interactors
             MousedOverNode = null;
         }
 
+        private NodePaletteLibrary GetOrCreateLibrary(Node node)
+        {
+            var fullTypeName = node.GetType().FullName;
+            var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
+            return GetOrCreateLibrary(libraryName);
+        }
+
         private NodePaletteLibrary GetOrCreateLibrary(string libraryName)
         {
             if (LibrariesList.All(l => l.Name != libraryName))
@@ -186,9 +207,9 @@ namespace DiiagramrAPI.Diagram.Interactors
             return LibrariesList.First(l => l.Name == libraryName);
         }
 
-        private bool IsHiddenFromSelector(Node nodeViewModel)
+        private bool IsHiddenFromSelector(Node node)
         {
-            return nodeViewModel.GetType().IsDefined(typeof(HideFromNodeSelector), false);
+            return node.GetType().IsDefined(typeof(HideFromNodeSelector), false);
         }
 
         private void NodesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -275,23 +296,23 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (interaction.Type == InteractionType.RightMouseDown)
             {
-                _diagramViewModel = interaction.Diagram;
+                _diagram = interaction.Diagram;
 
-                var availableWidth = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Width : 0;
-                var availableHeight = _diagramViewModel.View != null ? _diagramViewModel.View.RenderSize.Height : 0;
+                var availableWidth = _diagram.View != null ? _diagram.View.RenderSize.Width : 0;
+                var availableHeight = _diagram.View != null ? _diagram.View.RenderSize.Height : 0;
                 X = Math.Min(interaction.MousePosition.X, availableWidth - NodeSelectorRightMargin);
                 Y = Math.Min(interaction.MousePosition.Y, availableHeight - NodeSelectorBottomMargin);
 
-                var mousedOverViewModel = interaction.ViewModelMouseIsOver;
+                var viewModelUnderMouse = interaction.ViewModelUnderMouse;
 
-                if (mousedOverViewModel is Terminal terminal)
+                if (viewModelUnderMouse is Terminal terminal)
                 {
                     if (terminal.Model.Direction != Direction.West)
                     {
                         X += Terminal.TerminalDiameter;
                     }
                 }
-                ShowWithContextFilter(mousedOverViewModel);
+                ShowWithContextFilter(viewModelUnderMouse);
             }
         }
     }

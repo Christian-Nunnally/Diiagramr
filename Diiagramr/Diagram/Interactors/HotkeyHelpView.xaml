@@ -41,8 +41,9 @@
                 Foreground="{StaticResource GrayedForegroundBrush}"
                 Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="Create Node" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Delete Node" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="Delete Selection" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="Lasso Selection" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="Remove Wire" Style="{StaticResource HelpLabelStyle}" />
             </StackPanel>
             <StackPanel
             Grid.Column="1"
@@ -54,6 +55,7 @@
                 FontSize="16"
                 Foreground="{StaticResource GrayedForegroundBrush}"
                 Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
@@ -72,6 +74,7 @@
                 <Label Content="Right Click" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="'Del'" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="'Ctrl' + Drag" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="'Ctrl' + Click" Style="{StaticResource HelpLabelStyle}" />
             </StackPanel>
         </Grid>
     </Border>

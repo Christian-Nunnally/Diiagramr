@@ -42,7 +42,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 ProcessMouseUpInteraction(interaction);
             }
 
-            if (interaction.ViewModelMouseIsOver is Node pluginNode)
+            if (interaction.ViewModelUnderMouse is Node pluginNode)
             {
                 if (!pluginNode.IsSelected)
                 {
@@ -60,12 +60,12 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (_mouseDownPoint.Equals(interaction.MousePosition))
             {
-                if (interaction.ViewModelMouseIsOver is Diagram)
+                if (interaction.ViewModelUnderMouse is Diagram)
                 {
                     interaction.Diagram.UnselectNodes();
                     interaction.Diagram.UnselectTerminals();
                 }
-                else if (interaction.ViewModelMouseIsOver is Node pluginNode)
+                else if (interaction.ViewModelUnderMouse is Node pluginNode)
                 {
                     if (!pluginNode.IsSelected)
                     {

@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Media;
 
 namespace DiiagramrAPI.Service
@@ -6,14 +7,9 @@ namespace DiiagramrAPI.Service
     {
         public static double RoundToNearest(double value, double multiple)
         {
-            var rem = value % multiple;
-            var result = value - rem;
-            if (rem > multiple / 2.0)
-            {
-                result += multiple;
-            }
-
-            return result;
+            return value > 0 ?
+                Math.Round(value / multiple) * multiple :
+                Math.Round(Math.Abs(value) / multiple) * -multiple;
         }
 
         public static Color ChangeColorBrightness(Color color, float correctionFactor)

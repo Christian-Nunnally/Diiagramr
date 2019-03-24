@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DiiagramrAPI.Diagram
@@ -23,7 +22,6 @@ namespace DiiagramrAPI.Diagram
         {
             Model = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
-            IsAttachedToModel = true;
             SetWireColor();
             X1 = Model.X1 + Diagram.NodeBorderWidth;
             Y1 = Model.Y1 + Diagram.NodeBorderWidth;
@@ -56,8 +54,7 @@ namespace DiiagramrAPI.Diagram
         public double Y2 { get; set; }
         public Direction BannedDirectionForStart { get; set; }
         public Direction BannedDirectionForEnd { get; set; }
-        public bool IsAttachedToModel { get; set; } = false;
-        public bool DoAnimationWhenViewIsLoaded { get; set; } = true;
+        public bool DoAnimationWhenViewIsLoaded { get; set; }
 
         private void SetWireColor()
         {
@@ -114,16 +111,15 @@ namespace DiiagramrAPI.Diagram
             Model?.DisconnectWire();
         }
 
-        public void WireMouseDown(object sender, MouseEventArgs e)
-        {
-            DisconnectWire();
-        }
-
         protected override void OnViewLoaded()
         {
             if (DoAnimationWhenViewIsLoaded)
             {
                 AnimateAndConfigureWirePoints();
+            }
+            else
+            {
+                Points = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2, BannedDirectionForStart, BannedDirectionForEnd);
             }
         }
 

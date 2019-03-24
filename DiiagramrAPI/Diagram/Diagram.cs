@@ -80,7 +80,7 @@ namespace DiiagramrAPI.Diagram
         private void KeyInputHandler(KeyEventArgs e, InteractionType type)
         {
             var interaction = new DiagramInteractionEventArguments(type) { Key = e.Key };
-            DiagramInteractionManager.DiagramInputHandler(interaction, this);
+            DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
         public void PreviewRightMouseButtonDownHandler(object sender, MouseButtonEventArgs e)
@@ -125,7 +125,7 @@ namespace DiiagramrAPI.Diagram
             {
                 interaction.MouseWheelDelta = mouseWheelEventArguments.Delta;
             }
-            DiagramInteractionManager.DiagramInputHandler(interaction, this);
+            DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
         public void AddNode(Node node)
@@ -138,13 +138,11 @@ namespace DiiagramrAPI.Diagram
             AddNodeViewModel(node);
 
             var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
-            DiagramInteractionManager.DiagramInputHandler(interaction, this);
+            DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
         private void AddNodeViewModel(Node viewModel)
         {
-            viewModel.WireConnectedToTerminal += WireAddedToDiagram;
-            viewModel.WireDisconnectedFromTerminal += WireRemovedFromDiagram;
             Nodes.Add(viewModel);
             BoundingBoxVisible = Nodes.Any();
             AddWiresForNode(viewModel);
@@ -181,10 +179,17 @@ namespace DiiagramrAPI.Diagram
 
         private void DiagramOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Diagram.Name)))
+            if (e.PropertyName.Equals(nameof(Name)))
             {
                 NotifyOfPropertyChange(() => Name);
             }
+        }
+
+        public Point GetDiagramPointFromViewPoint(Point viewPoint)
+        {
+            var diagramPointX = GetDiagramPointFromViewPointX(viewPoint.X);
+            var diagramPointY = GetDiagramPointFromViewPointY(viewPoint.Y);
+            return new Point(diagramPointX, diagramPointY);
         }
 
         public double GetDiagramPointFromViewPointX(double x)
@@ -229,6 +234,9 @@ namespace DiiagramrAPI.Diagram
 
         public void RemoveNode(Node viewModel)
         {
+            var wiresConnectedToNode = viewModel.Terminals.SelectMany(t => t.Model.ConnectedWires);
+            var wiresToRemove = Wires.Where(w => wiresConnectedToNode.Contains(w.Model));
+            wiresToRemove.ForEach(RemoveWire);
             Model.RemoveNode(viewModel.Model);
             Nodes.Remove(viewModel);
             viewModel.DisconnectAllTerminals();
@@ -266,22 +274,6 @@ namespace DiiagramrAPI.Diagram
             var maxX = SnapToGrid(Math.Max(rightmostNodeRight + DiagramMargin + NodeBorderThickness.Right + NodeBorderThickness.Left, BoundingBoxDefault.Right));
             var maxY = SnapToGrid(Math.Max(bottommostNodeBottom + DiagramMargin + NodeBorderThickness.Top + NodeBorderThickness.Bottom, BoundingBoxDefault.Bottom));
             BoundingBox = new Rect(minX, minY, maxX - minX, maxY - minY);
-        }
-
-        // TODO: remove.
-        private void WireAddedToDiagram(WireModel model)
-        {
-            AddWire(new Wire(model));
-        }
-
-        // TODO: remove.
-        private void WireRemovedFromDiagram(WireModel wireModel)
-        {
-            var wireToRemove = Wires.FirstOrDefault(wire => wire.Model == wireModel);
-            if (wireToRemove != null)
-            {
-                Wires.Remove(wireToRemove);
-            }
         }
 
         public void ViewSizeChanged(object sender, SizeChangedEventArgs e)
