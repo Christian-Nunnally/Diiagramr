@@ -8,12 +8,25 @@
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="HelpLabelStyle" TargetType="Label">
-                        <Setter Property="FontFamily" Value="Consolas" />
-                        <Setter Property="FontSize" Value="12" />
-                        <Setter Property="Height" Value="30" />
+                        <Setter Property="FontSize" Value="11" />
+                        <Setter Property="Height" Value="26" />
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="HorizontalAlignment" Value="Center" />
                         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                    </Style>
+                    <Style
+                        x:Key="RightHelpLabelStyle"
+                        BasedOn="{StaticResource HelpLabelStyle}"
+                        TargetType="Label">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                        <Setter Property="HorizontalContentAlignment" Value="Right" />
+                    </Style>
+                    <Style
+                        x:Key="LeftHelpLabelStyle"
+                        BasedOn="{StaticResource HelpLabelStyle}"
+                        TargetType="Label">
+                        <Setter Property="HorizontalAlignment" Value="Left" />
+                        <Setter Property="HorizontalContentAlignment" Value="Left" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -24,8 +37,8 @@
         BorderThickness="4"
         SnapsToDevicePixels="True">
         <Grid
-            Width="350"
-            Height="300"
+            Width="500"
+            Height="400"
             Background="{StaticResource WindowBorderBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -42,12 +55,14 @@
                     Content="Action"
                     FontSize="16"
                     Foreground="{StaticResource GrayedForegroundBrush}"
-                    Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Create Node" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Delete Selected" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Lasso Select" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Remove Wire" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Set Terminal" Style="{StaticResource HelpLabelStyle}" />
+                    Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Create new node" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Delete selected nodes" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Group select nodes" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Delete wire" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Set terminal (only some support)" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Wire to terminal" Style="{StaticResource RightHelpLabelStyle}" />
             </StackPanel>
             <StackPanel
                 Grid.Column="1"
@@ -59,6 +74,8 @@
                     FontSize="16"
                     Foreground="{StaticResource GrayedForegroundBrush}"
                     Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
@@ -75,12 +92,14 @@
                     Content="Instructions"
                     FontSize="16"
                     Foreground="{StaticResource GrayedForegroundBrush}"
-                    Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Right Click" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="'Del'" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="'Ctrl' + Drag" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="'Ctrl' + Click" Style="{StaticResource HelpLabelStyle}" />
-                <Label Content="Double Click" Style="{StaticResource HelpLabelStyle}" />
+                    Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Right click diagram" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Del'" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Ctrl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Ctrl' + Click wire" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Double click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Right click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
             </StackPanel>
         </Grid>
     </Border>

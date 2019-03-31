@@ -98,16 +98,6 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestConstructor_TypesIncompatible_DoesNotSetConnectedWire()
-        {
-            var inputTerminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            var outputTerminalMoq = new Mock<TerminalModel>("", typeof(string), Direction.North, TerminalKind.Output, 0);
-            var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
-            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
-        }
-
-        [TestMethod]
         public void TestConstructor_InputCanBeCastToOutput_ConnectsTerminals()
         {
             var inputTerminalMoq = new Mock<TerminalModel>("", typeof(Parent), Direction.North, TerminalKind.Input, 0);
@@ -125,16 +115,6 @@ namespace DiiagramrUnitTests.ModelTests
             var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
             inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
             outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestConstructor_InputCantBeCastToOutput_DoesNotConnectTerminals()
-        {
-            var inputTerminalMoq = new Mock<TerminalModel>("", typeof(Child), Direction.North, TerminalKind.Input, 0);
-            var outputTerminalMoq = new Mock<TerminalModel>("", typeof(Parent), Direction.North, TerminalKind.Output, 0);
-            var wire = new WireModel(outputTerminalMoq.Object, inputTerminalMoq.Object);
-            inputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
-            outputTerminalMoq.Verify(t => t.ConnectWire(wire), Times.Never);
         }
 
         [TestMethod]

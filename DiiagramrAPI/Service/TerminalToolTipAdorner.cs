@@ -9,7 +9,6 @@ namespace DiiagramrAPI.Service
     public class TerminalToolTipAdorner : Adorner
     {
         private readonly double MarginAroundLabel = 4.0;
-        private readonly double MarginFromTerminal = 5.0;
         private Border border;
         private TextBlock label;
         private VisualCollection visualChildren;

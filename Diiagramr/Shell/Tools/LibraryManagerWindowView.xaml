@@ -120,7 +120,7 @@
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-            <Border
+            <!--<Border
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
@@ -133,7 +133,7 @@
                     Content="Manage Library Sources"
                     IsHitTestVisible="False"
                     Style="{StaticResource RegularLabelStyle}" />
-            </Border>
+            </Border>-->
             <Border
                 Grid.Row="2"
                 Grid.Column="0"
