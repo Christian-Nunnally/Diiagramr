@@ -10,8 +10,8 @@
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
-                        <Setter Property="Canvas.Left" Value="{Binding XRelativeToNode}" />
-                        <Setter Property="Canvas.Top" Value="{Binding YRelativeToNode}" />
+                        <Setter Property="Canvas.Left" Value="{Binding ViewXPosition}" />
+                        <Setter Property="Canvas.Top" Value="{Binding ViewYPosition}" />
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate>

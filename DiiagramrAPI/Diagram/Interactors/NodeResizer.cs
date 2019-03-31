@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public class NodeResizer : DiagramInteractor
     {
-        private const double ResizeBorderMargin = 2;
+        private const double ResizeBorderMargin = 4;
         public Point PreviousMouseLocation { get; set; }
         private ResizeMode Mode { get; set; }
 

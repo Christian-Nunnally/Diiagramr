@@ -4,8 +4,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:diagram="clr-namespace:DiiagramrAPI.Diagram;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
-    Width="{x:Static diagram:Terminal.TerminalDiameter}"
-    Height="{x:Static diagram:Terminal.TerminalDiameter}"
+    Width="{x:Static diagram:Terminal.TerminalWidth}"
+    Height="{x:Static diagram:Terminal.TerminalHeight}"
     FocusVisualStyle="{x:Null}"
     LostFocus="{s:Action LostFocus}">
     <UserControl.Resources>

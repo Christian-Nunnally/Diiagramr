@@ -78,8 +78,8 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private void PreviewConnectingWireToTerminal(Terminal terminal)
         {
-            _previewWire.X1 = terminal.Model.X + Terminal.TerminalDiameter / 2;
-            _previewWire.Y1 = terminal.Model.Y + Terminal.TerminalDiameter / 2;
+            _previewWire.X1 = terminal.Model.X + Terminal.TerminalWidth / 2;
+            _previewWire.Y1 = terminal.Model.Y + Terminal.TerminalHeight / 2;
             var terminalColor = terminal.TerminalBackgroundBrush.Color;
             var R = terminalColor.R;
             var G = terminalColor.G;
@@ -152,8 +152,8 @@ namespace DiiagramrAPI.Diagram.Interactors
             diagram.UnselectNodes();
             diagram.HighlightTerminalsOfSameType(terminal.Model);
 
-            var x1 = terminal.Model.X + Terminal.TerminalDiameter / 2;
-            var y1 = terminal.Model.Y + Terminal.TerminalDiameter / 2;
+            var x1 = terminal.Model.X;
+            var y1 = terminal.Model.Y;
             terminal.SetAdorner(null);
             _previewWire = new Wire(terminal, x1, y1)
             {

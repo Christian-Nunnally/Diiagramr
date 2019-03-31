@@ -72,32 +72,14 @@ namespace DiiagramrAPI.Service
 
         private double GetRelativeXBasedOnTerminalDirection(double width)
         {
-            switch (AdornedTerminal.TerminalRotation)
-            {
-                case 90:
-                    return MarginFromTerminal + Terminal.TerminalDiameter;
-
-                case 270:
-                    return -width - MarginFromTerminal;
-
-                default:
-                    return (Terminal.TerminalDiameter / 2) - (width / 2);
-            }
+            var direction = AdornedTerminal.TerminalRotation;
+            return TerminalAdornerHelpers.GetVisualXBasedOnTerminalDirection(width, direction);
         }
 
         private double GetRelativeYBasedOnTerminalDirection(double height)
         {
-            switch (AdornedTerminal.TerminalRotation)
-            {
-                case 0:
-                    return -MarginFromTerminal - height;
-
-                case 180:
-                    return MarginFromTerminal + Terminal.TerminalDiameter;
-
-                default:
-                    return (Terminal.TerminalDiameter / 2) - (height / 2);
-            }
+            var direction = AdornedTerminal.TerminalRotation;
+            return TerminalAdornerHelpers.GetVisualYBasedOnTerminalDirection(height, direction);
         }
     }
 }

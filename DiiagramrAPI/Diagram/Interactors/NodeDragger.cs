@@ -38,7 +38,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 && !interaction.IsCtrlKeyPressed)
             {
                 var mouseX = interaction.MousePosition.X;
-                var mouseY = interaction.MousePosition.X;
+                var mouseY = interaction.MousePosition.Y;
                 var diagram = interaction.Diagram;
                 return IsMouseOverNodeBorder(node, mouseX, mouseY, diagram);
             }
@@ -51,10 +51,10 @@ namespace DiiagramrAPI.Diagram.Interactors
             var nodeTop = diagram.GetViewPointFromDiagramPointY(node.Y + Diagram.NodeBorderWidth);
             var nodeRight = diagram.GetViewPointFromDiagramPointX(node.X + node.Width + Diagram.NodeBorderWidth);
             var nodeBottom = diagram.GetViewPointFromDiagramPointY(node.Y + node.Height + Diagram.NodeBorderWidth);
-            return mouseX > nodeLeft
-                || mouseX < nodeRight
-                || mouseY > nodeTop
-                || mouseY < nodeBottom;
+            return mouseX > nodeRight
+                || mouseX < nodeLeft
+                || mouseY > nodeBottom
+                || mouseY < nodeTop;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)

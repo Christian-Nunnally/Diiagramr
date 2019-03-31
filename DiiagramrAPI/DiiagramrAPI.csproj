@@ -133,6 +133,7 @@
     <Compile Include="Service\DirectEditTextBoxAdorner.cs" />
     <Compile Include="Service\Interfaces\IShownInShellReaction.cs" />
     <Compile Include="Service\NodeNameAdornernment.cs" />
+    <Compile Include="Service\TerminalAdornerHelpers.cs" />
     <Compile Include="Service\TerminalToolTipAdorner.cs" />
     <Compile Include="Service\TypeColorProvider.cs" />
     <Compile Include="Service\DiagramCopier.cs" />

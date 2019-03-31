@@ -261,23 +261,23 @@ namespace DiiagramrAPI.Diagram
             switch (edge)
             {
                 case Direction.North:
-                    terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
-                    terminal.YRelativeToNode = 0;
+                    terminal.XRelativeToNode = (widerWidth * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
+                    terminal.YRelativeToNode = Diagram.NodeBorderWidth;
                     break;
 
                 case Direction.East:
-                    terminal.XRelativeToNode = Width;
-                    terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
+                    terminal.XRelativeToNode = Width + Diagram.NodeBorderWidth;
+                    terminal.YRelativeToNode = (tallerHeight * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
                     break;
 
                 case Direction.South:
-                    terminal.XRelativeToNode = widerWidth * precentAlongEdge - extraSpace;
-                    terminal.YRelativeToNode = Height;
+                    terminal.XRelativeToNode = (widerWidth * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
+                    terminal.YRelativeToNode = Height + Diagram.NodeBorderWidth;
                     break;
 
                 case Direction.West:
-                    terminal.XRelativeToNode = 0;
-                    terminal.YRelativeToNode = tallerHeight * precentAlongEdge - extraSpace;
+                    terminal.XRelativeToNode = Diagram.NodeBorderWidth;
+                    terminal.YRelativeToNode = (tallerHeight * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
                     break;
             }
         }
@@ -340,11 +340,16 @@ namespace DiiagramrAPI.Diagram
         public void MouseEntered()
         {
             SetAdorner(new NodeNameAdornernment(View, this));
+            MouseEnteredNode();
         }
 
         public void MouseLeft()
         {
             SetAdorner(null);
+            MouseLeftNode();
         }
+
+        protected virtual void MouseEnteredNode() { }
+        protected virtual void MouseLeftNode() { }
     }
 }

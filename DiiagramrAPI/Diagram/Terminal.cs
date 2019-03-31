@@ -13,7 +13,8 @@ namespace DiiagramrAPI.Diagram
 {
     public class Terminal : ViewModel, IMouseEnterLeaveReaction
     {
-        public const double TerminalDiameter = 2 * Diagram.NodeBorderWidth;
+        public const double TerminalHeight = 2 * Diagram.NodeBorderWidth;
+        public const double TerminalWidth = TerminalHeight - 10;
         public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
         public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
         public Action<object> DataChanged;
@@ -93,6 +94,10 @@ namespace DiiagramrAPI.Diagram
             get => Model.OffsetY;
             set => Model.OffsetY = value;
         }
+
+        public double ViewXPosition => XRelativeToNode - (Terminal.TerminalWidth / 2);
+
+        public double ViewYPosition => YRelativeToNode - (Terminal.TerminalHeight / 2);
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
         {

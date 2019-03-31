@@ -23,10 +23,10 @@ namespace DiiagramrAPI.Diagram
             Model = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
             SetWireColor();
-            X1 = Model.X1 + Diagram.NodeBorderWidth;
-            Y1 = Model.Y1 + Diagram.NodeBorderWidth;
-            X2 = Model.X2 + Diagram.NodeBorderWidth;
-            Y2 = Model.Y2 + Diagram.NodeBorderWidth;
+            X1 = Model.X1;
+            Y1 = Model.Y1;
+            X2 = Model.X2;
+            Y2 = Model.Y2;
         }
 
         /// <summary>
@@ -34,8 +34,8 @@ namespace DiiagramrAPI.Diagram
         /// </summary>
         public Wire(Terminal startTerminal, double x1, double y1)
         {
-            X2 = startTerminal.Model.X + Terminal.TerminalDiameter / 2;
-            Y2 = startTerminal.Model.Y + Terminal.TerminalDiameter / 2;
+            X2 = startTerminal.Model.X;
+            Y2 = startTerminal.Model.Y;
             BannedDirectionForEnd = DirectionHelpers.OppositeDirection(startTerminal.Model.Direction);
             BannedDirectionForStart = Direction.None;
             X1 = x1;
@@ -86,19 +86,19 @@ namespace DiiagramrAPI.Diagram
         {
             if (e.PropertyName.Equals(nameof(Model.X1)))
             {
-                X1 = Model.X1 + Diagram.NodeBorderWidth;
+                X1 = Model.X1;
             }
             else if (e.PropertyName.Equals(nameof(Model.X2)))
             {
-                X2 = Model.X2 + Diagram.NodeBorderWidth;
+                X2 = Model.X2;
             }
             else if (e.PropertyName.Equals(nameof(Model.Y1)))
             {
-                Y1 = Model.Y1 + Diagram.NodeBorderWidth;
+                Y1 = Model.Y1;
             }
             else if (e.PropertyName.Equals(nameof(Model.Y2)))
             {
-                Y2 = Model.Y2 + Diagram.NodeBorderWidth;
+                Y2 = Model.Y2;
             }
             else if (e.PropertyName.Equals(nameof(Model.SourceTerminal)) || e.PropertyName.Equals(nameof(Model.SinkTerminal)))
             {

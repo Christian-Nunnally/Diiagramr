@@ -6,7 +6,6 @@ using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -309,7 +308,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 {
                     if (terminal.Model.Direction != Direction.West)
                     {
-                        X += Terminal.TerminalDiameter;
+                        X += Terminal.TerminalHeight;
                     }
                 }
                 ShowWithContextFilter(viewModelUnderMouse);

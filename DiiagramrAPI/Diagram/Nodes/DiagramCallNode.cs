@@ -123,7 +123,7 @@ namespace DiiagramrAPI.Diagram.Nodes
             var northTerminalCount = Terminals.Count(m => m.Model.Direction == Direction.North);
             var southTerminalCount = Terminals.Count(m => m.Model.Direction == Direction.South);
             var northSouthMaxTerminals = Math.Max(northTerminalCount, southTerminalCount);
-            var idealWidth = northSouthMaxTerminals * (Terminal.TerminalDiameter + 5) + Diagram.NodeBorderWidth * 2;
+            var idealWidth = northSouthMaxTerminals * (Terminal.TerminalWidth + 5) + Diagram.NodeBorderWidth * 2;
             Width = Math.Max(Width, idealWidth);
         }
 
