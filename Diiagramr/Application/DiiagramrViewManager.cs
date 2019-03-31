@@ -46,7 +46,11 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(DiagramOutputNode), typeof(DiagramOutputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramInputNode), typeof(DiagramInputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramCallNode), typeof(DiagramCallNodeView));
+            _viewModelToViewMapping.Add(typeof(ButtonNode), typeof(ButtonNodeView));
             _viewModelToViewMapping.Add(typeof(AddNode), typeof(AddNodeView));
+            _viewModelToViewMapping.Add(typeof(DivideNode), typeof(DivideNodeView));
+            _viewModelToViewMapping.Add(typeof(SubtractNode), typeof(SubtractNodeView));
+            _viewModelToViewMapping.Add(typeof(MultiplyNode), typeof(MultiplyNodeView));
             _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
             _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoNodeSelectorView));

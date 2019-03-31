@@ -71,6 +71,10 @@
     <Compile Include="Diagram\Interactors\TerminalWirer.cs" />
     <Compile Include="Diagram\Interactors\WireDeleter.cs" />
     <Compile Include="Diagram\IWireableType.cs" />
+    <Compile Include="Diagram\Nodes\ButtonNode.cs" />
+    <Compile Include="Diagram\Nodes\DivideNode.cs" />
+    <Compile Include="Diagram\Nodes\MultiplyNode.cs" />
+    <Compile Include="Diagram\Nodes\SubtractNode.cs" />
     <Compile Include="Diagram\WirePathingAlgorithum.cs" />
     <Compile Include="FileDialog\IFileDialog.cs" />
     <Compile Include="FileDialog\OpenFileDialog.cs" />

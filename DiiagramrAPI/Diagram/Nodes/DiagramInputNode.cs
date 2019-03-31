@@ -1,5 +1,6 @@
 namespace DiiagramrAPI.Diagram.Nodes
 {
+    [HideFromNodeSelector]
     public class DiagramInputNode : IoNode
     {
         public TypedTerminal<object> OutputTerminal;

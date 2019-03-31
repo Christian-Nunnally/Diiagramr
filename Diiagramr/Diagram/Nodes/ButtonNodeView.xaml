@@ -1,0 +1,27 @@
+﻿<UserControl
+    x:Class="Diiagramr.Diagram.Nodes.ButtonNodeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet">
+    <UserControl.Resources>
+        <Style x:Key="ButtonBorderStyle" TargetType="Border">
+            <Setter Property="Background" Value="#aaaaaa" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#008AAA" />
+                </Trigger>
+                <DataTrigger Binding="{Binding IsPressed}" Value="True">
+                    <Setter Property="Background" Value="#007ACC" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Border MouseDown="{s:Action Trigger}" Style="{StaticResource ButtonBorderStyle}" MouseUp="{s:Action Unpress}">
+        <Label
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Padding="0"
+            FontSize="8"
+            Content="Press" />
+    </Border>
+</UserControl>

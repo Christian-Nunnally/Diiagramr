@@ -1,6 +1,6 @@
 namespace DiiagramrAPI.Diagram.Nodes
 {
-    public class AddNode : Node
+    public class DivideNode : Node
     {
         private TypedTerminal<float> _inputTerminal1;
         private TypedTerminal<float> _inputTerminal2;
@@ -12,11 +12,11 @@ namespace DiiagramrAPI.Diagram.Nodes
         protected override void SetupNode(NodeSetup setup)
         {
             setup.NodeSize(30, 30);
-            setup.NodeName("Add");
+            setup.NodeName("Divide");
             setup.EnableResize();
             _inputTerminal1 = setup.InputTerminal<float>("X", Direction.East);
             _inputTerminal2 = setup.InputTerminal<float>("Y", Direction.West);
-            _outputTerminal = setup.OutputTerminal<float>("X + Y", Direction.South);
+            _outputTerminal = setup.OutputTerminal<float>("X / Y", Direction.South);
 
             _inputTerminal1.DataChanged += InputTerminalOnDataChanged;
             _inputTerminal2.DataChanged += InputTerminalOnDataChanged;
@@ -24,9 +24,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
         private void InputTerminalOnDataChanged(float data)
         {
-            var result = _inputTerminal1.Data + _inputTerminal2.Data;
-            Value = $"{_inputTerminal1.Data.ToString("0.0")} + {_inputTerminal2.Data.ToString("0.0")}";
-            Result = $"= {result.ToString("0.0")}";
+            var result = _inputTerminal2.Data == 0 ? 0 : _inputTerminal1.Data / _inputTerminal2.Data;
             _outputTerminal.Data = result;
         }
     }
