@@ -5,10 +5,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
+    Height="20"
     FocusVisualStyle="{x:Null}"
     UseLayoutRounding="True"
-    Height="20"
-    Width="100"
     mc:Ignorable="d">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -21,23 +20,24 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <ItemsControl
-                Height="20"
-                VerticalAlignment="Top"
-                Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
-                DockPanel.Dock="Top"
-                Foreground="White"
-                ItemsSource="{Binding TopLevelMenuItems}">
+        Height="20"
+        HorizontalAlignment="Left"
+        VerticalAlignment="Top"
+        HorizontalContentAlignment="Left"
+        Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
+        DockPanel.Dock="Top"
+        Foreground="White"
+        ItemsSource="{Binding TopLevelMenuItems}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Label
-                            Padding="5,0"
-                            HorizontalContentAlignment="Center"
-                            VerticalContentAlignment="Center"
-                            Content="{Binding Name}"
-                            Foreground="White"
-                            IsHitTestVisible="True"
-                            
-                            MouseDown="{s:Action ExecuteCommandHandler}">
+                    Padding="5,0"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Content="{Binding Name}"
+                    Foreground="White"
+                    IsHitTestVisible="True"
+                    MouseDown="{s:Action ExecuteCommandHandler}">
                     <Label.Style>
                         <Style TargetType="Label">
                             <Style.Triggers>

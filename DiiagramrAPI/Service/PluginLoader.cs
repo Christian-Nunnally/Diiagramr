@@ -3,6 +3,7 @@ using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -58,7 +59,7 @@ namespace DiiagramrAPI.Service
 
         private NodeLibrary CreateLibraryDescriptionFromNuspec(string directory)
         {
-            var nuspec = _directoryService.ReadAllText(_directoryService.GetFiles(directory, "*.nuspec").First());
+            var nuspec = ReadNuspecInDirectory(directory);
             const string nameSearchString = "{http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd}id";
             const string versionSearchString = "{http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd}version";
             var xmlElement = XElement.Parse(nuspec);
@@ -67,15 +68,36 @@ namespace DiiagramrAPI.Service
             return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
         }
 
+        private string ReadNuspecInDirectory(string directory)
+        {
+            var nuspecPath = _directoryService
+                .GetFiles(directory, "*.nuspec")
+                .FirstOrDefault();
+            if (nuspecPath == null)
+            {
+                throw new PluginLoadException($".nuspec file not found in directory {directory}");
+            }
+            return _directoryService.ReadAllText(nuspecPath);
+        }
+
         private void GetInstalledPlugins()
         {
             var directories = _directoryService.GetDirectories(_pluginDirectory);
-            directories.ForEach(d => AddPluginFromDirectory(d, CreateLibraryDescriptionFromNuspec(d)));
+            try
+            {
+                directories.ForEach(d => AddPluginFromDirectory(d, CreateLibraryDescriptionFromNuspec(d)));
+            }
+            catch (PluginLoadException)
+            {
+                Debug.WriteLine("Error loading plugins: a plugin is missing a .nuspec file.");
+            }
         }
 
         private IEnumerable<Assembly> GetPluginAssemblies(string directory)
         {
-            return _directoryService.GetFiles(directory, "*.dll", SearchOption.AllDirectories).Select(Assembly.LoadFile);
+            return _directoryService
+                .GetFiles(directory, "*.dll", SearchOption.AllDirectories)
+                .Select(path => Assembly.Load(File.ReadAllBytes(path)));
         }
 
         private void LoadAssembly(Assembly assembly, NodeLibrary nodeLibrary)
@@ -99,7 +121,9 @@ namespace DiiagramrAPI.Service
 
         private void LoadNonPluginDll()
         {
-            var dlls = _directoryService.GetFiles(_pluginDirectory, "*.dll").Select(Assembly.LoadFile);
+            var dlls = _directoryService
+                .GetFiles(_pluginDirectory, "*.dll")
+                .Select(path => Assembly.Load(File.ReadAllBytes(path)));
             dlls.ForEach(dll => LoadAssembly(dll, new NodeLibrary()));
         }
 
@@ -133,11 +157,23 @@ namespace DiiagramrAPI.Service
             }
             catch (TypeLoadException)
             {
-                Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
+                Console.Error.WriteLine($"Unable to register node with type {exportedType}.");
             }
             catch (MissingMethodException)
             {
-                Console.Error.WriteLine($"Unable to register node with type {exportedType} because it doesn't have a public parameterless constructor.");
+                Console.Error.WriteLine($"Unable to register node with type {exportedType}. This might be because it doesn't have a public parameterless constructor.");
+            }
+        }
+
+        [Serializable]
+        private class PluginLoadException : Exception
+        {
+            public PluginLoadException()
+            {
+            }
+
+            public PluginLoadException(string message) : base(message)
+            {
             }
         }
     }

@@ -12,7 +12,6 @@ namespace DiiagramrAPI.Diagram.Nodes
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Button");
-            setup.EnableResize();
             _outputTerminal = setup.OutputTerminal<bool>("Trigger", Direction.South);
         }
 

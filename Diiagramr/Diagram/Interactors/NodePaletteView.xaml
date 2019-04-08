@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\NodeStyle.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
                         <Setter Property="Canvas.Left" Value="{Binding ViewXPosition}" />
@@ -26,8 +27,8 @@
                     </ItemsPanelTemplate>
 
                     <Style x:Key="NodeBorderStyle" TargetType="Border">
-                        <Setter Property="Background" Value="White" />
-                        <Setter Property="BorderBrush" Value="Gray" />
+                        <Setter Property="Background" Value="{StaticResource NodeBackgroundBrush}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource NodeBorderBrush}" />
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="Width" Value="{Binding MousedOverNode.Width}" />
                         <Setter Property="Height" Value="{Binding MousedOverNode.Height}" />
@@ -161,8 +162,10 @@
                                     HorizontalContentAlignment="Stretch"
                                     VerticalContentAlignment="Stretch"
                                     s:View.Model="{Binding MousedOverNode}"
-                                    IsTabStop="False" />
+                                    Style="{StaticResource NodeContentControlStyle}" />
                             </Border>
+
+                            <Border Style="{StaticResource NodeBorderExtenderStyle}" />
                         </Grid>
                     </ControlTemplate>
                 </ContentControl.Template>

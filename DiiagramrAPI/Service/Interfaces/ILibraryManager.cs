@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Diagram.Model;
+using DiiagramrAPI.Shell.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,17 +10,16 @@ namespace DiiagramrAPI.Service.Interfaces
     public interface ILibraryManager : IService
     {
         ObservableCollection<NodeLibrary> AvailableLibraries { get; }
-        ObservableCollection<string> InstalledLibraryNames { get; }
+        ObservableCollection<LibraryListItem> InstalledLibraryItems { get; }
+        ObservableCollection<LibraryListItem> AvailableLibraryItems { get; }
         ObservableCollection<string> Sources { get; }
-
-        bool AddSource(string sourceUrl);
-
         IEnumerable<Type> GetSerializeableTypes();
 
-        Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription);
+        Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem);
+        void UninstallLibrary(LibraryListItem libraryListItem);
 
         Task LoadSourcesAsync();
-
+        bool AddSource(string sourceUrl);
         bool RemoveSource(string sourceUrl);
     }
 }

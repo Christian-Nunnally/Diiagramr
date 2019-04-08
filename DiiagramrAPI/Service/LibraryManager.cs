@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -32,7 +33,8 @@ namespace DiiagramrAPI.Service
         }
 
         public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
-        public ObservableCollection<string> InstalledLibraryNames { get; } = new ObservableCollection<string>();
+        public ObservableCollection<LibraryListItem> InstalledLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
+        public ObservableCollection<LibraryListItem> AvailableLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
         public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
 
         public bool AddSource(string sourceUrl)
@@ -51,37 +53,51 @@ namespace DiiagramrAPI.Service
             return _pluginLoader.SerializeableTypes;
         }
 
-        public async Task<bool> InstallLatestVersionOfLibraryAsync(NodeLibrary libraryDescription)
+        public async Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem)
         {
-            if (InstalledLibraryNames.Any(s => s == libraryDescription.ToString()))
+            if (IsLibraryInstalled(libraryListItem.Library))
             {
                 return true;
             }
 
+            libraryListItem.ButtonText = "Installing";
             await LoadSourcesAsync();
 
-            if (!TryGetLibraryWithNameAndMajorVersion(libraryDescription, out var library))
+            if (!TryGetLibraryWithNameAndVersion(libraryListItem.Library, out var library))
             {
                 return false;
             }
 
             var absPath = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            CreateTemporaryDirectory(absPath);
+
+            var zipPath = "tmp/" + library + ".zip";
+            var extractPath = "tmp/" + library;
+            var toPath = PluginsDirectory + library;
+
+            await _webResourceFetcher.DownloadFileAsync(library.DownloadPath, zipPath);
+            ExtractDllFromZip(zipPath, extractPath, toPath);
+            library.PathOnDisk = toPath;
+            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
+            UpdateInstalledLibraries();
+            InstalledLibraryItems.Add(new LibraryListItem(library, library.Name) { ButtonText = "Uninstall" });
+            libraryListItem.ButtonText = "Installed";
+            return true;
+        }
+
+        private void CreateTemporaryDirectory(string absPath)
+        {
             var tmpDir = absPath + "\\tmp";
 
             if (!_directoryService.Exists(tmpDir))
             {
                 _directoryService.CreateDirectory(tmpDir);
             }
+        }
 
-            var zipPath = "tmp/" + library + ".zip";
-            var extractPath = "tmp/" + library;
-            var toPath = PluginsDirectory + library;
-
-            Task.Run(() => _webResourceFetcher.DownloadFileAsync(library.DownloadPath, zipPath)).Wait();
-            ExtractDllFromZip(zipPath, extractPath, toPath);
-            _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
-            UpdateInstalledLibraries();
-            return true;
+        private bool IsLibraryInstalled(NodeLibrary libraryDescription)
+        {
+            return InstalledLibraryItems.Any(i => i.LibraryDisplayName == libraryDescription.ToString());
         }
 
         private void ExtractDllFromZip(string zipPath, string extractPath, string toPath)
@@ -118,7 +134,7 @@ namespace DiiagramrAPI.Service
 
             var packagesString = Task.Run(() => _webResourceFetcher.DownloadStringAsync(sourceUrl)).Result;
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
-            RemoveFromAvailableLibrariesFromPaths(libraryPaths);
+            RemoveAvailableLibrariesFromPaths(libraryPaths);
 
             return true;
         }
@@ -144,7 +160,7 @@ namespace DiiagramrAPI.Service
 
         private void AddLibraryToAvailableIfNewest(NodeLibrary library)
         {
-            if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
+            if (TryGetLibraryWithNameAndVersion(library, out var otherLibrary))
             {
                 if (!library.IsNewerVersionThan(otherLibrary))
                 {
@@ -152,11 +168,14 @@ namespace DiiagramrAPI.Service
                 }
 
                 AvailableLibraries.Remove(otherLibrary);
+                AvailableLibraryItems.Remove(AvailableLibraryItems.FirstOrDefault(x => x.Library == otherLibrary));
                 AvailableLibraries.Add(library);
+                AvailableLibraryItems.Add(new LibraryListItem(library, library.Name));
             }
             else
             {
                 AvailableLibraries.Add(library);
+                AvailableLibraryItems.Add(new LibraryListItem(library, library.Name));
             }
         }
 
@@ -185,19 +204,20 @@ namespace DiiagramrAPI.Service
             AddToAvailableLibrariesFromPaths(libraryPaths);
         }
 
-        private void RemoveFromAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
+        private void RemoveAvailableLibrariesFromPaths(IEnumerable<string> libraryPaths)
         {
             foreach (var libraryPath in libraryPaths)
             {
                 var library = CreateLibraryFromPath(libraryPath);
-                if (TryGetLibraryWithNameAndMajorVersion(library, out var otherLibrary))
+                while (TryGetLibraryWithNameAndVersion(library, out var otherLibrary))
                 {
                     AvailableLibraries.Remove(otherLibrary);
+                    AvailableLibraryItems.Remove(AvailableLibraryItems.FirstOrDefault(x => x.Library == otherLibrary));
                 }
             }
         }
 
-        private bool TryGetLibraryWithNameAndMajorVersion(NodeLibrary library, out NodeLibrary otherLibrary)
+        private bool TryGetLibraryWithNameAndVersion(NodeLibrary library, out NodeLibrary otherLibrary)
         {
             otherLibrary = null;
             if (library.Name == null)
@@ -207,19 +227,42 @@ namespace DiiagramrAPI.Service
 
             bool SameName(NodeLibrary l) => l.Name == library.Name.ToLower();
             bool SameMajorVersion(NodeLibrary l) => l.MajorVersion == library.MajorVersion;
-            otherLibrary = AvailableLibraries.FirstOrDefault(l => SameName(l) && SameMajorVersion(l));
+            bool SameMinorVersion(NodeLibrary l) => l.MinorVersion == library.MinorVersion;
+            bool SamePatch(NodeLibrary l) => l.Patch == library.Patch;
+            otherLibrary = AvailableLibraries.FirstOrDefault(l =>
+                   SameName(l)
+                && SameMajorVersion(l)
+                && SameMinorVersion(l)
+                && SamePatch(l));
             return otherLibrary != null;
         }
 
         private void UpdateInstalledLibraries()
         {
-            InstalledLibraryNames.Clear();
+            InstalledLibraryItems.Clear();
 
             var directories = _directoryService.GetDirectories(PluginsDirectory);
             foreach (var directory in directories)
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
-                InstalledLibraryNames.Add(directoryName);
+                // TODO: Do not pass in null here or you wont be able to uninstall the library.
+                var libraryListItem = new LibraryListItem(null, directoryName) { ButtonText = "N/A" };
+                InstalledLibraryItems.Add(libraryListItem);
+            }
+        }
+
+        public void UninstallLibrary(LibraryListItem libraryListItem)
+        {
+            if (libraryListItem.Library != null)
+            {
+                if (TryGetLibraryWithNameAndVersion(libraryListItem.Library, out NodeLibrary library))
+                {
+                    if (!string.IsNullOrEmpty(library.PathOnDisk))
+                    {
+                        _directoryService.Delete(library.PathOnDisk, true);
+                        InstalledLibraryItems.Remove(libraryListItem);
+                    }
+                }
             }
         }
     }

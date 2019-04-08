@@ -11,6 +11,8 @@ namespace DiiagramrAPI.Diagram.Model
     {
         private bool _isActive = true;
 
+        public event Action WireDataChanged;
+
         public WireModel(TerminalModel startTerminal, TerminalModel endTerminal)
         {
             if (startTerminal.Kind == endTerminal.Kind)
@@ -115,6 +117,7 @@ namespace DiiagramrAPI.Diagram.Model
                 if (e.PropertyName.Equals(nameof(TerminalModel.Data)))
                 {
                     SinkTerminal.Data = source.Data;
+                    WireDataChanged();
                     return;
                 }
             }

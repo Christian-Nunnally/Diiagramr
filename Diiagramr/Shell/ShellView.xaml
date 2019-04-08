@@ -9,14 +9,14 @@
     Title="{Binding WindowTitle}"
     Width="{Binding Width}"
     Height="{Binding Height}"
+    MinWidth="400"
+    MinHeight="200"
     d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
     Closing="{s:Action WindowClosing}"
     FocusVisualStyle="{x:Null}"
     SnapsToDevicePixels="True"
     Style="{StaticResource CustomWindowStyle}"
     UseLayoutRounding="True"
-    MinHeight="200"
-    MinWidth="400"
     mc:Ignorable="d">
     <Window.Resources>
         <ResourceDictionary>
@@ -32,39 +32,43 @@
     <Grid>
         <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <ContentControl
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                HorizontalContentAlignment="Left"
                 s:View.Model="{Binding ToolbarViewModel}"
                 Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
-                VerticalAlignment="Top"
-                HorizontalAlignment="Left"
-                DockPanel.Dock="Top"/>
+                DockPanel.Dock="Top" />
             <Grid>
                 <ContentControl s:View.Model="{Binding ActiveItem}" />
-                <Grid MouseDown="{s:Action MouseDownHandler}" MouseUp="{s:Action MouseUpHandler}" Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
+                <Grid
+                    MouseDown="{s:Action MouseDownHandler}"
+                    MouseUp="{s:Action MouseUpHandler}"
+                    Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition Height="48"/>
-                        <RowDefinition Height="{Binding ActiveWindow.MaxHeight}"/>
-                        <RowDefinition Height="48"/>
-                        <RowDefinition/>
+                        <RowDefinition />
+                        <RowDefinition Height="48" />
+                        <RowDefinition Height="{Binding ActiveWindow.MaxHeight}" />
+                        <RowDefinition Height="48" />
+                        <RowDefinition />
                     </Grid.RowDefinitions>
                     <Label
                         Grid.Row="1"
                         Height="48"
+                        Padding="0"
+                        VerticalAlignment="Bottom"
                         HorizontalContentAlignment="Center"
                         VerticalContentAlignment="Top"
                         Content="{Binding ActiveWindow.Title}"
-                        VerticalAlignment="Bottom"
                         FontSize="24"
-                        Padding="0"
                         Foreground="{StaticResource ForegroundBrush}"
                         IsHitTestVisible="False" />
                     <DockPanel
                         Grid.Row="2"
                         MaxWidth="{Binding ActiveWindow.MaxWidth}"
                         MaxHeight="{Binding ActiveWindow.MaxHeight}"
+                        Background="Black"
                         IsHitTestVisible="True"
-                        MouseDown="{s:Action MouseDownHandled}"
-                        Background="Black">
+                        MouseDown="{s:Action MouseDownHandled}">
                         <ContentControl s:View.Model="{Binding ActiveWindow}" />
                     </DockPanel>
                     <Grid.Style>

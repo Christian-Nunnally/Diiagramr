@@ -11,13 +11,17 @@
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffWhite}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />
             <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=DarkHighlightGray}" />
-            <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=White}" />
+            <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=AlmostWhite}" />
             <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource ResourceKey=TransparentBlack}" />
             <SolidColorBrush x:Key="WindowBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />
             <SolidColorBrush x:Key="WindowBorderBackgroundBrush" Color="{StaticResource ResourceKey=ToolWindowBackground}" />
             <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=ButtonHoverBlue}" />
             <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=LightGray}" />
             <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=HighlightedGray}" />
+            <SolidColorBrush x:Key="NodeBackgroundBrush" Color="{StaticResource ResourceKey=LighterGray}" />
+            <SolidColorBrush x:Key="NodeBorderBrush" Color="{StaticResource ResourceKey=NodeBorderGray}" />
+            <SolidColorBrush x:Key="SoftDiagramForeground" Color="{StaticResource ResourceKey=LightSoftDiagramForeground}" />
+            <SolidColorBrush x:Key="DiagramBoundingBoxBorderBrush" Color="{StaticResource ResourceKey=LightDiagramBoundingBoxBorder}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

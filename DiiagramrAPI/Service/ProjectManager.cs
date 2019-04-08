@@ -1,6 +1,7 @@
 ﻿using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Diagram.Nodes;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -182,7 +183,7 @@ namespace DiiagramrAPI.Service
                 {
                     if (node.Dependency != null)
                     {
-                        await _libraryManager.InstallLatestVersionOfLibraryAsync(node.Dependency);
+                        await _libraryManager.InstallLatestVersionOfLibraryAsync(new LibraryListItem(node.Dependency, node.Dependency.Name));
                     }
                 }
             }

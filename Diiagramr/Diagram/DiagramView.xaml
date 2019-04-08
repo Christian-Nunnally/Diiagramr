@@ -6,28 +6,19 @@
     xmlns:s="https://github.com/canton7/Stylet"
     s:View.ActionTarget="{Binding}"
     Focusable="True"
-    SnapsToDevicePixels="True"
     KeyDown="{s:Action KeyDownHandler}"
     KeyUp="{s:Action KeyUpHandler}"
-    SizeChanged="{s:Action ViewSizeChanged}"
     MouseMove="{s:Action PreviewMouseMoveHandler}"
-    PreviewMouseWheel="{s:Action PreviewMouseWheelHandler}">
+    PreviewMouseWheel="{s:Action PreviewMouseWheelHandler}"
+    SizeChanged="{s:Action ViewSizeChanged}"
+    SnapsToDevicePixels="True"
+    UseLayoutRounding="True">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="NodeStyle.xaml" />
                 <ResourceDictionary>
-                    <Style x:Key="NodeBorderRectangleStyle" TargetType="{x:Type Rectangle}">
-                        <Setter Property="Fill" Value="Transparent" />
-                        <Setter Property="RadiusX" Value=".5" />
-                        <Setter Property="RadiusY" Value=".5" />
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Fill" Value="{StaticResource NodeDragAreaStyleBrush}" />
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-
                     <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
                         <Canvas />
                     </ItemsPanelTemplate>
@@ -54,24 +45,6 @@
                         </Setter>
                     </Style>
 
-                    <Style x:Key="SelectionStyle" TargetType="Border">
-                        <Setter Property="BorderBrush" Value="{StaticResource ResourceKey=NodeSelectionStyleBrush}" />
-                        <Setter Property="CornerRadius" Value="1" />
-                        <Setter Property="BorderThickness" Value="1" />
-                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeSelectionBorderThickness}" />
-                        <Setter Property="IsHitTestVisible" Value="False" />
-                    </Style>
-
-                    <Style x:Key="NodeBorderStyle" TargetType="Border">
-                        <Setter Property="Background" Value="#ffffff" />
-                        <Setter Property="CornerRadius" Value="1" />
-                        <Setter Property="BorderBrush" Value="#3E3E42" />
-                        <Setter Property="BorderThickness" Value="0" />
-                        <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
-                        <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
-                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeBorderThickness}" />
-                    </Style>
-
                     <VisualBrush
                         x:Key="DotFillBrush"
                         TileMode="Tile"
@@ -83,18 +56,30 @@
                             <Ellipse
                                 Width="2"
                                 Height="2"
-                                Fill="#404040" />
+                                Fill="{StaticResource DiagramBoundingBoxBorderBrush}" />
                         </VisualBrush.Visual>
                     </VisualBrush>
 
                     <BooleanToVisibilityConverter x:Key="Btv" />
 
-                    <Style x:Key="NodeBorderExtenderStyle" TargetType="Rectangle">
-                        <Setter Property="Fill" Value="#3E3E42" />
-                        <Setter Property="RadiusX" Value="2" />
-                        <Setter Property="RadiusY" Value="2" />
-                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeBorderExtenderThickness}" />
-                        <Setter Property="IsHitTestVisible" Value="False" />
+                    <Style x:Key="HelpLabelStyle" TargetType="Label">
+                        <Setter Property="Padding" Value="0" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Content" Value="Press '/' key for help" />
+                        <Setter Property="FontSize" Value="11" />
+                        <Setter Property="Foreground" Value="{StaticResource SoftDiagramForeground}" />
+                    </Style>
+
+                    <TransformGroup x:Key="DiagramTransformGroup">
+                        <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
+                        <TranslateTransform X="{Binding PanX}" Y="{Binding PanY}" />
+                    </TransformGroup>
+
+                    <Style x:Key="DiagramBoundingBoxStyle" TargetType="Border">
+                        <Setter Property="BorderThickness" Value="2" />
+                        <Setter Property="CornerRadius" Value="5" />
+                        <Setter Property="BorderBrush" Value="{StaticResource DiagramBoundingBoxBorderBrush}" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
@@ -102,20 +87,12 @@
     </UserControl.Resources>
 
     <Grid
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
         Background="{StaticResource ResourceKey=DiagramBackgroundBrush}"
         PreviewMouseLeftButtonDown="{s:Action PreviewLeftMouseButtonDownHandler}"
         PreviewMouseLeftButtonUp="{s:Action PreviewLeftMouseButtonUpHandler}"
         PreviewMouseRightButtonDown="{s:Action PreviewRightMouseButtonDownHandler}"
         PreviewMouseRightButtonUp="{s:Action PreviewRightMouseButtonUpHandler}">
-        <Border>
-            <Border.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleX="{Binding Zoom}" ScaleY="{Binding Zoom}" />
-                    <TranslateTransform X="{Binding PanX}" Y="{Binding PanY}" />
-                </TransformGroup>
-            </Border.RenderTransform>
+        <Border RenderTransform="{StaticResource DiagramTransformGroup}">
             <Grid>
                 <Canvas>
                     <Border
@@ -123,9 +100,7 @@
                         Canvas.Top="{Binding BoundingBox.Top}"
                         Width="{Binding BoundingBox.Width}"
                         Height="{Binding BoundingBox.Height}"
-                        BorderBrush="#404040"
-                        BorderThickness="2"
-                        CornerRadius="5"
+                        Style="{StaticResource DiagramBoundingBoxStyle}"
                         Visibility="{Binding BoundingBoxVisible, Converter={StaticResource Btv}}">
                         <Canvas
                             Margin="12,12,0,0"
@@ -141,7 +116,7 @@
                     ItemsSource="{Binding Wires}" />
 
                 <!--  Node Items Control  -->
-                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding Nodes}" >
+                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding Nodes}">
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
                             <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}" />
@@ -150,57 +125,22 @@
                                 <Setter.Value>
                                     <DataTemplate DataType="{x:Type diagram:Node}">
                                         <Grid Visibility="{Binding Visible, Converter={StaticResource Btv}}">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*" />
-                                                <ColumnDefinition MaxWidth="{x:Static diagram:Diagram.NodeBorderWidth}" />
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition MaxHeight="{x:Static diagram:Diagram.NodeBorderWidth}" />
-                                                <RowDefinition Height="*" />
-                                            </Grid.RowDefinitions>
-                                            <Rectangle
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}"
-                                                Style="{StaticResource NodeBorderRectangleStyle}" />
-                                            <Border
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                Style="{StaticResource SelectionStyle}"
-                                                Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+                                            <Rectangle DataContext="{Binding RelativeSource={RelativeSource TemplatedParent}}" Style="{StaticResource NodeBorderRectangleStyle}" />
+
+                                            <Border Style="{StaticResource SelectionStyle}" Visibility="{Binding IsSelected, Converter={StaticResource Btv}}" />
+
+                                            <!--  Terminal Items Control  -->
                                             <ItemsControl
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
                                                 ItemContainerStyle="{StaticResource TerminalContainerStyle}"
                                                 ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
                                                 ItemsSource="{Binding Terminals}" />
-                                            <Rectangle
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                Style="{StaticResource NodeBorderExtenderStyle}" />
-                                            <Border
-                                                Grid.Row="0"
-                                                Grid.RowSpan="2"
-                                                Grid.Column="0"
-                                                Grid.ColumnSpan="2"
-                                                ForceCursor="False"
-                                                Cursor="SizeAll"
-                                                Style="{StaticResource NodeBorderStyle}">
-                                                <ContentControl
-                                                    Cursor="Arrow"
-                                                    HorizontalContentAlignment="Stretch"
-                                                    VerticalContentAlignment="Stretch"
-                                                    s:View.Model="{Binding}"
-                                                    IsTabStop="False" />
+
+                                            <!--  Node  -->
+                                            <Border Style="{StaticResource NodeBorderStyle}">
+                                                <ContentControl s:View.Model="{Binding}" Style="{StaticResource NodeContentControlStyle}" />
                                             </Border>
+
+                                            <Border Style="{StaticResource NodeBorderExtenderStyle}" />
                                         </Grid>
                                     </DataTemplate>
                                 </Setter.Value>
@@ -210,18 +150,7 @@
                 </ItemsControl>
             </Grid>
         </Border>
-        <Label
-            Padding="0"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Center"
-            Content="Press '/' key for help"
-            FontSize="11"
-            Foreground="#A4A4A4"
-            Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />
-        <ContentControl
-            HorizontalContentAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            s:View.Model="{Binding DiagramInteractionManager}"
-            IsTabStop="False" />
+        <Label Style="{StaticResource HelpLabelStyle}" Visibility="{Binding AreInstructionsVisible, Converter={StaticResource Btv}}" />
+        <ContentControl s:View.Model="{Binding DiagramInteractionManager}" />
     </Grid>
 </UserControl>

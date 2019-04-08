@@ -13,9 +13,8 @@ namespace DiiagramrAPI.Diagram.Nodes
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Subtract");
-            setup.EnableResize();
-            _inputTerminal1 = setup.InputTerminal<float>("X", Direction.East);
-            _inputTerminal2 = setup.InputTerminal<float>("Y", Direction.West);
+            _inputTerminal1 = setup.InputTerminal<float>("X", Direction.North);
+            _inputTerminal2 = setup.InputTerminal<float>("Y", Direction.North);
             _outputTerminal = setup.OutputTerminal<float>("X - Y", Direction.South);
 
             _inputTerminal1.DataChanged += InputTerminalOnDataChanged;

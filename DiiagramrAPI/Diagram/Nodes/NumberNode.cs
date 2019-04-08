@@ -28,6 +28,7 @@ namespace DiiagramrAPI.Diagram.Nodes
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Number");
+            setup.EnableResize();
             _outputTerminal = setup.OutputTerminal<float>("Number", Direction.South);
             _outputTerminal.Data = Value;
         }

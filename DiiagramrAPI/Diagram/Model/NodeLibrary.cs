@@ -31,6 +31,9 @@ namespace DiiagramrAPI.Diagram.Model
         public virtual string Name { get; set; }
 
         [DataMember]
+        public virtual string PathOnDisk { get; set; }
+
+        [DataMember]
         public int Patch { get; set; }
 
         public bool IsNewerVersionThan(NodeLibrary otherLibrary)

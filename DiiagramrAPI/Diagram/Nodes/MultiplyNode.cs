@@ -13,9 +13,8 @@ namespace DiiagramrAPI.Diagram.Nodes
         {
             setup.NodeSize(30, 30);
             setup.NodeName("Multiply");
-            setup.EnableResize();
-            _inputTerminal1 = setup.InputTerminal<float>("X", Direction.East);
-            _inputTerminal2 = setup.InputTerminal<float>("Y", Direction.West);
+            _inputTerminal1 = setup.InputTerminal<float>("X", Direction.North);
+            _inputTerminal2 = setup.InputTerminal<float>("Y", Direction.North);
             _outputTerminal = setup.OutputTerminal<float>("XY", Direction.South);
 
             _inputTerminal1.DataChanged += InputTerminalOnDataChanged;
@@ -24,7 +23,7 @@ namespace DiiagramrAPI.Diagram.Nodes
 
         private void InputTerminalOnDataChanged(float data)
         {
-            var result = _inputTerminal1.Data - _inputTerminal2.Data;
+            var result = _inputTerminal1.Data * _inputTerminal2.Data;
             _outputTerminal.Data = result;
         }
     }

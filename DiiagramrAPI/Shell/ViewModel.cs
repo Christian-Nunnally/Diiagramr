@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Shell
     public abstract class ViewModel : Screen
     {
         public Adorner Adorner { get; private set; }
-        public virtual bool Visible { get; set; }
+        public virtual bool Visible { get; set; } = true;
 
         public void SetAdorner(Adorner adorner)
         {

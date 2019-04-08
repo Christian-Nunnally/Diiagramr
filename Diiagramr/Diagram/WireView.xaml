@@ -2,15 +2,24 @@
     x:Class="Diiagramr.Diagram.WireView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:diagram="clr-namespace:Diiagramr.Diagram"
-    xmlns:s="https://github.com/canton7/Stylet">
+    xmlns:diagram="clr-namespace:Diiagramr.Diagram">
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="Btv" />
         <diagram:PointsToPathConverter x:Key="PointsToPathConverter" />
     </UserControl.Resources>
-    <Path
-        Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
-        Stroke="{Binding LineColorBrush}"
-        StrokeLineJoin="Miter"
-        StrokeMiterLimit="1"
-        StrokeThickness="4" />
+    <Canvas>
+        <Path
+            Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
+            Stroke="{Binding LineColorBrush}"
+            StrokeLineJoin="Miter"
+            StrokeMiterLimit="1"
+            StrokeThickness="4" />
+        <Ellipse
+            Canvas.Left="{Binding DataVisualX}"
+            Canvas.Top="{Binding DataVisualY}"
+            Width="{Binding DataVisualDiameter}"
+            Height="{Binding DataVisualDiameter}"
+            Fill="#bbbbff"
+            Visibility="{Binding IsDataVisualVisible, Converter={StaticResource Btv}}" />
+    </Canvas>
 </UserControl>

@@ -222,16 +222,16 @@ namespace DiiagramrAPI.Diagram.Interactors
             const int workingHeight = 100;
 
             MousedOverNode = VisibleNodesList.First(m => m.Name == node.Name);
-            var totalNodeWidth = MousedOverNode.Width + Diagram.NodeBorderWidth * 2;
-            var totalNodeHeight = MousedOverNode.Height + Diagram.NodeBorderWidth * 2;
+            var totalNodeWidth = MousedOverNode.Width + Diagram.NodeBorderWidth * 2.0;
+            var totalNodeHeight = MousedOverNode.Height + Diagram.NodeBorderWidth * 2.0;
             PreviewNodeScaleX = workingWidth / totalNodeWidth;
             PreviewNodeScaleY = workingHeight / totalNodeHeight;
 
             PreviewNodeScaleX = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
             PreviewNodeScaleY = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
 
-            var newWidth = totalNodeWidth * PreviewNodeScaleX;
-            var newHeight = totalNodeHeight * PreviewNodeScaleY;
+            var newWidth = totalNodeWidth * PreviewNodeScaleX + 1;
+            var newHeight = totalNodeHeight * PreviewNodeScaleY + 1;
 
             PreviewNodePositionX = (workingWidth - newWidth) / 2.0;
             PreviewNodePositionY = (workingHeight - newHeight) / 2.0;

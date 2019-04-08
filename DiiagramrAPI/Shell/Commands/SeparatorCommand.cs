@@ -14,6 +14,12 @@ namespace DiiagramrAPI.Service.Commands
         public override float Weight => 0.3f;
     }
 
+    public class HelpSeparatorCommand1 : SeparatorCommand
+    {
+        public override string Parent => "Help";
+        public override float Weight => 0.5f;
+    }
+
     public abstract class SeparatorCommand : ToolBarCommand
     {
         public override string Name => "";

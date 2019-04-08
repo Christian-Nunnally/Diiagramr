@@ -78,8 +78,8 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private void PreviewConnectingWireToTerminal(Terminal terminal)
         {
-            _previewWire.X1 = terminal.Model.X + Terminal.TerminalWidth / 2;
-            _previewWire.Y1 = terminal.Model.Y + Terminal.TerminalHeight / 2;
+            _previewWire.X1 = terminal.Model.X;
+            _previewWire.Y1 = terminal.Model.Y;
             var terminalColor = terminal.TerminalBackgroundBrush.Color;
             var R = terminalColor.R;
             var G = terminalColor.G;
@@ -182,7 +182,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, bool animateWire)
         {
-            var wireModel = new WireModel(startTerminal.Model, endTerminal.Model);
+            var wireModel = new WireModel(startTerminal.Model, endTerminal.Model) { };
             var wire = new Wire(wireModel)
             {
                 DoAnimationWhenViewIsLoaded = animateWire

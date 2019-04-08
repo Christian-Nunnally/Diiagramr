@@ -8,11 +8,17 @@
     <Color x:Key="LightGray">#C8C8C8</Color>
     <Color x:Key="DarkHighlightGray">#424245</Color>
     <Color x:Key="White">#FFFFFF</Color>
+    <Color x:Key="AlmostWhite">#FBFBFB</Color>
     <Color x:Key="Black">#000000</Color>
+    <Color x:Key="AlmostBlack">#080808</Color>
     <Color x:Key="TransparentBlack">#60202020</Color>
     <Color x:Key="LessTransparentBlack">#10101010</Color>
     <Color x:Key="ToolWindowBackground">#333337</Color>
     <Color x:Key="ButtonHoverBlue">#007ACC</Color>
     <Color x:Key="HighlightedGray">#3F3F46</Color>
     <Color x:Key="Gray">#333337</Color>
+    <Color x:Key="NodeBorderGray">#3E3E42</Color>
+    <Color x:Key="LightSoftDiagramForeground">#A4A4A4</Color>
+    <Color x:Key="LightDiagramBoundingBoxBorder">#404542</Color>
+    <Color x:Key="LighterGray">#aaaaaa</Color>
 </ResourceDictionary>

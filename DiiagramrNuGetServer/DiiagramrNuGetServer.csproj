@@ -115,6 +115,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CommandReference.txt" />
     <Content Include="DataServices\Packages.svc" />
     <Content Include="Default.aspx" />
     <Content Include="favicon.ico" />
