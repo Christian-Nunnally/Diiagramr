@@ -39,7 +39,10 @@ namespace DiiagramrAPI.Service.Commands.FileCommands
             {
                 project = _projectFileService.LoadProject();
             }
-            LoadProject(shell, project);
+            if (project != null)
+            {
+                LoadProject(shell, project);
+            }
         }
 
         private void LoadProject(IShell shell, ProjectModel project)
