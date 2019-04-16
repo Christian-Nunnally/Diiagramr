@@ -19,7 +19,6 @@ namespace DiiagramrAPI.Service.Commands.StartupCommands
         internal override void ExecuteInternal(IShell shell, object parameter)
         {
             shell.ShowScreen(_visualDropStartScreenViewModel);
-            shell.SetWindowTitle("Visual Drop");
         }
     }
 }
