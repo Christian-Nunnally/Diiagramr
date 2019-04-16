@@ -4,17 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27004.2002
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diiagramr", "Diiagramr\Diiagramr.csproj", "{6EFB487A-7176-4F27-92BA-2401FC1B6629}"
-	ProjectSection(ProjectDependencies) = postProject
-		{B781F174-51D7-42C9-8536-579F8159DBE9} = {B781F174-51D7-42C9-8536-579F8159DBE9}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrUnitTest", "DiiagramrUnitTest\DiiagramrUnitTest.csproj", "{4684600E-834A-43C6-A421-22F0EF0DBB09}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrAPI", "DiiagramrAPI\DiiagramrAPI.csproj", "{27B53540-1FFB-490C-9DB1-D829179869EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrNuGetServer", "DiiagramrNuGetServer\DiiagramrNuGetServer.csproj", "{A308A0AB-4CDB-4D99-B6CD-E434F7559115}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualDrop", "..\VisualDrop\VisualDrop\VisualDrop.csproj", "{B781F174-51D7-42C9-8536-579F8159DBE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -56,14 +51,6 @@ Global
 		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|x86.ActiveCfg = Release|Any CPU
 		{A308A0AB-4CDB-4D99-B6CD-E434F7559115}.Release|x86.Build.0 = Release|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|x86.Build.0 = Debug|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|x86.ActiveCfg = Release|Any CPU
-		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
