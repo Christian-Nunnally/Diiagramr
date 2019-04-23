@@ -5,6 +5,7 @@ using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 
@@ -39,7 +40,7 @@ namespace DiiagramrAPI.Shell
         public ToolbarViewModel ToolbarViewModel { get; set; }
         public ContextMenuViewModel ContextMenuViewModel { get; set; }
         public AbstractShellWindow ActiveWindow { get; set; }
-        public string WindowTitle { get; set; } = "Visual Drop";
+        public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
         public double Width { get; set; } = 1010;
         public double Height { get; set; } = 830;
         public IShell Shell { get; }

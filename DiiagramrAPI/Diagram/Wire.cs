@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Diagram
         private WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
         private List<Point> _dataVisualAnimationFrames = new List<Point>();
         private List<Point[]> _wireDrawAnimationFrames = new List<Point[]>();
-        private readonly bool _showDataPropagation = true;
+        private readonly bool _showDataPropagation = false;
         private bool _showingDataPropagation;
         private bool _isDataVisualAnimationFramesValid;
 
