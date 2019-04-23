@@ -246,7 +246,8 @@ namespace DiiagramrAPI.Service
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
                 // TODO: Do not pass in null here or you wont be able to uninstall the library.
-                var libraryListItem = new LibraryListItem(null, directoryName) { ButtonText = "N/A" };
+                var matchingLibrary = AvailableLibraries.FirstOrDefault(x => x.PathOnDisk == directoryName);
+                var libraryListItem = new LibraryListItem(new NodeLibrary() { PathOnDisk = directory }, directoryName) { ButtonText = "Uninstall" };
                 InstalledLibraryItems.Add(libraryListItem);
             }
         }
@@ -260,6 +261,14 @@ namespace DiiagramrAPI.Service
                     if (!string.IsNullOrEmpty(library.PathOnDisk))
                     {
                         _directoryService.Delete(library.PathOnDisk, true);
+                        InstalledLibraryItems.Remove(libraryListItem);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(libraryListItem?.Library?.PathOnDisk))
+                    {
+                        _directoryService.Delete(libraryListItem.Library.PathOnDisk, true);
                         InstalledLibraryItems.Remove(libraryListItem);
                     }
                 }
