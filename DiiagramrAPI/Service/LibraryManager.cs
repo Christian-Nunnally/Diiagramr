@@ -245,7 +245,6 @@ namespace DiiagramrAPI.Service
             foreach (var directory in directories)
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
-                // TODO: Do not pass in null here or you wont be able to uninstall the library.
                 var matchingLibrary = AvailableLibraries.FirstOrDefault(x => x.PathOnDisk == directoryName);
                 var libraryListItem = new LibraryListItem(new NodeLibrary() { PathOnDisk = directory }, directoryName) { ButtonText = "Uninstall" };
                 InstalledLibraryItems.Add(libraryListItem);

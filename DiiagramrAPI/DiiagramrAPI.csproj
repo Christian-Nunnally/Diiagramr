@@ -100,6 +100,7 @@
     <Compile Include="Diagram\Interactors\NodePlacer.cs" />
     <Compile Include="Diagram\Interactors\PointSelector.cs" />
     <Compile Include="Diagram\Interactors\LassoNodeSelector.cs" />
+    <Compile Include="Shell\Commands\DiagnosticsCommands\CrashApplicationCommand.cs" />
     <Compile Include="Shell\Commands\DiagnosticsCommands\DiagnosticsCommandGroup.cs" />
     <Compile Include="Shell\Commands\HelpCommands\SubmitBugCommand.cs" />
     <Compile Include="Shell\Commands\HelpCommands\OpenWikiCommand.cs" />
