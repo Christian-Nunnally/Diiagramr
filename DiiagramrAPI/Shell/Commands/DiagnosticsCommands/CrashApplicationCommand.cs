@@ -5,11 +5,6 @@ namespace DiiagramrAPI.Service.Commands.DiagnosticsCommands
 {
     public class CrashApplicationCommand : DiiagramrCommand
     {
-        public CrashApplicationCommand()
-        {
-            var x = 0;
-        }
-
         public override string Name => "Crash Application";
         public override string Parent => "Diagnostics";
 

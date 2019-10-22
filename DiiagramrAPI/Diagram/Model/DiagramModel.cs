@@ -14,16 +14,6 @@ namespace DiiagramrAPI.Diagram.Model
             Name = "";
         }
 
-        /// <summary>
-        ///     Notifies listeners when the appearance of this diagram have changed.
-        /// </summary>
-        public event Action PresentationChanged;
-
-        /// <summary>
-        ///     Notifies listeners when the sematics of this diagram have changed.
-        /// </summary>
-        public event Action SemanticsChanged;
-
         public virtual bool IsOpen { get; set; }
 
         public bool NameEditMode { get; set; } = false;
@@ -37,19 +27,10 @@ namespace DiiagramrAPI.Diagram.Model
         {
             if (Nodes.Contains(nodeModel))
             {
-                throw new InvalidOperationException("Can not add a nodeModel twice");
+                throw new InvalidOperationException("Can not add a node twice.");
             }
 
-            nodeModel.SemanticsChanged += NodeSematicsChanged;
-            nodeModel.PresentationChanged += NodePresentationChanged;
             Nodes.Add(nodeModel);
-            NodeSematicsChanged();
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            Nodes.ForEach(n => n.SemanticsChanged += NodeSematicsChanged);
         }
 
         public virtual void Pause()
@@ -70,30 +51,15 @@ namespace DiiagramrAPI.Diagram.Model
 
         public virtual void RemoveNode(NodeModel nodeModel)
         {
-            if (!Nodes.Contains(nodeModel))
+            if (Nodes.Contains(nodeModel))
             {
-                return;
+                Nodes.Remove(nodeModel);
             }
-
-            nodeModel.SemanticsChanged -= NodeSematicsChanged;
-            nodeModel.PresentationChanged -= NodePresentationChanged;
-            Nodes.Remove(nodeModel);
-            NodeSematicsChanged();
         }
 
         public virtual void Stop()
         {
             Nodes.ForEach(n => n.ResetTerminals());
-        }
-
-        private void NodePresentationChanged()
-        {
-            PresentationChanged?.Invoke();
-        }
-
-        private void NodeSematicsChanged()
-        {
-            SemanticsChanged?.Invoke();
         }
     }
 }

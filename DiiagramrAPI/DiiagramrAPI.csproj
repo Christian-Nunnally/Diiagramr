@@ -179,7 +179,6 @@
     <Compile Include="Shell\Tools\LibrarySourceManagerWindowViewModel.cs" />
     <Compile Include="Project\DiagramWellViewModel.cs" />
     <Compile Include="Diagram\Nodes\AddNode.cs" />
-    <Compile Include="Diagram\Nodes\DiagramCallNode.cs" />
     <Compile Include="Diagram\Nodes\DiagramInputNode.cs" />
     <Compile Include="Diagram\Nodes\DiagramOutputNode.cs" />
     <Compile Include="Diagram\Nodes\IONode.cs" />

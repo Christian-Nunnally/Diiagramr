@@ -31,11 +31,6 @@ namespace DiiagramrAPI.Diagram.Model
         {
         }
 
-        /// <summary>
-        ///     Notifies listeners when the sematics of this terminal have changed.
-        /// </summary>
-        public virtual event Action SemanticsChanged;
-
         [DataMember]
         public virtual List<WireModel> ConnectedWires { get; set; }
 
@@ -123,13 +118,10 @@ namespace DiiagramrAPI.Diagram.Model
 
         public virtual void ConnectWire(WireModel wire)
         {
-            if (ConnectedWires.Contains(wire))
+            if (!ConnectedWires.Contains(wire))
             {
-                return;
+                ConnectedWires.Add(wire);
             }
-
-            ConnectedWires.Add(wire);
-            SemanticsChanged?.Invoke();
         }
 
         public virtual void DisableWire()
@@ -143,7 +135,6 @@ namespace DiiagramrAPI.Diagram.Model
         public virtual void DisconnectWire(WireModel wire)
         {
             ConnectedWires.Remove(wire);
-            SemanticsChanged?.Invoke();
         }
 
         public virtual void DisconnectWires()

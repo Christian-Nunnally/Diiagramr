@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using PropertyChanged;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
@@ -29,13 +28,6 @@ namespace DiiagramrAPI.Diagram.Model
 
             Diagrams.Add(diagram);
             ProjectChanged();
-            TriggerProjectChangeWhenDiagramChanges(diagram);
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            Diagrams.ForEach(TriggerProjectChangeWhenDiagramChanges);
         }
 
         public void ProjectChanged()
@@ -52,7 +44,6 @@ namespace DiiagramrAPI.Diagram.Model
 
             Diagrams.Remove(diagram);
             ProjectChanged();
-            RemoveTriggerProjectChangeWhenDiagramChanges(diagram);
         }
 
         protected override void OnModelPropertyChanged(string propertyName = null)
@@ -62,18 +53,6 @@ namespace DiiagramrAPI.Diagram.Model
             {
                 ProjectChanged();
             }
-        }
-
-        private void RemoveTriggerProjectChangeWhenDiagramChanges(DiagramModel diagram)
-        {
-            diagram.PresentationChanged -= ProjectChanged;
-            diagram.SemanticsChanged -= ProjectChanged;
-        }
-
-        private void TriggerProjectChangeWhenDiagramChanges(DiagramModel diagram)
-        {
-            diagram.PresentationChanged += ProjectChanged;
-            diagram.SemanticsChanged += ProjectChanged;
         }
     }
 }

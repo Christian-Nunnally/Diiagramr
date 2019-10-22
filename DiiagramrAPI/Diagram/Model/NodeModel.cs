@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -16,30 +15,17 @@ namespace DiiagramrAPI.Diagram.Model
         public NodeModel(string nodeTypeFullName)
         {
             Name = nodeTypeFullName;
-            Terminals = new List<TerminalModel>();
         }
 
         public NodeModel(string nodeTypeFullName, NodeLibrary dependency)
         {
             Name = nodeTypeFullName;
             Dependency = dependency;
-            Terminals = new List<TerminalModel>();
         }
 
         private NodeModel()
         {
-            Terminals = new List<TerminalModel>();
         }
-
-        /// <summary>
-        ///     Notifies listeners when the appearance of this node have changed.
-        /// </summary>
-        public virtual event Action PresentationChanged;
-
-        /// <summary>
-        ///     Notifies listeners when the sematics of this node have changed.
-        /// </summary>
-        public virtual event Action SemanticsChanged;
 
         [DataMember]
         public virtual NodeLibrary Dependency { get; set; }
@@ -60,7 +46,7 @@ namespace DiiagramrAPI.Diagram.Model
         }
 
         [DataMember]
-        public List<TerminalModel> Terminals { get; set; }
+        public List<TerminalModel> Terminals { get; set; } = new List<TerminalModel>();
 
         [DataMember]
         public virtual double Width { get; set; }
@@ -74,8 +60,6 @@ namespace DiiagramrAPI.Diagram.Model
         public virtual void AddTerminal(TerminalModel terminal)
         {
             Terminals.Add(terminal);
-            SemanticsChanged?.Invoke();
-            terminal.SemanticsChanged += TerminalSematicsChanged;
             terminal.AddToNode(this);
         }
 
@@ -91,12 +75,7 @@ namespace DiiagramrAPI.Diagram.Model
 
         public virtual object GetVariable(string name)
         {
-            if (!PersistedVariables.ContainsKey(name))
-            {
-                return null;
-            }
-
-            return PersistedVariables[name];
+            return !PersistedVariables.ContainsKey(name) ? null : PersistedVariables[name];
         }
 
         public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
@@ -107,19 +86,11 @@ namespace DiiagramrAPI.Diagram.Model
             }
         }
 
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            Terminals.ForEach(t => t.SemanticsChanged += TerminalSematicsChanged);
-        }
-
         public virtual void RemoveTerminal(TerminalModel terminal)
         {
             terminal.DisconnectWires();
-            terminal.SemanticsChanged -= TerminalSematicsChanged;
             PropertyChanged -= terminal.NodePropertyChanged;
             Terminals.Remove(terminal);
-            TerminalSematicsChanged();
         }
 
         public virtual void ResetTerminals()
@@ -142,25 +113,6 @@ namespace DiiagramrAPI.Diagram.Model
             {
                 PersistedVariables[name] = value;
             }
-
-            SemanticsChanged?.Invoke();
-        }
-
-        protected override void OnModelPropertyChanged(string propertyName = null)
-        {
-            base.OnModelPropertyChanged(propertyName);
-            if (nameof(Width) == propertyName
-                    || nameof(Height) == propertyName
-                    || nameof(X) == propertyName
-                    || nameof(Y) == propertyName)
-            {
-                PresentationChanged?.Invoke();
-            }
-        }
-
-        private void TerminalSematicsChanged()
-        {
-            SemanticsChanged?.Invoke();
         }
     }
 }
