@@ -1,6 +1,6 @@
 using System.Runtime.Serialization;
 
-namespace DiiagramrAPI.Diagram.Model
+namespace DiiagramrAPI.Diagram.Interoperability
 {
     [DataContract]
     public class NodeLibrary

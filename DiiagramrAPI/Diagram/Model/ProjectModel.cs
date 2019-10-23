@@ -46,9 +46,9 @@ namespace DiiagramrAPI.Diagram.Model
             ProjectChanged();
         }
 
-        protected override void OnModelPropertyChanged(string propertyName = null)
+        protected override void NotifyPropertyChanged(string propertyName = null)
         {
-            base.OnModelPropertyChanged(propertyName);
+            base.NotifyPropertyChanged(propertyName);
             if (propertyName.Equals(nameof(Name)))
             {
                 ProjectChanged();

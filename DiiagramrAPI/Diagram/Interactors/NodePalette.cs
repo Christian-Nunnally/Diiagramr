@@ -1,5 +1,4 @@
 using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Diagram.Nodes;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using Stylet;
@@ -62,10 +61,6 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private bool CanAddNodeToPalette(Node node)
         {
-            if (node is DiagramCallNode)
-            {
-                return false;
-            }
             if (IsHiddenFromSelector(node))
             {
                 return false;
@@ -142,11 +137,11 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
-            AutoWireTerminals(nodeToInsert);
             nodeToInsert.Visible = false;
             nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
             nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
             _diagram.AddNode(nodeToInsert);
+            AutoWireTerminals(nodeToInsert);
             ContextTerminal = null;
         }
 

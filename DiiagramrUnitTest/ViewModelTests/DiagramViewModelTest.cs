@@ -67,13 +67,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestConstructor_NodeAlreadyOnDiagram_SetsUpTerminalPropertyChangedNotificationsOnNode()
-        {
-            ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
-            _nodeMoq.Verify(p => p.SetTerminalsPropertyChanged());
-        }
-
-        [TestMethod]
         public void TestConstructor_NodeAlreadyOnDiagram_AddsNodeViewModelToViewModelList()
         {
             ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();

@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Interoperability;
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

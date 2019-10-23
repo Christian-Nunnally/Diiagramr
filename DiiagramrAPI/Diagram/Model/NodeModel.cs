@@ -1,4 +1,6 @@
+using DiiagramrAPI.Diagram.Interoperability;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
@@ -59,18 +61,32 @@ namespace DiiagramrAPI.Diagram.Model
 
         public virtual void AddTerminal(TerminalModel terminal)
         {
+            if (Terminals.Contains(terminal))
+            {
+                throw new ModelValidationException(this, "This terminal has already been added");
+            }
+            if (terminal.ParentNode is object)
+            {
+                throw new ModelValidationException(this, "Remove terminal from its current node before adding it to this one");
+            }
+
+            terminal.ParentNode = this;
             Terminals.Add(terminal);
-            terminal.AddToNode(this);
         }
 
-        public virtual void DisableTerminals()
+        public virtual void RemoveTerminal(TerminalModel terminal)
         {
-            Terminals.ForEach(t => t.DisableWire());
-        }
+            if (!Terminals.Contains(terminal))
+            {
+                throw new ModelValidationException(this, "Add terminal before removing it");
+            }
+            if (terminal.ConnectedWires.Any())
+            {
+                throw new ModelValidationException(this, "Disconnect terminal before removing it");
+            }
 
-        public virtual void EnableTerminals()
-        {
-            Terminals.ForEach(t => t.EnableWire());
+            terminal.ParentNode = null;
+            Terminals.Remove(terminal);
         }
 
         public virtual object GetVariable(string name)
@@ -86,21 +102,9 @@ namespace DiiagramrAPI.Diagram.Model
             }
         }
 
-        public virtual void RemoveTerminal(TerminalModel terminal)
-        {
-            terminal.DisconnectWires();
-            PropertyChanged -= terminal.NodePropertyChanged;
-            Terminals.Remove(terminal);
-        }
-
         public virtual void ResetTerminals()
         {
             Terminals.ForEach(t => t.ResetWire());
-        }
-
-        public virtual void SetTerminalsPropertyChanged()
-        {
-            Terminals.ForEach(t => PropertyChanged += t.NodePropertyChanged);
         }
 
         public virtual void SetVariable(string name, object value)
@@ -114,5 +118,7 @@ namespace DiiagramrAPI.Diagram.Model
                 PersistedVariables[name] = value;
             }
         }
+
+        public bool IsConnected => Terminals.Any(t => t.ConnectedWires.Any());
     }
 }

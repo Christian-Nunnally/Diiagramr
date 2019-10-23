@@ -88,7 +88,7 @@
     <Compile Include="Diagram\Interactors\NodeResizer.cs" />
     <Compile Include="Diagram\Interactors\NodeDragger.cs" />
     <Compile Include="Diagram\Model\DiagramModel.cs" />
-    <Compile Include="Diagram\Model\NodeLibrary.cs" />
+    <Compile Include="Diagram\Interoperability\NodeLibrary.cs" />
     <Compile Include="Diagram\Model\ModelBase.cs" />
     <Compile Include="Diagram\Model\NodeModel.cs" />
     <Compile Include="Diagram\Model\ProjectModel.cs" />
@@ -168,6 +168,7 @@
     <Compile Include="Service\WebResourceFetcher.cs" />
     <Compile Include="Shell\FeatureToggles.cs" />
     <Compile Include="Shell\IShell.cs" />
+    <Compile Include="Shell\ITransaction.cs" />
     <Compile Include="Shell\Shell.cs" />
     <Compile Include="Shell\ShellCommand.cs" />
     <Compile Include="Shell\Tools\LibraryListItem.cs" />

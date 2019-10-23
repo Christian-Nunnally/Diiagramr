@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using System.Linq;
 using System.Windows.Input;
 
@@ -10,7 +9,16 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             var diagram = interaction.Diagram;
             var selectedNodes = diagram.Nodes.Where(n => n.IsSelected);
-            selectedNodes.ForEach(diagram.RemoveNode);
+            foreach (var node in selectedNodes)
+            {
+                var connectedWires = node.Terminals.SelectMany(t => t.Model.ConnectedWires);
+                foreach (var wire in connectedWires)
+                {
+                    diagram.RemoveWire(wire);
+                }
+                diagram.RemoveNode(node);
+            }
+
             if (!diagram.Nodes.Any())
             {
                 diagram.ResetPanAndZoom();

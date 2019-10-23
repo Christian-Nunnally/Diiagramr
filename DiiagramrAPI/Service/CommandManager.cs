@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Service
 {
+    // todo: maybe rename to commandfactory?
     public class CommandManager
     {
         private readonly IShell _shell;

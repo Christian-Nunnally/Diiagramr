@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Diagram.Nodes;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Tools;
 using System;
@@ -26,7 +25,6 @@ namespace DiiagramrAPI.Service
             _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
-            DiagramCallNode.ProjectManager = this;
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
@@ -183,7 +181,7 @@ namespace DiiagramrAPI.Service
                 {
                     if (node.Dependency != null)
                     {
-                        await _libraryManager.InstallLatestVersionOfLibraryAsync(new LibraryListItem(node.Dependency, node.Dependency.Name));
+                        await _libraryManager.InstallLatestVersionOfLibraryAsync(new LibraryListItem(node.Dependency));
                     }
                 }
             }

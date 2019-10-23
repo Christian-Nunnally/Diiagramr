@@ -3,7 +3,6 @@ using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using System.ComponentModel;
 
 namespace DiiagramrUnitTests.ModelTests
 {
@@ -43,40 +42,10 @@ namespace DiiagramrUnitTests.ModelTests
         }
 
         [TestMethod]
-        public void TestAddTerminal_TerminalNotfiedOfNodePropertyChanges()
-        {
-            _node.AddTerminal(_termMoq.Object);
-            _node.X++;
-
-            _termMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
-        }
-
-        [TestMethod]
-        public void TestSetTerminalsPropertyChanged_TerminalNotfiedOfNodePropertyChanges()
-        {
-            _node.Terminals.Add(_termMoq.Object);
-            _node.SetTerminalsPropertyChanged();
-            _node.X++;
-
-            _termMoq.Verify(m => m.NodePropertyChanged(It.IsAny<object>(), It.IsAny<PropertyChangedEventArgs>()));
-        }
-
-        [TestMethod]
         public void TestSetVariable_VariableIsPutInPersistedVariables()
         {
             _node.SetVariable("Key", "Value");
             Assert.AreEqual("Value", _node.PersistedVariables["Key"]);
-        }
-
-        [TestMethod]
-        public void TestSetVariable_SemanticsChangedInvoked()
-        {
-            var semanticsChanged = false;
-            _node.SemanticsChanged += () => semanticsChanged = true;
-
-            _node.SetVariable("Key", "Value");
-
-            Assert.IsTrue(semanticsChanged);
         }
 
         [TestMethod]
@@ -90,53 +59,6 @@ namespace DiiagramrUnitTests.ModelTests
         {
             _node.SetVariable("Key", "Value");
             Assert.AreEqual("Value", _node.GetVariable("Key"));
-        }
-
-        [TestMethod]
-        public void TestSemanticsChanged_TerminalAdded_SematicsChangedInvoked()
-        {
-            var semanticsChanged = false;
-            _node.SemanticsChanged += () => semanticsChanged = true;
-            _node.AddTerminal(_termMoq.Object);
-
-            Assert.IsTrue(semanticsChanged);
-        }
-
-        [TestMethod]
-        public void TestSemanticsChanged_TerminalSemanticsChanged_SematicsChangedInvoked()
-        {
-            var terminalMoq = new Mock<TerminalModel>("", typeof(int), Direction.North, TerminalKind.Input, 0);
-            var semanticsChanged = false;
-            _node.SemanticsChanged += () => semanticsChanged = true;
-            _node.AddTerminal(terminalMoq.Object);
-
-            terminalMoq.Raise(n => n.SemanticsChanged += null);
-
-            Assert.IsTrue(semanticsChanged);
-        }
-
-        [TestMethod]
-        public void TestEnableTerminals_CallsEnableWire()
-        {
-            _node.AddTerminal(_termMoq.Object);
-            _node.EnableTerminals();
-            _termMoq.Verify(m => m.EnableWire(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestResetTerminals_CallsResetWire()
-        {
-            _node.AddTerminal(_termMoq.Object);
-            _node.ResetTerminals();
-            _termMoq.Verify(m => m.ResetWire(), Times.Once);
-        }
-
-        [TestMethod]
-        public void TestDisableTerminals_CallsDisableWire()
-        {
-            _node.AddTerminal(_termMoq.Object);
-            _node.DisableTerminals();
-            _termMoq.Verify(m => m.DisableWire(), Times.Once);
         }
 
         [TestMethod]

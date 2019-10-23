@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Model;
+﻿using DiiagramrAPI.Diagram.Interoperability;
 using PropertyChanged;
 
 namespace DiiagramrAPI.Shell.Tools
@@ -10,11 +10,10 @@ namespace DiiagramrAPI.Shell.Tools
         public string LibraryDisplayName { get; }
         public NodeLibrary Library { get; internal set; }
 
-        // TODO: Just pass in the library and get the name from that.
-        public LibraryListItem(NodeLibrary library, string libraryDisplayName)
+        public LibraryListItem(NodeLibrary library)
         {
             Library = library;
-            LibraryDisplayName = libraryDisplayName;
+            LibraryDisplayName = library.Name;
         }
 
         public override string ToString()

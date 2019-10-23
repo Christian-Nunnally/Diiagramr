@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
+using DiiagramrAPI.Diagram.Interoperability;
 using DiiagramrAPI.Diagram.Model;
 using System.Collections.Generic;
 using System.ComponentModel;

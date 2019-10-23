@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
@@ -28,7 +29,7 @@ namespace DiiagramrAPI.Diagram.Model
             {
                 if (_name != value)
                 {
-                    OnModelPropertyChanged(nameof(Name));
+                    NotifyPropertyChanged(nameof(Name));
                 }
 
                 _name = value;
@@ -37,9 +38,15 @@ namespace DiiagramrAPI.Diagram.Model
 
         private static int StaticId { get; set; }
 
-        protected virtual void OnModelPropertyChanged([CallerMemberName] string propertyName = null)
+        protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
+
+    public class ModelValidationException : InvalidOperationException
+    {
+        public ModelValidationException(ModelBase model, string solutionRecomendation)
+            : base($"{model.ToString()} - {solutionRecomendation}") { }
     }
 }

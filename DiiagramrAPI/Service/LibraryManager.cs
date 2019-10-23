@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Model;
+﻿using DiiagramrAPI.Diagram.Interoperability;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Tools;
 using System;
@@ -80,7 +80,7 @@ namespace DiiagramrAPI.Service
             library.PathOnDisk = toPath;
             _pluginLoader.AddPluginFromDirectory(absPath + "/" + toPath, library);
             UpdateInstalledLibraries();
-            InstalledLibraryItems.Add(new LibraryListItem(library, library.Name) { ButtonText = "Uninstall" });
+            InstalledLibraryItems.Add(new LibraryListItem(library) { ButtonText = "Uninstall" });
             libraryListItem.ButtonText = "Installed";
             return true;
         }
@@ -170,12 +170,12 @@ namespace DiiagramrAPI.Service
                 AvailableLibraries.Remove(otherLibrary);
                 AvailableLibraryItems.Remove(AvailableLibraryItems.FirstOrDefault(x => x.Library == otherLibrary));
                 AvailableLibraries.Add(library);
-                AvailableLibraryItems.Add(new LibraryListItem(library, library.Name));
+                AvailableLibraryItems.Add(new LibraryListItem(library));
             }
             else
             {
                 AvailableLibraries.Add(library);
-                AvailableLibraryItems.Add(new LibraryListItem(library, library.Name));
+                AvailableLibraryItems.Add(new LibraryListItem(library));
             }
         }
 
@@ -246,7 +246,7 @@ namespace DiiagramrAPI.Service
             {
                 var directoryName = directory.Remove(0, PluginsDirectory.Length);
                 var matchingLibrary = AvailableLibraries.FirstOrDefault(x => x.PathOnDisk == directoryName);
-                var libraryListItem = new LibraryListItem(new NodeLibrary() { PathOnDisk = directory }, directoryName) { ButtonText = "Uninstall" };
+                var libraryListItem = new LibraryListItem(new NodeLibrary() { PathOnDisk = directory, Name = directoryName }) { ButtonText = "Uninstall" };
                 InstalledLibraryItems.Add(libraryListItem);
             }
         }

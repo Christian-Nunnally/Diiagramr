@@ -1,3 +1,4 @@
+using DiiagramrAPI.Service;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,20 +16,39 @@ namespace DiiagramrAPI.Diagram.Model
     public class TerminalModel : ModelBase
     {
         private string _typeName;
+        private NodeModel _parentNode;
 
         public TerminalModel(string name, Type type, Direction defaultDirection, TerminalKind kind, int index)
         {
             ConnectedWires = new List<WireModel>();
-            PropertyChanged += OnTerminalPropertyChanged;
             TerminalIndex = index;
             Direction = defaultDirection;
             Kind = kind;
             Type = type;
             Name = name;
+            PropertyChanged += PropertyChangedHandler;
+        }
+
+        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
+        {
+            if (IsOutput && e.PropertyName == nameof(Data))
+            {
+                foreach (var wire in ConnectedWires)
+                {
+                    wire.SinkTerminal.Data = Data;
+                }
+            }
         }
 
         protected TerminalModel()
         {
+        }
+
+        [DataMember]
+        public NodeModel ParentNode
+        {
+            get => _parentNode;
+            set => ParentNode.UpdateListeningProperty(value, () => _parentNode = value, ParentNodePropertyChanged);
         }
 
         [DataMember]
@@ -45,17 +65,8 @@ namespace DiiagramrAPI.Diagram.Model
         [DataMember]
         public TerminalKind Kind { get; set; }
 
-        /// <summary>
-        ///     The x position of the node this terminal belongs to.
-        /// </summary>
-        [DataMember]
-        public double NodeX { get; set; }
-
-        /// <summary>
-        ///     The y position of the node this terminal belongs to.
-        /// </summary>
-        [DataMember]
-        public double NodeY { get; set; }
+        public bool IsInput => Kind == TerminalKind.Input;
+        public bool IsOutput => Kind == TerminalKind.Output;
 
         /// <summary>
         ///     The x position of the terminal relative to the left of the node.
@@ -101,96 +112,70 @@ namespace DiiagramrAPI.Diagram.Model
         ///     Gets the overall x position of the terminal on the diagram.  NodeX + offsetX.
         /// </summary>
         [DataMember]
-        public virtual double X { get; set; }
+        public virtual double X => (ParentNode?.X ?? 0) + OffsetX;
 
         /// <summary>
         ///     Gets the overall y position of the terminal on the diagram.  NodeY + offsetY.
         /// </summary>
         [DataMember]
-        public virtual double Y { get; set; }
+        public virtual double Y => (ParentNode?.Y ?? 0) + OffsetY;
 
-        public void AddToNode(NodeModel node)
+        public virtual void ConnectWire(WireModel wire, TerminalModel otherTerminal)
         {
-            node.PropertyChanged += NodePropertyChanged;
-            NodeX = node.X;
-            NodeY = node.Y;
-        }
-
-        public virtual void ConnectWire(WireModel wire)
-        {
-            if (!ConnectedWires.Contains(wire))
+            if (ConnectedWires.Contains(wire))
             {
-                ConnectedWires.Add(wire);
+                throw new ModelValidationException(this, "Remove this wire from a terminal before connecting it again");
             }
-        }
-
-        public virtual void DisableWire()
-        {
-            foreach (var connectedWire in ConnectedWires)
+            if (otherTerminal.Kind == Kind)
             {
-                connectedWire.DisableWire();
+                throw new ModelValidationException(this, "Only input terminals to output terminals");
             }
+
+            if (IsInput)
+            {
+                wire.SinkTerminal = this;
+                wire.SourceTerminal = otherTerminal;
+                
+            }
+            else
+            {
+                wire.SinkTerminal = otherTerminal;
+                wire.SourceTerminal = this;
+            }
+            otherTerminal.ConnectedWires.Add(wire);
+            ConnectedWires.Add(wire);
         }
 
-        public virtual void DisconnectWire(WireModel wire)
+        public virtual void DisconnectWire(WireModel wire, TerminalModel otherTerminal)
         {
+            if (!ConnectedWires.Contains(wire) || !otherTerminal.ConnectedWires.Contains(wire))
+            {
+                throw new ModelValidationException(this, "Wire must be connected in order to disconnect it");
+            }
+
+            otherTerminal.ConnectedWires.Remove(wire);
             ConnectedWires.Remove(wire);
+            wire.SinkTerminal = null;
+            wire.SourceTerminal = null;
         }
 
-        public virtual void DisconnectWires()
+        private void ParentNodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            for (var i = ConnectedWires.Count - 1; i >= 0; i--)
+            if (e.PropertyName == nameof(NodeModel.X))
             {
-                ConnectedWires[i].DisconnectWire();
+                NotifyPropertyChanged(nameof(X));
             }
-        }
-
-        public virtual void EnableWire()
-        {
-            foreach (var connectedWire in ConnectedWires)
+            else if (e.PropertyName == nameof(NodeModel.Y))
             {
-                connectedWire.EnableWire();
-            }
-        }
-
-        public virtual void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            var node = (NodeModel)sender;
-            if (e.PropertyName.Equals(nameof(NodeModel.X)))
-            {
-                NodeX = node.X;
-            }
-
-            if (e.PropertyName.Equals(nameof(NodeModel.Y)))
-            {
-                NodeY = node.Y;
-            }
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
-            PropertyChanged += OnTerminalPropertyChanged;
-        }
-
-        public void OnTerminalPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName.Equals(nameof(NodeX)) || e.PropertyName.Equals(nameof(OffsetX)))
-            {
-                X = NodeX + OffsetX;
-            }
-            else if (e.PropertyName.Equals(nameof(NodeY)) || e.PropertyName.Equals(nameof(OffsetY)))
-            {
-                Y = NodeY + OffsetY;
+                NotifyPropertyChanged(nameof(Y));
             }
         }
 
         public virtual void ResetWire()
         {
-            foreach (var connectedWire in ConnectedWires)
+            foreach (var wire in ConnectedWires)
             {
-                connectedWire.DisableWire();
-                connectedWire.ResetWire();
+                wire.ResetWire();
             }
         }
     }

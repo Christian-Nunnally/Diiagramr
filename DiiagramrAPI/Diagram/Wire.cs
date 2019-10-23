@@ -32,23 +32,11 @@ namespace DiiagramrAPI.Diagram
         {
             Model = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
-            wire.WireDataChanged += WireDataChanged;
             SetWireColor();
             X1 = Model.X1;
             Y1 = Model.Y1;
             X2 = Model.X2;
             Y2 = Model.Y2;
-        }
-
-        private void WireDataChanged()
-        {
-            if (FeatureToggles.WirePropagationAnimationFeatureOn)
-            {
-                if (View != null)
-                {
-                    DoWirePropagationAnimation();
-                }
-            }
         }
 
         private void DoWirePropagationAnimation()
@@ -159,7 +147,7 @@ namespace DiiagramrAPI.Diagram
 
         public void DisconnectWire()
         {
-            Model?.DisconnectWire();
+            Model.SinkTerminal.DisconnectWire(Model, Model.SourceTerminal);
         }
 
         protected override void OnViewLoaded()

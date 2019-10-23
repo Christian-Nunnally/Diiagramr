@@ -45,7 +45,6 @@ namespace DiiagramrAPI.Diagram
                 foreach (var nodeModel in diagram.Nodes)
                 {
                     var viewModel = nodeProvider.LoadNodeViewModelFromNode(nodeModel);
-                    nodeModel.SetTerminalsPropertyChanged();
                     AddNodeViewModel(viewModel);
                 }
             }
@@ -158,6 +157,15 @@ namespace DiiagramrAPI.Diagram
                 inputTerminal.ConnectedWires
                     .Select(w => new Wire(w))
                     .ForEach(AddWire);
+            }
+        }
+
+        public void RemoveWire(WireModel wireModel)
+        {
+            var wire = Wires.FirstOrDefault(w => w.Model == wireModel);
+            if (wire is object)
+            {
+                Wires.Remove(wire);
             }
         }
 

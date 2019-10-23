@@ -34,15 +34,5 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             Assert.AreEqual(wireMoq.Object, wireViewModel.Model);
         }
-
-        [TestMethod]
-        public void TestDisconnectWire_WireModelDisconnectTerminalInvoked()
-        {
-            var wireMoq = new Mock<WireModel>(_inputTerminalMoq.Object, _outputTerminalMoq.Object);
-            var wireViewModel = new Wire(wireMoq.Object);
-
-            wireViewModel.DisconnectWire();
-            wireMoq.Verify(m => m.DisconnectWire());
-        }
     }
 }

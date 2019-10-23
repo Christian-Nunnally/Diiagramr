@@ -140,13 +140,5 @@ namespace DiiagramrUnitTests.ViewModelTests
             terminalViewModel.ShowHighlightIfCompatibleType(typeof(string));
             Assert.IsFalse(terminalViewModel.HighlightVisible);
         }
-
-        [TestMethod]
-        public void TestDisconnectTerminal_CallsDisconnectWiresOnModel()
-        {
-            var terminalViewModel = new Terminal(_terminalModelMoq.Object);
-            terminalViewModel.DisconnectTerminal();
-            _terminalModelMoq.Verify(t => t.DisconnectWires());
-        }
     }
 }

@@ -145,7 +145,10 @@ namespace DiiagramrAPI.Diagram
 
         public virtual void DisconnectTerminal()
         {
-            Model.DisconnectWires();
+            foreach (var wire in Model.ConnectedWires.ToArray())
+            {
+                Model.DisconnectWire(wire, Model.IsInput ? wire.SourceTerminal : wire.SinkTerminal);
+            }
         }
 
         public virtual void SetTerminalDirection(Direction direction)

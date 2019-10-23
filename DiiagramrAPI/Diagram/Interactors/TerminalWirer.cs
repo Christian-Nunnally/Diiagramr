@@ -182,7 +182,8 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, bool animateWire)
         {
-            var wireModel = new WireModel(startTerminal.Model, endTerminal.Model) { };
+            var wireModel = new WireModel();
+            startTerminal.Model.ConnectWire(wireModel, endTerminal.Model);
             var wire = new Wire(wireModel)
             {
                 DoAnimationWhenViewIsLoaded = animateWire

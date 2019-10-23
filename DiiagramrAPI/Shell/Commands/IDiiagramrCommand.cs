@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands
 {
+    // todo: this is an IDiiagramrShellCommand, there should also be a simpler general purpose command that this wraps
     public interface IDiiagramrCommand : IService
     {
         string Name { get; }
