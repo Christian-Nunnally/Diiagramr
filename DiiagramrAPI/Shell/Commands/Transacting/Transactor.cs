@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
         {
             RedoStack.Clear();
             Action undo = command.Execute(parameter);
-            Action redo = () => command.Execute(parameter);
+            Func<Action> redo = () => command.Execute(parameter);
             UndoStack.Push(new UndoRedo(undo, redo));
         }
 
@@ -21,7 +21,8 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
             if (RedoStack.Count > 0)
             {
                 var undoRedo = RedoStack.Pop();
-                undoRedo.Redo();
+                var newUndo = undoRedo.Redo();
+                undoRedo.Undo = newUndo;
                 UndoStack.Push(undoRedo);
             }
         }
@@ -54,10 +55,10 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
 
         protected struct UndoRedo
         {
-            public readonly Action Undo;
-            public readonly Action Redo;
+            public Action Undo;
+            public readonly Func<Action> Redo;
 
-            public UndoRedo(Action undo, Action redo)
+            public UndoRedo(Action undo, Func<Action> redo)
             {
                 Undo = undo;
                 Redo = redo;

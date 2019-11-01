@@ -1,5 +1,8 @@
-﻿using DiiagramrAPI.Diagram.Model;
+﻿using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
+using DiiagramrAPI.Shell.Commands.Transacting;
+using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -13,9 +16,11 @@ namespace DiiagramrAPI.Diagram.Interactors
         private Wire _previewWire;
         private Terminal _wiringTerminal;
         private int _leftMouseDownCount;
+        private readonly ITransactor _transactor;
 
-        public TerminalWirer()
+        public TerminalWirer(Func<ITransactor> _transactorFactory)
         {
+            _transactor = _transactorFactory.Invoke();
             Weight = 0.75;
         }
 
@@ -164,7 +169,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private void WireTerminalsToWiringTerminal(Diagram diagram, Terminal terminal)
         {
-            TryWireTwoTerminalsOnDiagram(diagram, _wiringTerminal, terminal, true);
+            TryWireTwoTerminalsOnDiagram(diagram, _wiringTerminal, terminal, _transactor, true);
             diagram.RemoveWire(_previewWire);
             diagram.UnhighlightTerminals();
             diagram.UnselectTerminals();
@@ -172,23 +177,19 @@ namespace DiiagramrAPI.Diagram.Interactors
             _wiringTerminal = null;
         }
 
-        public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, bool animateWire)
+        public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
             if (CanWireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal))
             {
-                WireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal, animateWire);
+                WireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal, transactor, animateWire);
             }
         }
 
-        private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, bool animateWire)
+        private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
             var wireModel = new WireModel();
-            startTerminal.Model.ConnectWire(wireModel, endTerminal.Model);
-            var wire = new Wire(wireModel)
-            {
-                DoAnimationWhenViewIsLoaded = animateWire
-            };
-            diagram.AddWire(wire);
+            var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.Model, animateWire);
+            transactor.Transact(wireToTerminalCommand, endTerminal.Model);
         }
 
         public static bool CanWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal)

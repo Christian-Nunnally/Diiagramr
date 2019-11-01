@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Diagram.Commands
 
         public Action Execute(object parameter)
         {
-            if (parameter is WireModel wire)
+            if (parameter is WireModel wire && wire.SourceTerminal != null && wire.SinkTerminal != null)
             {
                 var sourceTerminal = wire.SourceTerminal;
                 var sinkTerminal = wire.SinkTerminal;

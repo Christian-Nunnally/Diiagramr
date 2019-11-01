@@ -1,6 +1,7 @@
 using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Shell.Commands.Transacting;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -152,7 +153,7 @@ namespace DiiagramrAPI.Diagram.Interactors
                 var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
                 if (terminalsThatCouldBeWired.Count() == 1)
                 {
-                    TerminalWirer.TryWireTwoTerminalsOnDiagram(_diagram, ContextTerminal, terminalsThatCouldBeWired.First(), false);
+                    TerminalWirer.TryWireTwoTerminalsOnDiagram(_diagram, ContextTerminal, terminalsThatCouldBeWired.First(), NullTransactor.Instance, false);
                 }
             }
         }

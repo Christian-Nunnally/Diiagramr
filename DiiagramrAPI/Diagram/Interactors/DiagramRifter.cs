@@ -1,4 +1,6 @@
-﻿using DiiagramrAPI.Service;
+﻿using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Service;
+using DiiagramrAPI.Shell.Commands.Transacting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,13 +16,16 @@ namespace DiiagramrAPI.Diagram.Interactors
         private double _lastRiftDeltaY;
         public Point RiftStartDiagramPoint { get; set; }
         private RiftMode Mode { get; set; }
-        private IEnumerable<Node> NodesBeingRifted { get; set; }
+        private IEnumerable<Node> _nodesBeingRifted;
 
         public double RiftWidth { get; set; }
         public double RiftWidthPlus5 => RiftWidth + RiftVisualEndCapSize;
         public double RiftWidthMinus5 => RiftWidth - RiftVisualEndCapSize;
 
         public double RiftHeight { get; set; }
+
+        private MoveNodesToCurrentPositionCommand _undoRiftCommand;
+
         public double RiftHeightPlus5 => RiftHeight + RiftVisualEndCapSize;
         public double RiftHeightMinus5 => RiftHeight - RiftVisualEndCapSize;
 
@@ -34,6 +39,14 @@ namespace DiiagramrAPI.Diagram.Interactors
             Up,
             Down,
             None
+        }
+
+        private readonly ITransactor _transactor;
+
+        public DiagramRifter(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+            Weight = 0.5;
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -77,9 +90,9 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private void Rift(Diagram diagram, double riftDeltaX, double riftDeltaY)
         {
-            if (NodesBeingRifted == null)
+            if (_nodesBeingRifted == null)
             {
-                NodesBeingRifted = GetNodesToRift(diagram).ToList();
+                _nodesBeingRifted = GetNodesToRift(diagram).ToList();
             }
             RiftNodes(riftDeltaX, riftDeltaY);
         }
@@ -91,16 +104,16 @@ namespace DiiagramrAPI.Diagram.Interactors
             switch (Mode)
             {
                 case RiftMode.Left:
-                    NodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
+                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
                     break;
                 case RiftMode.Right:
-                    NodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
+                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
                     break;
                 case RiftMode.Up:
-                    NodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
+                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
                     break;
                 case RiftMode.Down:
-                    NodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
+                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
                     break;
                 case RiftMode.None:
                     break;
@@ -163,6 +176,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             Y = mousePosition.Y;
             RiftWidth = 0;
             RiftHeight = 0;
+            _undoRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
         }
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
@@ -173,14 +187,15 @@ namespace DiiagramrAPI.Diagram.Interactors
 
             if (!interaction.IsCtrlKeyPressed)
             {
-                foreach (var node in NodesBeingRifted)
+                foreach (var node in _nodesBeingRifted)
                 {
                     node.X = interaction.Diagram.SnapToGrid(node.X);
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);
                 }
             }
 
-            NodesBeingRifted = null;
+            var doRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
+            _transactor.Transact(doRiftCommand, _undoRiftCommand, _nodesBeingRifted);
         }
     }
 }
