@@ -55,10 +55,5 @@ namespace DiiagramrAPI.Diagram.Model
             IsOpen = false;
             IsOpen = true;
         }
-
-        public virtual void Stop()
-        {
-            Nodes.ForEach(n => n.ResetTerminals());
-        }
     }
 }

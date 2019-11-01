@@ -1,3 +1,6 @@
+using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Shell.EditorCommands;
+using System;
 using System.Linq;
 using System.Windows.Input;
 
@@ -5,19 +8,19 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public class NodeDeleter : DiagramInteractor
     {
+        private readonly ITransactor _transactor;
+
+        public NodeDeleter(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+        }
+
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
-            var selectedNodes = diagram.Nodes.Where(n => n.IsSelected);
-            foreach (var node in selectedNodes)
-            {
-                var connectedWires = node.Terminals.SelectMany(t => t.Model.ConnectedWires);
-                foreach (var wire in connectedWires)
-                {
-                    diagram.RemoveWire(wire);
-                }
-                diagram.RemoveNode(node);
-            }
+            var selectedNodes = diagram.Nodes.Where(n => n.IsSelected).ToArray();
+            var unwireAndRemoveAllNodesCommand = new MapCommand(new UnwireAndDeleteNodeCommand(diagram));
+            _transactor.Transact(unwireAndRemoveAllNodesCommand, selectedNodes);
 
             if (!diagram.Nodes.Any())
             {

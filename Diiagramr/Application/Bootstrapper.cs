@@ -1,4 +1,5 @@
 using DiiagramrAPI.Shell;
+using DiiagramrAPI.Shell.EditorCommands;
 using DiiagramrAPI.Shell.Tools;
 using Stylet;
 using StyletIoC;
@@ -17,6 +18,7 @@ namespace Diiagramr.Application
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<LibraryManagerWindowViewModel>().To<LibraryManagerWindowViewModel>().InSingletonScope();
             builder.Bind<IShell>().To<DiiagramrAPI.Shell.Shell>().InSingletonScope();
+            builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
         }
     }
 }

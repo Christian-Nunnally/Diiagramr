@@ -60,13 +60,5 @@ namespace DiiagramrUnitTests.ModelTests
             _node.SetVariable("Key", "Value");
             Assert.AreEqual("Value", _node.GetVariable("Key"));
         }
-
-        [TestMethod]
-        public void TestSetNodeViewModel_InitializePluginNodeSettingsInvokedOnViewModel()
-        {
-            var nodeViewModelMoq = new Mock<Node>();
-            _node.NodeViewModel = nodeViewModelMoq.Object;
-            nodeViewModelMoq.Verify(n => n.InitializePluginNodeSettings());
-        }
     }
 }

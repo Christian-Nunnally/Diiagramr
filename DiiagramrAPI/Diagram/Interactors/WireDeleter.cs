@@ -1,13 +1,24 @@
-﻿namespace DiiagramrAPI.Diagram.Interactors
+﻿using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Shell.EditorCommands;
+using System;
+
+namespace DiiagramrAPI.Diagram.Interactors
 {
     public class WireDeleter : DiagramInteractor
     {
+        private readonly ITransactor _transactor;
+
+        public WireDeleter(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+        }
+
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.ViewModelUnderMouse is Wire wire)
             {
-                wire.DisconnectWire();
-                interaction.Diagram.RemoveWire(wire);
+                var deleteWireCommand = new DeleteWireCommand(interaction.Diagram);
+                _transactor.Transact(deleteWireCommand, wire.Model);
             }
         }
 

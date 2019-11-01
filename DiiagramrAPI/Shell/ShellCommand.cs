@@ -4,7 +4,7 @@ namespace DiiagramrAPI.Shell
 {
     public static class ShellCommand
     {
-        internal static CommandManager CommandManager { get; set; }
+        internal static ShellCommandFactory CommandManager { get; set; }
 
         /// <summary>
         /// Attempts to execute a command from a static context.

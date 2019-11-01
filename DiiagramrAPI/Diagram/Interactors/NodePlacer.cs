@@ -1,3 +1,6 @@
+using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Shell.EditorCommands;
+using System;
 using System.Linq;
 using System.Windows;
 
@@ -6,6 +9,13 @@ namespace DiiagramrAPI.Diagram.Interactors
     public class NodePlacer : DiagramInteractor
     {
         public Node InsertingNodeViewModel { get; set; }
+
+        private readonly ITransactor _transactor;
+
+        public NodePlacer(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+        }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -48,13 +58,16 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (interaction.Type == InteractionType.RightMouseDown)
             {
-                interaction.Diagram.RemoveNode(InsertingNodeViewModel);
+                var removeNodeCommand = new UnwireAndDeleteNodeCommand(interaction.Diagram);
+                removeNodeCommand.Execute(InsertingNodeViewModel);
             }
             else
             {
                 InsertingNodeViewModel.X = interaction.Diagram.SnapToGrid(InsertingNodeViewModel.X);
                 InsertingNodeViewModel.Y = interaction.Diagram.SnapToGrid(InsertingNodeViewModel.Y);
             }
+
+            _transactor.Transact(new UndoCommand(new UnwireAndDeleteNodeCommand(interaction.Diagram)), InsertingNodeViewModel);
             InsertingNodeViewModel = null;
             interaction.Diagram.ShowSnapGrid = false;
         }

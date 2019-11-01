@@ -33,7 +33,7 @@ namespace DiiagramrAPI.Shell
             ExecuteWhenAttached(shell => shell.WindowTitle = title);
         }
 
-        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        public void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             ExecuteWhenAttached(shell => shell.ShowContextMenu(commands, position));
         }

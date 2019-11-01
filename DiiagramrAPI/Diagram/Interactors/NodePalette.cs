@@ -86,7 +86,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             NodeModel nodeModel = new NodeModel("");
             // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
-            node.InitializeWithNode(nodeModel);
+            node.AttachToModel(nodeModel);
             var library = GetOrCreateLibrary(node);
             library.Nodes.Add(node);
         }
@@ -140,7 +140,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             nodeToInsert.Visible = false;
             nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
             nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
-            _diagram.AddNode(nodeToInsert);
+            _diagram.AddNodeInteractively(nodeToInsert);
             AutoWireTerminals(nodeToInsert);
             ContextTerminal = null;
         }
@@ -159,18 +159,18 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
         {
-            if (startTerminal.Model.Kind == TerminalKind.Input)
+            if (startTerminal.Model is InputTerminalModel inputTerminal)
             {
                 return node.Terminals
-                    .Where(t => t is OutputTerminal
-                             && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
+                    .OfType<OutputTerminal>()
+                    .Where(t => t.Model.Type.IsAssignableFrom(inputTerminal.Type));
 
             }
-            else if (startTerminal.Model.Kind == TerminalKind.Output)
+            else if (startTerminal.Model is OutputTerminalModel outputTerminal)
             {
                 return node.Terminals
-                    .Where(t => t is InputTerminal
-                        && t.Model.Type.IsAssignableFrom(startTerminal.Model.Type));
+                    .OfType<InputTerminal>()
+                    .Where(t => t.Model.Type.IsAssignableFrom(outputTerminal.Type));
             }
             return Enumerable.Empty<Terminal>();
         }
@@ -301,7 +301,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
                 if (viewModelUnderMouse is Terminal terminal)
                 {
-                    if (terminal.Model.Direction != Direction.West)
+                    if (terminal.Model.DefaultSide != Direction.West)
                     {
                         X += Terminal.TerminalHeight;
                     }

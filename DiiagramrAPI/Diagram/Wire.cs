@@ -33,10 +33,10 @@ namespace DiiagramrAPI.Diagram
             Model = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
             SetWireColor();
-            X1 = Model.X1;
-            Y1 = Model.Y1;
-            X2 = Model.X2;
-            Y2 = Model.Y2;
+            X1 = Model.X2;
+            Y1 = Model.Y2;
+            X2 = Model.X1;
+            Y2 = Model.Y1;
         }
 
         private void DoWirePropagationAnimation()
@@ -70,12 +70,12 @@ namespace DiiagramrAPI.Diagram
         {
             X2 = startTerminal.Model.X;
             Y2 = startTerminal.Model.Y;
-            BannedDirectionForEnd = DirectionHelpers.OppositeDirection(startTerminal.Model.Direction);
+            BannedDirectionForEnd = DirectionHelpers.OppositeDirection(startTerminal.Model.DefaultSide);
             BannedDirectionForStart = Direction.None;
             X1 = x1;
             Y1 = y1;
-            _wirePathingAlgorithum.FallbackSourceTerminal = startTerminal.Model.Kind == TerminalKind.Input ? startTerminal : null;
-            _wirePathingAlgorithum.FallbackSinkTerminal = startTerminal.Model.Kind == TerminalKind.Output ? startTerminal : null;
+            _wirePathingAlgorithum.FallbackSourceTerminal = startTerminal.Model is InputTerminalModel ? startTerminal : null;
+            _wirePathingAlgorithum.FallbackSinkTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal : null;
             LineColorBrush = new SolidColorBrush(Colors.White);
         }
 
@@ -123,21 +123,21 @@ namespace DiiagramrAPI.Diagram
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Model.X1)))
+            if (e.PropertyName.Equals(nameof(Model.X2)))
             {
-                X1 = Model.X1;
+                X1 = Model.X2;
             }
-            else if (e.PropertyName.Equals(nameof(Model.X2)))
+            else if (e.PropertyName.Equals(nameof(Model.X1)))
             {
-                X2 = Model.X2;
-            }
-            else if (e.PropertyName.Equals(nameof(Model.Y1)))
-            {
-                Y1 = Model.Y1;
+                X2 = Model.X1;
             }
             else if (e.PropertyName.Equals(nameof(Model.Y2)))
             {
-                Y2 = Model.Y2;
+                Y1 = Model.Y2;
+            }
+            else if (e.PropertyName.Equals(nameof(Model.Y1)))
+            {
+                Y2 = Model.Y1;
             }
             else if (e.PropertyName.Equals(nameof(Model.SourceTerminal)) || e.PropertyName.Equals(nameof(Model.SinkTerminal)))
             {
@@ -180,10 +180,8 @@ namespace DiiagramrAPI.Diagram
         private void AnimateWirePointsOnUiThread(int frameDelay)
         {
             var wirePoints = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2, BannedDirectionForStart, BannedDirectionForEnd);
-            if (Model.UserWiredFromInput)
-            {
-                Array.Reverse(wirePoints);
-            }
+            // If you want the wire to draw the other way reverse wirePoints array.
+            // Array.Reverse(wirePoints);
 
             GenerateFramesOfWiringAnimation(wirePoints);
             foreach (var frame in _wireDrawAnimationFrames)
@@ -295,10 +293,8 @@ namespace DiiagramrAPI.Diagram
                 }
             }
             AddDataVisualAnimationFrame(originalPoints.Last());
-            if (!Model.UserWiredFromInput)
-            {
-                _dataVisualAnimationFrames.Reverse();
-            }
+            // reverse the frames if you want the wire to draw backwards
+            // _dataVisualAnimationFrames.Reverse();
             _isDataVisualAnimationFramesValid = true;
         }
 

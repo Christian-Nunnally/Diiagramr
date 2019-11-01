@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands
 {
-    public abstract class DiiagramrCommand : IDiiagramrCommand
+    public abstract class DiiagramrCommand : IShellCommand
     {
         public abstract string Name { get; }
         public virtual string Parent => null;
-        public IList<IDiiagramrCommand> SubCommandItems { get; set; } = new List<IDiiagramrCommand>();
+        public IList<IShellCommand> SubCommandItems { get; set; } = new List<IShellCommand>();
         public virtual float Weight => 0f;
 
         public bool CanExecute(IShell shell)

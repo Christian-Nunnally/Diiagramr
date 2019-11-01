@@ -85,7 +85,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             var G = terminalColor.G;
             var B = terminalColor.B;
             _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
-            _previewWire.BannedDirectionForStart = DirectionHelpers.OppositeDirection(terminal.Model.Direction);
+            _previewWire.BannedDirectionForStart = DirectionHelpers.OppositeDirection(terminal.Model.DefaultSide);
         }
 
         private void CancelWireInsertion(Diagram diagram)
@@ -197,7 +197,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 return false;
             }
-            if (endTerminal.Model.Kind == startTerminal.Model.Kind)
+            if (endTerminal.Model.GetType() == startTerminal.Model.GetType())
             {
                 return false;
             }
@@ -206,8 +206,8 @@ namespace DiiagramrAPI.Diagram.Interactors
                 return false;
             }
 
-            var sinkTerminal = startTerminal.Model.Kind == TerminalKind.Input ? startTerminal.Model : endTerminal.Model;
-            var sourceTerminal = startTerminal.Model.Kind == TerminalKind.Output ? startTerminal.Model : endTerminal.Model;
+            var sinkTerminal = startTerminal.Model is InputTerminalModel ? startTerminal.Model : endTerminal.Model;
+            var sourceTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal.Model : endTerminal.Model;
 
             if (!sourceTerminal.Type.IsSubclassOf(sinkTerminal.Type) && sourceTerminal.Type != sinkTerminal.Type)
             {

@@ -29,7 +29,7 @@ namespace DiiagramrAPI.Diagram
         public virtual NodeModel Model { get; set; }
         public virtual bool IsSelected { get; set; }
         public virtual bool ResizeEnabled { get; set; }
-        private bool IsInitialized { get; set; }
+        private bool IsAttached { get; set; }
         public virtual double MinimumHeight { get; set; }
         public virtual double MinimumWidth { get; set; }
         public virtual string Name { get; set; } = "Node";
@@ -72,7 +72,7 @@ namespace DiiagramrAPI.Diagram
         {
             Terminals.Add(terminalViewModel);
             AddTerminal(terminalViewModel.Model);
-            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.Model.Direction);
+            DropAndArrangeTerminal(terminalViewModel, terminalViewModel.Model.DefaultSide);
             terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
         }
 
@@ -105,21 +105,30 @@ namespace DiiagramrAPI.Diagram
         public virtual void InitializePluginNodeSettings()
         {
             PluginNodeSettings.ForEach(info => _pluginNodeSettingCache.Add(info.Name, info));
-            PluginNodeSettings.ForEach(Model.InitializePersistedVariableToProperty);
+            PluginNodeSettings.ForEach(PersistProperty);
             PluginNodeSettings.ForEach(info => info.SetValue(this, Model?.GetVariable(info.Name)));
         }
 
-        public virtual void InitializeWithNode(NodeModel nodeModel)
+        private void PersistProperty(PropertyInfo info)
         {
-            if (IsInitialized)
+            if (!Model.PersistedVariables.ContainsKey(info.Name))
+            {
+                Model.SetVariable(info.Name, info.GetValue(this));
+            }
+        }
+
+        public virtual void AttachToModel(NodeModel nodeModel)
+        {
+            if (IsAttached)
             {
                 return;
             }
 
-            IsInitialized = true;
+            IsAttached = true;
 
             Model = nodeModel;
-            Model.NodeViewModel = this;
+            Model.Name = GetType().FullName;
+            InitializePluginNodeSettings();
 
             LoadTerminalViewModels();
 
@@ -132,7 +141,7 @@ namespace DiiagramrAPI.Diagram
         {
             Terminals.Remove(terminalViewModel);
             RemoveTerminal(terminalViewModel.Model);
-            FixOtherTerminalsOnEdge(terminalViewModel.Model.Direction);
+            FixOtherTerminalsOnEdge(terminalViewModel.Model.DefaultSide);
         }
 
         public void UnhighlightTerminals()
@@ -295,7 +304,7 @@ namespace DiiagramrAPI.Diagram
         private void FixOtherTerminalsOnEdge(Direction edge)
         {
             var otherTerminalsInDirection = Terminals
-                .Where(t => t.Model.Direction == edge).ToArray();
+                .Where(t => t.Model.DefaultSide == edge).ToArray();
 
             var inc = 1 / (otherTerminalsInDirection.Length + 1.0f);
             for (var i = 0; i < otherTerminalsInDirection.Length; i++)

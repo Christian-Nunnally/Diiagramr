@@ -55,12 +55,5 @@ namespace DiiagramrUnitTests.ModelTests
             var dia = new DiagramModel();
             dia.RemoveNode(_nodeMoq.Object);
         }
-
-        [TestMethod]
-        public void TestStop_CallsResetTerminals()
-        {
-            _diagram.Stop();
-            _nodeMoq.Verify(m => m.ResetTerminals(), Times.Once);
-        }
     }
 }

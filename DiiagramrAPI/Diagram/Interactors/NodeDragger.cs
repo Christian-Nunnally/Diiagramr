@@ -1,3 +1,7 @@
+using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Shell.EditorCommands;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
@@ -5,7 +9,16 @@ namespace DiiagramrAPI.Diagram.Interactors
 {
     public class NodeDragger : DiagramInteractor
     {
+        private IEnumerable<Node> _draggingNodes;
+        private ICommand _moveNodesToStartPointCommand;
         public Point PreviousMouseLocation { get; set; }
+
+        private readonly ITransactor _transactor;
+
+        public NodeDragger(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+        }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -13,11 +26,11 @@ namespace DiiagramrAPI.Diagram.Interactors
             {
                 var diagram = interaction.Diagram;
                 var mousePosition = interaction.MousePosition;
-                ProcessMouseDown(diagram, mousePosition);
+                ProcessMouseMoved(diagram, mousePosition);
             }
         }
 
-        private void ProcessMouseDown(Diagram diagram, Point mousePosition)
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
         {
             var deltaX = mousePosition.X - PreviousMouseLocation.X;
             var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
@@ -64,6 +77,8 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
+            _draggingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected);
+            _moveNodesToStartPointCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             PreviousMouseLocation = interaction.MousePosition;
         }
 
@@ -71,13 +86,14 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (!interaction.IsCtrlKeyPressed)
             {
-                foreach (var node in interaction.Diagram.Nodes.Where(n => n.IsSelected))
+                foreach (var node in _draggingNodes)
                 {
                     node.X = interaction.Diagram.SnapToGrid(node.X);
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);
                 }
             }
             interaction.Diagram.ShowSnapGrid = false;
+            _transactor.Transact(new CustomUndoCommand(new MoveNodesToCurrentPositionCommand(_draggingNodes), _moveNodesToStartPointCommand), _draggingNodes);
         }
     }
 }

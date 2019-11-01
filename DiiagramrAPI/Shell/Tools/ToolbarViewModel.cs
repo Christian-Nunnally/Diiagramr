@@ -12,11 +12,11 @@ namespace DiiagramrAPI.Shell.Tools
 {
     public class ToolbarViewModel : Screen
     {
-        private readonly Service.CommandManager _commandManager;
+        private readonly Service.ShellCommandFactory _commandManager;
 
         public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; set; }
 
-        public ToolbarViewModel(Func<Service.CommandManager> commandManagerFactory)
+        public ToolbarViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
         {
             _commandManager = commandManagerFactory.Invoke();
             var toolbarCommands = _commandManager.Commands.OfType<ToolBarCommand>();

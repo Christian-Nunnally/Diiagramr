@@ -56,7 +56,7 @@ namespace DiiagramrAPI.Service
                 throw NoViewModelException(fullName);
             }
 
-            viewModel.InitializeWithNode(node);
+            viewModel.AttachToModel(node);
             ResolveTerminalTypes(viewModel);
             return viewModel;
         }

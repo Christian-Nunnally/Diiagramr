@@ -4,13 +4,15 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Commands
 {
-    // todo: this is an IDiiagramrShellCommand, there should also be a simpler general purpose command that this wraps
-    public interface IDiiagramrCommand : IService
+    public interface IShellCommand : IService
     {
         string Name { get; }
+
         string Parent { get; }
-        IList<IDiiagramrCommand> SubCommandItems { get; set; }
+
         float Weight { get; }
+
+        IList<IShellCommand> SubCommandItems { get; set; }
 
         bool CanExecute(IShell shell);
 

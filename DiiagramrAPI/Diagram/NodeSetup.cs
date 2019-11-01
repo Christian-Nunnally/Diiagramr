@@ -1,4 +1,3 @@
-using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Model;
 using System;
 using System.Linq;
@@ -6,7 +5,7 @@ using System.Linq;
 namespace DiiagramrAPI.Diagram
 {
     /// <summary>
-    ///     Class that provides an API that is as english as possible to make creating nodes easy.
+    /// Class that provides an API that is as simple as possible to make creating nodes easy.
     /// </summary>
     public class NodeSetup
     {
@@ -14,7 +13,7 @@ namespace DiiagramrAPI.Diagram
         private int _terminalIndex;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="NodeSetup" /> class.
+        /// Initializes a new instance of the <see cref="NodeSetup" /> class.
         /// </summary>
         /// <param name="nodeViewModel">The node view model.</param>
         public NodeSetup(Node nodeViewModel)
@@ -22,18 +21,8 @@ namespace DiiagramrAPI.Diagram
             _nodeViewModel = nodeViewModel ?? throw new ArgumentNullException(nameof(nodeViewModel));
         }
 
-        public TypedTerminal<T> CreateClientTerminal<T>(Terminal terminalViewModel)
-        {
-            if (!_nodeViewModel.Terminals.Contains(terminalViewModel))
-            {
-                throw new InvalidOperationException("Can not create a client terminal for a terminal view model that is not on the node.");
-            }
-
-            return new TypedTerminal<T>(terminalViewModel);
-        }
-
         /// <summary>
-        ///     Allows the node to be resized via an adorner that appears when the node is selected.
+        /// Allows the node to be resized via an adorner that appears when the node is selected.
         /// </summary>
         public void EnableResize()
         {
@@ -41,18 +30,7 @@ namespace DiiagramrAPI.Diagram
         }
 
         /// <summary>
-        ///     Sets up a input terminal on this node.
-        /// </summary>
-        /// <param name="name">The name of the terminal.</param>
-        /// <param name="direction">The default side of the node this terminal belongs on.</param>
-        /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
-        public TypedTerminal<T> InputTerminal<T>(string name, Direction direction)
-        {
-            return CreateClientTerminal<T>(name, direction, TerminalKind.Input);
-        }
-
-        /// <summary>
-        ///     Sets the name of a node, this is what displays above the node on the diagram.
+        /// Sets the name of a node, this is what displays above the node on the diagram.
         /// </summary>
         /// <param name="name"></param>
         public void NodeName(string name)
@@ -61,7 +39,7 @@ namespace DiiagramrAPI.Diagram
         }
 
         /// <summary>
-        ///     Sets the weight of the node in the node selector (where it gets inserted in the list).
+        /// Sets the weight of the node in the node selector (where it gets inserted in the list).
         /// </summary>
         /// <param name="weight">Usually between 0 and 1, 1 being at the bottom of the list and 0 being at the top of the list.</param>
         public void NodeWeight(float weight)
@@ -70,7 +48,7 @@ namespace DiiagramrAPI.Diagram
         }
 
         /// <summary>
-        ///     Sets the initial node geometry.
+        /// Sets the initial node geometry.
         /// </summary>
         /// <param name="width">The width of the node.</param>
         /// <param name="height">The height of the node.</param>
@@ -91,31 +69,37 @@ namespace DiiagramrAPI.Diagram
         }
 
         /// <summary>
-        ///     Sets up a output terminal on this node.
+        /// Sets up a input terminal on this node.
+        /// </summary>
+        /// <param name="name">The name of the terminal.</param>
+        /// <param name="direction">The default side of the node this terminal belongs on.</param>
+        /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
+        public TypedTerminal<T> InputTerminal<T>(string name, Direction direction)
+        {
+            var model = new InputTerminalModel(name, typeof(T), direction, _terminalIndex);
+            return CreateClientTerminal<T>(name, direction, model);
+        }
+
+        /// <summary>
+        /// Sets up a output terminal on this node.
         /// </summary>
         /// <param name="name">The name of the terminal.</param>
         /// <param name="direction">The default side of the node this terminal belongs on.</param>
         /// <remarks>For now, dynamically creating output terminals at runtime is not supported</remarks>
         public TypedTerminal<T> OutputTerminal<T>(string name, Direction direction)
         {
-            return CreateClientTerminal<T>(name, direction, TerminalKind.Output);
+            var model = new OutputTerminalModel(name, typeof(T), direction, _terminalIndex);
+            return CreateClientTerminal<T>(name, direction, model);
         }
 
-        /// <summary>
-        ///     Sets up a terminal on this node of the given kind.
-        /// </summary>
-        /// <param name="name">The name of the terminal.</param>
-        /// <param name="direction">The default side of the node this terminal belongs on.</param>
-        /// <param name="kind">The kind of terminal to create.</param>
-        /// <remarks>For now, dynamically creating terminals at runtime is not supported</remarks>
-        private TypedTerminal<T> CreateClientTerminal<T>(string name, Direction direction, TerminalKind kind)
+        private TypedTerminal<T> CreateClientTerminal<T>(string name, Direction direction, TerminalModel model)
         {
-            var terminalViewModel = FindOrCreateTerminalViewModel<T>(name, direction, kind);
+            var terminalViewModel = FindOrCreateTerminalViewModel<T>(name, direction, model);
             _terminalIndex++;
             return new TypedTerminal<T>(terminalViewModel);
         }
 
-        private Terminal FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalKind kind)
+        private Terminal FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalModel model)
         {
             var terminalViewModel = _nodeViewModel.Terminals.FirstOrDefault(viewModel => viewModel.Model.TerminalIndex == _terminalIndex);
             if (terminalViewModel != null)
@@ -123,8 +107,7 @@ namespace DiiagramrAPI.Diagram
                 return terminalViewModel;
             }
 
-            var terminalModel = new TerminalModel(name, typeof(T), direction, kind, _terminalIndex);
-            terminalViewModel = Terminal.CreateTerminalViewModel(terminalModel);
+            terminalViewModel = Terminal.CreateTerminalViewModel(model);
             _nodeViewModel.AddTerminalViewModel(terminalViewModel);
             return terminalViewModel;
         }

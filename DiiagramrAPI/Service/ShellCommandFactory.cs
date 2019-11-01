@@ -6,14 +6,13 @@ using System.Linq;
 
 namespace DiiagramrAPI.Service
 {
-    // todo: maybe rename to commandfactory?
-    public class CommandManager
+    public class ShellCommandFactory
     {
         private readonly IShell _shell;
-        private Dictionary<string, IDiiagramrCommand> _commands = new Dictionary<string, IDiiagramrCommand>();
-        public IEnumerable<IDiiagramrCommand> Commands => _commands.Values;
+        private Dictionary<string, IShellCommand> _commands = new Dictionary<string, IShellCommand>();
+        public IEnumerable<IShellCommand> Commands => _commands.Values;
 
-        public CommandManager(Func<IShell> shellFactory, Func<IEnumerable<IDiiagramrCommand>> commandsFactory)
+        public ShellCommandFactory(Func<IShell> shellFactory, Func<IEnumerable<IShellCommand>> commandsFactory)
         {
             ShellCommand.CommandManager = this;
             _shell  = shellFactory.Invoke();
@@ -21,7 +20,7 @@ namespace DiiagramrAPI.Service
             SetupCommands(commands);
         }
 
-        private void SetupCommands(IEnumerable<IDiiagramrCommand> commands)
+        private void SetupCommands(IEnumerable<IShellCommand> commands)
         {
             foreach (var command in commands)
             {
@@ -40,7 +39,7 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        private string GenerateCommandPath(IDiiagramrCommand command)
+        private string GenerateCommandPath(IShellCommand command)
         {
             if (command.Parent == null)
             {
@@ -67,17 +66,14 @@ namespace DiiagramrAPI.Service
             ExecuteCommand(commandID, null);
         }
 
-        public void ExecuteCommand(IDiiagramrCommand command)
+        public void ExecuteCommand(IShellCommand command)
         {
             ExecuteCommand(command, null);
         }
 
-        public void ExecuteCommand(IDiiagramrCommand command, object parameter)
+        public void ExecuteCommand(IShellCommand command, object parameter)
         {
-            if (command.CanExecute(_shell))
-            {
-                command.Execute(_shell, parameter);
-            }
+            command.Execute(_shell, parameter);
         }
     }
 }

@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Shell
 
         void AttachToViewModel(ShellViewModel shellViewModel);
 
-        void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position);
+        void ShowContextMenu(IList<IShellCommand> commands, Point position);
 
         void OpenWindow(AbstractShellWindow window);
 

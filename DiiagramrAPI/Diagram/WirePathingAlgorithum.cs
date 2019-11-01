@@ -31,10 +31,10 @@ namespace DiiagramrAPI.Diagram
             var stubEnd = TranslatePointInDirection(end, DirectionHelpers.OppositeDirection(bannedDirectionForEnd), WireDistanceOutOfTerminal);
             if (_wireModel != null)
             {
-                bannedDirectionForStart = DirectionHelpers.OppositeDirection(_wireModel.SinkTerminal.Direction);
-                bannedDirectionForEnd = DirectionHelpers.OppositeDirection(_wireModel.SourceTerminal.Direction);
-                stubStart = TranslatePointInDirection(start, _wireModel.SinkTerminal.Direction, WireDistanceOutOfTerminal);
-                stubEnd = TranslatePointInDirection(end, _wireModel.SourceTerminal.Direction, WireDistanceOutOfTerminal);
+                bannedDirectionForStart = DirectionHelpers.OppositeDirection(_wireModel.SinkTerminal.DefaultSide);
+                bannedDirectionForEnd = DirectionHelpers.OppositeDirection(_wireModel.SourceTerminal.DefaultSide);
+                stubStart = TranslatePointInDirection(start, _wireModel.SinkTerminal.DefaultSide, WireDistanceOutOfTerminal);
+                stubEnd = TranslatePointInDirection(end, _wireModel.SourceTerminal.DefaultSide, WireDistanceOutOfTerminal);
             }
             if (StubsAreTooCloseTogether(stubStart, stubEnd))
             {

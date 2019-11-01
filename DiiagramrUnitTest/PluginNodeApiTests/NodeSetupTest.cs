@@ -70,7 +70,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.InputTerminal<int>(string.Empty, Direction.South);
 
-            nodeViewModelMoq.Verify(n => n.AddTerminalViewModel(It.Is<Terminal>(tvm => tvm.Model.Direction == Direction.South)));
+            nodeViewModelMoq.Verify(n => n.AddTerminalViewModel(It.Is<Terminal>(tvm => tvm.Model.DefaultSide == Direction.South)));
         }
 
         [TestMethod]
@@ -116,7 +116,7 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             nodeSetup.OutputTerminal<int>(string.Empty, Direction.South);
 
-            nodeViewModelMoq.Verify(n => n.AddTerminalViewModel(It.Is<Terminal>(tvm => tvm.Model.Direction == Direction.South)));
+            nodeViewModelMoq.Verify(n => n.AddTerminalViewModel(It.Is<Terminal>(tvm => tvm.Model.DefaultSide == Direction.South)));
         }
 
         [TestMethod]
@@ -139,31 +139,6 @@ namespace DiiagramrUnitTests.PluginNodeApiTests
             nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
             var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
             Assert.IsNotNull(nodeSetup.OutputTerminal<int>("lala", Direction.South));
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void TestCreateClientTerminal_ViewModelNotOnNode_ThrowsException()
-        {
-            var nodeViewModelMoq = new Mock<Node>();
-            var terminalViewModelMoq = new Mock<Terminal>(new Mock<TerminalModel>().Object);
-            terminalViewModelMoq.SetupGet(model => model.Model).Returns(new Mock<TerminalModel>().Object);
-            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal>());
-            var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
-
-            nodeSetup.CreateClientTerminal<int>(terminalViewModelMoq.Object);
-        }
-
-        [TestMethod]
-        public void TestCreateClientTerminal_ViewModelOnNode_ReturnsTerminal()
-        {
-            var nodeViewModelMoq = new Mock<Node>();
-            var terminalViewModelMoq = new Mock<Terminal>(new Mock<TerminalModel>().Object);
-            terminalViewModelMoq.SetupGet(model => model.Model).Returns(new Mock<TerminalModel>().Object);
-            nodeViewModelMoq.SetupGet(n => n.Terminals).Returns(new List<Terminal> { terminalViewModelMoq.Object });
-            var nodeSetup = new NodeSetup(nodeViewModelMoq.Object);
-
-            Assert.IsNotNull(nodeSetup.CreateClientTerminal<int>(terminalViewModelMoq.Object));
         }
     }
 }

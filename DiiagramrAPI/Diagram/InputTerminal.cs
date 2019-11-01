@@ -1,5 +1,4 @@
 using DiiagramrAPI.Diagram.Model;
-using System;
 using System.Windows.Controls;
 
 namespace DiiagramrAPI.Diagram
@@ -10,12 +9,8 @@ namespace DiiagramrAPI.Diagram
 
         public TextBox DirectEditTextBox { get; set; }
 
-        public InputTerminal(TerminalModel inputTerminal) : base(inputTerminal)
+        public InputTerminal(InputTerminalModel inputTerminal) : base(inputTerminal)
         {
-            if (inputTerminal.Kind != TerminalKind.Input)
-            {
-                throw new ArgumentException("Terminal must be input kind for InputTerminalViewModel");
-            }
         }
 
         public string DirectEditTextBoxText

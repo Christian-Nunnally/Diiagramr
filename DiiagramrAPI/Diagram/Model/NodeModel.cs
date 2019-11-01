@@ -1,7 +1,6 @@
 using DiiagramrAPI.Diagram.Interoperability;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.Serialization;
 
 namespace DiiagramrAPI.Diagram.Model
@@ -11,8 +10,6 @@ namespace DiiagramrAPI.Diagram.Model
     {
         [DataMember]
         public readonly Dictionary<string, object> PersistedVariables = new Dictionary<string, object>();
-
-        private Node _nodeViewModel;
 
         public NodeModel(string nodeTypeFullName)
         {
@@ -34,18 +31,6 @@ namespace DiiagramrAPI.Diagram.Model
 
         [DataMember]
         public virtual double Height { get; set; }
-
-        public virtual Node NodeViewModel
-        {
-            get => _nodeViewModel;
-
-            set
-            {
-                _nodeViewModel = value;
-                _nodeViewModel.InitializePluginNodeSettings();
-                Name = _nodeViewModel.GetType().FullName;
-            }
-        }
 
         [DataMember]
         public List<TerminalModel> Terminals { get; set; } = new List<TerminalModel>();
@@ -91,32 +76,13 @@ namespace DiiagramrAPI.Diagram.Model
 
         public virtual object GetVariable(string name)
         {
-            return !PersistedVariables.ContainsKey(name) ? null : PersistedVariables[name];
-        }
-
-        public virtual void InitializePersistedVariableToProperty(PropertyInfo info)
-        {
-            if (!PersistedVariables.ContainsKey(info.Name))
-            {
-                SetVariable(info.Name, info.GetValue(NodeViewModel));
-            }
-        }
-
-        public virtual void ResetTerminals()
-        {
-            Terminals.ForEach(t => t.ResetWire());
+            PersistedVariables.TryGetValue(name, out object value);
+            return value;
         }
 
         public virtual void SetVariable(string name, object value)
         {
-            if (!PersistedVariables.ContainsKey(name))
-            {
-                PersistedVariables.Add(name, value);
-            }
-            else
-            {
-                PersistedVariables[name] = value;
-            }
+            PersistedVariables[name] = value;
         }
 
         public bool IsConnected => Terminals.Any(t => t.ConnectedWires.Any());

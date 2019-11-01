@@ -95,15 +95,15 @@ namespace DiiagramrAPI.Diagram
             set => Model.OffsetY = value;
         }
 
-        public double ViewXPosition => XRelativeToNode - (Terminal.TerminalWidth / 2);
+        public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
 
-        public double ViewYPosition => YRelativeToNode - (Terminal.TerminalHeight / 2);
+        public double ViewYPosition => YRelativeToNode - (TerminalHeight / 2);
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
         {
-            return terminal.Kind == TerminalKind.Input
-                ? (Terminal)new InputTerminal(terminal)
-                : (Terminal)new OutputTerminal(terminal);
+            return terminal is InputTerminalModel inputTerminalModel
+                ? (Terminal)new InputTerminal(inputTerminalModel)
+                : new OutputTerminal((OutputTerminalModel)terminal);
         }
 
         public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
@@ -111,7 +111,7 @@ namespace DiiagramrAPI.Diagram
             const double marginFromEdgeOfNode = Diagram.NodeBorderWidth + 10;
             var offsetX = Model.OffsetX;
             var offsetY = Model.OffsetY;
-            var terminalDirection = Model.Direction;
+            var terminalDirection = Model.DefaultSide;
 
             if (terminalDirection == Direction.North)
             {
@@ -147,13 +147,13 @@ namespace DiiagramrAPI.Diagram
         {
             foreach (var wire in Model.ConnectedWires.ToArray())
             {
-                Model.DisconnectWire(wire, Model.IsInput ? wire.SourceTerminal : wire.SinkTerminal);
+                Model.DisconnectWire(wire, Model is InputTerminalModel ? wire.SourceTerminal : wire.SinkTerminal);
             }
         }
 
         public virtual void SetTerminalDirection(Direction direction)
         {
-            Model.Direction = direction;
+            Model.DefaultSide = direction;
         }
 
         public virtual void ShowHighlightIfCompatibleType(Type type)
@@ -174,7 +174,7 @@ namespace DiiagramrAPI.Diagram
 
         private void SetTerminalRotationBasedOnDirection()
         {
-            switch (Model.Direction)
+            switch (Model.DefaultSide)
             {
                 case Direction.North:
                     TerminalRotation = 0;
@@ -196,7 +196,7 @@ namespace DiiagramrAPI.Diagram
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Model.Direction))
+            if (e.PropertyName == nameof(Model.DefaultSide))
             {
                 SetTerminalRotationBasedOnDirection();
             }

@@ -11,14 +11,14 @@ namespace DiiagramrAPI.Shell.Tools
 {
     public class ContextMenuViewModel : Screen
     {
-        private readonly Service.CommandManager _commandManager;
+        private readonly Service.ShellCommandFactory _commandManager;
 
-        public ContextMenuViewModel(Func<Service.CommandManager> commandManagerFactory)
+        public ContextMenuViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
         {
             _commandManager = commandManagerFactory.Invoke();
         }
 
-        public ObservableCollection<IDiiagramrCommand> Commands { get; set; } = new ObservableCollection<IDiiagramrCommand>();
+        public ObservableCollection<IShellCommand> Commands { get; set; } = new ObservableCollection<IShellCommand>();
         public float MinimumWidth { get; set; } = 150;
         public bool Visible { get; set; }
         public float X { get; set; } = 0;
@@ -34,7 +34,7 @@ namespace DiiagramrAPI.Shell.Tools
             }
         }
 
-        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        public void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             X = (float)position.X;
             Y = (float)position.Y;

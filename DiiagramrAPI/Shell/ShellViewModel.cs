@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Shell
 
         public ShellViewModel(
             Func<IProjectManager> projectManagerFactory,
-            Func<IEnumerable<IDiiagramrCommand>> commandsFactory,
+            Func<IEnumerable<IShellCommand>> commandsFactory,
             Func<ContextMenuViewModel> contextMenuViewModelFactory,
             Func<IShell> shellFactory,
             Func<ToolbarViewModel> toolbarViewModelFactory)
@@ -89,12 +89,12 @@ namespace DiiagramrAPI.Shell
             }
         }
 
-        public void ShowContextMenu(IList<IDiiagramrCommand> commands, Point position)
+        public void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             ContextMenuViewModel.ShowContextMenu(commands, position);
         }
 
-        public void ShowContextMenu(IList<IDiiagramrCommand> commands)
+        public void ShowContextMenu(IList<IShellCommand> commands)
         {
             ShowContextMenu(commands, new Point(0, 22));
         }

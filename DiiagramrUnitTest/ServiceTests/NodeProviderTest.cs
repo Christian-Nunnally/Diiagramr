@@ -74,17 +74,6 @@ namespace DiiagramrUnitTests.ServiceTests
         }
 
         [TestMethod]
-        public void TestLoadNodeViewModelFromNode_ViewModelRegistered_NodesViewModelSet()
-        {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
-            _testNode.Name = _nodeViewModelMoq.Object.GetType().FullName;
-
-            var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
-
-            Assert.AreEqual(nodeViewModel, _testNode.NodeViewModel);
-        }
-
-        [TestMethod]
         public void TestLoadNodeViewModelFromNode_ViewModelRegistered_ViewModelsNodeSet()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
@@ -152,16 +141,6 @@ namespace DiiagramrUnitTests.ServiceTests
             var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
             Assert.AreNotEqual(_nodeViewModelMoq.Object, nodeViewModel);
-        }
-
-        [TestMethod]
-        public void TestCreateNodeViewModelFromName_ViewModelRegistered_NodesViewModelSet()
-        {
-            _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
-
-            var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
-
-            Assert.AreEqual(nodeViewModel, nodeViewModel.Model.NodeViewModel);
         }
 
         [TestMethod]

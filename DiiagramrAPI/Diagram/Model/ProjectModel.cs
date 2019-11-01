@@ -10,12 +10,11 @@ namespace DiiagramrAPI.Diagram.Model
     {
         public ProjectModel()
         {
-            Diagrams = new ObservableCollection<DiagramModel>();
             Name = "NewProject";
         }
 
         [DataMember]
-        public virtual ObservableCollection<DiagramModel> Diagrams { get; set; }
+        public virtual ObservableCollection<DiagramModel> Diagrams { get; } = new ObservableCollection<DiagramModel>();
 
         public bool IsDirty { get; set; }
 

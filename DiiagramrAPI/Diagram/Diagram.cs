@@ -127,6 +127,14 @@ namespace DiiagramrAPI.Diagram
             DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
+        public void AddNodeInteractively(Node node)
+        {
+            AddNode(node);
+
+            var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
+            DiagramInteractionManager.HandleDiagramInput(interaction, this);
+        }
+
         public void AddNode(Node node)
         {
             if (node.Model == null)
@@ -135,9 +143,6 @@ namespace DiiagramrAPI.Diagram
             }
             Model.AddNode(node.Model);
             AddNodeViewModel(node);
-
-            var interaction = new DiagramInteractionEventArguments(InteractionType.NodeInserted);
-            DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
         private void AddNodeViewModel(Node viewModel)
@@ -152,7 +157,7 @@ namespace DiiagramrAPI.Diagram
 
         private void AddWiresForNode(Node viewModel)
         {
-            foreach (var inputTerminal in viewModel.Model.Terminals.Where(t => t.Kind == TerminalKind.Input))
+            foreach (var inputTerminal in viewModel.Model.Terminals.OfType<InputTerminalModel>())
             {
                 inputTerminal.ConnectedWires
                     .Select(w => new Wire(w))
@@ -175,6 +180,11 @@ namespace DiiagramrAPI.Diagram
             {
                 Wires.Remove(wire);
             }
+        }
+
+        public void AddWire(WireModel wireModel)
+        {
+            AddWire(new Wire(wireModel));
         }
 
         public void AddWire(Wire wire)
@@ -229,7 +239,7 @@ namespace DiiagramrAPI.Diagram
         {
             foreach (var nodeViewModel in Nodes)
             {
-                if (terminal.Kind == TerminalKind.Output)
+                if (terminal is OutputTerminalModel)
                 {
                     nodeViewModel.HighlightInputTerminalsOfType(terminal.Type);
                 }

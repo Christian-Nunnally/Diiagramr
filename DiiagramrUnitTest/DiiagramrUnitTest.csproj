@@ -79,8 +79,6 @@
     <Compile Include="ModelTests\ProjectModelTest.cs" />
     <Compile Include="ModelTests\DiagramModelTest.cs" />
     <Compile Include="ModelTests\NodeModelTest.cs" />
-    <Compile Include="PluginNodeApiTests\TerminalTest.cs" />
-    <Compile Include="PluginNodeApiTests\PluginNodeTest.cs" />
     <Compile Include="PluginNodeApiTests\NodeSetupTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceTests\NodeProviderTest.cs" />
@@ -90,14 +88,10 @@
     <Compile Include="ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="ViewModelTests\ProjectExplorerViewModelTest.cs" />
-    <Compile Include="ViewModelTests\InputTerminalViewModelTest.cs" />
-    <Compile Include="ViewModelTests\OutputTerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\StartScreenViewModelTest.cs" />
-    <Compile Include="ViewModelTests\TerminalViewModelTest.cs" />
     <Compile Include="ViewModelTests\ProjectScreenViewModelTest.cs" />
     <Compile Include="ViewModelTests\Window\LibrarySourceManagerWindowViewModelTest.cs" />
     <Compile Include="ViewModelTests\Window\LibraryManagerWindowViewModelTest.cs" />
-    <Compile Include="ViewModelTests\WireViewModelTest.cs" />
     <Compile Include="ViewModelTests\NodeSelectorViewModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
