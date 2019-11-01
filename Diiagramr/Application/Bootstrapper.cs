@@ -1,5 +1,5 @@
 using DiiagramrAPI.Shell;
-using DiiagramrAPI.Shell.EditorCommands;
+using DiiagramrAPI.Shell.Commands.Transacting;
 using DiiagramrAPI.Shell.Tools;
 using Stylet;
 using StyletIoC;

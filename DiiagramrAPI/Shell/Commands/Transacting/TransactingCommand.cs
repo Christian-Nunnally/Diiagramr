@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands.Transacting
 {
     /// <summary>
     /// A command with free undo functionality as long as the only actions <see cref="Execute(ITransactor)"/> does are other commands.

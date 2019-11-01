@@ -2,7 +2,7 @@
 using DiiagramrAPI.Shell.Tools;
 using System;
 
-namespace DiiagramrAPI.Service.Commands.ToolCommands
+namespace DiiagramrAPI.Shell.ShellCommands.ToolCommands
 {
     public class ManageLibrariesCommand : ToolBarCommand
     {

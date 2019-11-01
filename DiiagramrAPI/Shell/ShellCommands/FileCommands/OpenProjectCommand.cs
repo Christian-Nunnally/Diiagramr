@@ -1,12 +1,12 @@
 ﻿using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Project;
+using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace DiiagramrAPI.Service.Commands.FileCommands
+namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class OpenProjectCommand : ToolBarCommand
     {

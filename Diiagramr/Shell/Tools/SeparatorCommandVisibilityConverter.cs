@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Commands;
+using DiiagramrAPI.Shell.ShellCommands;
 using System;
 using System.Globalization;
 using System.Windows;

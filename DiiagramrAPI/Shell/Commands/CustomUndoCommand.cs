@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands
 {
     /// <summary>
     /// A command that you can wrap around another command to override its undo action.

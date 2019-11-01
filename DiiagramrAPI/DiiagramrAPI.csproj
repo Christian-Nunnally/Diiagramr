@@ -63,8 +63,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Diagram\Commands\ResizeNodeCommand.cs" />
     <Compile Include="Diagram\Commands\MoveNodeCommand.cs" />
     <Compile Include="Diagram\Commands\MoveNodesToCurrentPositionCommand.cs" />
+    <Compile Include="Diagram\Commands\ResizeNodesToCurrentSizeCommand.cs" />
     <Compile Include="Diagram\Commands\UnwireNodeCommand.cs" />
     <Compile Include="Diagram\Commands\UnwireAndDeleteNodeCommand.cs" />
     <Compile Include="Diagram\Commands\DeleteWireCommand.cs" />
@@ -109,15 +111,16 @@
     <Compile Include="Diagram\Interactors\NodePlacer.cs" />
     <Compile Include="Diagram\Interactors\PointSelector.cs" />
     <Compile Include="Diagram\Interactors\LassoNodeSelector.cs" />
-    <Compile Include="Shell\EditorCommands\GlobalTransactor.cs" />
-    <Compile Include="Shell\EditorCommands\CustomUndoCommand.cs" />
-    <Compile Include="Shell\EditorCommands\UndoCommand.cs" />
-    <Compile Include="Shell\EditorCommands\MapCommand.cs" />
-    <Compile Include="Shell\EditorCommands\Transactor.cs" />
-    <Compile Include="Shell\EditorCommands\BasicComposingCommand.cs" />
-    <Compile Include="Shell\EditorCommands\TransactingCommand.cs" />
-    <Compile Include="Shell\EditorCommands\ICommand.cs" />
-    <Compile Include="Shell\EditorCommands\ITransactor.cs" />
+    <Compile Include="Shell\Commands\Transacting\GlobalTransactor.cs" />
+    <Compile Include="Shell\Commands\CustomUndoCommand.cs" />
+    <Compile Include="Shell\Commands\Transacting\TransactorExtensions.cs" />
+    <Compile Include="Shell\Commands\UndoCommand.cs" />
+    <Compile Include="Shell\Commands\MapCommand.cs" />
+    <Compile Include="Shell\Commands\Transacting\Transactor.cs" />
+    <Compile Include="Shell\Commands\BasicComposingCommand.cs" />
+    <Compile Include="Shell\Commands\Transacting\TransactingCommand.cs" />
+    <Compile Include="Shell\Commands\ICommand.cs" />
+    <Compile Include="Shell\Commands\Transacting\ITransactor.cs" />
     <Compile Include="Shell\ShellCommands\DiagnosticsCommands\CrashApplicationCommand.cs" />
     <Compile Include="Shell\ShellCommands\DiagnosticsCommands\DiagnosticsCommandGroup.cs" />
     <Compile Include="Shell\ShellCommands\HelpCommands\SubmitBugCommand.cs" />

@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System.Collections.Generic;
 
-namespace DiiagramrAPI.Service.Commands
+namespace DiiagramrAPI.Shell.ShellCommands
 {
     public abstract class DiiagramrCommand : IShellCommand
     {

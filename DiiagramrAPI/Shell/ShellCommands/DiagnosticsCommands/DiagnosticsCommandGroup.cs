@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System.Windows;
 
-namespace DiiagramrAPI.Service.Commands.DiagnosticsCommands
+namespace DiiagramrAPI.Shell.ShellCommands.DiagnosticsCommands
 {
     public class DiagnosticsCommandGroup : TopLevelToolBarCommand
     {

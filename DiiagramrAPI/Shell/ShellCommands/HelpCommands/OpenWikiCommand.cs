@@ -1,6 +1,6 @@
 ﻿using DiiagramrAPI.Shell;
 
-namespace DiiagramrAPI.Service.Commands.ToolCommands
+namespace DiiagramrAPI.Shell.ShellCommands.HelpCommands
 {
     public class OpenWikiCommand : ToolBarCommand
     {

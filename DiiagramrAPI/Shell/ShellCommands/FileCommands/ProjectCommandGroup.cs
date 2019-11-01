@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System.Windows;
 
-namespace DiiagramrAPI.Service.Commands.FileCommands
+namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class ProjectCommandGroup : TopLevelToolBarCommand
     {

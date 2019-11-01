@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System;
 
-namespace DiiagramrAPI.Service.Commands.DiagnosticsCommands
+namespace DiiagramrAPI.Shell.ShellCommands.DiagnosticsCommands
 {
     public class CrashApplicationCommand : DiiagramrCommand
     {

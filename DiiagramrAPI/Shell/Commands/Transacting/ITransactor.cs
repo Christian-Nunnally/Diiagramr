@@ -1,4 +1,4 @@
-﻿namespace DiiagramrAPI.Shell.EditorCommands
+﻿namespace DiiagramrAPI.Shell.Commands.Transacting
 {
     public interface ITransactor
     {

@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System.Windows;
 
-namespace DiiagramrAPI.Service.Commands.ToolCommands
+namespace DiiagramrAPI.Shell.ShellCommands.ToolCommands
 {
     public class ToolsCommandGroup : TopLevelToolBarCommand
     {

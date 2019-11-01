@@ -1,5 +1,6 @@
 using DiiagramrAPI.Diagram.Commands;
-using DiiagramrAPI.Shell.EditorCommands;
+using DiiagramrAPI.Shell.Commands;
+using DiiagramrAPI.Shell.Commands.Transacting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +78,7 @@ namespace DiiagramrAPI.Diagram.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            _draggingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected);
+            _draggingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected).ToArray();
             _moveNodesToStartPointCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             PreviousMouseLocation = interaction.MousePosition;
         }
@@ -93,7 +94,8 @@ namespace DiiagramrAPI.Diagram.Interactors
                 }
             }
             interaction.Diagram.ShowSnapGrid = false;
-            _transactor.Transact(new CustomUndoCommand(new MoveNodesToCurrentPositionCommand(_draggingNodes), _moveNodesToStartPointCommand), _draggingNodes);
+            var doCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
+            _transactor.Transact(doCommand, _moveNodesToStartPointCommand, _draggingNodes);
         }
     }
 }

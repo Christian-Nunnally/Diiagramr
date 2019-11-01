@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands
 {
     /// <summary>
     /// Wraps a command so that, when transacted, it becomes an undo action on the stack. This command, once undone, can not be redone.

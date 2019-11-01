@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Service.Commands;
-using DiiagramrAPI.Shell;
+﻿using DiiagramrAPI.Shell;
+using DiiagramrAPI.Shell.ShellCommands;
 using System;
 using System.Collections.Generic;
 using System.Linq;

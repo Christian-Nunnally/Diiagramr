@@ -2,7 +2,7 @@
 using DiiagramrAPI.Shell;
 using System.Collections.Generic;
 
-namespace DiiagramrAPI.Service.Commands
+namespace DiiagramrAPI.Shell.ShellCommands
 {
     public interface IShellCommand : IService
     {

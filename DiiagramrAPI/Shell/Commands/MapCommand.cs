@@ -1,6 +1,7 @@
-﻿using System.Collections;
+﻿using DiiagramrAPI.Shell.Commands.Transacting;
+using System.Collections;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands
 {
     public class MapCommand : TransactingCommand
     {

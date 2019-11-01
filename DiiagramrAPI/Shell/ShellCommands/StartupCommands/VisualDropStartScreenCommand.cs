@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Shell;
 using System;
 
-namespace DiiagramrAPI.Service.Commands.StartupCommands
+namespace DiiagramrAPI.Shell.ShellCommands.StartupCommands
 {
     public class VisualDropStartScreenCommand : DiiagramrCommand
     {

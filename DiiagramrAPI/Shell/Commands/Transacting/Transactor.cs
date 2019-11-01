@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands.Transacting
 {
     public class Transactor : ITransactor
     {

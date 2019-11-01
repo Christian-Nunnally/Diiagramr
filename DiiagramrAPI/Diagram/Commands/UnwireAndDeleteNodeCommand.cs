@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Shell.EditorCommands;
+﻿using DiiagramrAPI.Shell.Commands;
 
 namespace DiiagramrAPI.Diagram.Commands
 {

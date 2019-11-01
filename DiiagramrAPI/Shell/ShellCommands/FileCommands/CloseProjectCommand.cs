@@ -1,7 +1,7 @@
-﻿using DiiagramrAPI.Shell;
+﻿using DiiagramrAPI.Service;
 using System;
 
-namespace DiiagramrAPI.Service.Commands.FileCommands
+namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     internal class CloseProjectCommand : DiiagramrCommand
     {

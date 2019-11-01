@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiiagramrAPI.Shell.EditorCommands
+namespace DiiagramrAPI.Shell.Commands
 {
     /// <summary>
     /// A command to wrap around complex editor operations.

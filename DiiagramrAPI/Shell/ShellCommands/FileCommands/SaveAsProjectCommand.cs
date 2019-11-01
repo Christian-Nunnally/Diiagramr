@@ -2,7 +2,7 @@
 using DiiagramrAPI.Shell;
 using System;
 
-namespace DiiagramrAPI.Service.Commands.FileCommands
+namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class SaveAsProjectCommand : ToolBarCommand
     {

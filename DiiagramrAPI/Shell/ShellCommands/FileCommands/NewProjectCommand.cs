@@ -4,7 +4,7 @@ using DiiagramrAPI.Shell;
 using System;
 using System.Linq;
 
-namespace DiiagramrAPI.Service.Commands.FileCommands
+namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class NewProjectCommand : ToolBarCommand
     {

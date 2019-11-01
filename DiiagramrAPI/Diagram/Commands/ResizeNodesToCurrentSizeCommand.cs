@@ -4,16 +4,16 @@ using System.Windows;
 
 namespace DiiagramrAPI.Diagram.Commands
 {
-    public class MoveNodesToCurrentPositionCommand : TransactingCommand
+    public class ResizeNodesToCurrentSizeCommand : TransactingCommand
     {
-        private readonly Dictionary<Node, Point> _nodeToPositionMap = new Dictionary<Node, Point>();
+        private readonly Dictionary<Node, Size> _nodeToSizeMap = new Dictionary<Node, Size>();
         private readonly IEnumerable<Node> _nodes;
 
-        public MoveNodesToCurrentPositionCommand(IEnumerable<Node> nodes)
+        public ResizeNodesToCurrentSizeCommand(IEnumerable<Node> nodes)
         {
             foreach (var node in nodes)
             {
-                _nodeToPositionMap[node] = new Point(node.X, node.Y);
+                _nodeToSizeMap[node] = new Size(node.Width, node.Height);
             }
             _nodes = nodes;
         }
@@ -24,9 +24,9 @@ namespace DiiagramrAPI.Diagram.Commands
             {
                 foreach (var node in nodes)
                 {
-                    if (_nodeToPositionMap.ContainsKey(node))
+                    if (_nodeToSizeMap.ContainsKey(node))
                     {
-                        transactor.Transact(new MoveNodeCommand(_nodeToPositionMap[node]), node);
+                        transactor.Transact(new ResizeNodeCommand(_nodeToSizeMap[node]), node);
                     }
                 }
             }

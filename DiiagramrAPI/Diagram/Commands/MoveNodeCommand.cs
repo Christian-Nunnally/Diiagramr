@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Shell.EditorCommands;
+﻿using DiiagramrAPI.Shell.Commands;
 using System;
 using System.Windows;
 

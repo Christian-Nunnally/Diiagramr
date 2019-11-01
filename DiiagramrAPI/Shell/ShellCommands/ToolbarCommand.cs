@@ -1,4 +1,4 @@
-﻿namespace DiiagramrAPI.Service.Commands
+﻿namespace DiiagramrAPI.Shell.ShellCommands
 {
     public abstract class ToolBarCommand : DiiagramrCommand
     {

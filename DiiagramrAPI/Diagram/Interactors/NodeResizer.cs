@@ -1,4 +1,7 @@
+using DiiagramrAPI.Diagram.Commands;
+using DiiagramrAPI.Shell.Commands.Transacting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Input;
@@ -9,6 +12,11 @@ namespace DiiagramrAPI.Diagram.Interactors
     {
         private const double ResizeBorderMargin = 4;
         public Point PreviousMouseLocation { get; set; }
+
+        private IEnumerable<Node> _resizingNodes;
+        private ResizeNodesToCurrentSizeCommand _undoResizeCommand;
+        private MoveNodesToCurrentPositionCommand _undoPositionAdjustmentCommand;
+
         private ResizeMode Mode { get; set; }
 
         private enum ResizeMode
@@ -19,8 +27,11 @@ namespace DiiagramrAPI.Diagram.Interactors
             Bottom,
         }
 
-        public NodeResizer()
+        private readonly ITransactor _transactor;
+
+        public NodeResizer(Func<ITransactor> _transactorFactory)
         {
+            _transactor = _transactorFactory.Invoke();
             Weight = 0.5;
         }
 
@@ -132,6 +143,9 @@ namespace DiiagramrAPI.Diagram.Interactors
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             PreviousMouseLocation = interaction.MousePosition;
+            _resizingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected).ToArray();
+            _undoResizeCommand = new ResizeNodesToCurrentSizeCommand(_resizingNodes);
+            _undoPositionAdjustmentCommand = new MoveNodesToCurrentPositionCommand(_resizingNodes);
             interaction.Diagram.ShowSnapGrid = true;
         }
 
@@ -139,7 +153,7 @@ namespace DiiagramrAPI.Diagram.Interactors
         {
             if (!interaction.IsCtrlKeyPressed)
             {
-                foreach (var node in interaction.Diagram.Nodes.Where(n => n.IsSelected))
+                foreach (var node in _resizingNodes)
                 {
                     node.X = interaction.Diagram.SnapToGrid(node.X);
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);
@@ -149,6 +163,10 @@ namespace DiiagramrAPI.Diagram.Interactors
             }
             interaction.Diagram.ShowSnapGrid = false;
             Mouse.SetCursor(Cursors.Arrow);
+            var resizeCommand = new ResizeNodesToCurrentSizeCommand(_resizingNodes);
+            var positionAdjustmentCommand = new MoveNodesToCurrentPositionCommand(_resizingNodes);
+            _transactor.Transact(resizeCommand, _undoResizeCommand, _resizingNodes);
+            _transactor.Transact(positionAdjustmentCommand, _undoPositionAdjustmentCommand, _resizingNodes);
         }
 
         public static double DistanceFromPointToLine(Point point, Point lineStart, Point lineStop)
