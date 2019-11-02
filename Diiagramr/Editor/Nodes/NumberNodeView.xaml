@@ -1,0 +1,15 @@
+﻿<UserControl
+    x:Class="Diiagramr.Diagram.Nodes.NumberNodeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet">
+    <TextBox
+        Grid.Row="1"
+        Grid.Column="0"
+        Grid.ColumnSpan="2"
+        HorizontalContentAlignment="Center"
+        VerticalContentAlignment="Center"
+        PreviewKeyDown="{s:Action PreviewKeyDown}"
+        Text="{Binding StringValue, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+        FontSize="12" />
+</UserControl>

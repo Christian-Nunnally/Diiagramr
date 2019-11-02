@@ -24,9 +24,9 @@ namespace DiiagramrAPI.Diagram
         public const double NodeSelectorBottomMargin = 250;
         public const double NodeSelectorRightMargin = 400;
         public const int DiagramMargin = 100;
-        public static Thickness NodeBorderThickness = new Thickness(NodeBorderWidth);
-        public static Thickness NodeBorderExtenderThickness = new Thickness(NodeBorderWidth - 1);
-        public static Thickness NodeSelectionBorderThickness = new Thickness(NodeBorderWidth - 16);
+        public static Thickness NodeBorderThickness { get; } = new Thickness(NodeBorderWidth);
+        public static Thickness NodeBorderExtenderThickness { get; } = new Thickness(NodeBorderWidth - 1);
+        public static Thickness NodeSelectionBorderThickness { get; } = new Thickness(NodeBorderWidth - 16);
         private static readonly Rect BoundingBoxDefault = new Rect(-400, -275, 800, 550);
         private readonly IProvideNodes _nodeProvider;
 
@@ -52,8 +52,8 @@ namespace DiiagramrAPI.Diagram
         }
 
         public DiagramModel Model { get; }
-        public BindableCollection<Node> Nodes { get; set; } = new BindableCollection<Node>();
-        public BindableCollection<Wire> Wires { get; set; } = new BindableCollection<Wire>();
+        public BindableCollection<Node> Nodes { get; } = new BindableCollection<Node>();
+        public BindableCollection<Wire> Wires { get; } = new BindableCollection<Wire>();
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
 
         public bool AreInstructionsVisible => !Nodes.Any();

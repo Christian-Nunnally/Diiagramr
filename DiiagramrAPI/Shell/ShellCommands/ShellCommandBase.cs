@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Shell.ShellCommands
     {
         public abstract string Name { get; }
         public virtual string Parent => null;
-        public IList<IShellCommand> SubCommandItems { get; set; } = new List<IShellCommand>();
+        public IList<IShellCommand> SubCommandItems { get; } = new List<IShellCommand>();
         public virtual float Weight => 0f;
 
         public bool CanExecute(IShell shell)

@@ -1,4 +1,4 @@
-namespace DiiagramrAPI.Service
+namespace DiiagramrCore
 {
     using System;
     using System.Windows.Media;

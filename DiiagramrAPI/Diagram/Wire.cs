@@ -81,7 +81,7 @@ namespace DiiagramrAPI.Diagram
         }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
-        public IList<Point> Points { get; set; }
+        public IList<Point> Points { get; private set; }
         public WireModel Model { get; private set; }
         public double X1 { get; set; }
         public double X2 { get; set; }

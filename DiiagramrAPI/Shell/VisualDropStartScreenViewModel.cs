@@ -175,6 +175,7 @@ namespace DiiagramrAPI.Shell
 
         public void UpdateRecentProjects(string name)
         {
+            RecentProject1 = name;
             //if (name == Properties.Settings.Default.RecentProject1
             // || name == Properties.Settings.Default.RecentProject2
             // || name == Properties.Settings.Default.RecentProject3)

@@ -155,7 +155,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Shell\Tools\SeparatorCommandVisibilityConverter.cs" />
-    <Compile Include="Diagram\PointsToPathConverter.cs" />
+    <Compile Include="Editor\PointsToPathConverter.cs" />
     <Compile Include="Application\WindowStyle.xaml.cs">
       <DependentUpon>WindowStyle.xaml</DependentUpon>
     </Compile>
@@ -188,79 +188,79 @@
     <None Include="Application\App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Diagram\DiagramInteractorManagerView.xaml">
+    <Page Include="Editor\DiagramInteractorManagerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DiagramRifterView.xaml">
+    <Page Include="Editor\Interactors\DiagramRifterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodeResizerView.xaml">
+    <Page Include="Editor\Interactors\NodeResizerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DiagramZoomerView.xaml">
+    <Page Include="Editor\Interactors\DiagramZoomerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\LassoNodeSelectorView.xaml">
+    <Page Include="Editor\Interactors\LassoNodeSelectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodeDeleterView.xaml">
+    <Page Include="Editor\Interactors\NodeDeleterView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\DiagramPannerView.xaml">
+    <Page Include="Editor\Interactors\DiagramPannerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodePlacerView.xaml">
+    <Page Include="Editor\Interactors\NodePlacerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\NodeDraggerView.xaml">
+    <Page Include="Editor\Interactors\NodeDraggerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\HotkeyHelpView.xaml">
+    <Page Include="Editor\Interactors\HotkeyHelpView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\TerminalWirerView.xaml">
+    <Page Include="Editor\Interactors\TerminalWirerView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Interactors\PointSelectorView.xaml">
+    <Page Include="Editor\Interactors\PointSelectorView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\NodeStyle.xaml">
+    <Page Include="Editor\NodeStyle.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Diagram\Nodes\IndexNodeView.xaml">
+    <Page Include="Editor\Nodes\IndexNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\AddNodeView.xaml">
+    <Page Include="Editor\Nodes\AddNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\ButtonNodeView.xaml">
+    <Page Include="Editor\Nodes\ButtonNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\DivideNodeView.xaml">
+    <Page Include="Editor\Nodes\DivideNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\SubtractNodeView.xaml">
+    <Page Include="Editor\Nodes\SubtractNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\MultiplyNodeView.xaml">
+    <Page Include="Editor\Nodes\MultiplyNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -284,27 +284,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\DiagramOutputNodeView.xaml">
+    <Page Include="Editor\Nodes\DiagramOutputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\DiagramInputNodeView.xaml">
+    <Page Include="Editor\Nodes\DiagramInputNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\AndNodeView.xaml">
+    <Page Include="Editor\Nodes\AndNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\Nodes\NumberNodeView.xaml">
+    <Page Include="Editor\Nodes\NumberNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\TerminalView.xaml">
+    <Page Include="Editor\TerminalView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\DiagramView.xaml">
+    <Page Include="Editor\DiagramView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -312,7 +312,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Diagram\InputTerminalView.xaml">
+    <Page Include="Editor\InputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -320,11 +320,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Diagram\Interactors\NodePaletteView.xaml">
+    <Page Include="Editor\Interactors\NodePaletteView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Diagram\OutputTerminalView.xaml">
+    <Page Include="Editor\OutputTerminalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -352,7 +352,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Diagram\WireView.xaml">
+    <Page Include="Editor\WireView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

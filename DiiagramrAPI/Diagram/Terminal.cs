@@ -1,6 +1,7 @@
 using DiiagramrAPI.Diagram.Interactors;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
+using DiiagramrCore;
 using DiiagramrModel;
 using System;
 using System.ComponentModel;
@@ -15,9 +16,9 @@ namespace DiiagramrAPI.Diagram
     {
         public const double TerminalHeight = 2 * Diagram.NodeBorderWidth;
         public const double TerminalWidth = TerminalHeight - 10;
-        public static CornerRadius TerminalBorderCornerRadius = new CornerRadius(2);
-        public static CornerRadius TerminalCornerRadius = new CornerRadius(3);
-        public Action<object> DataChanged;
+        public static CornerRadius TerminalBorderCornerRadius { get; } = new CornerRadius(2);
+        public static CornerRadius TerminalCornerRadius { get; } = new CornerRadius(3);
+        public Action<object> DataChanged { get; }
         private object _data;
 
         public Terminal(TerminalModel terminal)

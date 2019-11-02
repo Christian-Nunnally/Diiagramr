@@ -11,9 +11,9 @@
         /// </summary>
         /// <param name="name">The user visible name of the terminal.</param>
         /// <param name="type">The data type of the terminal.</param>
-        /// <param name="defaultSide">The default side of a node the terminal belongs on.</param>
+        /// <param name="defaultDirection">The default side of a node the terminal belongs on.</param>
         /// <param name="index">The unique index of the terminal.</param>
-        public InputTerminalModel(string name, Type type, Direction defaultDirection, int index) 
+        public InputTerminalModel(string name, Type type, Direction defaultDirection, int index)
             : base(name, type, defaultDirection, index)
         {
         }
@@ -29,6 +29,7 @@
             {
                 throw new ModelValidationException(this, "Remove this wire from a terminal before connecting it again");
             }
+
             if (otherTerminal is InputTerminalModel)
             {
                 throw new ModelValidationException(this, "Connect this terminal to an output instead of an input");

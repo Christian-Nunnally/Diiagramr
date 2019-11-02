@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Shell.ShellCommands
 
         float Weight { get; }
 
-        IList<IShellCommand> SubCommandItems { get; set; }
+        IList<IShellCommand> SubCommandItems { get; }
 
         bool CanExecute(IShell shell);
 

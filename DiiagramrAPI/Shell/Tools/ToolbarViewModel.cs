@@ -14,7 +14,7 @@ namespace DiiagramrAPI.Shell.Tools
     {
         private readonly Service.ShellCommandFactory _commandManager;
 
-        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; }
+        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; } = new ObservableCollection<TopLevelToolBarCommand>();
 
         public ToolbarViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
         {
@@ -25,7 +25,6 @@ namespace DiiagramrAPI.Shell.Tools
 
         private void SetupToolbarCommands(IEnumerable<ToolBarCommand> commands)
         {
-            TopLevelMenuItems = new ObservableCollection<TopLevelToolBarCommand>();
             var topLevelMenuItems = commands.OfType<TopLevelToolBarCommand>();
             var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
             foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))

@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Shell
         private ShellViewModel _shellViewModel;
         private readonly Queue<Action<ShellViewModel>> _workQueue = new Queue<Action<ShellViewModel>>();
 
-        public IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; set; } = new BindableCollection<TopLevelToolBarCommand>();
+        public IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; } = new BindableCollection<TopLevelToolBarCommand>();
 
         public void AttachToViewModel(ShellViewModel shellViewModel)
         {

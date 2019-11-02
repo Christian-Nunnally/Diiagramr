@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="Diiagramr.Diagram.Interactors.LassoNodeSelectorView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Rectangle
+        Width="{Binding Width}"
+        Height="{Binding Height}"
+        Fill="{StaticResource DiagramSelectionRectangleFill}"
+        RadiusX="3"
+        RadiusY="3"
+        Stroke="{StaticResource DiagramSelectionRectangleStroke}"
+        StrokeThickness="2" />
+</UserControl>
