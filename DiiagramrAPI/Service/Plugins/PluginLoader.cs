@@ -69,18 +69,6 @@ namespace DiiagramrAPI.Service.Plugins
             return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
         }
 
-        private string ReadNuspecInDirectory(string directory)
-        {
-            var nuspecPath = _directoryService
-                .GetFiles(directory, "*.nuspec")
-                .FirstOrDefault();
-            if (nuspecPath == null)
-            {
-                throw new PluginLoadException($".nuspec file not found in directory {directory}");
-            }
-            return _directoryService.ReadAllText(nuspecPath);
-        }
-
         private void GetInstalledPlugins()
         {
             var directories = _directoryService.GetDirectories(_pluginDirectory);
@@ -137,6 +125,18 @@ namespace DiiagramrAPI.Service.Plugins
                     _serializeableTypes.Add(exportedType);
                 }
             }
+        }
+
+        private string ReadNuspecInDirectory(string directory)
+        {
+            var nuspecPath = _directoryService
+                .GetFiles(directory, "*.nuspec")
+                .FirstOrDefault();
+            if (nuspecPath == null)
+            {
+                throw new PluginLoadException($".nuspec file not found in directory {directory}");
+            }
+            return _directoryService.ReadAllText(nuspecPath);
         }
 
         private void RegisterPluginNodesFromAssembly(Assembly assembly, NodeLibrary libraryDependency)

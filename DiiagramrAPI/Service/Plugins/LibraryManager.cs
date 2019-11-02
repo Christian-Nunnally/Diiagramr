@@ -33,8 +33,8 @@ namespace DiiagramrAPI.Service.Plugins
         }
 
         public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
-        public ObservableCollection<LibraryListItem> InstalledLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
         public ObservableCollection<LibraryListItem> AvailableLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
+        public ObservableCollection<LibraryListItem> InstalledLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
         public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
 
         public bool AddSource(string sourceUrl)
@@ -85,31 +85,6 @@ namespace DiiagramrAPI.Service.Plugins
             return true;
         }
 
-        private void CreateTemporaryDirectory(string absPath)
-        {
-            var tmpDir = absPath + "\\tmp";
-
-            if (!_directoryService.Exists(tmpDir))
-            {
-                _directoryService.CreateDirectory(tmpDir);
-            }
-        }
-
-        private bool IsLibraryInstalled(NodeLibrary libraryDescription)
-        {
-            return InstalledLibraryItems.Any(i => i.LibraryDisplayName == libraryDescription.ToString());
-        }
-
-        private void ExtractDllFromZip(string zipPath, string extractPath, string toPath)
-        {
-            if (!_directoryService.Exists(toPath))
-            {
-                _directoryService.ExtractToDirectory(zipPath, extractPath);
-                _directoryService.Move(extractPath, toPath);
-                _directoryService.Delete(zipPath, false);
-            }
-        }
-
         public async Task LoadSourcesAsync()
         {
             _shouldSourcesBeLoaded = true;
@@ -137,6 +112,29 @@ namespace DiiagramrAPI.Service.Plugins
             RemoveAvailableLibrariesFromPaths(libraryPaths);
 
             return true;
+        }
+
+        public void UninstallLibrary(LibraryListItem libraryListItem)
+        {
+            if (libraryListItem.Library != null)
+            {
+                if (TryGetLibraryWithNameAndVersion(libraryListItem.Library, out NodeLibrary library))
+                {
+                    if (!string.IsNullOrEmpty(library.PathOnDisk))
+                    {
+                        _directoryService.Delete(library.PathOnDisk, true);
+                        InstalledLibraryItems.Remove(libraryListItem);
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(libraryListItem?.Library?.PathOnDisk))
+                    {
+                        _directoryService.Delete(libraryListItem.Library.PathOnDisk, true);
+                        InstalledLibraryItems.Remove(libraryListItem);
+                    }
+                }
+            }
         }
 
         private static NodeLibrary CreateLibraryFromPath(string libraryPath)
@@ -186,6 +184,31 @@ namespace DiiagramrAPI.Service.Plugins
                 var library = CreateLibraryFromPath(libraryPath);
                 AddLibraryToAvailableIfNewest(library);
             }
+        }
+
+        private void CreateTemporaryDirectory(string absPath)
+        {
+            var tmpDir = absPath + "\\tmp";
+
+            if (!_directoryService.Exists(tmpDir))
+            {
+                _directoryService.CreateDirectory(tmpDir);
+            }
+        }
+
+        private void ExtractDllFromZip(string zipPath, string extractPath, string toPath)
+        {
+            if (!_directoryService.Exists(toPath))
+            {
+                _directoryService.ExtractToDirectory(zipPath, extractPath);
+                _directoryService.Move(extractPath, toPath);
+                _directoryService.Delete(zipPath, false);
+            }
+        }
+
+        private bool IsLibraryInstalled(NodeLibrary libraryDescription)
+        {
+            return InstalledLibraryItems.Any(i => i.LibraryDisplayName == libraryDescription.ToString());
         }
 
         private async Task LoadSourceAsync(string sourceUrl)
@@ -248,29 +271,6 @@ namespace DiiagramrAPI.Service.Plugins
                 var matchingLibrary = AvailableLibraries.FirstOrDefault(x => x.PathOnDisk == directoryName);
                 var libraryListItem = new LibraryListItem(new NodeLibrary() { PathOnDisk = directory, Name = directoryName }) { ButtonText = "Uninstall" };
                 InstalledLibraryItems.Add(libraryListItem);
-            }
-        }
-
-        public void UninstallLibrary(LibraryListItem libraryListItem)
-        {
-            if (libraryListItem.Library != null)
-            {
-                if (TryGetLibraryWithNameAndVersion(libraryListItem.Library, out NodeLibrary library))
-                {
-                    if (!string.IsNullOrEmpty(library.PathOnDisk))
-                    {
-                        _directoryService.Delete(library.PathOnDisk, true);
-                        InstalledLibraryItems.Remove(libraryListItem);
-                    }
-                }
-                else
-                {
-                    if (!string.IsNullOrEmpty(libraryListItem?.Library?.PathOnDisk))
-                    {
-                        _directoryService.Delete(libraryListItem.Library.PathOnDisk, true);
-                        InstalledLibraryItems.Remove(libraryListItem);
-                    }
-                }
             }
         }
     }

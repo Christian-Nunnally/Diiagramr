@@ -6,15 +6,15 @@ namespace DiiagramrAPI.Shell.Tools
     [AddINotifyPropertyChangedInterface]
     public class LibraryListItem
     {
-        public string ButtonText { get; set; } = "Install";
-        public string LibraryDisplayName { get; }
-        public NodeLibrary Library { get; internal set; }
-
         public LibraryListItem(NodeLibrary library)
         {
             Library = library;
             LibraryDisplayName = library.Name;
         }
+
+        public string ButtonText { get; set; } = "Install";
+        public NodeLibrary Library { get; internal set; }
+        public string LibraryDisplayName { get; }
 
         public override string ToString()
         {

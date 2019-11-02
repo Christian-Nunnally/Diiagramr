@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Shell;
-using System;
+﻿using System;
 
 namespace DiiagramrAPI.Shell.ShellCommands.StartupCommands
 {

@@ -4,8 +4,8 @@ namespace DiiagramrAPI.Service
 {
     internal static class TerminalAdornerHelpers
     {
-        private const double XAdjustmentBecauseTheTerminalVisualIsRotated = (Diagram.NodeBorderWidth - (Terminal.TerminalWidth / 2));
         private const double MarginFromTerminal = 5.0;
+        private const double XAdjustmentBecauseTheTerminalVisualIsRotated = (Diagram.NodeBorderWidth - (Terminal.TerminalWidth / 2));
 
         public static double GetVisualXBasedOnTerminalDirection(double width, float direction)
         {

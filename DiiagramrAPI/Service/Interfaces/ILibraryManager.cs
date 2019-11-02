@@ -10,16 +10,20 @@ namespace DiiagramrAPI.Service.Interfaces
     public interface ILibraryManager : IService
     {
         ObservableCollection<NodeLibrary> AvailableLibraries { get; }
-        ObservableCollection<LibraryListItem> InstalledLibraryItems { get; }
         ObservableCollection<LibraryListItem> AvailableLibraryItems { get; }
+        ObservableCollection<LibraryListItem> InstalledLibraryItems { get; }
         ObservableCollection<string> Sources { get; }
+
+        bool AddSource(string sourceUrl);
+
         IEnumerable<Type> GetSerializeableTypes();
 
         Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem);
-        void UninstallLibrary(LibraryListItem libraryListItem);
 
         Task LoadSourcesAsync();
-        bool AddSource(string sourceUrl);
+
         bool RemoveSource(string sourceUrl);
+
+        void UninstallLibrary(LibraryListItem libraryListItem);
     }
 }

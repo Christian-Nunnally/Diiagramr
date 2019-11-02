@@ -1,13 +1,12 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using System;
 
 namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class VisualDropCloseProjectCommand : ToolBarCommand
     {
-        private readonly VisualDropStartScreenViewModel _startScreenViewModel;
         private readonly IProjectManager _projectManager;
+        private readonly VisualDropStartScreenViewModel _startScreenViewModel;
 
         public VisualDropCloseProjectCommand(Func<VisualDropStartScreenViewModel> startScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
         {

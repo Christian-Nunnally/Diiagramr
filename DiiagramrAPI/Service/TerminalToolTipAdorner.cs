@@ -67,7 +67,10 @@ namespace DiiagramrAPI.Service
             return finalSize;
         }
 
-        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
+        protected override Visual GetVisualChild(int index)
+        {
+            return visualChildren[index];
+        }
 
         private double GetRelativeXBasedOnTerminalDirection(double width)
         {

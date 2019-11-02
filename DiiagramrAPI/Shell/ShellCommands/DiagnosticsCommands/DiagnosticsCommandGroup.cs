@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Shell;
-using System.Windows;
+﻿using System.Windows;
 
 namespace DiiagramrAPI.Shell.ShellCommands.DiagnosticsCommands
 {

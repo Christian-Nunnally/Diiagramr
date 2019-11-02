@@ -11,32 +11,13 @@ namespace DiiagramrAPI.Shell
 {
     public class VisualDropStartScreenViewModel : Screen, IShownInShellReaction
     {
-        private const int _recentProjectMaxCharacterLength = 10;
         private const int _dripEffectDelay = 30;
         private const int _frames = 100;
         private const int _quadrents = 1;
-
-        private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
+        private const int _recentProjectMaxCharacterLength = 10;
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
+        private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
         private IProjectFileService _projectFileService;
-
-        public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
-
-        public bool OpenProjectButtonsVisible { get; set; }
-        public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
-        public string RecentProject1 { get; set; }
-        public string RecentProject2 { get; set; }
-        public string RecentProject3 { get; set; }
-
-        public string RecentProject1DisplayString => RecentProject1.Length > _recentProjectMaxCharacterLength
-            ? RecentProject1.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject1;
-        public string RecentProject2DisplayString => RecentProject2.Length > _recentProjectMaxCharacterLength
-            ? RecentProject2.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject2;
-        public string RecentProject3DisplayString => RecentProject3.Length > _recentProjectMaxCharacterLength
-            ? RecentProject3.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject3;
 
         public VisualDropStartScreenViewModel(Func<IProjectFileService> projectFileServiceFactory)
         {
@@ -60,19 +41,139 @@ namespace DiiagramrAPI.Shell
             UpdateRecentProjects(string.Empty);
         }
 
-        private void PopulateTargetSpectrumValues()
+        public bool OpenProjectButtonsVisible { get; set; }
+        public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
+        public string RecentProject1 { get; set; }
+
+        public string RecentProject1DisplayString => RecentProject1.Length > _recentProjectMaxCharacterLength
+            ? RecentProject1.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
+            : RecentProject1;
+
+        public string RecentProject2 { get; set; }
+
+        public string RecentProject2DisplayString => RecentProject2.Length > _recentProjectMaxCharacterLength
+            ? RecentProject2.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
+            : RecentProject2;
+
+        public string RecentProject3 { get; set; }
+
+        public string RecentProject3DisplayString => RecentProject3.Length > _recentProjectMaxCharacterLength
+            ? RecentProject3.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
+            : RecentProject3;
+
+        public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
+
+        public void BrowseButtonPressed()
         {
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(188, 47, 51))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(46, new SolidColorBrush(Color.FromRgb(183, 108, 87))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(195, 153, 93))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(166, 185, 151))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(38, new SolidColorBrush(Color.FromRgb(98, 147, 104))));
-            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(66, 80, 116))));
+            ShellCommand.Execute("Project:Open");
         }
 
-        private void ProjectSavedHandler(ProjectModel project)
+        public void NewButtonPressed()
         {
-            UpdateRecentProjects(project.Name);
+            ShellCommand.Execute("Project:New");
+        }
+
+        public void OpenButtonsMouseLeave()
+        {
+            OpenProjectButtonsVisible = false;
+        }
+
+        public void OpenLabelMouseEntered()
+        {
+            OpenProjectButtonsVisible = true;
+        }
+
+        public void RecentProject1Pressed()
+        {
+            if (RecentProject1 == "Recent #1")
+            {
+                BrowseButtonPressed();
+            }
+            else
+            {
+                LoadProject(RecentProject1);
+            }
+        }
+
+        public void RecentProject2Pressed()
+        {
+            if (RecentProject2 == "Recent #2")
+            {
+                BrowseButtonPressed();
+            }
+            else
+            {
+                LoadProject(RecentProject2);
+            }
+        }
+
+        public void RecentProject3Pressed()
+        {
+            if (RecentProject3 == "Recent #3")
+            {
+                BrowseButtonPressed();
+            }
+            else
+            {
+                LoadProject(RecentProject3);
+            }
+        }
+
+        public void ShownInShell()
+        {
+            AnimateLogo();
+        }
+
+        public void UpdateRecentProjects(string name)
+        {
+            RecentProject1 = name;
+            //if (name == Properties.Settings.Default.RecentProject1
+            // || name == Properties.Settings.Default.RecentProject2
+            // || name == Properties.Settings.Default.RecentProject3)
+            //{
+            //    return;
+            //}
+            //if (!string.IsNullOrEmpty(name))
+            //{
+            //    Properties.Settings.Default.RecentProject3 = Properties.Settings.Default.RecentProject2;
+            //    Properties.Settings.Default.RecentProject2 = Properties.Settings.Default.RecentProject1;
+            //    Properties.Settings.Default.RecentProject1 = name;
+            //    Properties.Settings.Default.Save();
+            //}
+            //RecentProject1 = Properties.Settings.Default.RecentProject1;
+            //RecentProject2 = Properties.Settings.Default.RecentProject2;
+            //RecentProject3 = Properties.Settings.Default.RecentProject3;
+        }
+
+        protected override void OnViewLoaded()
+        {
+            AnimateLogo();
+        }
+
+        private void AnimateLogo()
+        {
+            if (View != null)
+            {
+                new Thread(() =>
+                {
+                    for (int frame = 0; frame < _frames + _dripEffectDelay; frame++)
+                    {
+                        if (View == null)
+                        {
+                            return;
+                        }
+
+                        View.Dispatcher.Invoke(() =>
+                        {
+                            for (int j = 0; j < _targetSpectrumLogoValues.Count; j++)
+                            {
+                                SpectrumLogoValues[j] = _logoAnimationFrames[frame][j];
+                            }
+                        });
+                        Thread.Sleep(14);
+                    }
+                }).Start();
+            }
         }
 
         private void GenerateAnimationFrames()
@@ -122,122 +223,24 @@ namespace DiiagramrAPI.Shell
             }
         }
 
-        public void ShownInShell()
-        {
-            AnimateLogo();
-        }
-
-        private void AnimateLogo()
-        {
-            if (View != null)
-            {
-                new Thread(() =>
-                {
-                    for (int frame = 0; frame < _frames + _dripEffectDelay; frame++)
-                    {
-                        if (View == null)
-                        {
-                            return;
-                        }
-
-                        View.Dispatcher.Invoke(() =>
-                        {
-                            for (int j = 0; j < _targetSpectrumLogoValues.Count; j++)
-                            {
-                                SpectrumLogoValues[j] = _logoAnimationFrames[frame][j];
-                            }
-                        });
-                        Thread.Sleep(14);
-                    }
-                }).Start();
-            }
-        }
-
-        protected override void OnViewLoaded()
-        {
-            AnimateLogo();
-        }
-
-        public void NewButtonPressed()
-        {
-            ShellCommand.Execute("Project:New");
-        }
-
-        public void BrowseButtonPressed()
-        {
-            ShellCommand.Execute("Project:Open");
-        }
-
         private void LoadProject(string projectName)
         {
             ShellCommand.Execute("Project:Open", projectName);
         }
 
-        public void UpdateRecentProjects(string name)
+        private void PopulateTargetSpectrumValues()
         {
-            RecentProject1 = name;
-            //if (name == Properties.Settings.Default.RecentProject1
-            // || name == Properties.Settings.Default.RecentProject2
-            // || name == Properties.Settings.Default.RecentProject3)
-            //{
-            //    return;
-            //}
-            //if (!string.IsNullOrEmpty(name))
-            //{
-            //    Properties.Settings.Default.RecentProject3 = Properties.Settings.Default.RecentProject2;
-            //    Properties.Settings.Default.RecentProject2 = Properties.Settings.Default.RecentProject1;
-            //    Properties.Settings.Default.RecentProject1 = name;
-            //    Properties.Settings.Default.Save();
-            //}
-            //RecentProject1 = Properties.Settings.Default.RecentProject1;
-            //RecentProject2 = Properties.Settings.Default.RecentProject2;
-            //RecentProject3 = Properties.Settings.Default.RecentProject3;
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(188, 47, 51))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(46, new SolidColorBrush(Color.FromRgb(183, 108, 87))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(195, 153, 93))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(166, 185, 151))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(38, new SolidColorBrush(Color.FromRgb(98, 147, 104))));
+            _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(66, 80, 116))));
         }
 
-        public void OpenLabelMouseEntered()
+        private void ProjectSavedHandler(ProjectModel project)
         {
-            OpenProjectButtonsVisible = true;
-        }
-
-        public void OpenButtonsMouseLeave()
-        {
-            OpenProjectButtonsVisible = false;
-        }
-
-        public void RecentProject1Pressed()
-        {
-            if (RecentProject1 == "Recent #1")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                LoadProject(RecentProject1);
-            }
-        }
-
-        public void RecentProject2Pressed()
-        {
-            if (RecentProject2 == "Recent #2")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                LoadProject(RecentProject2);
-            }
-        }
-
-        public void RecentProject3Pressed()
-        {
-            if (RecentProject3 == "Recent #3")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                LoadProject(RecentProject3);
-            }
+            UpdateRecentProjects(project.Name);
         }
     }
 }

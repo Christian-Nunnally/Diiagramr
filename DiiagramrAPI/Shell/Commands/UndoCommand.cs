@@ -8,13 +8,14 @@ namespace DiiagramrAPI.Shell.Commands
     // TODO: turn in to an extension method
     public class UndoCommand : ICommand
     {
+        private readonly ICommand _command;
+
+        private bool _hasBeenUndone;
+
         public UndoCommand(ICommand command)
         {
             _command = command;
         }
-
-        private bool _hasBeenUndone;
-        private readonly ICommand _command;
 
         public Action Execute(object parameter) => Undo(parameter);
 

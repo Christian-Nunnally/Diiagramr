@@ -1,6 +1,4 @@
-﻿using DiiagramrAPI.Shell;
-
-namespace DiiagramrAPI.Shell.ShellCommands
+﻿namespace DiiagramrAPI.Shell.ShellCommands
 {
     public class FileSeparatorCommand1 : SeparatorCommand
     {

@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using System.Collections.Generic;
 
 namespace DiiagramrAPI.Shell.ShellCommands
@@ -10,9 +9,8 @@ namespace DiiagramrAPI.Shell.ShellCommands
 
         string Parent { get; }
 
-        float Weight { get; }
-
         IList<IShellCommand> SubCommandItems { get; }
+        float Weight { get; }
 
         bool CanExecute(IShell shell);
 

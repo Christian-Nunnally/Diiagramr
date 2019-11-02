@@ -13,10 +13,9 @@ namespace DiiagramrAPI.Shell
 {
     public class ShellViewModel : Conductor<IScreen>.StackNavigation
     {
-        public const string StartCommandId = "start";
-        public Stack<AbstractShellWindow> WindowStack { get; } = new Stack<AbstractShellWindow>();
-        private TimeSpan _lastMouseDownTime;
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
+        public const string StartCommandId = "start";
+        private TimeSpan _lastMouseDownTime;
 
         public ShellViewModel(
             Func<IProjectManager> projectManagerFactory,
@@ -32,17 +31,32 @@ namespace DiiagramrAPI.Shell
             ShellCommand.Execute(StartCommandId);
         }
 
+        public AbstractShellWindow ActiveWindow { get; set; }
         public bool CanSaveAsProject { get; set; }
         public bool CanSaveProject { get; set; }
+        public ContextMenuViewModel ContextMenuViewModel { get; set; }
+        public double Height { get; set; } = 830;
         public bool IsWindowOpen => ActiveWindow != null;
         public IProjectManager ProjectManager { get; }
-        public ToolbarViewModel ToolbarViewModel { get; set; }
-        public ContextMenuViewModel ContextMenuViewModel { get; set; }
-        public AbstractShellWindow ActiveWindow { get; set; }
-        public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
-        public double Width { get; set; } = 1010;
-        public double Height { get; set; } = 830;
         public IShell Shell { get; }
+        public ToolbarViewModel ToolbarViewModel { get; set; }
+        public double Width { get; set; } = 1010;
+        public Stack<AbstractShellWindow> WindowStack { get; } = new Stack<AbstractShellWindow>();
+        public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
+
+        public void CloseWindow()
+        {
+            if (ActiveWindow != null)
+            {
+                ActiveWindow.OpenWindow -= OpenWindow;
+                ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
+            }
+        }
+
+        public void MouseDownHandled(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
+        }
 
         public void MouseDownHandler()
         {
@@ -54,15 +68,6 @@ namespace DiiagramrAPI.Shell
             if (DateTime.Now.TimeOfDay.Subtract(_lastMouseDownTime).TotalMilliseconds < 700)
             {
                 CloseWindow();
-            }
-        }
-
-        public void CloseWindow()
-        {
-            if (ActiveWindow != null)
-            {
-                ActiveWindow.OpenWindow -= OpenWindow;
-                ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
             }
         }
 
@@ -108,14 +113,6 @@ namespace DiiagramrAPI.Shell
             }
         }
 
-        private void CloseCurrentScreens()
-        {
-            while (ActiveItem != null)
-            {
-                ActiveItem.RequestClose();
-            }
-        }
-
         public void WindowClosing(object sender, CancelEventArgs e)
         {
             if (!ProjectManager.CloseProject())
@@ -124,9 +121,12 @@ namespace DiiagramrAPI.Shell
             }
         }
 
-        public void MouseDownHandled(object sender, MouseButtonEventArgs e)
+        private void CloseCurrentScreens()
         {
-            e.Handled = true;
+            while (ActiveItem != null)
+            {
+                ActiveItem.RequestClose();
+            }
         }
     }
 }

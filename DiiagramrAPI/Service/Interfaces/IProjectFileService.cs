@@ -6,9 +6,9 @@ namespace DiiagramrAPI.Service.Interfaces
 {
     public interface IProjectFileService : IService
     {
-        string ProjectDirectory { get; set; }
-
         event Action<ProjectModel> ProjectSaved;
+
+        string ProjectDirectory { get; set; }
 
         /// <summary>
         /// Confirms ProjectModel Close.

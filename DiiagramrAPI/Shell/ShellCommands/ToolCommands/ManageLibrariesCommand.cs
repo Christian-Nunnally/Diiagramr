@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Shell;
-using DiiagramrAPI.Shell.Tools;
+﻿using DiiagramrAPI.Shell.Tools;
 using System;
 
 namespace DiiagramrAPI.Shell.ShellCommands.ToolCommands

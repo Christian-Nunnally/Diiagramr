@@ -5,8 +5,8 @@ namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     internal class CloseProjectCommand : DiiagramrCommand
     {
-        private readonly StartScreenViewModel _startScreenViewModel;
         private readonly ProjectManager _projectManager;
+        private readonly StartScreenViewModel _startScreenViewModel;
 
         public CloseProjectCommand(Func<StartScreenViewModel> startScreenViewModelFactory, Func<ProjectManager> projectManagerFactory)
         {

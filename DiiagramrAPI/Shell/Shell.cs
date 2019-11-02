@@ -12,9 +12,8 @@ namespace DiiagramrAPI.Shell
     /// </summary>
     public class Shell : IShell
     {
-        private ShellViewModel _shellViewModel;
         private readonly Queue<Action<ShellViewModel>> _workQueue = new Queue<Action<ShellViewModel>>();
-
+        private ShellViewModel _shellViewModel;
         public IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; } = new BindableCollection<TopLevelToolBarCommand>();
 
         public void AttachToViewModel(ShellViewModel shellViewModel)
@@ -43,20 +42,20 @@ namespace DiiagramrAPI.Shell
             ExecuteWhenAttached(shell => shell.ShowScreen(screen));
         }
 
+        private void ExecuteAllActions()
+        {
+            while (_workQueue.Count != 0)
+            {
+                _workQueue.Dequeue().Invoke(_shellViewModel);
+            }
+        }
+
         private void ExecuteWhenAttached(Action<ShellViewModel> shellAction)
         {
             _workQueue.Enqueue(shellAction);
             if (_shellViewModel != null)
             {
                 ExecuteAllActions();
-            }
-        }
-
-        private void ExecuteAllActions()
-        {
-            while (_workQueue.Count != 0)
-            {
-                _workQueue.Dequeue().Invoke(_shellViewModel);
             }
         }
     }

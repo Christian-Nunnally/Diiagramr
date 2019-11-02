@@ -14,8 +14,6 @@ namespace DiiagramrAPI.Shell.Tools
     {
         private readonly Service.ShellCommandFactory _commandManager;
 
-        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; } = new ObservableCollection<TopLevelToolBarCommand>();
-
         public ToolbarViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
         {
             _commandManager = commandManagerFactory.Invoke();
@@ -23,19 +21,7 @@ namespace DiiagramrAPI.Shell.Tools
             SetupToolbarCommands(toolbarCommands);
         }
 
-        private void SetupToolbarCommands(IEnumerable<ToolBarCommand> commands)
-        {
-            var topLevelMenuItems = commands.OfType<TopLevelToolBarCommand>();
-            var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
-            foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
-            {
-                TopLevelMenuItems.Add(topLevelMenuItem);
-                foreach (var subMenuItem in nonTopLevelMenuItems.Where(x => x.Parent == topLevelMenuItem.Name).OrderBy(x => x.Weight))
-                {
-                    topLevelMenuItem.SubCommandItems.Add(subMenuItem);
-                }
-            }
-        }
+        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; } = new ObservableCollection<TopLevelToolBarCommand>();
 
         public void ExecuteCommandHandler(object sender, MouseEventArgs e)
         {
@@ -53,6 +39,20 @@ namespace DiiagramrAPI.Shell.Tools
                     }
                 }
                 _commandManager.ExecuteCommand(command, correctedRelativePosition);
+            }
+        }
+
+        private void SetupToolbarCommands(IEnumerable<ToolBarCommand> commands)
+        {
+            var topLevelMenuItems = commands.OfType<TopLevelToolBarCommand>();
+            var nonTopLevelMenuItems = commands.Where(x => x.Parent != null);
+            foreach (var topLevelMenuItem in topLevelMenuItems.OrderBy(x => x.Weight))
+            {
+                TopLevelMenuItems.Add(topLevelMenuItem);
+                foreach (var subMenuItem in nonTopLevelMenuItems.Where(x => x.Parent == topLevelMenuItem.Name).OrderBy(x => x.Weight))
+                {
+                    topLevelMenuItem.SubCommandItems.Add(subMenuItem);
+                }
             }
         }
     }

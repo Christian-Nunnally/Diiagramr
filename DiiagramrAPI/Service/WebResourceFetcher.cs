@@ -10,6 +10,11 @@ namespace DiiagramrAPI.Service
         private readonly WebClient _webClient = new WebClient();
         private bool _currentlyFetching = false;
 
+        public void Dispose()
+        {
+            _webClient.Dispose();
+        }
+
         public async Task DownloadFileAsync(string url, string downloadToPath)
         {
             try
@@ -45,11 +50,6 @@ namespace DiiagramrAPI.Service
             {
                 _currentlyFetching = false;
             }
-        }
-
-        public void Dispose()
-        {
-            _webClient.Dispose();
         }
     }
 }

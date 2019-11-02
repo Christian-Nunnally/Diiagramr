@@ -11,16 +11,8 @@ namespace DiiagramrAPI.Service
     public class DirectEditTextBoxAdorner : Adorner
     {
         private readonly TextBox textBox;
-        private VisualCollection visualChildren;
         private string _directEditTextBoxText;
-
-        public bool IsBoolType => AdornedTerminal.Model.Type == typeof(bool);
-        public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
-        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
-        public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
-        public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
-        public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
-        public bool IsEnumType => AdornedTerminal.Model.Type.IsEnum;
+        private VisualCollection visualChildren;
 
         public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal) : base(adornedElement)
         {
@@ -59,46 +51,7 @@ namespace DiiagramrAPI.Service
             visualChildren.Add(textBox);
         }
 
-        private void LostFocusHandler(object sender, RoutedEventArgs e)
-        {
-            AdornedTerminal.SetAdorner(null);
-        }
-
-        private void KeyDownHandler(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                AdornedTerminal.SetAdorner(null);
-            }
-        }
-
         public Terminal AdornedTerminal { get; set; }
-        protected override int VisualChildrenCount => visualChildren.Count;
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            double width = textBox.Width;
-            double height = textBox.Height;
-
-            double x = GetRelativeXBasedOnTerminalDirection(width);
-            double y = GetRelativeYBasedOnTerminalDirection(height);
-            textBox.Arrange(new Rect(x, y, width, height));
-            return finalSize;
-        }
-
-        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
-
-        private double GetRelativeXBasedOnTerminalDirection(double width)
-        {
-            var direction = AdornedTerminal.TerminalRotation;
-            return TerminalAdornerHelpers.GetVisualXBasedOnTerminalDirection(width, direction);
-        }
-
-        private double GetRelativeYBasedOnTerminalDirection(double height)
-        {
-            var direction = AdornedTerminal.TerminalRotation;
-            return TerminalAdornerHelpers.GetVisualYBasedOnTerminalDirection(height, direction);
-        }
 
         public string DirectEditTextBoxText
         {
@@ -136,6 +89,56 @@ namespace DiiagramrAPI.Service
                     }
                 }
             }
+        }
+
+        public bool IsBoolType => AdornedTerminal.Model.Type == typeof(bool);
+        public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
+        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
+        public bool IsEnumType => AdornedTerminal.Model.Type.IsEnum;
+        public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
+        public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
+        public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
+        protected override int VisualChildrenCount => visualChildren.Count;
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            double width = textBox.Width;
+            double height = textBox.Height;
+
+            double x = GetRelativeXBasedOnTerminalDirection(width);
+            double y = GetRelativeYBasedOnTerminalDirection(height);
+            textBox.Arrange(new Rect(x, y, width, height));
+            return finalSize;
+        }
+
+        protected override Visual GetVisualChild(int index)
+        {
+            return visualChildren[index];
+        }
+
+        private double GetRelativeXBasedOnTerminalDirection(double width)
+        {
+            var direction = AdornedTerminal.TerminalRotation;
+            return TerminalAdornerHelpers.GetVisualXBasedOnTerminalDirection(width, direction);
+        }
+
+        private double GetRelativeYBasedOnTerminalDirection(double height)
+        {
+            var direction = AdornedTerminal.TerminalRotation;
+            return TerminalAdornerHelpers.GetVisualYBasedOnTerminalDirection(height, direction);
+        }
+
+        private void KeyDownHandler(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                AdornedTerminal.SetAdorner(null);
+            }
+        }
+
+        private void LostFocusHandler(object sender, RoutedEventArgs e)
+        {
+            AdornedTerminal.SetAdorner(null);
         }
     }
 }

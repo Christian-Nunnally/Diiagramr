@@ -128,6 +128,8 @@ namespace DiiagramrAPI.Service
 
     public class ProviderException : Exception
     {
-        public ProviderException(string message) : base($"Node Provider Exception: {message}") { }
+        public ProviderException(string message) : base($"Node Provider Exception: {message}")
+        {
+        }
     }
 }

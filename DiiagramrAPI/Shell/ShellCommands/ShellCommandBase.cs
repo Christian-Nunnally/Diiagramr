@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Shell;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DiiagramrAPI.Shell.ShellCommands
 {
@@ -15,8 +14,6 @@ namespace DiiagramrAPI.Shell.ShellCommands
             return true;
         }
 
-        internal abstract void ExecuteInternal(IShell shell, object parameter);
-
         public void Execute(IShell shell, object parameter)
         {
             if (CanExecute(shell))
@@ -24,5 +21,7 @@ namespace DiiagramrAPI.Shell.ShellCommands
                 ExecuteInternal(shell, parameter);
             }
         }
+
+        internal abstract void ExecuteInternal(IShell shell, object parameter);
     }
 }

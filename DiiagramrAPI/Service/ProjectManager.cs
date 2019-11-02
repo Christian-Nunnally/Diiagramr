@@ -141,7 +141,7 @@ namespace DiiagramrAPI.Service
                 }
                 catch
                 {
-                    // This code is so that if a project fails to load because it contains a node from an uninstalled library, 
+                    // This code is so that if a project fails to load because it contains a node from an uninstalled library,
                     // it will attempt to download and install the missing library. I'm pretty sure this code work as intended
                     // because nodes that fail to load are handled by printing a message to the output and just ignoring that node.
                     // TODO: Make async

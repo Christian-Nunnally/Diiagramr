@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell.ShellCommands;
 using DiiagramrCore;
 using Stylet;
@@ -35,6 +34,11 @@ namespace DiiagramrAPI.Shell.Tools
             }
         }
 
+        public void MouseLeft()
+        {
+            Visible = false;
+        }
+
         public void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             X = (float)position.X;
@@ -42,11 +46,6 @@ namespace DiiagramrAPI.Shell.Tools
             Visible = !Visible;
             Commands.Clear();
             commands.ForEach(Commands.Add);
-        }
-
-        public void MouseLeft()
-        {
-            Visible = false;
         }
     }
 }

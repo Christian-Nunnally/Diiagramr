@@ -8,10 +8,10 @@ namespace DiiagramrAPI.Service
 {
     public class NodeNameAdornernment : Adorner
     {
-        private readonly double MarginAroundLabel = 4.0;
-        private readonly double MarginFromNode = Diagram.NodeBorderWidth + 5;
         private readonly Border border;
         private readonly TextBlock label;
+        private readonly double MarginAroundLabel = 4.0;
+        private readonly double MarginFromNode = Diagram.NodeBorderWidth + 5;
         private readonly VisualCollection visualChildren;
 
         public NodeNameAdornernment(UIElement adornedElement, Node adornedNode) : base(adornedElement)
@@ -66,6 +66,9 @@ namespace DiiagramrAPI.Service
             return finalSize;
         }
 
-        protected override Visual GetVisualChild(int index) { return visualChildren[index]; }
+        protected override Visual GetVisualChild(int index)
+        {
+            return visualChildren[index];
+        }
     }
 }

@@ -39,7 +39,6 @@ namespace DiiagramrAPI.Shell.Tools
                 {
                     if (LibraryManager.RemoveSource(source))
                     {
-
                     }
                 }
             }

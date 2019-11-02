@@ -1,23 +1,22 @@
 ﻿using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using System;
 
 namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
 {
     public class SaveAsProjectCommand : ToolBarCommand
     {
-        public override string Name => "Save As...";
-        public override string Parent => "Project";
-        public override float Weight => .4f;
-
-        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
         private readonly IProjectManager _projectManager;
+        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 
         public SaveAsProjectCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
         {
             _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
         }
+
+        public override string Name => "Save As...";
+        public override string Parent => "Project";
+        public override float Weight => .4f;
 
         internal override void ExecuteInternal(IShell shell, object parameter)
         {

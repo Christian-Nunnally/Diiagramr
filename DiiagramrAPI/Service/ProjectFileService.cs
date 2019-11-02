@@ -30,9 +30,9 @@ namespace DiiagramrAPI.Service
             }
         }
 
-        public string ProjectDirectory { get; set; }
-
         public event Action<ProjectModel> ProjectSaved;
+
+        public string ProjectDirectory { get; set; }
 
         public MessageBoxResult ConfirmProjectClose()
         {

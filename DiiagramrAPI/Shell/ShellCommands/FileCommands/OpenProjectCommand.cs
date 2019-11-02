@@ -14,16 +14,16 @@ namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
 
-        public override string Name => "Open";
-        public override string Parent => "Project";
-        public override float Weight => .9f;
-
         public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory, Func<IProjectManager> projectManagerFactory, Func<ProjectScreen> projectScreenViewModelFactory)
         {
             _projectFileService = projectFileServiceFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();
             _projectScreen = projectScreenViewModelFactory.Invoke();
         }
+
+        public override string Name => "Open";
+        public override string Parent => "Project";
+        public override float Weight => .9f;
 
         internal override void ExecuteInternal(IShell shell, object parameter)
         {
@@ -33,7 +33,6 @@ namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
                 projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
                 var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
                 project = _projectFileService.LoadProject(projectPath);
-
             }
             else
             {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace DiiagramrAPI.Shell.Commands.Transacting
 {
@@ -15,12 +14,12 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
             return () => UndoRedo(transactor);
         }
 
+        protected abstract void Execute(ITransactor transactor, object parameter);
+
         private void UndoRedo(Transactor transactor)
         {
             transactor.UndoAll();
             transactor.MoveRedoStackBackToUndo();
         }
-
-        protected abstract void Execute(ITransactor transactor, object parameter);
     }
 }

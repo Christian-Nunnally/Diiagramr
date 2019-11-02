@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Interfaces;
-using DiiagramrAPI.Shell;
 using System;
 using System.Linq;
 
@@ -11,15 +10,15 @@ namespace DiiagramrAPI.Shell.ShellCommands.FileCommands
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreenViewModel;
 
-        public override string Name => "New";
-        public override string Parent => "Project";
-        public override float Weight => 1.0f;
-
         public NewProjectCommand(Func<ProjectScreen> projectScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
         {
             _projectManager = projectManagerFactory.Invoke();
             _projectScreenViewModel = projectScreenViewModelFactory.Invoke();
         }
+
+        public override string Name => "New";
+        public override string Parent => "Project";
+        public override float Weight => 1.0f;
 
         internal override void ExecuteInternal(IShell shell, object parameter)
         {
