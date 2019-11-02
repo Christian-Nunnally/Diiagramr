@@ -1,4 +1,5 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Project;
+using DiiagramrAPI.Service.Shell;
 using DiiagramrModel;
 using Stylet;
 using System;

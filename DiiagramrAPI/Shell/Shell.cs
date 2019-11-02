@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Shell.ShellCommands;
+﻿using DiiagramrAPI.Service.Shell;
+using DiiagramrAPI.Shell.ShellCommands;
 using Stylet;
 using System;
 using System.Collections.Generic;

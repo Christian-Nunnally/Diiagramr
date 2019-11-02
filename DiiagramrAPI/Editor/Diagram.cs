@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Editor.Interactors;
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Shell;
 using DiiagramrCore;
 using DiiagramrModel;
@@ -24,15 +24,12 @@ namespace DiiagramrAPI.Editor
         public const double NodeSelectorBottomMargin = 250;
         public const double NodeSelectorRightMargin = 400;
         private static readonly Rect BoundingBoxDefault = new Rect(-400, -275, 800, 550);
-        private readonly IProvideNodes _nodeProvider;
 
         public Diagram(
             DiagramModel diagram,
             IProvideNodes nodeProvider,
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
-            _nodeProvider = nodeProvider ?? throw new ArgumentNullException(nameof(nodeProvider));
-
             DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);
 
             Model = diagram;

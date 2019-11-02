@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Plugins;
 using System;
 using System.Threading.Tasks;
 using System.Windows;

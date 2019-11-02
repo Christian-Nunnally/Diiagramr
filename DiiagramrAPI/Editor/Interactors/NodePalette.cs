@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Shell.Commands.Transacting;
 using DiiagramrCore;
 using DiiagramrModel;

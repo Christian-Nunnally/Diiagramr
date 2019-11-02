@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Project;
 using Stylet;
 using System;
 using System.Linq;

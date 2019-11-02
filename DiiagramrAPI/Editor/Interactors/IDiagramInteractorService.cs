@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service;
 
 namespace DiiagramrAPI.Editor.Interactors
 {

@@ -1,3 +1,4 @@
+using DiiagramrAPI.Service.Shell;
 using DiiagramrAPI.Shell.ShellCommands;
 using DiiagramrCore;
 using Stylet;
@@ -11,9 +12,9 @@ namespace DiiagramrAPI.Shell.Tools
 {
     public class ContextMenuViewModel : Screen
     {
-        private readonly Service.ShellCommandFactory _commandManager;
+        private readonly ShellCommandFactory _commandManager;
 
-        public ContextMenuViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
+        public ContextMenuViewModel(Func<ShellCommandFactory> commandManagerFactory)
         {
             _commandManager = commandManagerFactory.Invoke();
         }

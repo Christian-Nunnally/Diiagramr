@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Project;
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
 using System;
 using System.Linq;
 

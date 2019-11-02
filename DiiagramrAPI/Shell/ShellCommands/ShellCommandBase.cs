@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using DiiagramrAPI.Service.Shell;
+using System.Collections.Generic;
 
 namespace DiiagramrAPI.Shell.ShellCommands
 {

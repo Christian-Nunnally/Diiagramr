@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
+using DiiagramrAPI.Service.IO;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;

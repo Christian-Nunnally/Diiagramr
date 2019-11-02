@@ -1,4 +1,4 @@
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Shell;
 using System;
 
@@ -10,7 +10,7 @@ namespace DiiagramrAPI.Project
 
         public ProjectScreen(
             Func<ProjectExplorer> projectExplorerViewModelFactory,
-            Func<DiagramWellViewModel> diagramWellViewModelFactory,
+            Func<DiagramWell> diagramWellViewModelFactory,
             Func<IProjectManager> projectManagerFactory)
         {
             _projectManager = projectManagerFactory.Invoke();
@@ -19,7 +19,7 @@ namespace DiiagramrAPI.Project
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
         }
 
-        public DiagramWellViewModel DiagramWellViewModel { get; set; }
+        public DiagramWell DiagramWellViewModel { get; set; }
         public ProjectExplorer ProjectExplorerViewModel { get; set; }
     }
 }

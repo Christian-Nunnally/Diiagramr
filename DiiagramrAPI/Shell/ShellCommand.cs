@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service;
+﻿using DiiagramrAPI.Shell.ShellCommands;
 
 namespace DiiagramrAPI.Shell
 {

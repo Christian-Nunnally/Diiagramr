@@ -14,7 +14,7 @@ namespace DiiagramrUnitTests.ViewModelTests
     [TestClass]
     public class DiagramWellViewModelTest
     {
-        private DiagramWellViewModel _diagramWellViewModel;
+        private DiagramWell _diagramWellViewModel;
         private Mock<IProvideNodes> _nodeProviderMoq;
         private Mock<NodePalette> _nodeSelectorMoq;
         private Mock<IProjectManager> _projectManagerMoq;
@@ -26,7 +26,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             _nodeProviderMoq = new Mock<IProvideNodes>();
             _nodeSelectorMoq = new Mock<NodePalette>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
 
-            _diagramWellViewModel = new DiagramWellViewModel(() => _projectManagerMoq.Object);
+            _diagramWellViewModel = new DiagramWell(() => _projectManagerMoq.Object);
         }
 
         [TestMethod]

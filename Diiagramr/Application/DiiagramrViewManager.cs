@@ -36,7 +36,7 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel), typeof(VisualDropStartScreenView));
             _viewModelToViewMapping.Add(typeof(ProjectExplorer), typeof(ProjectExplorerView));
             _viewModelToViewMapping.Add(typeof(NodePalette), typeof(NodePaletteView));
-            _viewModelToViewMapping.Add(typeof(DiagramWellViewModel), typeof(DiagramWellView));
+            _viewModelToViewMapping.Add(typeof(DiagramWell), typeof(DiagramWellView));
             _viewModelToViewMapping.Add(typeof(Wire), typeof(WireView));
             _viewModelToViewMapping.Add(typeof(Terminal), typeof(TerminalView));
             _viewModelToViewMapping.Add(typeof(OutputTerminal), typeof(OutputTerminalView));
