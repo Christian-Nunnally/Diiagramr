@@ -3,11 +3,9 @@ using DiiagramrModel;
 
 namespace DiiagramrAPI.Editor.Nodes
 {
-    [HideFromNodeSelector]
+    [HideFromNodeSelectorAttribute]
     public class DiagramOutputNode : IoNode
     {
-        public TypedTerminal<object> InputTerminal;
-
         public event TerminalDataChangedDelegate<object> DataChanged
         {
             add
@@ -22,6 +20,8 @@ namespace DiiagramrAPI.Editor.Nodes
         }
 
         private event TerminalDataChangedDelegate<object> _dataChanged;
+
+        public TypedTerminal<object> InputTerminal { get; private set; }
 
         protected override void SetupNode(NodeSetup setup)
         {

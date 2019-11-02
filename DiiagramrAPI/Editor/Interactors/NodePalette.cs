@@ -1,5 +1,5 @@
 using DiiagramrAPI.Service.Editor;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrCore;
 using DiiagramrModel;
 using Stylet;
@@ -31,15 +31,15 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public IEnumerable<Node> AvailableNodes => LibrariesList.SelectMany(l => l.Nodes);
         public Terminal ContextTerminal { get; set; }
-        public List<NodePaletteLibrary> LibrariesList { get; set; } = new List<NodePaletteLibrary>();
+        public List<NodePaletteLibrary> LibrariesList { get; } = new List<NodePaletteLibrary>();
         public Node MousedOverNode { get; set; }
         public bool NodePreviewVisible => MousedOverNode != null;
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
         public double PreviewNodeScaleX { get; set; }
         public double PreviewNodeScaleY { get; set; }
-        public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; set; } = new BindableCollection<NodePaletteLibrary>();
-        public BindableCollection<Node> VisibleNodesList { get; set; } = new BindableCollection<Node>();
+        public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; } = new BindableCollection<NodePaletteLibrary>();
+        public BindableCollection<Node> VisibleNodesList { get; } = new BindableCollection<Node>();
 
         public void AddNodes()
         {
@@ -92,7 +92,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public void MouseLeftSelector()
         {
-            LibrariesList.ForEach(l => l.Unselect());
+            LibrariesList.ForEach(l => l.UnselectLibraryItem());
             VisibleNodesList.Clear();
             MousedOverNode = null;
         }
@@ -150,8 +150,8 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             VisibleNodesList.Clear();
             VisibleNodesList.AddRange(library.Nodes.Where(Filter).OrderBy(n => n.Weight));
-            VisibleLibrariesList.ForEach(l => l.Unselect());
-            library.Select();
+            VisibleLibrariesList.ForEach(l => l.UnselectLibraryItem());
+            library.SelectLibraryItem();
             MousedOverNode = null;
         }
 
@@ -234,7 +234,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private bool IsHiddenFromSelector(Node node)
         {
-            return node.GetType().IsDefined(typeof(HideFromNodeSelector), false);
+            return node.GetType().IsDefined(typeof(HideFromNodeSelectorAttribute), false);
         }
 
         private void NodesOnPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -305,6 +305,7 @@ namespace DiiagramrAPI.Editor.Interactors
             catch (Exception e)
             {
                 Console.Error.WriteLine($"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
+                throw;
             }
         }
     }

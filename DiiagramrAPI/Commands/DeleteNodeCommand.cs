@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Shell.Commands;
+﻿using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Editor;
 using System;
 
 namespace DiiagramrAPI.Commands

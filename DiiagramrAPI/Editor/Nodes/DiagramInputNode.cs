@@ -3,10 +3,10 @@ using DiiagramrModel;
 
 namespace DiiagramrAPI.Editor.Nodes
 {
-    [HideFromNodeSelector]
+    [HideFromNodeSelectorAttribute]
     public class DiagramInputNode : IoNode
     {
-        public TypedTerminal<object> OutputTerminal;
+        public TypedTerminal<object> OutputTerminal { get; private set; }
 
         public void TerminalDataChanged(object data)
         {

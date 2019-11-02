@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Service.Plugins;
-using DiiagramrAPI.Shell.Tools;
+﻿using DiiagramrAPI.Application.Tools;
+using DiiagramrAPI.Service.Plugins;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
@@ -9,7 +9,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
     public class LibrarySourceManagerWindowViewModelTest
     {
         private Mock<ILibraryManager> _libraryManagerMoq;
-        private LibrarySourceManagerWindowViewModel _librarySourceManagerWindowViewModel;
+        private LibrarySourceManagerWindow _librarySourceManagerWindowViewModel;
 
         [TestMethod]
         public void TestAddSource_NonEmptySource_AddsSource()
@@ -23,7 +23,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         public void TestInitialize()
         {
             _libraryManagerMoq = new Mock<ILibraryManager>();
-            _librarySourceManagerWindowViewModel = new LibrarySourceManagerWindowViewModel(() => _libraryManagerMoq.Object);
+            _librarySourceManagerWindowViewModel = new LibrarySourceManagerWindow(() => _libraryManagerMoq.Object);
         }
 
         [TestMethod]

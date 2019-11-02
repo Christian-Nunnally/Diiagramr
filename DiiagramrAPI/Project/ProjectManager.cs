@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Editor;
+﻿using DiiagramrAPI.Application.Tools;
+using DiiagramrAPI.Editor;
 using DiiagramrAPI.Service.Plugins;
-using DiiagramrAPI.Shell.Tools;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;

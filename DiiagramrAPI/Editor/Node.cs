@@ -1,6 +1,5 @@
+using DiiagramrAPI.Application;
 using DiiagramrAPI.Editor.Interactors;
-using DiiagramrAPI.Service;
-using DiiagramrAPI.Shell;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;
@@ -67,7 +66,7 @@ namespace DiiagramrAPI.Editor
         public virtual double X { get; set; }
         public virtual double Y { get; set; }
         private bool IsAttached { get; set; }
-        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
+        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSettingAttribute)));
 
         public virtual void AddTerminalViewModel(Terminal terminalViewModel)
         {

@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands.Transacting;
 using System;
 
 namespace DiiagramrAPI.Editor.Interactors
@@ -8,9 +8,9 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private readonly ITransactor _transactor;
 
-        public WireDeleter(Func<ITransactor> _transactorFactory)
+        public WireDeleter(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory.Invoke();
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)

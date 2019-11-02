@@ -38,7 +38,7 @@ namespace DiiagramrAPI.Editor
         public TypedTerminal<T> InputTerminal<T>(string name, Direction direction)
         {
             var model = new InputTerminalModel(name, typeof(T), direction, _terminalIndex);
-            return CreateClientTerminal<T>(name, direction, model);
+            return CreateClientTerminal<T>(model);
         }
 
         /// <summary>
@@ -89,17 +89,17 @@ namespace DiiagramrAPI.Editor
         public TypedTerminal<T> OutputTerminal<T>(string name, Direction direction)
         {
             var model = new OutputTerminalModel(name, typeof(T), direction, _terminalIndex);
-            return CreateClientTerminal<T>(name, direction, model);
+            return CreateClientTerminal<T>(model);
         }
 
-        private TypedTerminal<T> CreateClientTerminal<T>(string name, Direction direction, TerminalModel model)
+        private TypedTerminal<T> CreateClientTerminal<T>(TerminalModel model)
         {
-            var terminalViewModel = FindOrCreateTerminalViewModel<T>(name, direction, model);
+            var terminalViewModel = FindOrCreateTerminalViewModel<T>(model);
             _terminalIndex++;
             return new TypedTerminal<T>(terminalViewModel);
         }
 
-        private Terminal FindOrCreateTerminalViewModel<T>(string name, Direction direction, TerminalModel model)
+        private Terminal FindOrCreateTerminalViewModel<T>(TerminalModel model)
         {
             var terminalViewModel = _nodeViewModel.Terminals.FirstOrDefault(viewModel => viewModel.Model.TerminalIndex == _terminalIndex);
             if (terminalViewModel != null)

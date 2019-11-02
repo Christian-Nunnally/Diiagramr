@@ -5,15 +5,15 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:s="https://github.com/canton7/Stylet"
-    xmlns:viewModel="clr-namespace:DiiagramrAPI.Shell.Tools;assembly=DiiagramrAPI"
-    xmlns:diiagramr="clr-namespace:Diiagramr.Shell.Tools"
-    d:DataContext="{d:DesignInstance viewModel:ContextMenuViewModel}"
+    xmlns:viewModel="clr-namespace:DiiagramrAPI.Application.Tools;assembly=DiiagramrAPI"
+    xmlns:tools="clr-namespace:Diiagramr.Application.Tools"
+    d:DataContext="{d:DesignInstance viewModel:ContextMenu}"
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <diiagramr:NotSeparatorCommandVisibilityConverter x:Key="IsNotSeparatorConverter" />
-        <diiagramr:SeparatorCommandVisibilityConverter x:Key="IsSeparatorConverter" />
+        <tools:NotSeparatorCommandVisibilityConverter x:Key="IsNotSeparatorConverter" />
+        <tools:SeparatorCommandVisibilityConverter x:Key="IsSeparatorConverter" />
     </UserControl.Resources>
     <Border Margin="-10" IsHitTestVisible="True" MouseLeave="{s:Action MouseLeft}" Background="Transparent">
         <Border Margin="10" Background="#1B1B1C" BorderBrush="#333337" BorderThickness="1" Padding="2">

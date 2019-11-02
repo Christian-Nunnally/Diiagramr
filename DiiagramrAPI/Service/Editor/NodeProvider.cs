@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;
@@ -126,6 +125,7 @@ namespace DiiagramrAPI.Service.Editor
         }
     }
 
+    [Serializable]
     public class ProviderException : Exception
     {
         public ProviderException(string message) : base($"Node Provider Exception: {message}")

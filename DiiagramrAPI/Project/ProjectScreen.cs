@@ -1,5 +1,5 @@
 using DiiagramrAPI.Service.Editor;
-using DiiagramrAPI.Shell;
+using DiiagramrAPI.Application;
 using System;
 
 namespace DiiagramrAPI.Project

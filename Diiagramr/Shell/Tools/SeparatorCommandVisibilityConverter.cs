@@ -1,10 +1,10 @@
-using DiiagramrAPI.Shell.ShellCommands;
+using DiiagramrAPI.Application.ShellCommands;
 using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
 
-namespace Diiagramr.Shell.Tools
+namespace Diiagramr.Application.Tools
 {
     public class NotSeparatorCommandVisibilityConverter : IValueConverter
     {

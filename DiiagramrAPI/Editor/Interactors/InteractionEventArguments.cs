@@ -20,20 +20,19 @@ namespace DiiagramrAPI.Editor.Interactors
 
     public class DiagramInteractionEventArguments
     {
-        public Diagram Diagram;
-        public Key Key;
-        public Point MousePosition;
-        public InteractionType Type;
-        public Screen ViewModelUnderMouse;
-
         public DiagramInteractionEventArguments(InteractionType type)
         {
             Type = type;
         }
 
+        public Diagram Diagram { get; internal set; }
         public bool IsAltKeyPressed { get; internal set; }
         public bool IsCtrlKeyPressed { get; internal set; }
         public bool IsShiftKeyPressed { get; internal set; }
+        public Key Key { get; internal set; }
+        public Point MousePosition { get; internal set; }
         public int MouseWheelDelta { get; internal set; }
+        public InteractionType Type { get; internal set; }
+        public Screen ViewModelUnderMouse { get; internal set; }
     }
 }

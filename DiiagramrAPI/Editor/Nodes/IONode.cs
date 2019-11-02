@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Editor.Nodes
             Id = StaticId++;
         }
 
-        [NodeSetting]
+        [NodeSettingAttribute]
         public int Id { get; set; }
 
         private static int StaticId { get; set; }

@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Shell.Commands.Transacting;
+﻿using DiiagramrAPI.Application.Commands.Transacting;
 using System;
 using System.Windows.Input;
 

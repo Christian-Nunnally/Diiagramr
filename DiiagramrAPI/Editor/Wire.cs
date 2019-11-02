@@ -1,5 +1,5 @@
 using DiiagramrAPI.Service;
-using DiiagramrAPI.Shell;
+using DiiagramrAPI.Application;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;

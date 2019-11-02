@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Shell.Commands;
+using DiiagramrAPI.Application.Commands;
 using System;
 using System.Windows;
 

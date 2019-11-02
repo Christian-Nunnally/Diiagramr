@@ -1,16 +1,15 @@
+using Diiagramr.Application.Tools;
 using Diiagramr.Editor;
 using Diiagramr.Editor.Interactors;
 using Diiagramr.Editor.Nodes;
 using Diiagramr.Project;
-using Diiagramr.Shell;
-using Diiagramr.Shell.Tools;
 using Diiagramr.View.ShellScreen;
+using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor;
 using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Editor.Nodes;
 using DiiagramrAPI.Project;
-using DiiagramrAPI.Shell;
-using DiiagramrAPI.Shell.Tools;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -30,8 +29,8 @@ namespace Diiagramr.Application
             // todo: automate this
             _viewModelToViewMapping.Add(typeof(ShellViewModel), typeof(ShellView));
             _viewModelToViewMapping.Add(typeof(ProjectScreen), typeof(ProjectScreenView));
-            _viewModelToViewMapping.Add(typeof(LibraryManagerWindowViewModel), typeof(LibraryManagerWindowView));
-            _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindowViewModel), typeof(LibrarySourceManagerWindowView));
+            _viewModelToViewMapping.Add(typeof(LibraryManagerWindow), typeof(LibraryManagerWindowView));
+            _viewModelToViewMapping.Add(typeof(LibrarySourceManagerWindow), typeof(LibrarySourceManagerWindowView));
             _viewModelToViewMapping.Add(typeof(StartScreenViewModel), typeof(StartScreenView));
             _viewModelToViewMapping.Add(typeof(VisualDropStartScreenViewModel), typeof(VisualDropStartScreenView));
             _viewModelToViewMapping.Add(typeof(ProjectExplorer), typeof(ProjectExplorerView));
@@ -52,7 +51,7 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(DivideNode), typeof(DivideNodeView));
             _viewModelToViewMapping.Add(typeof(SubtractNode), typeof(SubtractNodeView));
             _viewModelToViewMapping.Add(typeof(MultiplyNode), typeof(MultiplyNodeView));
-            _viewModelToViewMapping.Add(typeof(ContextMenuViewModel), typeof(ContextMenuView));
+            _viewModelToViewMapping.Add(typeof(ContextMenu), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
             _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoNodeSelectorView));
             _viewModelToViewMapping.Add(typeof(PointSelector), typeof(PointSelectorView));

@@ -70,7 +70,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestLibrarySelect_SetsBackgroundColorToNonWhite()
         {
             var library = new NodePaletteLibrary("");
-            library.Select();
+            library.SelectLibraryItem();
             var brush = (SolidColorBrush)library.BackgroundBrush;
             Assert.IsFalse(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
         }
@@ -79,7 +79,7 @@ namespace DiiagramrUnitTests.ViewModelTests
         public void TestLibraryUnselect_SetsBackgroundColorToWhite()
         {
             var library = new NodePaletteLibrary("");
-            library.Unselect();
+            library.UnselectLibraryItem();
             var brush = (SolidColorBrush)library.BackgroundBrush;
             Assert.IsTrue(brush.Color.R == 255 && brush.Color.G == 255 && brush.Color.B == 255);
         }
@@ -93,7 +93,7 @@ namespace DiiagramrUnitTests.ViewModelTests
 
             _nodeSelectorViewModel.MouseLeftSelector();
 
-            libraryMoq1.Verify(l => l.Unselect());
+            libraryMoq1.Verify(l => l.UnselectLibraryItem());
         }
 
         [TestMethod]
@@ -124,7 +124,7 @@ namespace DiiagramrUnitTests.ViewModelTests
             libraryMoq1.SetupGet(l => l.Nodes).Returns(new List<Node>());
             _nodeSelectorViewModel.ShowLibrary(libraryMoq1.Object);
 
-            libraryMoq1.Verify(l => l.Select());
+            libraryMoq1.Verify(l => l.SelectLibraryItem());
         }
 
         [TestMethod]

@@ -1,6 +1,6 @@
 using DiiagramrAPI.Commands;
-using DiiagramrAPI.Shell.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Application.Commands.Transacting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +14,9 @@ namespace DiiagramrAPI.Editor.Interactors
         private IEnumerable<Node> _draggingNodes;
         private ICommand _moveNodesToStartPointCommand;
 
-        public NodeDragger(Func<ITransactor> _transactorFactory)
+        public NodeDragger(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory.Invoke();
         }
 
         public Point PreviousMouseLocation { get; set; }

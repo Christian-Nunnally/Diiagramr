@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Editor.Interactors;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Service.Editor;
-using DiiagramrAPI.Shell;
 using DiiagramrCore;
 using DiiagramrModel;
 using Stylet;

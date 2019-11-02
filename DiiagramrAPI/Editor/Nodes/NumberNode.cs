@@ -22,7 +22,7 @@ namespace DiiagramrAPI.Editor.Nodes
             }
         }
 
-        [NodeSetting]
+        [NodeSettingAttribute]
         public float Value { get; set; }
 
         public void PreviewKeyDown(object sender, KeyEventArgs e)

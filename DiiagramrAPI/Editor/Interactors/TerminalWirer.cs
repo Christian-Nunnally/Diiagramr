@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Service;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrModel;
 using System;
 using System.Linq;
@@ -24,7 +23,7 @@ namespace DiiagramrAPI.Editor.Interactors
             Weight = 0.75;
         }
 
-        public static bool CanWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal)
+        public static bool CanWireTwoTerminalsOnDiagram(Terminal startTerminal, Terminal endTerminal)
         {
             if (endTerminal?.Model == null)
             {
@@ -55,7 +54,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
-            if (CanWireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal))
+            if (CanWireTwoTerminalsOnDiagram(startTerminal, endTerminal))
             {
                 WireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal, transactor, animateWire);
             }
@@ -96,7 +95,7 @@ namespace DiiagramrAPI.Editor.Interactors
             if (interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelUnderMouse is Terminal terminal)
             {
                 _wiringTerminal = terminal;
-                StartWiringFromTerminal(interaction.Diagram, terminal, interaction.MousePosition);
+                StartWiringFromTerminal(interaction.Diagram, terminal);
                 _leftMouseDownCount = 0;
             }
         }
@@ -106,14 +105,13 @@ namespace DiiagramrAPI.Editor.Interactors
             var type = interaction.Type;
             var diagram = interaction.Diagram;
             var elementUnderMouse = interaction.ViewModelUnderMouse;
-            var mousePosition = interaction.MousePosition;
             if (type == InteractionType.RightMouseDown)
             {
                 CancelWireInsertion(interaction.Diagram);
             }
             else if (type == InteractionType.LeftMouseDown && elementUnderMouse is Terminal terminal)
             {
-                WireToTerminal(diagram, terminal, mousePosition);
+                WireToTerminal(diagram, terminal);
             }
         }
 
@@ -185,7 +183,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private void StartWiringFromTerminal(Diagram diagram, Terminal terminal, Point mousePosition)
+        private void StartWiringFromTerminal(Diagram diagram, Terminal terminal)
         {
             diagram.UnselectTerminals();
             diagram.UnselectNodes();
@@ -211,7 +209,7 @@ namespace DiiagramrAPI.Editor.Interactors
             _wiringTerminal = null;
         }
 
-        private void WireToTerminal(Diagram diagram, Terminal terminal, Point mousePosition)
+        private void WireToTerminal(Diagram diagram, Terminal terminal)
         {
             if (_wiringTerminal == terminal)
             {

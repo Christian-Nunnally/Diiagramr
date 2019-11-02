@@ -19,13 +19,13 @@ namespace DiiagramrAPI.Editor.Interactors
         public virtual List<Node> Nodes { get; }
         public bool NodesLoaded { get; set; }
 
-        public virtual void Select()
+        public virtual void SelectLibraryItem()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
             IsLibraryMenuExpanded = true;
         }
 
-        public virtual void Unselect()
+        public virtual void UnselectLibraryItem()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
             IsLibraryMenuExpanded = false;

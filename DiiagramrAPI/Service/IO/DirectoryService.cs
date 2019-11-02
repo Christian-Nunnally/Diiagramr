@@ -34,9 +34,10 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.Exists(path);
             }
-            catch
+            catch (Exception)
             {
-                return false;
+                // TODO: catch more specific exception.
+                throw;
             }
         }
 
@@ -56,9 +57,10 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetDirectories(path).ToList();
             }
-            catch
+            catch (Exception)
             {
-                return new List<string>();
+                // TODO: Handle specific exception
+                throw;
             }
         }
 

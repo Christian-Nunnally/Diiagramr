@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrCore;
 using System;
 using System.Collections.Generic;
@@ -18,9 +18,9 @@ namespace DiiagramrAPI.Editor.Interactors
         private IEnumerable<Node> _nodesBeingRifted;
         private MoveNodesToCurrentPositionCommand _undoRiftCommand;
 
-        public DiagramRifter(Func<ITransactor> _transactorFactory)
+        public DiagramRifter(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory.Invoke();
             Weight = 0.5;
         }
 

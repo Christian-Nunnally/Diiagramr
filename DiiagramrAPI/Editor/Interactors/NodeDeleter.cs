@@ -1,6 +1,6 @@
 using DiiagramrAPI.Commands;
-using DiiagramrAPI.Shell.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Application.Commands.Transacting;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -11,9 +11,9 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private readonly ITransactor _transactor;
 
-        public NodeDeleter(Func<ITransactor> _transactorFactory)
+        public NodeDeleter(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory.Invoke();
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)

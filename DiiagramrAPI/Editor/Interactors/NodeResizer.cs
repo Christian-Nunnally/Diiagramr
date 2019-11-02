@@ -1,5 +1,5 @@
 using DiiagramrAPI.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands.Transacting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +16,9 @@ namespace DiiagramrAPI.Editor.Interactors
         private MoveNodesToCurrentPositionCommand _undoPositionAdjustmentCommand;
         private ResizeNodesToCurrentSizeCommand _undoResizeCommand;
 
-        public NodeResizer(Func<ITransactor> _transactorFactory)
+        public NodeResizer(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory.Invoke();
             Weight = 0.5;
         }
 

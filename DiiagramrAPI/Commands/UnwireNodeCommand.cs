@@ -1,6 +1,6 @@
 ﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Shell.Commands;
-using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Application.Commands.Transacting;
 using System.Linq;
 
 namespace DiiagramrAPI.Commands

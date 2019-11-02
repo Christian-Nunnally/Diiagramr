@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Service.Plugins;
-using DiiagramrAPI.Shell;
-using DiiagramrAPI.Shell.Tools;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Tools;
+using DiiagramrAPI.Service.Plugins;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -11,16 +11,16 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
     public class LibraryManagerWindowViewModelTest
     {
         private Mock<ILibraryManager> _libraryManagerMoq;
-        private LibraryManagerWindowViewModel _libraryManagerWindowViewModel;
-        private Mock<LibrarySourceManagerWindowViewModel> _librarySourceManagerMoq;
+        private LibraryManagerWindow _libraryManagerWindowViewModel;
+        private Mock<LibrarySourceManagerWindow> _librarySourceManagerMoq;
 
         [TestInitialize]
         public void TestInitialize()
         {
             _libraryManagerMoq = new Mock<ILibraryManager>();
-            _librarySourceManagerMoq = new Mock<LibrarySourceManagerWindowViewModel>(
+            _librarySourceManagerMoq = new Mock<LibrarySourceManagerWindow>(
                 (Func<ILibraryManager>)(() => _libraryManagerMoq.Object));
-            _libraryManagerWindowViewModel = new LibraryManagerWindowViewModel(() => _libraryManagerMoq.Object, () => _librarySourceManagerMoq.Object);
+            _libraryManagerWindowViewModel = new LibraryManagerWindow(() => _libraryManagerMoq.Object, () => _librarySourceManagerMoq.Object);
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
 
             _libraryManagerWindowViewModel.ViewSources();
 
-            Assert.IsTrue(openedWindow is LibrarySourceManagerWindowViewModel);
+            Assert.IsTrue(openedWindow is LibrarySourceManagerWindow);
         }
     }
 }

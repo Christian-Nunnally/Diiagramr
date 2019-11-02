@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Editor.Nodes
         private TypedTerminal<byte[]> _arrayTerminal;
         private TypedTerminal<float> _valueTerminal;
 
-        [NodeSetting]
+        [NodeSettingAttribute]
         public int Index { get; set; }
 
         public string StringValue
