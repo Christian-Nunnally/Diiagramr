@@ -7,8 +7,8 @@ namespace DiiagramrAPI.Commands
 {
     public class UnwireNodeCommand : TransactingCommand
     {
-        private readonly ICommand _removeWireCommand;
         private readonly Diagram _diagram;
+        private readonly ICommand _removeWireCommand;
 
         public UnwireNodeCommand(Diagram diagram)
         {

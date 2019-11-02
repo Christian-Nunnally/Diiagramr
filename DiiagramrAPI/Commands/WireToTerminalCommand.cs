@@ -7,9 +7,9 @@ namespace DiiagramrAPI.Commands
 {
     public class WireToTerminalCommand : ICommand
     {
-        private readonly ICommand _removeWireCommand;
         private readonly Diagram _diagram;
         private readonly TerminalModel _fromTerminal;
+        private readonly ICommand _removeWireCommand;
         private bool _animateWireWhenLoaded;
 
         public WireToTerminalCommand(Diagram diagram, TerminalModel fromTerminal, bool animateWireWhenLoaded = false)

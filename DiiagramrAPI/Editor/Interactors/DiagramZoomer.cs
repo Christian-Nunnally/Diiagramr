@@ -2,8 +2,8 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class DiagramZoomer : DiagramInteractor
     {
-        private const double MinimumZoom = 0.4;
         private const double MaximumZoom = 3.0;
+        private const double MinimumZoom = 0.4;
         private const double ZoomAmount = .1;
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -24,21 +24,6 @@ namespace DiiagramrAPI.Editor.Interactors
             diagram.PanY -= diagramStartY - diagramEndY;
         }
 
-        private void SetZoom(Diagram diagram, double zoom)
-        {
-            if (zoom < MinimumZoom)
-            {
-                diagram.Zoom = MinimumZoom;
-                return;
-            }
-            else if (zoom > MaximumZoom)
-            {
-                diagram.Zoom = MaximumZoom;
-                return;
-            }
-            diagram.Zoom = zoom;
-        }
-
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.MouseWheel;
@@ -55,6 +40,21 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
+        }
+
+        private void SetZoom(Diagram diagram, double zoom)
+        {
+            if (zoom < MinimumZoom)
+            {
+                diagram.Zoom = MinimumZoom;
+                return;
+            }
+            else if (zoom > MaximumZoom)
+            {
+                diagram.Zoom = MaximumZoom;
+                return;
+            }
+            diagram.Zoom = zoom;
         }
     }
 }

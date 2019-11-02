@@ -13,8 +13,8 @@ namespace DiiagramrAPI.Editor.Interactors
             Nodes = new List<Node>();
         }
 
-        public bool IsLibraryMenuExpanded { get; set; }
         public Brush BackgroundBrush { get; private set; } = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
+        public bool IsLibraryMenuExpanded { get; set; }
         public string Name { get; }
         public virtual List<Node> Nodes { get; }
         public bool NodesLoaded { get; set; }

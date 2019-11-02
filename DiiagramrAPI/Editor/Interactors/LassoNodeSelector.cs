@@ -4,34 +4,32 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class LassoNodeSelector : DiagramInteractor
     {
-        private double _startX;
-        private double _startY;
-
         private double _endX;
         private double _endY;
-
-        public double Width { get; set; }
+        private double _startX;
+        private double _startY;
         public double Height { get; set; }
+        public double Width { get; set; }
 
-        private void SetRectangleBounds()
+        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
-            X = Math.Min(_startX, _endX);
-            Y = Math.Min(_startY, _endY);
-            Width = Math.Abs(_startX - _endX);
-            Height = Math.Abs(_startY - _endY);
-        }
-
-        public void SetStart(double x, double y)
-        {
-            _startX = x;
-            _startY = y;
-            SetRectangleBounds();
+            if (interaction.Type == InteractionType.MouseMoved)
+            {
+                SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
+            }
         }
 
         public void SetEnd(double x, double y)
         {
             _endX = x;
             _endY = y;
+            SetRectangleBounds();
+        }
+
+        public void SetStart(double x, double y)
+        {
+            _startX = x;
+            _startY = y;
             SetRectangleBounds();
         }
 
@@ -71,12 +69,12 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        private void SetRectangleBounds()
         {
-            if (interaction.Type == InteractionType.MouseMoved)
-            {
-                SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
-            }
+            X = Math.Min(_startX, _endX);
+            Y = Math.Min(_startY, _endY);
+            Width = Math.Abs(_startX - _endX);
+            Height = Math.Abs(_startY - _endY);
         }
     }
 }

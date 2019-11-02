@@ -13,15 +13,52 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private const int GhostWireAlphaValue = 70;
         private readonly SolidColorBrush _ghostWireBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, 128, 128, 128));
+        private readonly ITransactor _transactor;
+        private int _leftMouseDownCount;
         private Wire _previewWire;
         private Terminal _wiringTerminal;
-        private int _leftMouseDownCount;
-        private readonly ITransactor _transactor;
 
         public TerminalWirer(Func<ITransactor> transactorFactory)
         {
             _transactor = transactorFactory?.Invoke() ?? throw new ArgumentNullException(nameof(transactorFactory));
             Weight = 0.75;
+        }
+
+        public static bool CanWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal)
+        {
+            if (endTerminal?.Model == null)
+            {
+                return false;
+            }
+            if (endTerminal.Model.GetType() == startTerminal.Model.GetType())
+            {
+                return false;
+            }
+            if (endTerminal.Model.ConnectedWires.Any(connectedWire => startTerminal.Model.ConnectedWires.Contains(connectedWire)))
+            {
+                return false;
+            }
+
+            var sinkTerminal = startTerminal.Model is InputTerminalModel ? startTerminal.Model : endTerminal.Model;
+            var sourceTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal.Model : endTerminal.Model;
+
+            if (!sourceTerminal.Type.IsSubclassOf(sinkTerminal.Type) && sourceTerminal.Type != sinkTerminal.Type)
+            {
+                if (sourceTerminal.Type != typeof(object))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
+        {
+            if (CanWireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal))
+            {
+                WireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal, transactor, animateWire);
+            }
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -37,67 +74,6 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 ProcessLeftMouseDown(diagram, elementUnderMouse);
             }
-        }
-
-        private void ProcessLeftMouseDown(Diagram diagram, Stylet.Screen elementUnderMouse)
-        {
-            _leftMouseDownCount++;
-            if (_leftMouseDownCount == 2)
-            {
-                if (elementUnderMouse is Terminal terminal && terminal == _wiringTerminal)
-                {
-                    ShowDirectEditTextboxOnTerminal(diagram, terminal);
-                }
-            }
-        }
-
-        private void ShowDirectEditTextboxOnTerminal(Diagram diagram, Terminal terminal)
-        {
-            CancelWireInsertion(diagram);
-            var directEditTextbox = new DirectEditTextBoxAdorner(terminal.View, terminal);
-            if (directEditTextbox.IsDirectlyEditableType)
-            {
-                terminal.SetAdorner(directEditTextbox);
-            }
-        }
-
-        private void ProcessMouseMove(Diagram diagram, Point mousePosition, Stylet.Screen elementUnderMouse)
-        {
-            SetPreviewWireEndPosition(diagram, mousePosition);
-            if (elementUnderMouse is Terminal terminal && terminal.HighlightVisible && terminal != _wiringTerminal)
-            {
-                PreviewConnectingWireToTerminal(terminal);
-            }
-            else
-            {
-                _previewWire.LineColorBrush = _ghostWireBrush;
-                _previewWire.BannedDirectionForStart = Direction.None;
-            }
-        }
-
-        private void SetPreviewWireEndPosition(Diagram diagram, Point mousePosition)
-        {
-            _previewWire.X1 = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
-            _previewWire.Y1 = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
-        }
-
-        private void PreviewConnectingWireToTerminal(Terminal terminal)
-        {
-            _previewWire.X1 = terminal.Model.X;
-            _previewWire.Y1 = terminal.Model.Y;
-            var terminalColor = terminal.TerminalBackgroundBrush.Color;
-            var R = terminalColor.R;
-            var G = terminalColor.G;
-            var B = terminalColor.B;
-            _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
-            _previewWire.BannedDirectionForStart = terminal.Model.DefaultSide.Opposite();
-        }
-
-        private void CancelWireInsertion(Diagram diagram)
-        {
-            diagram.UnhighlightTerminals();
-            diagram.UnselectNodes();
-            diagram.RemoveWire(_previewWire);
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
@@ -141,14 +117,72 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private void WireToTerminal(Diagram diagram, Terminal terminal, Point mousePosition)
+        private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
-            if (_wiringTerminal == terminal)
+            var wireModel = new WireModel();
+            var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.Model, animateWire);
+            transactor.Transact(wireToTerminalCommand, endTerminal.Model);
+        }
+
+        private void CancelWireInsertion(Diagram diagram)
+        {
+            diagram.UnhighlightTerminals();
+            diagram.UnselectNodes();
+            diagram.RemoveWire(_previewWire);
+        }
+
+        private void PreviewConnectingWireToTerminal(Terminal terminal)
+        {
+            _previewWire.X1 = terminal.Model.X;
+            _previewWire.Y1 = terminal.Model.Y;
+            var terminalColor = terminal.TerminalBackgroundBrush.Color;
+            var R = terminalColor.R;
+            var G = terminalColor.G;
+            var B = terminalColor.B;
+            _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
+            _previewWire.BannedDirectionForStart = terminal.Model.DefaultSide.Opposite();
+        }
+
+        private void ProcessLeftMouseDown(Diagram diagram, Stylet.Screen elementUnderMouse)
+        {
+            _leftMouseDownCount++;
+            if (_leftMouseDownCount == 2)
             {
-                CancelWireInsertion(diagram);
-                return;
+                if (elementUnderMouse is Terminal terminal && terminal == _wiringTerminal)
+                {
+                    ShowDirectEditTextboxOnTerminal(diagram, terminal);
+                }
             }
-            WireTerminalsToWiringTerminal(diagram, terminal);
+        }
+
+        private void ProcessMouseMove(Diagram diagram, Point mousePosition, Stylet.Screen elementUnderMouse)
+        {
+            SetPreviewWireEndPosition(diagram, mousePosition);
+            if (elementUnderMouse is Terminal terminal && terminal.HighlightVisible && terminal != _wiringTerminal)
+            {
+                PreviewConnectingWireToTerminal(terminal);
+            }
+            else
+            {
+                _previewWire.LineColorBrush = _ghostWireBrush;
+                _previewWire.BannedDirectionForStart = Direction.None;
+            }
+        }
+
+        private void SetPreviewWireEndPosition(Diagram diagram, Point mousePosition)
+        {
+            _previewWire.X1 = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
+            _previewWire.Y1 = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
+        }
+
+        private void ShowDirectEditTextboxOnTerminal(Diagram diagram, Terminal terminal)
+        {
+            CancelWireInsertion(diagram);
+            var directEditTextbox = new DirectEditTextBoxAdorner(terminal.View, terminal);
+            if (directEditTextbox.IsDirectlyEditableType)
+            {
+                terminal.SetAdorner(directEditTextbox);
+            }
         }
 
         private void StartWiringFromTerminal(Diagram diagram, Terminal terminal, Point mousePosition)
@@ -177,48 +211,14 @@ namespace DiiagramrAPI.Editor.Interactors
             _wiringTerminal = null;
         }
 
-        public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
+        private void WireToTerminal(Diagram diagram, Terminal terminal, Point mousePosition)
         {
-            if (CanWireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal))
+            if (_wiringTerminal == terminal)
             {
-                WireTwoTerminalsOnDiagram(diagram, startTerminal, endTerminal, transactor, animateWire);
+                CancelWireInsertion(diagram);
+                return;
             }
-        }
-
-        private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
-        {
-            var wireModel = new WireModel();
-            var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.Model, animateWire);
-            transactor.Transact(wireToTerminalCommand, endTerminal.Model);
-        }
-
-        public static bool CanWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal)
-        {
-            if (endTerminal?.Model == null)
-            {
-                return false;
-            }
-            if (endTerminal.Model.GetType() == startTerminal.Model.GetType())
-            {
-                return false;
-            }
-            if (endTerminal.Model.ConnectedWires.Any(connectedWire => startTerminal.Model.ConnectedWires.Contains(connectedWire)))
-            {
-                return false;
-            }
-
-            var sinkTerminal = startTerminal.Model is InputTerminalModel ? startTerminal.Model : endTerminal.Model;
-            var sourceTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal.Model : endTerminal.Model;
-
-            if (!sourceTerminal.Type.IsSubclassOf(sinkTerminal.Type) && sourceTerminal.Type != sinkTerminal.Type)
-            {
-                if (sourceTerminal.Type != typeof(object))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            WireTerminalsToWiringTerminal(diagram, terminal);
         }
     }
 }

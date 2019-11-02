@@ -9,14 +9,14 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class NodePlacer : DiagramInteractor
     {
-        public Node InsertingNodeViewModel { get; set; }
-
         private readonly ITransactor _transactor;
 
         public NodePlacer(Func<ITransactor> _transactorFactory)
         {
             _transactor = _transactorFactory.Invoke();
         }
+
+        public Node InsertingNodeViewModel { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -28,20 +28,9 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private void MoveInsertingNode(Diagram diagram, Point mouseLocation)
-        {
-            if (InsertingNodeViewModel != null)
-            {
-                InsertingNodeViewModel.Model.X = diagram.GetDiagramPointFromViewPointX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - Diagram.NodeBorderWidth;
-                InsertingNodeViewModel.Model.Y = diagram.GetDiagramPointFromViewPointY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - Diagram.NodeBorderWidth;
-                InsertingNodeViewModel.X = diagram.GetDiagramPointFromViewPointX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - Diagram.NodeBorderWidth;
-                InsertingNodeViewModel.Y = diagram.GetDiagramPointFromViewPointY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - Diagram.NodeBorderWidth;
-            }
-        }
-
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.NodeInserted; 
+            return interaction.Type == InteractionType.NodeInserted;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
@@ -71,6 +60,17 @@ namespace DiiagramrAPI.Editor.Interactors
             _transactor.Transact(new UndoCommand(new UnwireAndDeleteNodeCommand(interaction.Diagram)), InsertingNodeViewModel);
             InsertingNodeViewModel = null;
             interaction.Diagram.ShowSnapGrid = false;
+        }
+
+        private void MoveInsertingNode(Diagram diagram, Point mouseLocation)
+        {
+            if (InsertingNodeViewModel != null)
+            {
+                InsertingNodeViewModel.Model.X = diagram.GetDiagramPointFromViewPointX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - Diagram.NodeBorderWidth;
+                InsertingNodeViewModel.Model.Y = diagram.GetDiagramPointFromViewPointY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - Diagram.NodeBorderWidth;
+                InsertingNodeViewModel.X = diagram.GetDiagramPointFromViewPointX(mouseLocation.X) - InsertingNodeViewModel.Width / 2.0 - Diagram.NodeBorderWidth;
+                InsertingNodeViewModel.Y = diagram.GetDiagramPointFromViewPointY(mouseLocation.Y) - InsertingNodeViewModel.Height / 2.0 - Diagram.NodeBorderWidth;
+            }
         }
     }
 }

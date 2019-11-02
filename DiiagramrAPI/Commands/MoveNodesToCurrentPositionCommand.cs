@@ -7,8 +7,8 @@ namespace DiiagramrAPI.Commands
 {
     public class MoveNodesToCurrentPositionCommand : TransactingCommand
     {
-        private readonly Dictionary<Node, Point> _nodeToPositionMap = new Dictionary<Node, Point>();
         private readonly IEnumerable<Node> _nodes;
+        private readonly Dictionary<Node, Point> _nodeToPositionMap = new Dictionary<Node, Point>();
 
         public MoveNodesToCurrentPositionCommand(IEnumerable<Node> nodes)
         {

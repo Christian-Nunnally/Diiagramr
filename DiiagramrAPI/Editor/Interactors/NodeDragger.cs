@@ -10,16 +10,16 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class NodeDragger : DiagramInteractor
     {
+        private readonly ITransactor _transactor;
         private IEnumerable<Node> _draggingNodes;
         private ICommand _moveNodesToStartPointCommand;
-        public Point PreviousMouseLocation { get; set; }
-
-        private readonly ITransactor _transactor;
 
         public NodeDragger(Func<ITransactor> _transactorFactory)
         {
             _transactor = _transactorFactory.Invoke();
         }
+
+        public Point PreviousMouseLocation { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -29,20 +29,6 @@ namespace DiiagramrAPI.Editor.Interactors
                 var mousePosition = interaction.MousePosition;
                 ProcessMouseMoved(diagram, mousePosition);
             }
-        }
-
-        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
-        {
-            var deltaX = mousePosition.X - PreviousMouseLocation.X;
-            var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
-            foreach (var otherNode in diagram.Nodes.Where(n => n.IsSelected))
-            {
-                otherNode.X += deltaX / diagram.Zoom;
-                otherNode.Y += deltaY / diagram.Zoom;
-            }
-            PreviousMouseLocation = mousePosition;
-            diagram.UpdateDiagramBoundingBox();
-            diagram.ShowSnapGrid = true;
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
@@ -57,18 +43,6 @@ namespace DiiagramrAPI.Editor.Interactors
                 return IsMouseOverNodeBorder(node, mouseX, mouseY, diagram);
             }
             return false;
-        }
-
-        private static bool IsMouseOverNodeBorder(Node node, double mouseX, double mouseY, Diagram diagram)
-        {
-            var nodeLeft = diagram.GetViewPointFromDiagramPointX(node.X + Diagram.NodeBorderWidth);
-            var nodeTop = diagram.GetViewPointFromDiagramPointY(node.Y + Diagram.NodeBorderWidth);
-            var nodeRight = diagram.GetViewPointFromDiagramPointX(node.X + node.Width + Diagram.NodeBorderWidth);
-            var nodeBottom = diagram.GetViewPointFromDiagramPointY(node.Y + node.Height + Diagram.NodeBorderWidth);
-            return mouseX > nodeRight
-                || mouseX < nodeLeft
-                || mouseY > nodeBottom
-                || mouseY < nodeTop;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
@@ -96,6 +70,32 @@ namespace DiiagramrAPI.Editor.Interactors
             interaction.Diagram.ShowSnapGrid = false;
             var doCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             _transactor.Transact(doCommand, _moveNodesToStartPointCommand, _draggingNodes);
+        }
+
+        private static bool IsMouseOverNodeBorder(Node node, double mouseX, double mouseY, Diagram diagram)
+        {
+            var nodeLeft = diagram.GetViewPointFromDiagramPointX(node.X + Diagram.NodeBorderWidth);
+            var nodeTop = diagram.GetViewPointFromDiagramPointY(node.Y + Diagram.NodeBorderWidth);
+            var nodeRight = diagram.GetViewPointFromDiagramPointX(node.X + node.Width + Diagram.NodeBorderWidth);
+            var nodeBottom = diagram.GetViewPointFromDiagramPointY(node.Y + node.Height + Diagram.NodeBorderWidth);
+            return mouseX > nodeRight
+                || mouseX < nodeLeft
+                || mouseY > nodeBottom
+                || mouseY < nodeTop;
+        }
+
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
+        {
+            var deltaX = mousePosition.X - PreviousMouseLocation.X;
+            var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
+            foreach (var otherNode in diagram.Nodes.Where(n => n.IsSelected))
+            {
+                otherNode.X += deltaX / diagram.Zoom;
+                otherNode.Y += deltaY / diagram.Zoom;
+            }
+            PreviousMouseLocation = mousePosition;
+            diagram.UpdateDiagramBoundingBox();
+            diagram.ShowSnapGrid = true;
         }
     }
 }

@@ -25,29 +25,6 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private static void ProcessMouseMouseUpAfterNotPanning(Diagram diagram)
-        {
-            diagram.UnselectNodes();
-            diagram.UnselectTerminals();
-        }
-
-        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
-        {
-            var deltaX = mousePosition.X - StartMouseLocation.X;
-            var deltaY = mousePosition.Y - StartMouseLocation.Y;
-
-            if (!_reachedMinimunMouseDeltaToStartPanning)
-            {
-                var distance = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
-                _reachedMinimunMouseDeltaToStartPanning = distance > MinimumMouseDeltaToStartPanning;
-            }
-            if (_reachedMinimunMouseDeltaToStartPanning)
-            {
-                diagram.PanX = StartPanX + deltaX;
-                diagram.PanY = StartPanY + deltaY;
-            }
-        }
-
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
@@ -70,6 +47,29 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
+        }
+
+        private static void ProcessMouseMouseUpAfterNotPanning(Diagram diagram)
+        {
+            diagram.UnselectNodes();
+            diagram.UnselectTerminals();
+        }
+
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
+        {
+            var deltaX = mousePosition.X - StartMouseLocation.X;
+            var deltaY = mousePosition.Y - StartMouseLocation.Y;
+
+            if (!_reachedMinimunMouseDeltaToStartPanning)
+            {
+                var distance = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
+                _reachedMinimunMouseDeltaToStartPanning = distance > MinimumMouseDeltaToStartPanning;
+            }
+            if (_reachedMinimunMouseDeltaToStartPanning)
+            {
+                diagram.PanX = StartPanX + deltaX;
+                diagram.PanY = StartPanY + deltaY;
+            }
         }
     }
 }

@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Commands.Transacting;
 using DiiagramrCore;
@@ -18,8 +17,9 @@ namespace DiiagramrAPI.Editor.Interactors
         public const bool AutoWireToContext = true;
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
-        private IProvideNodes _nodeProvider;
         private Diagram _diagram;
+        private IProvideNodes _nodeProvider;
+        private Func<Node, bool> Filter = x => true;
         private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
@@ -29,20 +29,17 @@ namespace DiiagramrAPI.Editor.Interactors
             AddNodes();
         }
 
-        public Terminal ContextTerminal { get; set; }
         public IEnumerable<Node> AvailableNodes => LibrariesList.SelectMany(l => l.Nodes);
+        public Terminal ContextTerminal { get; set; }
         public List<NodePaletteLibrary> LibrariesList { get; set; } = new List<NodePaletteLibrary>();
-        public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; set; } = new BindableCollection<NodePaletteLibrary>();
         public Node MousedOverNode { get; set; }
         public bool NodePreviewVisible => MousedOverNode != null;
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
         public double PreviewNodeScaleX { get; set; }
         public double PreviewNodeScaleY { get; set; }
-
+        public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; set; } = new BindableCollection<NodePaletteLibrary>();
         public BindableCollection<Node> VisibleNodesList { get; set; } = new BindableCollection<Node>();
-
-        private Func<Node, bool> Filter = x => true;
 
         public void AddNodes()
         {
@@ -61,42 +58,22 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private bool CanAddNodeToPalette(Node node)
-        {
-            if (IsHiddenFromSelector(node))
-            {
-                return false;
-            }
-            var library = GetOrCreateLibrary(node);
-            return !library.Nodes.Any(n => n.Equals(node));
-        }
-
-        private void TryAddingNode(Node node)
-        {
-            try
-            {
-                AddNode(node);
-            }
-            // TODO: Catch more specific exception.
-            catch (Exception e)
-            {
-                Console.Error.WriteLine($"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
-            }
-        }
-
-        private void AddNode(Node node)
-        {
-            NodeModel nodeModel = new NodeModel("");
-            // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
-            node.AttachToModel(nodeModel);
-            var library = GetOrCreateLibrary(node);
-            library.Nodes.Add(node);
-        }
-
         public void BackgroundMouseDown()
         {
             VisibleNodesList.Clear();
             MousedOverNode = null;
+        }
+
+        public void BeginInsertingNode(Node node, bool insertCopy = false)
+        {
+            var nodeTypeName = node.GetType().FullName;
+            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
+            nodeToInsert.Visible = false;
+            nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
+            _diagram.AddNodeInteractively(nodeToInsert);
+            AutoWireTerminals(nodeToInsert);
+            ContextTerminal = null;
         }
 
         public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
@@ -130,21 +107,73 @@ namespace DiiagramrAPI.Editor.Interactors
             PreviewNode(node);
         }
 
+        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
+        {
+            if (interaction.Type == InteractionType.RightMouseDown)
+            {
+                _diagram = interaction.Diagram;
+
+                var availableWidth = _diagram.View != null ? _diagram.View.RenderSize.Width : 0;
+                var availableHeight = _diagram.View != null ? _diagram.View.RenderSize.Height : 0;
+                X = Math.Min(interaction.MousePosition.X, availableWidth - NodeSelectorRightMargin);
+                Y = Math.Min(interaction.MousePosition.Y, availableHeight - NodeSelectorBottomMargin);
+
+                var viewModelUnderMouse = interaction.ViewModelUnderMouse;
+
+                if (viewModelUnderMouse is Terminal terminal)
+                {
+                    if (terminal.Model.DefaultSide != Direction.West)
+                    {
+                        X += Terminal.TerminalHeight;
+                    }
+                }
+                ShowWithContextFilter(viewModelUnderMouse);
+            }
+        }
+
         public void SelectNode()
         {
             BeginInsertingNode(MousedOverNode, true);
         }
 
-        public void BeginInsertingNode(Node node, bool insertCopy = false)
+        public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            var nodeTypeName = node.GetType().FullName;
-            var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
-            nodeToInsert.Visible = false;
-            nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
-            nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
-            _diagram.AddNodeInteractively(nodeToInsert);
-            AutoWireTerminals(nodeToInsert);
-            ContextTerminal = null;
+            return interaction.Type == InteractionType.RightMouseDown;
+        }
+
+        public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
+        {
+            return interaction.Type == InteractionType.LeftMouseDown || interaction.Type == InteractionType.NodeInserted;
+        }
+
+        public void ShowLibrary(NodePaletteLibrary library)
+        {
+            VisibleNodesList.Clear();
+            VisibleNodesList.AddRange(library.Nodes.Where(Filter).OrderBy(n => n.Weight));
+            VisibleLibrariesList.ForEach(l => l.Unselect());
+            library.Select();
+            MousedOverNode = null;
+        }
+
+        public override void StartInteraction(DiagramInteractionEventArguments interaction)
+        {
+        }
+
+        public override void StopInteraction(DiagramInteractionEventArguments interaction)
+        {
+            if (ContextTerminal != null)
+            {
+                ContextTerminal.HighlightVisible = false;
+            }
+        }
+
+        private void AddNode(Node node)
+        {
+            NodeModel nodeModel = new NodeModel("");
+            // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
+            node.AttachToModel(nodeModel);
+            var library = GetOrCreateLibrary(node);
+            library.Nodes.Add(node);
         }
 
         private void AutoWireTerminals(Node nodeToInsert)
@@ -159,31 +188,14 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
+        private bool CanAddNodeToPalette(Node node)
         {
-            if (startTerminal.Model is InputTerminalModel inputTerminal)
+            if (IsHiddenFromSelector(node))
             {
-                return node.Terminals
-                    .OfType<OutputTerminal>()
-                    .Where(t => t.Model.Type.IsAssignableFrom(inputTerminal.Type));
-
+                return false;
             }
-            else if (startTerminal.Model is OutputTerminalModel outputTerminal)
-            {
-                return node.Terminals
-                    .OfType<InputTerminal>()
-                    .Where(t => t.Model.Type.IsAssignableFrom(outputTerminal.Type));
-            }
-            return Enumerable.Empty<Terminal>();
-        }
-
-        public void ShowLibrary(NodePaletteLibrary library)
-        {
-            VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(library.Nodes.Where(Filter).OrderBy(n => n.Weight));
-            VisibleLibrariesList.ForEach(l => l.Unselect());
-            library.Select();
-            MousedOverNode = null;
+            var library = GetOrCreateLibrary(node);
+            return !library.Nodes.Any(n => n.Equals(node));
         }
 
         private NodePaletteLibrary GetOrCreateLibrary(Node node)
@@ -201,6 +213,23 @@ namespace DiiagramrAPI.Editor.Interactors
             }
 
             return LibrariesList.First(l => l.Name == libraryName);
+        }
+
+        private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
+        {
+            if (startTerminal.Model is InputTerminalModel inputTerminal)
+            {
+                return node.Terminals
+                    .OfType<OutputTerminal>()
+                    .Where(t => t.Model.Type.IsAssignableFrom(inputTerminal.Type));
+            }
+            else if (startTerminal.Model is OutputTerminalModel outputTerminal)
+            {
+                return node.Terminals
+                    .OfType<InputTerminal>()
+                    .Where(t => t.Model.Type.IsAssignableFrom(outputTerminal.Type));
+            }
+            return Enumerable.Empty<Terminal>();
         }
 
         private bool IsHiddenFromSelector(Node node)
@@ -234,18 +263,11 @@ namespace DiiagramrAPI.Editor.Interactors
             PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
         }
 
-        public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
+        private void Show(Func<Node, bool> filter)
         {
-            return interaction.Type == InteractionType.RightMouseDown;
-        }
-
-        public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
-        {
-            return interaction.Type == InteractionType.LeftMouseDown || interaction.Type == InteractionType.NodeInserted;
-        }
-
-        public override void StartInteraction(DiagramInteractionEventArguments interaction)
-        {
+            Filter = filter;
+            VisibleLibrariesList.Clear();
+            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
         }
 
         private void ShowWithContextFilter(Screen mousedOverViewModel)
@@ -273,42 +295,16 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        private void Show(Func<Node, bool> filter)
+        private void TryAddingNode(Node node)
         {
-            Filter = filter;
-            VisibleLibrariesList.Clear();
-            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
-        }
-
-        public override void StopInteraction(DiagramInteractionEventArguments interaction)
-        {
-            if (ContextTerminal != null)
+            try
             {
-                ContextTerminal.HighlightVisible = false;
+                AddNode(node);
             }
-        }
-
-        public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
-        {
-            if (interaction.Type == InteractionType.RightMouseDown)
+            // TODO: Catch more specific exception.
+            catch (Exception e)
             {
-                _diagram = interaction.Diagram;
-
-                var availableWidth = _diagram.View != null ? _diagram.View.RenderSize.Width : 0;
-                var availableHeight = _diagram.View != null ? _diagram.View.RenderSize.Height : 0;
-                X = Math.Min(interaction.MousePosition.X, availableWidth - NodeSelectorRightMargin);
-                Y = Math.Min(interaction.MousePosition.Y, availableHeight - NodeSelectorBottomMargin);
-
-                var viewModelUnderMouse = interaction.ViewModelUnderMouse;
-
-                if (viewModelUnderMouse is Terminal terminal)
-                {
-                    if (terminal.Model.DefaultSide != Direction.West)
-                    {
-                        X += Terminal.TerminalHeight;
-                    }
-                }
-                ShowWithContextFilter(viewModelUnderMouse);
+                Console.Error.WriteLine($"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
             }
         }
     }

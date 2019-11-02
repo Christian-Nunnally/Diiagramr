@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell.Commands.Transacting;
 using DiiagramrCore;
 using System;
@@ -11,27 +10,19 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class DiagramRifter : DiagramInteractor
     {
-        private const int RiftVisualEndCapSize = 4;
         private const int MinimimDistanceToStartRift = 5;
+        private const int RiftVisualEndCapSize = 4;
+        private readonly ITransactor _transactor;
         private double _lastRiftDeltaX;
         private double _lastRiftDeltaY;
-        public Point RiftStartDiagramPoint { get; set; }
-        private RiftMode Mode { get; set; }
         private IEnumerable<Node> _nodesBeingRifted;
-
-        public double RiftWidth { get; set; }
-        public double RiftWidthPlus5 => RiftWidth + RiftVisualEndCapSize;
-        public double RiftWidthMinus5 => RiftWidth - RiftVisualEndCapSize;
-
-        public double RiftHeight { get; set; }
-
         private MoveNodesToCurrentPositionCommand _undoRiftCommand;
 
-        public double RiftHeightPlus5 => RiftHeight + RiftVisualEndCapSize;
-        public double RiftHeightMinus5 => RiftHeight - RiftVisualEndCapSize;
-
-        public bool IsModeHorizontial => Mode == RiftMode.Right || Mode == RiftMode.Left;
-        public bool IsModeVertical => Mode == RiftMode.Down || Mode == RiftMode.Up;
+        public DiagramRifter(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+            Weight = 0.5;
+        }
 
         private enum RiftMode
         {
@@ -42,13 +33,16 @@ namespace DiiagramrAPI.Editor.Interactors
             None
         }
 
-        private readonly ITransactor _transactor;
-
-        public DiagramRifter(Func<ITransactor> _transactorFactory)
-        {
-            _transactor = _transactorFactory.Invoke();
-            Weight = 0.5;
-        }
+        public bool IsModeHorizontial => Mode == RiftMode.Right || Mode == RiftMode.Left;
+        public bool IsModeVertical => Mode == RiftMode.Down || Mode == RiftMode.Up;
+        public double RiftHeight { get; set; }
+        public double RiftHeightMinus5 => RiftHeight - RiftVisualEndCapSize;
+        public double RiftHeightPlus5 => RiftHeight + RiftVisualEndCapSize;
+        public Point RiftStartDiagramPoint { get; set; }
+        public double RiftWidth { get; set; }
+        public double RiftWidthMinus5 => RiftWidth - RiftVisualEndCapSize;
+        public double RiftWidthPlus5 => RiftWidth + RiftVisualEndCapSize;
+        private RiftMode Mode { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -60,98 +54,6 @@ namespace DiiagramrAPI.Editor.Interactors
             if (interaction.Type == InteractionType.MouseMoved)
             {
                 ProcessMouseMoved(diagram, mousePosition, riftDeltaX, riftDeltaY);
-            }
-        }
-
-        private void ProcessMouseMoved(Diagram diagram, Point mousePosition, double riftDeltaX, double riftDeltaY)
-        {
-            if (Mode == RiftMode.None)
-            {
-                CheckIfRiftShouldStart(riftDeltaX, riftDeltaY);
-            }
-            if (Mode != RiftMode.None)
-            {
-                Rift(diagram, riftDeltaX, riftDeltaY);
-                diagram.UpdateDiagramBoundingBox();
-                SetRiftSize(mousePosition);
-            }
-        }
-
-        private void SetRiftSize(Point mousePosition)
-        {
-            if (IsModeVertical)
-            {
-                RiftHeight = mousePosition.Y - Y;
-            }
-            else if (IsModeHorizontial)
-            {
-                RiftWidth = mousePosition.X - X;
-            }
-        }
-
-        private void Rift(Diagram diagram, double riftDeltaX, double riftDeltaY)
-        {
-            if (_nodesBeingRifted == null)
-            {
-                _nodesBeingRifted = GetNodesToRift(diagram).ToList();
-            }
-            RiftNodes(riftDeltaX, riftDeltaY);
-        }
-
-        private void RiftNodes(double riftDeltaX, double riftDeltaY)
-        {
-            var deltaSinceLastMoveX = riftDeltaX - _lastRiftDeltaX;
-            var deltaSinceLastMoveY = riftDeltaY - _lastRiftDeltaY;
-            switch (Mode)
-            {
-                case RiftMode.Left:
-                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
-                    break;
-                case RiftMode.Right:
-                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
-                    break;
-                case RiftMode.Up:
-                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
-                    break;
-                case RiftMode.Down:
-                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
-                    break;
-                case RiftMode.None:
-                    break;
-            }
-            _lastRiftDeltaX = riftDeltaX;
-            _lastRiftDeltaY = riftDeltaY;
-        }
-
-        private IEnumerable<Node> GetNodesToRift(Diagram diagram)
-        {
-            switch (Mode)
-            {
-                case RiftMode.Left:
-                    return diagram.Nodes.Where(n => n.X + n.Width < RiftStartDiagramPoint.X);
-                case RiftMode.Right:
-                    return diagram.Nodes.Where(n => n.X > RiftStartDiagramPoint.X);
-                case RiftMode.Up:
-                    return diagram.Nodes.Where(n => n.Y + n.Height < RiftStartDiagramPoint.Y);
-                case RiftMode.Down:
-                    return diagram.Nodes.Where(n => n.Y > RiftStartDiagramPoint.Y);
-            }
-            return Enumerable.Empty<Node>();
-        }
-
-        private void CheckIfRiftShouldStart(double riftDeltaX, double riftDeltaY)
-        {
-            if (Math.Abs(riftDeltaX) > MinimimDistanceToStartRift)
-            {
-                Mode = riftDeltaX > 0
-                    ? RiftMode.Right
-                    : RiftMode.Left;
-            }
-            else if (Math.Abs(riftDeltaY) > MinimimDistanceToStartRift)
-            {
-                Mode = riftDeltaY > 0
-                    ? RiftMode.Down
-                    : RiftMode.Up;
             }
         }
 
@@ -197,6 +99,105 @@ namespace DiiagramrAPI.Editor.Interactors
 
             var doRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
             _transactor.Transact(doRiftCommand, _undoRiftCommand, _nodesBeingRifted);
+        }
+
+        private void CheckIfRiftShouldStart(double riftDeltaX, double riftDeltaY)
+        {
+            if (Math.Abs(riftDeltaX) > MinimimDistanceToStartRift)
+            {
+                Mode = riftDeltaX > 0
+                    ? RiftMode.Right
+                    : RiftMode.Left;
+            }
+            else if (Math.Abs(riftDeltaY) > MinimimDistanceToStartRift)
+            {
+                Mode = riftDeltaY > 0
+                    ? RiftMode.Down
+                    : RiftMode.Up;
+            }
+        }
+
+        private IEnumerable<Node> GetNodesToRift(Diagram diagram)
+        {
+            switch (Mode)
+            {
+                case RiftMode.Left:
+                    return diagram.Nodes.Where(n => n.X + n.Width < RiftStartDiagramPoint.X);
+
+                case RiftMode.Right:
+                    return diagram.Nodes.Where(n => n.X > RiftStartDiagramPoint.X);
+
+                case RiftMode.Up:
+                    return diagram.Nodes.Where(n => n.Y + n.Height < RiftStartDiagramPoint.Y);
+
+                case RiftMode.Down:
+                    return diagram.Nodes.Where(n => n.Y > RiftStartDiagramPoint.Y);
+            }
+            return Enumerable.Empty<Node>();
+        }
+
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition, double riftDeltaX, double riftDeltaY)
+        {
+            if (Mode == RiftMode.None)
+            {
+                CheckIfRiftShouldStart(riftDeltaX, riftDeltaY);
+            }
+            if (Mode != RiftMode.None)
+            {
+                Rift(diagram, riftDeltaX, riftDeltaY);
+                diagram.UpdateDiagramBoundingBox();
+                SetRiftSize(mousePosition);
+            }
+        }
+
+        private void Rift(Diagram diagram, double riftDeltaX, double riftDeltaY)
+        {
+            if (_nodesBeingRifted == null)
+            {
+                _nodesBeingRifted = GetNodesToRift(diagram).ToList();
+            }
+            RiftNodes(riftDeltaX, riftDeltaY);
+        }
+
+        private void RiftNodes(double riftDeltaX, double riftDeltaY)
+        {
+            var deltaSinceLastMoveX = riftDeltaX - _lastRiftDeltaX;
+            var deltaSinceLastMoveY = riftDeltaY - _lastRiftDeltaY;
+            switch (Mode)
+            {
+                case RiftMode.Left:
+                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
+                    break;
+
+                case RiftMode.Right:
+                    _nodesBeingRifted.ForEach(n => n.X += deltaSinceLastMoveX);
+                    break;
+
+                case RiftMode.Up:
+                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
+                    break;
+
+                case RiftMode.Down:
+                    _nodesBeingRifted.ForEach(n => n.Y += deltaSinceLastMoveY);
+                    break;
+
+                case RiftMode.None:
+                    break;
+            }
+            _lastRiftDeltaX = riftDeltaX;
+            _lastRiftDeltaY = riftDeltaY;
+        }
+
+        private void SetRiftSize(Point mousePosition)
+        {
+            if (IsModeVertical)
+            {
+                RiftHeight = mousePosition.Y - Y;
+            }
+            else if (IsModeHorizontial)
+            {
+                RiftWidth = mousePosition.X - X;
+            }
         }
     }
 }

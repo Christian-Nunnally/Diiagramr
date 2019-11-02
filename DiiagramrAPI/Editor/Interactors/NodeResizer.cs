@@ -11,13 +11,16 @@ namespace DiiagramrAPI.Editor.Interactors
     public class NodeResizer : DiagramInteractor
     {
         private const double ResizeBorderMargin = 4;
-        public Point PreviousMouseLocation { get; set; }
-
+        private readonly ITransactor _transactor;
         private IEnumerable<Node> _resizingNodes;
-        private ResizeNodesToCurrentSizeCommand _undoResizeCommand;
         private MoveNodesToCurrentPositionCommand _undoPositionAdjustmentCommand;
+        private ResizeNodesToCurrentSizeCommand _undoResizeCommand;
 
-        private ResizeMode Mode { get; set; }
+        public NodeResizer(Func<ITransactor> _transactorFactory)
+        {
+            _transactor = _transactorFactory.Invoke();
+            Weight = 0.5;
+        }
 
         private enum ResizeMode
         {
@@ -27,12 +30,16 @@ namespace DiiagramrAPI.Editor.Interactors
             Bottom,
         }
 
-        private readonly ITransactor _transactor;
+        public Point PreviousMouseLocation { get; set; }
+        private ResizeMode Mode { get; set; }
 
-        public NodeResizer(Func<ITransactor> _transactorFactory)
+        public static double DistanceFromPointToLine(Point point, Point lineStart, Point lineStop)
         {
-            _transactor = _transactorFactory.Invoke();
-            Weight = 0.5;
+            var lineHeight = lineStop.X - lineStart.X;
+            var lineWidth = lineStop.Y - lineStart.Y;
+            var nominator = Math.Abs(lineHeight * (lineStart.Y - point.Y) - (lineStart.X - point.X) * lineWidth);
+            var denominator = Math.Sqrt(Math.Pow(lineHeight, 2) + Math.Pow(lineWidth, 2));
+            return nominator / denominator;
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -43,39 +50,6 @@ namespace DiiagramrAPI.Editor.Interactors
                 var mousePosition = interaction.MousePosition;
                 ProcessMouseMoved(diagram, mousePosition);
             }
-        }
-
-        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
-        {
-            var deltaX = mousePosition.X - PreviousMouseLocation.X;
-            var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
-            foreach (var node in diagram.Nodes.Where(n => n.IsSelected))
-            {
-                if (Mode == ResizeMode.Right)
-                {
-                    var widthChange = deltaX / diagram.Zoom;
-                    node.Width += widthChange;
-                }
-                else if (Mode == ResizeMode.Top)
-                {
-                    var heightChange = deltaY / diagram.Zoom;
-                    node.Height -= heightChange;
-                    node.Y += heightChange;
-                }
-                else if (Mode == ResizeMode.Left)
-                {
-                    var widthChange = deltaX / diagram.Zoom;
-                    node.Width -= widthChange;
-                    node.X += widthChange;
-                }
-                else if (Mode == ResizeMode.Bottom)
-                {
-                    var heightChange = deltaY / diagram.Zoom;
-                    node.Height += heightChange;
-                }
-            }
-            PreviousMouseLocation = mousePosition;
-            diagram.UpdateDiagramBoundingBox();
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
@@ -169,13 +143,37 @@ namespace DiiagramrAPI.Editor.Interactors
             _transactor.Transact(positionAdjustmentCommand, _undoPositionAdjustmentCommand, _resizingNodes);
         }
 
-        public static double DistanceFromPointToLine(Point point, Point lineStart, Point lineStop)
+        private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
         {
-            var lineHeight = lineStop.X - lineStart.X;
-            var lineWidth = lineStop.Y - lineStart.Y;
-            var nominator = Math.Abs(lineHeight * (lineStart.Y - point.Y) - (lineStart.X - point.X) * lineWidth);
-            var denominator = Math.Sqrt(Math.Pow(lineHeight, 2) + Math.Pow(lineWidth, 2));
-            return nominator / denominator;
+            var deltaX = mousePosition.X - PreviousMouseLocation.X;
+            var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
+            foreach (var node in diagram.Nodes.Where(n => n.IsSelected))
+            {
+                if (Mode == ResizeMode.Right)
+                {
+                    var widthChange = deltaX / diagram.Zoom;
+                    node.Width += widthChange;
+                }
+                else if (Mode == ResizeMode.Top)
+                {
+                    var heightChange = deltaY / diagram.Zoom;
+                    node.Height -= heightChange;
+                    node.Y += heightChange;
+                }
+                else if (Mode == ResizeMode.Left)
+                {
+                    var widthChange = deltaX / diagram.Zoom;
+                    node.Width -= widthChange;
+                    node.X += widthChange;
+                }
+                else if (Mode == ResizeMode.Bottom)
+                {
+                    var heightChange = deltaY / diagram.Zoom;
+                    node.Height += heightChange;
+                }
+            }
+            PreviousMouseLocation = mousePosition;
+            diagram.UpdateDiagramBoundingBox();
         }
     }
 }

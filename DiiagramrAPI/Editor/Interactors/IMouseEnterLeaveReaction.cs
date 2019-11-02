@@ -3,6 +3,7 @@
     internal interface IMouseEnterLeaveReaction
     {
         void MouseEntered();
+
         void MouseLeft();
     }
 }

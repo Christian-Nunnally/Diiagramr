@@ -2,12 +2,12 @@
 {
     public class MouseEnterLeaveInteractor : DiagramInteractor
     {
-        private IMouseEnterLeaveReaction ReactionMouseIsCurrentlyIn { get; set; }
-
         public MouseEnterLeaveInteractor()
         {
             Weight = 1.0;
         }
+
+        private IMouseEnterLeaveReaction ReactionMouseIsCurrentlyIn { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {

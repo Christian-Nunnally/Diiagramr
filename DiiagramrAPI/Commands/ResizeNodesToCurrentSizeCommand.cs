@@ -7,8 +7,8 @@ namespace DiiagramrAPI.Commands
 {
     public class ResizeNodesToCurrentSizeCommand : TransactingCommand
     {
-        private readonly Dictionary<Node, Size> _nodeToSizeMap = new Dictionary<Node, Size>();
         private readonly IEnumerable<Node> _nodes;
+        private readonly Dictionary<Node, Size> _nodeToSizeMap = new Dictionary<Node, Size>();
 
         public ResizeNodesToCurrentSizeCommand(IEnumerable<Node> nodes)
         {
