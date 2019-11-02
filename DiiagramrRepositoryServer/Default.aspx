@@ -1,14 +1,17 @@
-﻿<%@ Page Language="C#" %>
-<%@ Import Namespace="NuGet.Server" %>
-<%@ Import Namespace="NuGet.Server.App_Start" %>
-<%@ Import Namespace="NuGet.Server.Infrastructure" %>
+﻿<%@ page language="C#" %>
+
+<%@ import namespace="NuGet.Server" %>
+<%@ import namespace="NuGet.Server.App_Start" %>
+<%@ import namespace="NuGet.Server.Infrastructure" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title>NuGet Private Repository</title>
     <style>
-        body { font-family: Calibri; }
+        body {
+            font-family: Calibri;
+        }
     </style>
 </head>
 <body>
@@ -17,9 +20,9 @@
         <p>
             Click <a href="<%= VirtualPathUtility.ToAbsolute("~/nuget/Packages") %>">here</a> to view your packages.
         </p>
-        <fieldset style="width:800px">
+        <fieldset style="width: 800px">
             <legend><strong>Repository URLs</strong></legend>
-            In the package manager settings, add the following URL to the list of 
+            In the package manager settings, add the following URL to the list of
             Package Sources:
             <blockquote>
                 <strong><%= Helpers.GetRepositoryUrl(Request.Url, Request.ApplicationPath) %></strong>
@@ -31,15 +34,16 @@
             <blockquote>
                 <strong>nuget.exe push {package file} {apikey} -Source <%= Helpers.GetPushUrl(Request.Url, Request.ApplicationPath) %></strong>
             </blockquote>
-            <% } %> 
+            <% } %>
         </fieldset>
 
         <% if (Request.IsLocal || ServiceResolver.Current.Resolve<NuGet.Server.Core.Infrastructure.ISettingsProvider>().GetBoolSetting("allowRemoteCacheManagement", false)) { %>
-        <fieldset style="width:800px">
+        <fieldset style="width: 800px">
             <legend><strong>Adding packages</strong></legend>
 
             To add packages to the feed put package files (.nupkg files) in the folder
-            <code><% = PackageUtility.PackagePhysicalPath %></code><br/><br/>
+            <code><% = PackageUtility.PackagePhysicalPath %></code><br />
+            <br />
 
             Click <a href="<%= VirtualPathUtility.ToAbsolute("~/nuget/clear-cache") %>">here</a> to clear the package cache.
         </fieldset>

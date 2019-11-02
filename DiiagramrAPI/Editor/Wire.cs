@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service;
 using DiiagramrAPI.Application;
 using DiiagramrCore;
 using DiiagramrModel;

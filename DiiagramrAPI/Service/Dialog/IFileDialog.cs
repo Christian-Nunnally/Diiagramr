@@ -1,4 +1,3 @@
-using DiiagramrAPI.Service.Editor;
 using System.Windows;
 
 namespace DiiagramrAPI.Service.Dialog

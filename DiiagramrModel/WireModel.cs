@@ -1,9 +1,9 @@
 namespace DiiagramrModel
 {
-    using System.ComponentModel;
-    using System.Runtime.Serialization;
     using DiiagramrCore;
     using PropertyChanged;
+    using System.ComponentModel;
+    using System.Runtime.Serialization;
 
     /// <summary>
     /// A wire represents a link from one <see cref="TerminalModel"/> to another.

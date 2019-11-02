@@ -1,18 +1,18 @@
+using NuGet.Server;
+using NuGet.Server.Infrastructure;
+using NuGet.Server.V2;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using System.Web.Http.Routing;
-using NuGet.Server;
-using NuGet.Server.Infrastructure;
-using NuGet.Server.V2;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(DiiagramrRepositoryServer.App_Start.NuGetODataConfig), "Start")]
 
-namespace DiiagramrRepositoryServer.App_Start 
+namespace DiiagramrRepositoryServer.App_Start
 {
-    public static class NuGetODataConfig 
+    public static class NuGetODataConfig
     {
-        public static void Start() 
+        public static void Start()
         {
             ServiceResolver.SetServiceResolver(new DefaultServiceResolver());
 
@@ -36,7 +36,6 @@ namespace DiiagramrRepositoryServer.App_Start
                 defaults: new { controller = "PackagesOData", action = "ClearCache" },
                 constraints: new { httpMethod = new HttpMethodConstraint(HttpMethod.Get) }
             );
-
         }
     }
 }

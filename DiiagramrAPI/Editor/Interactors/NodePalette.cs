@@ -1,5 +1,5 @@
-using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;
 using Stylet;

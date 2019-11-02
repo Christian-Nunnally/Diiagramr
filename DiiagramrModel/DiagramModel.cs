@@ -1,8 +1,8 @@
 namespace DiiagramrModel
 {
+    using PropertyChanged;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
-    using PropertyChanged;
 
     [DataContract]
     [AddINotifyPropertyChangedInterface]

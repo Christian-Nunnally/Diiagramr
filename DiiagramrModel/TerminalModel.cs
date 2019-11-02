@@ -1,10 +1,10 @@
 namespace DiiagramrModel
 {
+    using DiiagramrCore;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.Serialization;
-    using DiiagramrCore;
 
     /// <summary>
     /// A terminal provides nodes with a mechanism to share data with the diagram,

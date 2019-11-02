@@ -1,6 +1,4 @@
-﻿using DiiagramrAPI.Editor;
-
-namespace DiiagramrAPI.Editor
+﻿namespace DiiagramrAPI.Editor
 {
     internal static class TerminalAdornerHelpers
     {

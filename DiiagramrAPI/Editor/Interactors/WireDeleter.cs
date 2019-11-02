@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Application.Commands.Transacting;
+﻿using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Commands;
 using System;
 
 namespace DiiagramrAPI.Editor.Interactors

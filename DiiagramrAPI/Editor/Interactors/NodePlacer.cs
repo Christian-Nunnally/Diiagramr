@@ -1,6 +1,6 @@
-using DiiagramrAPI.Commands;
 using DiiagramrAPI.Application.Commands;
 using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Commands;
 using System;
 using System.Linq;
 using System.Windows;

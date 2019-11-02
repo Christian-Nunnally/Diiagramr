@@ -1,8 +1,8 @@
 namespace DiiagramrModel
 {
+    using PropertyChanged;
     using System.Collections.ObjectModel;
     using System.Runtime.Serialization;
-    using PropertyChanged;
 
     /// <summary>
     /// A serializable representation of a project.

@@ -47,7 +47,7 @@
                         <Setter Property="HorizontalAlignment" Value="Right" />
                     </Style>
 
-                    <BooleanToVisibilityConverter x:Key="Btv"/>
+                    <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -133,7 +133,7 @@
                 HorizontalAlignment="Stretch"
                 HorizontalContentAlignment="Center"
                 Visibility="{Binding IsRestartRequired, Converter={StaticResource Btv}}"
-                VerticalAlignment="Bottom"/>
+                VerticalAlignment="Bottom" />
 
             <Border
                 Grid.Row="2"

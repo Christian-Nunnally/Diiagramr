@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Service.Editor;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Windows;
 
 namespace DiiagramrAPI.Service.Dialog

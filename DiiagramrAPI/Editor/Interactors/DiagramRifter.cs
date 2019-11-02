@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Commands;
-using DiiagramrAPI.Application.Commands.Transacting;
+﻿using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Commands;
 using DiiagramrCore;
 using System;
 using System.Collections.Generic;

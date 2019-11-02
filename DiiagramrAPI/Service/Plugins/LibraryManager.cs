@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Service.IO;
-using DiiagramrAPI.Application.Tools;
+﻿using DiiagramrAPI.Application.Tools;
+using DiiagramrAPI.Service.IO;
 using DiiagramrModel;
 using System;
 using System.Collections.Generic;
