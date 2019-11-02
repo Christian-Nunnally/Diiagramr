@@ -30,21 +30,24 @@ namespace DiiagramrAPI.Editor
         }
 
         /// <summary>
+        /// Sets up a input terminal on this node.
+        /// </summary>
+        /// <param name="name">The name of the terminal.</param>
+        /// <param name="direction">The default side of the node this terminal belongs on.</param>
+        /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
+        public TypedTerminal<T> InputTerminal<T>(string name, Direction direction)
+        {
+            var model = new InputTerminalModel(name, typeof(T), direction, _terminalIndex);
+            return CreateClientTerminal<T>(name, direction, model);
+        }
+
+        /// <summary>
         /// Sets the name of a node, this is what displays above the node on the diagram.
         /// </summary>
         /// <param name="name"></param>
         public void NodeName(string name)
         {
             _nodeViewModel.Name = name;
-        }
-
-        /// <summary>
-        /// Sets the weight of the node in the node selector (where it gets inserted in the list).
-        /// </summary>
-        /// <param name="weight">Usually between 0 and 1, 1 being at the bottom of the list and 0 being at the top of the list.</param>
-        public void NodeWeight(float weight)
-        {
-            _nodeViewModel.Weight = weight;
         }
 
         /// <summary>
@@ -69,15 +72,12 @@ namespace DiiagramrAPI.Editor
         }
 
         /// <summary>
-        /// Sets up a input terminal on this node.
+        /// Sets the weight of the node in the node selector (where it gets inserted in the list).
         /// </summary>
-        /// <param name="name">The name of the terminal.</param>
-        /// <param name="direction">The default side of the node this terminal belongs on.</param>
-        /// <remarks>For now, dynamically creating input terminals at runtime is not supported</remarks>
-        public TypedTerminal<T> InputTerminal<T>(string name, Direction direction)
+        /// <param name="weight">Usually between 0 and 1, 1 being at the bottom of the list and 0 being at the top of the list.</param>
+        public void NodeWeight(float weight)
         {
-            var model = new InputTerminalModel(name, typeof(T), direction, _terminalIndex);
-            return CreateClientTerminal<T>(name, direction, model);
+            _nodeViewModel.Weight = weight;
         }
 
         /// <summary>

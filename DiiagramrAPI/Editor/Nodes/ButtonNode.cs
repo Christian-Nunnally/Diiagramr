@@ -6,16 +6,9 @@ namespace DiiagramrAPI.Editor.Nodes
     {
         private TypedTerminal<bool> _outputTerminal;
 
-        public string Value { get; set; }
-        public string Result { get; set; }
         public bool IsPressed { get; set; }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Button");
-            _outputTerminal = setup.OutputTerminal<bool>("Trigger", Direction.South);
-        }
+        public string Result { get; set; }
+        public string Value { get; set; }
 
         public void Trigger()
         {
@@ -27,6 +20,13 @@ namespace DiiagramrAPI.Editor.Nodes
         public void Unpress()
         {
             IsPressed = false;
+        }
+
+        protected override void SetupNode(NodeSetup setup)
+        {
+            setup.NodeSize(30, 30);
+            setup.NodeName("Button");
+            _outputTerminal = setup.OutputTerminal<bool>("Trigger", Direction.South);
         }
     }
 }

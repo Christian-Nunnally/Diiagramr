@@ -22,21 +22,31 @@ namespace DiiagramrAPI.Editor
             Terminals = new ObservableCollection<Terminal>();
         }
 
-        public virtual IList<Terminal> Terminals { get; }
-        public IEnumerable<InputTerminal> InputTerminalViewModels => Terminals.OfType<InputTerminal>();
-        public IEnumerable<OutputTerminal> OutputTerminalViewModels => Terminals.OfType<OutputTerminal>();
-        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
+        public virtual double Height
+        {
+            get => Model.Height;
 
-        public virtual NodeModel Model { get; set; }
+            set
+            {
+                Model.Height = value;
+                if (Height < MinimumHeight - 0.05)
+                {
+                    Height = MinimumHeight;
+                }
+                FixAllTerminals();
+            }
+        }
+
+        public IEnumerable<InputTerminal> InputTerminalViewModels => Terminals.OfType<InputTerminal>();
         public virtual bool IsSelected { get; set; }
-        public virtual bool ResizeEnabled { get; set; }
-        private bool IsAttached { get; set; }
         public virtual double MinimumHeight { get; set; }
         public virtual double MinimumWidth { get; set; }
+        public virtual NodeModel Model { get; set; }
         public virtual string Name { get; set; } = "Node";
+        public IEnumerable<OutputTerminal> OutputTerminalViewModels => Terminals.OfType<OutputTerminal>();
+        public virtual bool ResizeEnabled { get; set; }
+        public virtual IList<Terminal> Terminals { get; }
         public virtual float Weight { get; set; }
-        public virtual double X { get; set; }
-        public virtual double Y { get; set; }
 
         public virtual double Width
         {
@@ -54,20 +64,10 @@ namespace DiiagramrAPI.Editor
             }
         }
 
-        public virtual double Height
-        {
-            get => Model.Height;
-
-            set
-            {
-                Model.Height = value;
-                if (Height < MinimumHeight - 0.05)
-                {
-                    Height = MinimumHeight;
-                }
-                FixAllTerminals();
-            }
-        }
+        public virtual double X { get; set; }
+        public virtual double Y { get; set; }
+        private bool IsAttached { get; set; }
+        private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSetting)));
 
         public virtual void AddTerminalViewModel(Terminal terminalViewModel)
         {
@@ -75,6 +75,26 @@ namespace DiiagramrAPI.Editor
             AddTerminal(terminalViewModel.Model);
             DropAndArrangeTerminal(terminalViewModel, terminalViewModel.Model.DefaultSide);
             terminalViewModel.CalculateUTurnLimitsForTerminal(Width, Height);
+        }
+
+        public virtual void AttachToModel(NodeModel nodeModel)
+        {
+            if (IsAttached)
+            {
+                return;
+            }
+
+            IsAttached = true;
+
+            Model = nodeModel;
+            Model.Name = GetType().FullName;
+            InitializePluginNodeSettings();
+
+            LoadTerminalViewModels();
+
+            var nodeSetterUpper = new NodeSetup(this);
+            SetupNode(nodeSetterUpper);
+            InitializeWidthAndHeight();
         }
 
         public void DisconnectAllTerminals()
@@ -110,32 +130,16 @@ namespace DiiagramrAPI.Editor
             PluginNodeSettings.ForEach(info => info.SetValue(this, Model?.GetVariable(info.Name)));
         }
 
-        private void PersistProperty(PropertyInfo info)
+        public void MouseEntered()
         {
-            if (!Model.PersistedVariables.ContainsKey(info.Name))
-            {
-                Model.SetVariable(info.Name, info.GetValue(this));
-            }
+            SetAdorner(new NodeNameAdornernment(View, this));
+            MouseEnteredNode();
         }
 
-        public virtual void AttachToModel(NodeModel nodeModel)
+        public void MouseLeft()
         {
-            if (IsAttached)
-            {
-                return;
-            }
-
-            IsAttached = true;
-
-            Model = nodeModel;
-            Model.Name = GetType().FullName;
-            InitializePluginNodeSettings();
-
-            LoadTerminalViewModels();
-
-            var nodeSetterUpper = new NodeSetup(this);
-            SetupNode(nodeSetterUpper);
-            InitializeWidthAndHeight();
+            SetAdorner(null);
+            MouseLeftNode();
         }
 
         public virtual void RemoveTerminalViewModel(Terminal terminalViewModel)
@@ -161,6 +165,14 @@ namespace DiiagramrAPI.Editor
                 terminal.IsSelected = false;
                 terminal.HighlightVisible = false;
             });
+        }
+
+        protected virtual void MouseEnteredNode()
+        {
+        }
+
+        protected virtual void MouseLeftNode()
+        {
         }
 
         protected override void OnPropertyChanged(string propertyName)
@@ -337,6 +349,14 @@ namespace DiiagramrAPI.Editor
             }
         }
 
+        private void PersistProperty(PropertyInfo info)
+        {
+            if (!Model.PersistedVariables.ContainsKey(info.Name))
+            {
+                Model.SetVariable(info.Name, info.GetValue(this));
+            }
+        }
+
         private void RemoveTerminal(TerminalModel terminal)
         {
             Model.RemoveTerminal(terminal);
@@ -346,20 +366,5 @@ namespace DiiagramrAPI.Editor
         {
             Terminals.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
         }
-
-        public void MouseEntered()
-        {
-            SetAdorner(new NodeNameAdornernment(View, this));
-            MouseEnteredNode();
-        }
-
-        public void MouseLeft()
-        {
-            SetAdorner(null);
-            MouseLeftNode();
-        }
-
-        protected virtual void MouseEnteredNode() { }
-        protected virtual void MouseLeftNode() { }
     }
 }

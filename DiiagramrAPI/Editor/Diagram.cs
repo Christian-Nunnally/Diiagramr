@@ -25,6 +25,7 @@ namespace DiiagramrAPI.Editor
         public const double NodeSelectorRightMargin = 400;
         private static readonly Rect BoundingBoxDefault = new Rect(-400, -275, 800, 550);
         private readonly IProvideNodes _nodeProvider;
+
         public Diagram(
             DiagramModel diagram,
             IProvideNodes nodeProvider,
@@ -63,6 +64,7 @@ namespace DiiagramrAPI.Editor
         public double ViewWidth { get; set; }
         public BindableCollection<Wire> Wires { get; } = new BindableCollection<Wire>();
         public double Zoom { get; set; } = 1;
+
         public void AddNode(Node node)
         {
             if (node.Model == null)
@@ -301,6 +303,7 @@ namespace DiiagramrAPI.Editor
             var interaction = new DiagramInteractionEventArguments(type) { Key = e.Key };
             DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
+
         private void MouseInputHandler(object sender, MouseEventArgs e, InteractionType interactionType)
         {
             var relativeMousePosition = e.GetPosition((IInputElement)sender);

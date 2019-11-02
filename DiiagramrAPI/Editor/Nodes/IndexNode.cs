@@ -9,6 +9,9 @@ namespace DiiagramrAPI.Editor.Nodes
         private TypedTerminal<byte[]> _arrayTerminal;
         private TypedTerminal<float> _valueTerminal;
 
+        [NodeSetting]
+        public int Index { get; set; }
+
         public string StringValue
         {
             get => Index.ToString();
@@ -26,8 +29,16 @@ namespace DiiagramrAPI.Editor.Nodes
             }
         }
 
-        [NodeSetting]
-        public int Index { get; set; }
+        public void PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                if (View != null)
+                {
+                    (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
+                }
+            }
+        }
 
         protected override void SetupNode(NodeSetup setup)
         {
@@ -48,17 +59,6 @@ namespace DiiagramrAPI.Editor.Nodes
                 if (Index < data.Length)
                 {
                     _valueTerminal.Data = data[Index];
-                }
-            }
-        }
-
-        public void PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                if (View != null)
-                {
-                    (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 }
             }
         }

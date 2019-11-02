@@ -8,11 +8,13 @@ namespace DiiagramrAPI.Editor
 {
     internal class WirePathingAlgorithum
     {
+        private const int MinimimDistanceToCalculateWire = 50;
         private const double WireDistanceOutOfTerminal = 25.0;
         private bool _uTurned = false;
-        private const int MinimimDistanceToCalculateWire = 50;
         private WireModel _wireModel;
 
+        public Terminal FallbackSinkTerminal { get; internal set; }
+        public Terminal FallbackSourceTerminal { get; internal set; }
         private double DownUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalDownWireMinimumLength : 0;
         private double DownUTurnLengthSource => _wireModel != null ? _wireModel.SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
         private double LeftUTurnLengthSink => _wireModel != null ? _wireModel.SinkTerminal.TerminalLeftWireMinimumLength : 0;
@@ -62,14 +64,6 @@ namespace DiiagramrAPI.Editor
             return points.ToArray();
         }
 
-        public Terminal FallbackSourceTerminal { get; internal set; }
-        public Terminal FallbackSinkTerminal { get; internal set; }
-
-        private bool StubsAreTooCloseTogether(Point stubStart, Point stubEnd)
-        {
-            return MinimimDistanceToCalculateWire > Math.Abs(stubStart.X - stubEnd.X) + Math.Abs(stubStart.Y - stubEnd.Y);
-        }
-
         private static Direction GetBannedDirectionFromPoints(Point start, Point end)
         {
             if (Math.Abs(start.X - end.X) > Math.Abs(start.Y - end.Y))
@@ -80,6 +74,31 @@ namespace DiiagramrAPI.Editor
             {
                 return start.Y - end.Y > 0 ? Direction.South : Direction.North;
             }
+        }
+
+        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
+        {
+            if (direction == Direction.North)
+            {
+                return new Point(p.X, p.Y - amount);
+            }
+
+            if (direction == Direction.South)
+            {
+                return new Point(p.X, p.Y + amount);
+            }
+
+            if (direction == Direction.East)
+            {
+                return new Point(p.X + amount, p.Y);
+            }
+
+            return direction == Direction.West ? new Point(p.X - amount, p.Y) : new Point(p.X, p.Y);
+        }
+
+        private bool StubsAreTooCloseTogether(Point stubStart, Point stubEnd)
+        {
+            return MinimimDistanceToCalculateWire > Math.Abs(stubStart.X - stubEnd.X) + Math.Abs(stubStart.Y - stubEnd.Y);
         }
 
         private List<Point> UTurn(Point start, Point end, Direction bannedDirectionForStart, Direction bannedDirectionForEnd, List<Point> pointsSoFar, int uturnCount, int maxNumberOfPoints, bool fromSourceTerminal)
@@ -302,26 +321,6 @@ namespace DiiagramrAPI.Editor
             var bannedStart = start.Y < end.Y ? Direction.North : Direction.South;
             var newPoint = new Point(start.X, end.Y);
             return WireTwoPoints(newPoint, end, bannedStart, bannedDirectionForEnd, pointsSoFar, uturnCount, fromSourceTerminal);
-        }
-
-        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
-        {
-            if (direction == Direction.North)
-            {
-                return new Point(p.X, p.Y - amount);
-            }
-
-            if (direction == Direction.South)
-            {
-                return new Point(p.X, p.Y + amount);
-            }
-
-            if (direction == Direction.East)
-            {
-                return new Point(p.X + amount, p.Y);
-            }
-
-            return direction == Direction.West ? new Point(p.X - amount, p.Y) : new Point(p.X, p.Y);
         }
     }
 }

@@ -7,11 +7,11 @@ namespace DiiagramrAPI.Editor
     {
         private string _directEditTextBoxText = "0";
 
-        public TextBox DirectEditTextBox { get; set; }
-
         public InputTerminal(InputTerminalModel inputTerminal) : base(inputTerminal)
         {
         }
+
+        public TextBox DirectEditTextBox { get; set; }
 
         public string DirectEditTextBoxText
         {

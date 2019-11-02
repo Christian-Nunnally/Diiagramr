@@ -8,8 +8,8 @@ namespace DiiagramrAPI.Editor.Nodes
         private TypedTerminal<float> _inputTerminal2;
         private TypedTerminal<float> _outputTerminal;
 
-        public string Value { get; set; }
         public string Result { get; set; }
+        public string Value { get; set; }
 
         protected override void SetupNode(NodeSetup setup)
         {

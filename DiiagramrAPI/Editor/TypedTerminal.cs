@@ -7,10 +7,10 @@ namespace DiiagramrAPI.Editor
 
     /// <summary>
     /// Generic wrapper around a <see cref="Terminal" /> for <see cref="Terminal" /> clients to get and set
-    /// terminal data. Setting the data on this terminal notifies the underlying <see cref="Wire" /> 
-    /// so that the data can be propagated by any connected <see cref="Terminal" />.  When the underlying 
-    /// <see cref="Node" /> has its data set, the value is casted to the correct type before being given 
-    /// to the <see cref="Node" /> client for consumption.   
+    /// terminal data. Setting the data on this terminal notifies the underlying <see cref="Wire" />
+    /// so that the data can be propagated by any connected <see cref="Terminal" />.  When the underlying
+    /// <see cref="Node" /> has its data set, the value is casted to the correct type before being given
+    /// to the <see cref="Node" /> client for consumption.
     /// </summary>
     /// <typeparam name="T">The datatype of the terminal.</typeparam>
     public class TypedTerminal<T>

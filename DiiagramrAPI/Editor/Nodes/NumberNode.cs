@@ -25,15 +25,6 @@ namespace DiiagramrAPI.Editor.Nodes
         [NodeSetting]
         public float Value { get; set; }
 
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Number");
-            setup.EnableResize();
-            _outputTerminal = setup.OutputTerminal<float>("Number", Direction.South);
-            _outputTerminal.Data = Value;
-        }
-
         public void PreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
@@ -43,6 +34,15 @@ namespace DiiagramrAPI.Editor.Nodes
                     (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 }
             }
+        }
+
+        protected override void SetupNode(NodeSetup setup)
+        {
+            setup.NodeSize(30, 30);
+            setup.NodeName("Number");
+            setup.EnableResize();
+            _outputTerminal = setup.OutputTerminal<float>("Number", Direction.South);
+            _outputTerminal.Data = Value;
         }
     }
 }

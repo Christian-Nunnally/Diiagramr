@@ -16,9 +16,6 @@ namespace DiiagramrAPI.Editor
     {
         public const double TerminalHeight = 2 * Diagram.NodeBorderWidth;
         public const double TerminalWidth = TerminalHeight - 10;
-        public static CornerRadius TerminalBorderCornerRadius { get; } = new CornerRadius(2);
-        public static CornerRadius TerminalCornerRadius { get; } = new CornerRadius(3);
-        public Action<object> DataChanged { get; }
         private object _data;
 
         public Terminal(TerminalModel terminal)
@@ -30,6 +27,9 @@ namespace DiiagramrAPI.Editor
             SetTerminalRotationBasedOnDirection();
             SetTerminalColor();
         }
+
+        public static CornerRadius TerminalBorderCornerRadius { get; } = new CornerRadius(2);
+        public static CornerRadius TerminalCornerRadius { get; } = new CornerRadius(3);
 
         public virtual object Data
         {
@@ -43,6 +43,8 @@ namespace DiiagramrAPI.Editor
             }
         }
 
+        public Action<object> DataChanged { get; }
+
         public int EdgeIndex
         {
             get => Model.EdgeIndex;
@@ -52,6 +54,7 @@ namespace DiiagramrAPI.Editor
         public virtual bool HighlightVisible { get; set; }
         public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
         public virtual bool IsSelected { get; set; }
+        public virtual TerminalModel Model { get; }
         public string Name { get; set; }
         public SolidColorBrush TerminalBackgroundBrush { get; set; }
         public SolidColorBrush TerminalBackgroundMouseOverBrush { get; set; }
@@ -68,8 +71,6 @@ namespace DiiagramrAPI.Editor
             set => Model.TerminalLeftWireMinimumLength = value;
         }
 
-        public virtual TerminalModel Model { get; }
-
         public double TerminalRightWireMinimumLength
         {
             get => Model.TerminalRightWireMinimumLength;
@@ -84,6 +85,10 @@ namespace DiiagramrAPI.Editor
             set => Model.TerminalUpWireMinimumLength = value;
         }
 
+        public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
+
+        public double ViewYPosition => YRelativeToNode - (TerminalHeight / 2);
+
         public double XRelativeToNode
         {
             get => Model.OffsetX;
@@ -95,10 +100,6 @@ namespace DiiagramrAPI.Editor
             get => Model.OffsetY;
             set => Model.OffsetY = value;
         }
-
-        public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
-
-        public double ViewYPosition => YRelativeToNode - (TerminalHeight / 2);
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
         {
@@ -152,6 +153,19 @@ namespace DiiagramrAPI.Editor
             }
         }
 
+        public void MouseEntered()
+        {
+            SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
+        }
+
+        public void MouseLeft()
+        {
+            if (!(Adorner is DirectEditTextBoxAdorner))
+            {
+                SetTerminalAdorner(null);
+            }
+        }
+
         public virtual void SetTerminalDirection(Direction direction)
         {
             Model.DefaultSide = direction;
@@ -163,6 +177,22 @@ namespace DiiagramrAPI.Editor
             {
                 HighlightVisible = Model.Type.IsAssignableFrom(type);
                 NotifyOfPropertyChange(nameof(HighlightVisible));
+            }
+        }
+
+        protected void SetTerminalAdorner(Adorner adorner)
+        {
+            if (adorner is DirectEditTextBoxAdorner)
+            {
+                SetAdorner(adorner);
+            }
+            else if (Adorner == null)
+            {
+                SetAdorner(adorner);
+            }
+            else if (adorner == null)
+            {
+                SetAdorner(adorner);
             }
         }
 
@@ -208,35 +238,6 @@ namespace DiiagramrAPI.Editor
             else if (e.PropertyName == nameof(TerminalModel.Type))
             {
                 SetTerminalColor();
-            }
-        }
-
-        protected void SetTerminalAdorner(Adorner adorner)
-        {
-            if (adorner is DirectEditTextBoxAdorner)
-            {
-                SetAdorner(adorner);
-            }
-            else if (Adorner == null)
-            {
-                SetAdorner(adorner);
-            }
-            else if (adorner == null)
-            {
-                SetAdorner(adorner);
-            }
-        }
-
-        public void MouseEntered()
-        {
-            SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
-        }
-
-        public void MouseLeft()
-        {
-            if (!(Adorner is DirectEditTextBoxAdorner))
-            {
-                SetTerminalAdorner(null);
             }
         }
     }
