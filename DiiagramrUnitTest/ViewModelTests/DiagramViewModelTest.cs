@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interactors;
+﻿using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

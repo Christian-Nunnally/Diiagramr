@@ -1,13 +1,13 @@
-using Diiagramr.Diagram;
-using Diiagramr.Diagram.Interactors;
-using Diiagramr.Diagram.Nodes;
+using Diiagramr.Editor;
+using Diiagramr.Editor.Interactors;
+using Diiagramr.Editor.Nodes;
 using Diiagramr.Project;
 using Diiagramr.Shell;
 using Diiagramr.Shell.Tools;
 using Diiagramr.View.ShellScreen;
-using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.Diagram.Nodes;
+using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Interactors;
+using DiiagramrAPI.Editor.Nodes;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
@@ -41,7 +41,7 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(Terminal), typeof(TerminalView));
             _viewModelToViewMapping.Add(typeof(OutputTerminal), typeof(OutputTerminalView));
             _viewModelToViewMapping.Add(typeof(InputTerminal), typeof(InputTerminalView));
-            _viewModelToViewMapping.Add(typeof(DiiagramrAPI.Diagram.Diagram), typeof(DiagramView));
+            _viewModelToViewMapping.Add(typeof(Diagram), typeof(DiagramView));
             _viewModelToViewMapping.Add(typeof(NumberNode), typeof(NumberNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramOutputNode), typeof(DiagramOutputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramInputNode), typeof(DiagramInputNodeView));

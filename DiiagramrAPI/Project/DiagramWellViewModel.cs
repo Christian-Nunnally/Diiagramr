@@ -1,3 +1,4 @@
+using DiiagramrAPI.Editor;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrModel;
 using Stylet;
@@ -9,7 +10,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Project
 {
-    public class DiagramWellViewModel : Conductor<Diagram.Diagram>.Collection.OneActive
+    public class DiagramWellViewModel : Conductor<Diagram>.Collection.OneActive
     {
         private readonly IProjectManager _projectManager;
 
@@ -86,12 +87,12 @@ namespace DiiagramrAPI.Project
 
         private void DiagramViewModelOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            var diagramViewModelSender = (Diagram.Diagram)sender;
-            if (e.PropertyName.Equals(nameof(Diagram.Diagram.Name)))
+            var diagramViewModelSender = (Diagram)sender;
+            if (e.PropertyName.Equals(nameof(Diagram.Name)))
             {
                 var oldActiveItem = ActiveItem;
                 ActiveItem = diagramViewModelSender;
-                if (diagramViewModelSender.Name.Equals(""))
+                if (diagramViewModelSender.Name == string.Empty)
                 {
                     CloseActiveDiagram();
                     return;

@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram;
+﻿using DiiagramrAPI.Editor;
 using DiiagramrAPI.Service;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

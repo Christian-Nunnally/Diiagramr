@@ -1,6 +1,6 @@
 ﻿using Castle.Core.Internal;
-using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interactors;
+using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

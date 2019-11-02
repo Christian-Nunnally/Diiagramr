@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interactors;
+﻿using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrModel;
@@ -40,8 +40,8 @@ namespace DiiagramrUnitTests.ViewModelTests
             var diagram = new DiagramModel();
             var project = new ProjectModel();
             var nodeProviderMoq = new Mock<IProvideNodes>();
-            var diagramViewModelMoq = new Mock<DiiagramrAPI.Diagram.Diagram>(diagram, nodeProviderMoq.Object, null, _nodeSelectorMoq.Object);
-            var diagramViewModelList = new List<DiiagramrAPI.Diagram.Diagram> { diagramViewModelMoq.Object };
+            var diagramViewModelMoq = new Mock<Diagram>(diagram, nodeProviderMoq.Object, null, _nodeSelectorMoq.Object);
+            var diagramViewModelList = new List<Diagram> { diagramViewModelMoq.Object };
 
             _projectManagerMoq.SetupAllProperties();
             _projectManagerMoq.Object.CurrentProject = project;

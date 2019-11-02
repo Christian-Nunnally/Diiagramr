@@ -1,8 +1,8 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Diagram.Interactors.DiagramInteractionManagerView"
+    x:Class="Diiagramr.Editor.Interactors.DiagramInteractionManagerView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:interacters="clr-namespace:DiiagramrAPI.Diagram.Interactors;assembly=DiiagramrAPI"
+    xmlns:interacters="clr-namespace:DiiagramrAPI.Editor.Interactors;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet">
     <UserControl.Resources>
         <ResourceDictionary>

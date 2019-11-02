@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Editor;
+using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Tools;
 using DiiagramrCore;
 using DiiagramrModel;
@@ -22,7 +23,7 @@ namespace DiiagramrAPI.Service
             Func<ILibraryManager> libraryManagerFactory,
             Func<DiagramFactory> diagramViewModelFactoryFactory)
         {
-            Diagrams = new List<Diagram.Diagram>();
+            Diagrams = new List<Diagram>();
             _libraryManager = libraryManagerFactory.Invoke();
             _projectFileService = projectFileServiceFactory.Invoke();
             _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
@@ -33,7 +34,7 @@ namespace DiiagramrAPI.Service
 
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
         public ProjectModel CurrentProject { get; set; }
-        public IList<Diagram.Diagram> Diagrams { get; }
+        public IList<Diagram> Diagrams { get; }
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
         public bool CloseProject()

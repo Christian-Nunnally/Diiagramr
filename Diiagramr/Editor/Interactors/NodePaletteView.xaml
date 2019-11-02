@@ -1,8 +1,8 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Diagram.Interactors.NodePaletteView"
+    x:Class="Diiagramr.Editor.Interactors.NodePaletteView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:diagram="clr-namespace:DiiagramrAPI.Diagram;assembly=DiiagramrAPI"
+    xmlns:editor="clr-namespace:DiiagramrAPI.Editor;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -32,7 +32,7 @@
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="Width" Value="{Binding MousedOverNode.Width}" />
                         <Setter Property="Height" Value="{Binding MousedOverNode.Height}" />
-                        <Setter Property="Margin" Value="{x:Static diagram:Diagram.NodeBorderThickness}" />
+                        <Setter Property="Margin" Value="{x:Static editor:Diagram.NodeBorderThickness}" />
                     </Style>
 
                     <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
@@ -116,7 +116,7 @@
                 <Style TargetType="ContentPresenter">
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
-                            <DataTemplate DataType="{x:Type diagram:Node}">
+                            <DataTemplate DataType="{x:Type editor:Node}">
                                 <Border
                                     MouseDown="{s:Action SelectNode}"
                                     MouseEnter="{s:Action NodeMouseEnterHandler}"

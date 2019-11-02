@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Interactors;
+﻿using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrModel;
 using System;
@@ -20,9 +21,9 @@ namespace DiiagramrAPI.Service
             diagramInteractors = _diagramInteractorsFactory.Invoke().OfType<DiagramInteractor>();
         }
 
-        public Diagram.Diagram CreateDiagramViewModel(DiagramModel diagram)
+        public Diagram CreateDiagramViewModel(DiagramModel diagram)
         {
-            return new Diagram.Diagram(diagram, _nodeProvidor, diagramInteractors);
+            return new Diagram(diagram, _nodeProvidor, diagramInteractors);
         }
     }
 }

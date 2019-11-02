@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram;
+﻿using DiiagramrAPI.Editor;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using StyletIoC;

@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram;
+﻿using DiiagramrAPI.Editor;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service
     public class NodeNameAdornernment : Adorner
     {
         private readonly double MarginAroundLabel = 4.0;
-        private readonly double MarginFromNode = Diagram.Diagram.NodeBorderWidth + 5;
+        private readonly double MarginFromNode = Diagram.NodeBorderWidth + 5;
         private readonly Border border;
         private readonly TextBlock label;
         private readonly VisualCollection visualChildren;
