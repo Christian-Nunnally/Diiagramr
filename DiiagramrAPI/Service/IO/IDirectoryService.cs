@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Service.IO
 
         bool Exists(string path);
 
-        void ExtractToDirectory(string from, string to);
+        void ExtractToDirectory(string sourcePath, string destinationPath);
 
         string GetCurrentDirectory();
 

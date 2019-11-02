@@ -209,7 +209,7 @@
     <Compile Include="Editor\Wire.cs" />
     <Compile Include="Shell\Tools\LibraryManagerWindowViewModel.cs" />
     <Compile Include="Editor\Interactors\NodePalette.cs" />
-    <Compile Include="Project\ProjectExplorerViewModel.cs" />
+    <Compile Include="Project\ProjectExplorer.cs" />
     <Compile Include="Project\ProjectScreen.cs" />
     <Compile Include="Shell\StartScreenViewModel.cs" />
     <Compile Include="Shell\ShellViewModel.cs" />

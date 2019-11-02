@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Project;
-using DiiagramrAPI.Service.Interfaces;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -13,11 +12,11 @@ namespace DiiagramrUnitTests.ViewModelTests
         private ProjectExplorer _projectExplorerViewModel;
         private Mock<IProjectManager> _projectManagerMoq;
 
-        [TestInitialize]
-        public void TestInitialize()
+        [TestMethod]
+        public void TestCanDeleteDiagram_SelectedDiagramNotNull_ReturnsTrue()
         {
-            _projectManagerMoq = new Mock<IProjectManager>();
-            _projectExplorerViewModel = new ProjectExplorer(() => _projectManagerMoq.Object);
+            _projectExplorerViewModel.SelectedDiagram = new DiagramModel();
+            Assert.IsTrue(_projectExplorerViewModel.CanDeleteDiagram);
         }
 
         [TestMethod]
@@ -27,10 +26,13 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestCanDeleteDiagram_SelectedDiagramNotNull_ReturnsTrue()
+        public void TestCopyDiagram_DiagramSelected_NewDiagramAdded()
         {
             _projectExplorerViewModel.SelectedDiagram = new DiagramModel();
-            Assert.IsTrue(_projectExplorerViewModel.CanDeleteDiagram);
+
+            _projectExplorerViewModel.CopyDiagram();
+
+            _projectManagerMoq.Verify(p => p.CreateDiagram(It.IsAny<DiagramModel>()));
         }
 
         [TestMethod]
@@ -57,13 +59,31 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestProjectChanged_ProjectNull_IsAddDiagramButtonIsFalse()
+        public void TestDiagramProjectItemMouseUp_DiagramsClosed()
         {
-            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
-            _projectManagerMoq.Object.CurrentProject = null;
-            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectExplorerViewModel.Diagrams.Add(diagramMoq.Object);
+            _projectExplorerViewModel.DiagramProjectItemMouseUp();
 
-            Assert.IsFalse(_projectExplorerViewModel.IsAddDiagramButtonVisible);
+            diagramMoq.VerifySet(d => d.IsOpen = false);
+        }
+
+        [TestMethod]
+        public void TestDiagramProjectItemMouseUp_SingleClick_SelectedDiagramOpen()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
+
+            _projectExplorerViewModel.DiagramProjectItemMouseUp();
+
+            diagramMoq.VerifySet(d => d.IsOpen = true);
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _projectManagerMoq = new Mock<IProjectManager>();
+            _projectExplorerViewModel = new ProjectExplorer(() => _projectManagerMoq.Object);
         }
 
         [TestMethod]
@@ -88,34 +108,13 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestDiagramProjectItemMouseUp_SingleClick_SelectedDiagramOpen()
+        public void TestProjectChanged_ProjectNull_IsAddDiagramButtonIsFalse()
         {
-            var diagramMoq = new Mock<DiagramModel>();
-            _projectExplorerViewModel.SelectedDiagram = diagramMoq.Object;
+            _projectManagerMoq.SetupProperty(m => m.CurrentProject);
+            _projectManagerMoq.Object.CurrentProject = null;
+            _projectManagerMoq.Raise(m => m.CurrentProjectChanged += null);
 
-            _projectExplorerViewModel.DiagramProjectItemMouseUp();
-
-            diagramMoq.VerifySet(d => d.IsOpen = true);
-        }
-
-        [TestMethod]
-        public void TestDiagramProjectItemMouseUp_DiagramsClosed()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            _projectExplorerViewModel.Diagrams.Add(diagramMoq.Object);
-            _projectExplorerViewModel.DiagramProjectItemMouseUp();
-
-            diagramMoq.VerifySet(d => d.IsOpen = false);
-        }
-
-        [TestMethod]
-        public void TestCopyDiagram_DiagramSelected_NewDiagramAdded()
-        {
-            _projectExplorerViewModel.SelectedDiagram = new DiagramModel();
-
-            _projectExplorerViewModel.CopyDiagram();
-
-            _projectManagerMoq.Verify(p => p.CreateDiagram(It.IsAny<DiagramModel>()));
+            Assert.IsFalse(_projectExplorerViewModel.IsAddDiagramButtonVisible);
         }
     }
 }

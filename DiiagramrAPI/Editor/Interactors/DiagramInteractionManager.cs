@@ -27,10 +27,10 @@ namespace DiiagramrAPI.Editor.Interactors
             WeightedDiagramInteractors = new BindableCollection<DiagramInteractor>(weighedInteractors);
         }
 
-        public BindableCollection<string> ActiveDiagramInteractorNames { get; set; } = new BindableCollection<string>();
-        public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; set; } = new BindableCollection<DiagramInteractor>();
+        public BindableCollection<string> ActiveDiagramInteractorNames { get; } = new BindableCollection<string>();
+        public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; } = new BindableCollection<DiagramInteractor>();
         public bool ShowDebugInfo { get; set; } = false;
-        public IList<DiagramInteractor> WeightedDiagramInteractors { get; set; } = new List<DiagramInteractor>();
+        public IList<DiagramInteractor> WeightedDiagramInteractors { get; } = new List<DiagramInteractor>();
 
         public void HandleDiagramInput(InteractionType type, Diagram diagram)
         {

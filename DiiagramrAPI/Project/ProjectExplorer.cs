@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Project
         }
 
         public bool CanDeleteDiagram => SelectedDiagram != null;
-        public ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
+        public ObservableCollection<DiagramModel> Diagrams { get; private set; } = new ObservableCollection<DiagramModel>();
         public bool IsAddDiagramButtonVisible { get; set; }
         public ProjectModel Project { get; set; }
         public IProjectManager ProjectManager { get; set; }

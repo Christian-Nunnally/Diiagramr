@@ -1,6 +1,6 @@
 ﻿using DiiagramrAPI.Editor;
 using DiiagramrAPI.Editor.Interactors;
-using DiiagramrAPI.Service.Interfaces;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -19,16 +19,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         private Mock<NodePalette> _nodeSelectorViewModelMoq;
         private Mock<Node> _pluginNodeMoq;
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            _diagramMoq = new Mock<DiagramModel>();
-            _diagramMoq.Setup(d => d.AddNode(It.IsAny<NodeModel>())).Verifiable();
-            _nodeProviderMoq = new Mock<IProvideNodes>();
-            _nodeSelectorViewModelMoq = new Mock<NodePalette>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
-            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, new List<DiagramInteractor>());
-        }
-
         [TestMethod]
         public void TestConstructor_CorrectArguments_ChildViewModelCollectionsNotNull()
         {
@@ -43,20 +33,10 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a node provider")]
-        public void TestConstructor_NullNodeProvider_ThrowsArgumentNullException()
+        public void TestConstructor_NodeAlreadyOnDiagram_AddsNodeViewModelToViewModelList()
         {
-            new Diagram(_diagramMoq.Object, null, new List<DiagramInteractor>());
-        }
-
-        private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
-        {
-            _nodeMoq = new Mock<NodeModel>("node");
-            _pluginNodeMoq = new Mock<Node>();
-            _pluginNodeMoq.SetupGet(n => n.Model).Returns(_nodeMoq.Object);
-            _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
-            _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
-            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, new List<DiagramInteractor>());
+            ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
+            Assert.AreEqual(1, _diagramViewModel.Nodes.Count);
         }
 
         [TestMethod]
@@ -67,10 +47,30 @@ namespace DiiagramrUnitTests.ViewModelTests
         }
 
         [TestMethod]
-        public void TestConstructor_NodeAlreadyOnDiagram_AddsNodeViewModelToViewModelList()
+        [ExpectedException(typeof(ArgumentNullException), "Diagram view model requires a node provider")]
+        public void TestConstructor_NullNodeProvider_ThrowsArgumentNullException()
         {
-            ConstructDiagramViewModelWithDiagramThatAlreadyHasANode();
-            Assert.AreEqual(1, _diagramViewModel.Nodes.Count);
+            new Diagram(_diagramMoq.Object, null, new List<DiagramInteractor>());
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _diagramMoq = new Mock<DiagramModel>();
+            _diagramMoq.Setup(d => d.AddNode(It.IsAny<NodeModel>())).Verifiable();
+            _nodeProviderMoq = new Mock<IProvideNodes>();
+            _nodeSelectorViewModelMoq = new Mock<NodePalette>((Func<IProvideNodes>)(() => _nodeProviderMoq.Object));
+            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, new List<DiagramInteractor>());
+        }
+
+        private void ConstructDiagramViewModelWithDiagramThatAlreadyHasANode()
+        {
+            _nodeMoq = new Mock<NodeModel>("node");
+            _pluginNodeMoq = new Mock<Node>();
+            _pluginNodeMoq.SetupGet(n => n.Model).Returns(_nodeMoq.Object);
+            _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
+            _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
+            _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, new List<DiagramInteractor>());
         }
     }
 }

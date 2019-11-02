@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Editor;
 using DiiagramrAPI.Service;
-using DiiagramrAPI.Service.Interfaces;
 using StyletIoC;
 using System;
 using System.Collections.Generic;
@@ -28,20 +27,6 @@ namespace Diiagramr.Application
                 {
                     builder.Bind(interfaceType).To(typeToBind).InSingletonScope();
                 }
-            }
-        }
-
-        public static void LoadColorInformation()
-        {
-            var wireableTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.GlobalAssemblyCache)
-                .SelectMany(x => x.GetExportedTypes())
-                .Where(t => t.GetInterface("IWireableType") != null);
-            foreach (var wireableType in wireableTypes)
-            {
-                var wireableInstance = (IWireableType)Activator.CreateInstance(wireableType);
-                var color = wireableInstance.GetTypeColor();
-                TypeColorProvider.Instance.RegisterColorForType(wireableType, color);
             }
         }
 
@@ -85,6 +70,20 @@ namespace Diiagramr.Application
             foreach (var loadedService in loadedServiceInterfaces)
             {
                 BindEverythingThatImplementsInterface(loadedService, builder, loadedTypes, realToFakeTypeDictionary);
+            }
+        }
+
+        public static void LoadColorInformation()
+        {
+            var wireableTypes = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.GlobalAssemblyCache)
+                .SelectMany(x => x.GetExportedTypes())
+                .Where(t => t.GetInterface("IWireableType") != null);
+            foreach (var wireableType in wireableTypes)
+            {
+                var wireableInstance = (IWireableType)Activator.CreateInstance(wireableType);
+                var color = wireableInstance.GetTypeColor();
+                TypeColorProvider.Instance.RegisterColorForType(wireableType, color);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service.Editor;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -73,9 +73,11 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetFiles(path, searchPattern, searchOption).ToList();
             }
-            catch
+            catch (Exception)
             {
                 return new List<string>();
+                // TODO: Handle specific exception
+                throw;
             }
         }
 
@@ -85,9 +87,11 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetFiles(path, searchPattern).ToList();
             }
-            catch
+            catch (Exception)
             {
                 return new List<string>();
+                // TODO: Handle specific exception
+                throw;
             }
         }
 

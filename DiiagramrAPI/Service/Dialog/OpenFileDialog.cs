@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Service.Dialog
 {
-    public class OpenFileDialog : IFileDialog, IDisposable
+    public sealed class OpenFileDialog : IFileDialog, IDisposable
     {
         private readonly System.Windows.Forms.OpenFileDialog _dialog;
 

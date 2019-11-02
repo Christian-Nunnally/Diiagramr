@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Service;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.IO;
 using DiiagramrAPI.Service.Plugins;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,10 +9,16 @@ namespace DiiagramrUnitTests.ServiceTests
     [TestClass]
     public class LibraryManagerTest
     {
-        private Mock<IPluginLoader> _pluginLoaderMoq;
         private Mock<IDirectoryService> _directoryServiceMoq;
-        private Mock<IFetchWebResource> _webResourceFetcherMoq;
         private LibraryManager _libraryManager;
+        private Mock<IPluginLoader> _pluginLoaderMoq;
+        private Mock<IFetchWebResource> _webResourceFetcherMoq;
+
+        [TestMethod]
+        public void TestAddSource_SourceDoesntStartWithHttp_ReturnsFalse()
+        {
+            Assert.IsFalse(_libraryManager.AddSource(""));
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -32,12 +37,6 @@ namespace DiiagramrUnitTests.ServiceTests
         {
             var libraryNameToPath = new NodeLibrary("test", "", 1, 0, 0);
             Assert.AreEqual("test - 1.0.0", libraryNameToPath.ToString());
-        }
-
-        [TestMethod]
-        public void TestAddSource_SourceDoesntStartWithHttp_ReturnsFalse()
-        {
-            Assert.IsFalse(_libraryManager.AddSource(""));
         }
     }
 }

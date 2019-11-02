@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Service;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Editor;
+using DiiagramrAPI.Project;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -10,6 +10,21 @@ namespace DiiagramrUnitTests.ServiceTests
     [TestClass]
     public class DiagramCopierTest
     {
+        [TestMethod]
+        public void TestCopy_CopyDiagramWithOneNode_NodeCopiedWithFullName()
+        {
+            var projectManagerMoq = new Mock<IProjectManager>();
+            var copier = new DiagramCopier(projectManagerMoq.Object);
+            var diagram = new DiagramModel();
+            var node = new NodeModel("Node")
+            {
+                Name = "test"
+            };
+            diagram.AddNode(node);
+            var copiedDiagram = copier.Copy(diagram);
+            Assert.AreEqual(diagram.Nodes.First().Name, copiedDiagram.Nodes.First().Name);
+        }
+
         [TestMethod]
         public void TestCopy_CopyEmptyDiagram_CopiedDiagramIsDifferent()
         {
@@ -34,21 +49,6 @@ namespace DiiagramrUnitTests.ServiceTests
             };
             var copiedDiagram = copier.Copy(diagram);
             Assert.IsTrue(copiedDiagram.Name.Contains(diagram.Name));
-        }
-
-        [TestMethod]
-        public void TestCopy_CopyDiagramWithOneNode_NodeCopiedWithFullName()
-        {
-            var projectManagerMoq = new Mock<IProjectManager>();
-            var copier = new DiagramCopier(projectManagerMoq.Object);
-            var diagram = new DiagramModel();
-            var node = new NodeModel("Node")
-            {
-                Name = "test"
-            };
-            diagram.AddNode(node);
-            var copiedDiagram = copier.Copy(diagram);
-            Assert.AreEqual(diagram.Nodes.First().Name, copiedDiagram.Nodes.First().Name);
         }
     }
 }

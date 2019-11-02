@@ -139,7 +139,7 @@ namespace DiiagramrAPI.Project
                         CreateDiagram();
                     }
                 }
-                catch
+                catch (Exception)
                 {
                     // This code is so that if a project fails to load because it contains a node from an uninstalled library,
                     // it will attempt to download and install the missing library. I'm pretty sure this code work as intended
@@ -152,6 +152,8 @@ namespace DiiagramrAPI.Project
                     {
                         CurrentDiagrams.First().IsOpen = true;
                     }
+                    // TODO: Catch specific types of exceptions.
+                    throw;
                 }
             }
         }

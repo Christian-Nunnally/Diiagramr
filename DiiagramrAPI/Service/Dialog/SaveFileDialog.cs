@@ -1,11 +1,12 @@
+using System;
 using System.Windows;
 using System.Windows.Forms;
 
 namespace DiiagramrAPI.Service.Dialog
 {
-    public class SaveFileDialog : IFileDialog
+    public sealed class SaveFileDialog : IFileDialog, IDisposable
     {
-        private System.Windows.Forms.SaveFileDialog _dialog;
+        private readonly System.Windows.Forms.SaveFileDialog _dialog;
 
         public SaveFileDialog()
         {

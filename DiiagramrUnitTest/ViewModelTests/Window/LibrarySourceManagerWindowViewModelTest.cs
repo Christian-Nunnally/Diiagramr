@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Plugins;
 using DiiagramrAPI.Shell.Tools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -11,19 +11,19 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         private Mock<ILibraryManager> _libraryManagerMoq;
         private LibrarySourceManagerWindowViewModel _librarySourceManagerWindowViewModel;
 
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            _libraryManagerMoq = new Mock<ILibraryManager>();
-            _librarySourceManagerWindowViewModel = new LibrarySourceManagerWindowViewModel(() => _libraryManagerMoq.Object);
-        }
-
         [TestMethod]
         public void TestAddSource_NonEmptySource_AddsSource()
         {
             _librarySourceManagerWindowViewModel.SourceTextBoxText = "test";
             _librarySourceManagerWindowViewModel.AddSource();
             _libraryManagerMoq.Verify(l => l.AddSource("test"));
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            _libraryManagerMoq = new Mock<ILibraryManager>();
+            _librarySourceManagerWindowViewModel = new LibrarySourceManagerWindowViewModel(() => _libraryManagerMoq.Object);
         }
 
         [TestMethod]

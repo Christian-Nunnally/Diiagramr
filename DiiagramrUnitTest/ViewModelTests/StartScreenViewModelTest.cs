@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Project;
 using DiiagramrAPI.Shell;
 using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -10,9 +10,29 @@ namespace DiiagramrUnitTests.ViewModelTests
     [TestClass]
     public class StartScreenViewModelTest
     {
-        private Mock<IProjectManager> _projectManagerMoq;
         private Mock<IProjectFileService> _projectFileServiceMoq;
+        private Mock<IProjectManager> _projectManagerMoq;
         private StartScreenViewModel _startScreenViewModel;
+
+        [TestMethod]
+        public void TestCreateProject_CallsCreateDiagramOnProjectManager()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            var diagrams = new ObservableCollection<DiagramModel> { diagramMoq.Object };
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagrams);
+            _startScreenViewModel.NewProject();
+            _projectManagerMoq.Verify(m => m.CreateDiagram());
+        }
+
+        [TestMethod]
+        public void TestCreateProject_CallsCreateProjectOnProjectManager()
+        {
+            var diagramMoq = new Mock<DiagramModel>();
+            var diagrams = new ObservableCollection<DiagramModel> { diagramMoq.Object };
+            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagrams);
+            _startScreenViewModel.NewProject();
+            _projectManagerMoq.Verify(m => m.CreateProject());
+        }
 
         [TestInitialize]
         public void TestInitialize()
@@ -27,26 +47,6 @@ namespace DiiagramrUnitTests.ViewModelTests
         {
             _startScreenViewModel.LoadProject();
             _projectManagerMoq.Verify(m => m.LoadProject(It.IsAny<ProjectModel>(), true));
-        }
-
-        [TestMethod]
-        public void TestCreateProject_CallsCreateProjectOnProjectManager()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            var diagrams = new ObservableCollection<DiagramModel> { diagramMoq.Object };
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagrams);
-            _startScreenViewModel.NewProject();
-            _projectManagerMoq.Verify(m => m.CreateProject());
-        }
-
-        [TestMethod]
-        public void TestCreateProject_CallsCreateDiagramOnProjectManager()
-        {
-            var diagramMoq = new Mock<DiagramModel>();
-            var diagrams = new ObservableCollection<DiagramModel> { diagramMoq.Object };
-            _projectManagerMoq.SetupGet(m => m.CurrentDiagrams).Returns(diagrams);
-            _startScreenViewModel.NewProject();
-            _projectManagerMoq.Verify(m => m.CreateDiagram());
         }
     }
 }

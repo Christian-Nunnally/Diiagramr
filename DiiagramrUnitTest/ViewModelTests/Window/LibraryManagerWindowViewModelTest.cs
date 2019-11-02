@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Plugins;
 using DiiagramrAPI.Shell;
 using DiiagramrAPI.Shell.Tools;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -11,8 +11,8 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
     public class LibraryManagerWindowViewModelTest
     {
         private Mock<ILibraryManager> _libraryManagerMoq;
-        private Mock<LibrarySourceManagerWindowViewModel> _librarySourceManagerMoq;
         private LibraryManagerWindowViewModel _libraryManagerWindowViewModel;
+        private Mock<LibrarySourceManagerWindowViewModel> _librarySourceManagerMoq;
 
         [TestInitialize]
         public void TestInitialize()
@@ -24,6 +24,16 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
         }
 
         [TestMethod]
+        public void TestProperties_GetsResonableResults()
+        {
+            Assert.IsTrue(_libraryManagerWindowViewModel.MaxWidth > 10);
+            Assert.IsTrue(_libraryManagerWindowViewModel.MaxWidth < 10000);
+            Assert.IsTrue(_libraryManagerWindowViewModel.MaxHeight > 10);
+            Assert.IsTrue(_libraryManagerWindowViewModel.MaxHeight < 10000);
+            Assert.IsFalse(string.IsNullOrEmpty(_libraryManagerWindowViewModel.Title));
+        }
+
+        [TestMethod]
         public void TestViewSources_InvokesEventToOpenSourcesManagerWindow()
         {
             AbstractShellWindow openedWindow = null;
@@ -32,16 +42,6 @@ namespace DiiagramrUnitTests.ViewModelTests.Window
             _libraryManagerWindowViewModel.ViewSources();
 
             Assert.IsTrue(openedWindow is LibrarySourceManagerWindowViewModel);
-        }
-
-        [TestMethod]
-        public void TestProperties_GetsResonableResults()
-        {
-            Assert.IsTrue(_libraryManagerWindowViewModel.MaxWidth > 10);
-            Assert.IsTrue(_libraryManagerWindowViewModel.MaxWidth < 10000);
-            Assert.IsTrue(_libraryManagerWindowViewModel.MaxHeight > 10);
-            Assert.IsTrue(_libraryManagerWindowViewModel.MaxHeight < 10000);
-            Assert.IsFalse(string.IsNullOrEmpty(_libraryManagerWindowViewModel.Title));
         }
     }
 }

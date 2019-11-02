@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Editor;
-using DiiagramrAPI.Editor.Interactors;
+﻿using DiiagramrAPI.Editor.Interactors;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrModel;
 using System;
@@ -15,10 +14,10 @@ namespace DiiagramrAPI.Editor
 
         public DiagramFactory(
             Func<IProvideNodes> nodeProvidorFactory,
-            Func<IEnumerable<IDiagramInteractorService>> _diagramInteractorsFactory)
+            Func<IEnumerable<IDiagramInteractorService>> diagramInteractorsFactory)
         {
             _nodeProvidor = nodeProvidorFactory.Invoke();
-            diagramInteractors = _diagramInteractorsFactory.Invoke().OfType<DiagramInteractor>();
+            diagramInteractors = diagramInteractorsFactory.Invoke().OfType<DiagramInteractor>();
         }
 
         public Diagram CreateDiagramViewModel(DiagramModel diagram)

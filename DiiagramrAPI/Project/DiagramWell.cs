@@ -1,5 +1,4 @@
 using DiiagramrAPI.Editor;
-using DiiagramrAPI.Service.Editor;
 using DiiagramrModel;
 using Stylet;
 using System;
@@ -92,7 +91,7 @@ namespace DiiagramrAPI.Project
             {
                 var oldActiveItem = ActiveItem;
                 ActiveItem = diagramViewModelSender;
-                if (diagramViewModelSender.Name == string.Empty)
+                if (string.IsNullOrEmpty(diagramViewModelSender.Name))
                 {
                     CloseActiveDiagram();
                     return;

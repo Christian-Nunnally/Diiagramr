@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Project;
-using DiiagramrAPI.Service.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -14,6 +13,18 @@ namespace DiiagramrUnitTests.ViewModelTests
         private Mock<IProjectManager> _projectManagerMoq;
         private ProjectScreen _projectScreenViewModel;
 
+        [TestMethod]
+        public void TestConstructor_SetsDiagramWell()
+        {
+            Assert.AreEqual(_diagramWellViewModelMoq.Object, _projectScreenViewModel.DiagramWellViewModel);
+        }
+
+        [TestMethod]
+        public void TestConstructor_SetsProjectExplorer()
+        {
+            Assert.AreEqual(_projectExplorerViewModelMoq.Object, _projectScreenViewModel.ProjectExplorerViewModel);
+        }
+
         [TestInitialize]
         public void TestInitialize()
         {
@@ -26,18 +37,6 @@ namespace DiiagramrUnitTests.ViewModelTests
                 () => _projectExplorerViewModelMoq.Object,
                 () => _diagramWellViewModelMoq.Object,
                 () => _projectManagerMoq.Object);
-        }
-
-        [TestMethod]
-        public void TestConstructor_SetsProjectExplorer()
-        {
-            Assert.AreEqual(_projectExplorerViewModelMoq.Object, _projectScreenViewModel.ProjectExplorerViewModel);
-        }
-
-        [TestMethod]
-        public void TestConstructor_SetsDiagramWell()
-        {
-            Assert.AreEqual(_diagramWellViewModelMoq.Object, _projectScreenViewModel.DiagramWellViewModel);
         }
     }
 }
