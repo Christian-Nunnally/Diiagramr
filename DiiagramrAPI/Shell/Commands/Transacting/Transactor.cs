@@ -55,8 +55,8 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
 
         protected struct UndoRedo
         {
-            public Action Undo;
-            public readonly Func<Action> Redo;
+            public Action Undo { get; set; }
+            public Func<Action> Redo { get; }
 
             public UndoRedo(Action undo, Func<Action> redo)
             {

@@ -4,7 +4,6 @@ namespace DiiagramrAPI.Diagram.Interactors
     {
         private const double MinimumZoom = 0.4;
         private const double MaximumZoom = 3.0;
-        private const double NumberOfFrames = 3;
         private const double ZoomAmount = .1;
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)

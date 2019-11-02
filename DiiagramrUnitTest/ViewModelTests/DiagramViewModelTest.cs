@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Diagram;
 using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;

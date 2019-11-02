@@ -1,4 +1,6 @@
-﻿namespace DiiagramrAPI.Diagram.Nodes
+﻿using DiiagramrModel;
+
+namespace DiiagramrAPI.Diagram.Nodes
 {
     public class AndNode : Node
     {

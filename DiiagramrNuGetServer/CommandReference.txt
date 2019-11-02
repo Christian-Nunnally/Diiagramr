@@ -1,7 +1,0 @@
-﻿# To delete a library:
-
-NuGet.exe delete visualdrop 1.0.0 -Source http://diiagramrlibraries.azurewebsites.net/api/v2/package/ -apiKey cb64589e-6b23-430c-8b2e-39e4e2994695
-
-# To push a library:
-
-NuGet.exe push .\DiiagramrFadeCandy.1.1.0.nupkg -Source http://diiagramrlibraries.azurewebsites.net/nuget/ -apiKey cb64589e-6b23-430c-8b2e-39e4e2994695

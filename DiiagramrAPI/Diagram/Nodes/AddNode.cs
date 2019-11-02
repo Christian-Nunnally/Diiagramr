@@ -1,3 +1,5 @@
+using DiiagramrModel;
+
 namespace DiiagramrAPI.Diagram.Nodes
 {
     public class AddNode : Node

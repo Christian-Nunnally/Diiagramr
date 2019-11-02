@@ -4,7 +4,7 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
 {
     public class NullTransactor : ITransactor
     {
-        public static NullTransactor Instance = new NullTransactor();
+        public static NullTransactor Instance { get; } = new NullTransactor();
 
         private NullTransactor() { }
 

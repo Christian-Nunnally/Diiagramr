@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Diagram.Commands;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrModel;
 using System;
 using System.Linq;
 using System.Windows;
@@ -18,15 +18,15 @@ namespace DiiagramrAPI.Diagram.Interactors
         private int _leftMouseDownCount;
         private readonly ITransactor _transactor;
 
-        public TerminalWirer(Func<ITransactor> _transactorFactory)
+        public TerminalWirer(Func<ITransactor> transactorFactory)
         {
-            _transactor = _transactorFactory.Invoke();
+            _transactor = transactorFactory?.Invoke() ?? throw new ArgumentNullException(nameof(transactorFactory));
             Weight = 0.75;
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
-            var diagram = interaction.Diagram;
+            var diagram = interaction?.Diagram ?? throw new ArgumentNullException(nameof(interaction));
             var mousePosition = interaction.MousePosition;
             var elementUnderMouse = interaction.ViewModelUnderMouse;
             if (interaction.Type == InteractionType.MouseMoved)
@@ -90,7 +90,7 @@ namespace DiiagramrAPI.Diagram.Interactors
             var G = terminalColor.G;
             var B = terminalColor.B;
             _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
-            _previewWire.BannedDirectionForStart = DirectionHelpers.OppositeDirection(terminal.Model.DefaultSide);
+            _previewWire.BannedDirectionForStart = terminal.Model.DefaultSide.Opposite();
         }
 
         private void CancelWireInsertion(Diagram diagram)

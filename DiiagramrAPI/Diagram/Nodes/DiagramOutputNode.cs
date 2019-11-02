@@ -1,3 +1,6 @@
+using DiiagramrAPI.Diagram.Interactors;
+using DiiagramrModel;
+
 namespace DiiagramrAPI.Diagram.Nodes
 {
     [HideFromNodeSelector]

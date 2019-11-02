@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using System;
 using System.IO;
 using System.Runtime.Serialization;

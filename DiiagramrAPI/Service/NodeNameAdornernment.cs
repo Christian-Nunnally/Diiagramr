@@ -10,9 +10,9 @@ namespace DiiagramrAPI.Service
     {
         private readonly double MarginAroundLabel = 4.0;
         private readonly double MarginFromNode = Diagram.Diagram.NodeBorderWidth + 5;
-        private Border border;
-        private TextBlock label;
-        private VisualCollection visualChildren;
+        private readonly Border border;
+        private readonly TextBlock label;
+        private readonly VisualCollection visualChildren;
 
         public NodeNameAdornernment(UIElement adornedElement, Node adornedNode) : base(adornedElement)
         {

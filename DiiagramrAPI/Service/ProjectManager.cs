@@ -1,6 +1,7 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Tools;
+using DiiagramrCore;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

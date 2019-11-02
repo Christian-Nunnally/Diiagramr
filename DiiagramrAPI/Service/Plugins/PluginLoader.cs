@@ -1,7 +1,7 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interoperability;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrCore;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Xml.Linq;
 
-namespace DiiagramrAPI.Service
+namespace DiiagramrAPI.Service.Plugins
 {
     public class PluginLoader : IPluginLoader
     {

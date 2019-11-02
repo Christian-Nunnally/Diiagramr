@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
+﻿using DiiagramrAPI.Service;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -27,12 +28,12 @@ namespace DiiagramrAPI.Diagram
             var start = new Point(x1, y1);
             var end = new Point(x2, y2);
 
-            var stubStart = TranslatePointInDirection(start, DirectionHelpers.OppositeDirection(bannedDirectionForStart), WireDistanceOutOfTerminal);
-            var stubEnd = TranslatePointInDirection(end, DirectionHelpers.OppositeDirection(bannedDirectionForEnd), WireDistanceOutOfTerminal);
+            var stubStart = TranslatePointInDirection(start, bannedDirectionForStart.Opposite(), WireDistanceOutOfTerminal);
+            var stubEnd = TranslatePointInDirection(end, bannedDirectionForEnd.Opposite(), WireDistanceOutOfTerminal);
             if (_wireModel != null)
             {
-                bannedDirectionForStart = DirectionHelpers.OppositeDirection(_wireModel.SinkTerminal.DefaultSide);
-                bannedDirectionForEnd = DirectionHelpers.OppositeDirection(_wireModel.SourceTerminal.DefaultSide);
+                bannedDirectionForStart = _wireModel.SinkTerminal.DefaultSide.Opposite();
+                bannedDirectionForEnd = _wireModel.SourceTerminal.DefaultSide.Opposite();
                 stubStart = TranslatePointInDirection(start, _wireModel.SinkTerminal.DefaultSide, WireDistanceOutOfTerminal);
                 stubEnd = TranslatePointInDirection(end, _wireModel.SourceTerminal.DefaultSide, WireDistanceOutOfTerminal);
             }

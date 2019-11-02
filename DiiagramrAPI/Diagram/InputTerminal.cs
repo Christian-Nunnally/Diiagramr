@@ -1,4 +1,4 @@
-using DiiagramrAPI.Diagram.Model;
+using DiiagramrModel;
 using System.Windows.Controls;
 
 namespace DiiagramrAPI.Diagram

@@ -1,6 +1,7 @@
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
+using DiiagramrCore;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -68,9 +69,9 @@ namespace DiiagramrAPI.Diagram
         /// </summary>
         public Wire(Terminal startTerminal, double x1, double y1)
         {
-            X2 = startTerminal.Model.X;
+            X2 = startTerminal?.Model.X ?? throw new ArgumentNullException(nameof(startTerminal));
             Y2 = startTerminal.Model.Y;
-            BannedDirectionForEnd = DirectionHelpers.OppositeDirection(startTerminal.Model.DefaultSide);
+            BannedDirectionForEnd = startTerminal.Model.DefaultSide.Opposite();
             BannedDirectionForStart = Direction.None;
             X1 = x1;
             Y1 = y1;
@@ -80,7 +81,7 @@ namespace DiiagramrAPI.Diagram
         }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
-        public Point[] Points { get; set; }
+        public IList<Point> Points { get; set; }
         public WireModel Model { get; private set; }
         public double X1 { get; set; }
         public double X2 { get; set; }
@@ -107,10 +108,10 @@ namespace DiiagramrAPI.Diagram
 
         protected override void OnPropertyChanged(string propertyName)
         {
-            if (propertyName.Equals(nameof(X1))
-             || propertyName.Equals(nameof(X2))
-             || propertyName.Equals(nameof(Y1))
-             || propertyName.Equals(nameof(Y2)))
+            if (propertyName == nameof(X1)
+             || propertyName == nameof(X2)
+             || propertyName == nameof(Y1)
+             || propertyName == nameof(Y2))
             {
                 if (View != null)
                 {
@@ -123,23 +124,23 @@ namespace DiiagramrAPI.Diagram
 
         private void ModelPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName.Equals(nameof(Model.X2)))
+            if (e.PropertyName == nameof(Model.X2))
             {
                 X1 = Model.X2;
             }
-            else if (e.PropertyName.Equals(nameof(Model.X1)))
+            else if (e.PropertyName == nameof(Model.X1))
             {
                 X2 = Model.X1;
             }
-            else if (e.PropertyName.Equals(nameof(Model.Y2)))
+            else if (e.PropertyName == nameof(Model.Y2))
             {
                 Y1 = Model.Y2;
             }
-            else if (e.PropertyName.Equals(nameof(Model.Y1)))
+            else if (e.PropertyName == nameof(Model.Y1))
             {
                 Y2 = Model.Y1;
             }
-            else if (e.PropertyName.Equals(nameof(Model.SourceTerminal)) || e.PropertyName.Equals(nameof(Model.SinkTerminal)))
+            else if (e.PropertyName == nameof(Model.SourceTerminal) || e.PropertyName == nameof(Model.SinkTerminal))
             {
                 Model.PropertyChanged -= ModelPropertyChanged;
             }
@@ -261,9 +262,9 @@ namespace DiiagramrAPI.Diagram
             _wireDrawAnimationFrames.Add(originalPoints);
         }
 
-        private void GenerateDataVisualAnimationFrames(Point[] originalPoints)
+        private void GenerateDataVisualAnimationFrames(IList<Point> originalPoints)
         {
-            if (originalPoints.Length == 0)
+            if (originalPoints.Count == 0)
             {
                 return;
             }
@@ -276,7 +277,7 @@ namespace DiiagramrAPI.Diagram
             {
                 var lengthSoFar = 0.0;
 
-                for (int j = 0; j < originalPoints.Length - 1; j++)
+                for (int j = 0; j < originalPoints.Count - 1; j++)
                 {
                     var nextLength = Point.Subtract(originalPoints[j], originalPoints[j + 1]).Length;
                     var precentAlongAnimation = (double)frameNumber / WireDataAnimationFrames * (Math.PI / 2.0);
@@ -313,10 +314,10 @@ namespace DiiagramrAPI.Diagram
             return interpolatedPoint;
         }
 
-        private double GetLengthOfWire(Point[] wirePoints)
+        private double GetLengthOfWire(IList<Point> wirePoints)
         {
             var length = 0.0;
-            for (int i = 0; i < wirePoints.Length - 2; i++)
+            for (int i = 0; i < wirePoints.Count - 2; i++)
             {
                 length += Point.Subtract(wirePoints[i], wirePoints[i + 1]).Length;
             }

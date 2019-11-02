@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Model;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

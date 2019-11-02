@@ -1,8 +1,8 @@
 ﻿using Castle.Core.Internal;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.FileDialog;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Windows;

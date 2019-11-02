@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.FileDialog;
+﻿using DiiagramrAPI.FileDialog;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using StyletIoC;
 using System;
 using System.Linq;

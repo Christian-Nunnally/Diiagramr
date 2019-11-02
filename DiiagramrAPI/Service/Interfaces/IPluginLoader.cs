@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Interoperability;
+﻿using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 

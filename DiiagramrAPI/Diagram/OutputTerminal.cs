@@ -1,4 +1,4 @@
-using DiiagramrAPI.Diagram.Model;
+using DiiagramrModel;
 
 namespace DiiagramrAPI.Diagram
 {

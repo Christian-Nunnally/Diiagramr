@@ -1,6 +1,5 @@
 ﻿using Castle.Core.Internal;
-using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Model;
+using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

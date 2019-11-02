@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Interoperability;
-using DiiagramrAPI.Shell.Tools;
+﻿using DiiagramrAPI.Shell.Tools;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

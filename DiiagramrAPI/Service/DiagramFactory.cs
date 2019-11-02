@@ -1,6 +1,6 @@
 ﻿using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;

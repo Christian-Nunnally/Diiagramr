@@ -1,6 +1,6 @@
-﻿using DiiagramrAPI.Diagram.Interoperability;
-using DiiagramrAPI.Service.Interfaces;
+﻿using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Tools;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
-namespace DiiagramrAPI.Service
+namespace DiiagramrAPI.Service.Plugins
 {
     public class LibraryManager : ILibraryManager
     {

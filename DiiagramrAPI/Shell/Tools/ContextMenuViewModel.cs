@@ -1,5 +1,6 @@
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell.ShellCommands;
+using DiiagramrCore;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DiiagramrAPI.Shell.Tools
             _commandManager = commandManagerFactory.Invoke();
         }
 
-        public ObservableCollection<IShellCommand> Commands { get; set; } = new ObservableCollection<IShellCommand>();
+        public ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
         public float MinimumWidth { get; set; } = 150;
         public bool Visible { get; set; }
         public float X { get; set; } = 0;

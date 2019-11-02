@@ -1,5 +1,5 @@
-﻿using DiiagramrAPI.Diagram.Model;
-using DiiagramrAPI.Shell.Commands;
+﻿using DiiagramrAPI.Shell.Commands;
+using DiiagramrModel;
 using System;
 
 namespace DiiagramrAPI.Diagram.Commands

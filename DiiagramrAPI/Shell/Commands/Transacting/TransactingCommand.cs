@@ -8,8 +8,6 @@ namespace DiiagramrAPI.Shell.Commands.Transacting
     /// </summary>
     public abstract class TransactingCommand : ICommand
     {
-        private readonly IList<ICommand> _composedCommands = new List<ICommand>();
-
         public virtual Action Execute(object parameter)
         {
             Transactor transactor = new Transactor();

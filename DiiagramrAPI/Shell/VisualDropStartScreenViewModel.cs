@@ -1,5 +1,5 @@
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service.Interfaces;
+using DiiagramrModel;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Shell
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
         private IProjectFileService _projectFileService;
 
-        public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; set; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
+        public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
 
         public bool OpenProjectButtonsVisible { get; set; }
         public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
@@ -51,9 +51,9 @@ namespace DiiagramrAPI.Shell
 
             GenerateAnimationFrames();
 
-            RecentProject1 = Properties.Settings.Default.RecentProject1;
-            RecentProject2 = Properties.Settings.Default.RecentProject2;
-            RecentProject3 = Properties.Settings.Default.RecentProject3;
+            RecentProject1 = "Broken"; // Properties.Settings.Default.RecentProject1;
+            RecentProject2 = "Broken"; // Properties.Settings.Default.RecentProject2;
+            RecentProject3 = "Broken"; // Properties.Settings.Default.RecentProject3;
             RecentProject1 = string.IsNullOrWhiteSpace(RecentProject1) ? "Recent #1" : RecentProject1;
             RecentProject2 = string.IsNullOrWhiteSpace(RecentProject2) ? "Recent #2" : RecentProject2;
             RecentProject3 = string.IsNullOrWhiteSpace(RecentProject3) ? "Recent #3" : RecentProject3;
@@ -175,22 +175,22 @@ namespace DiiagramrAPI.Shell
 
         public void UpdateRecentProjects(string name)
         {
-            if (name == Properties.Settings.Default.RecentProject1
-             || name == Properties.Settings.Default.RecentProject2
-             || name == Properties.Settings.Default.RecentProject3)
-            {
-                return;
-            }
-            if (!string.IsNullOrEmpty(name))
-            {
-                Properties.Settings.Default.RecentProject3 = Properties.Settings.Default.RecentProject2;
-                Properties.Settings.Default.RecentProject2 = Properties.Settings.Default.RecentProject1;
-                Properties.Settings.Default.RecentProject1 = name;
-                Properties.Settings.Default.Save();
-            }
-            RecentProject1 = Properties.Settings.Default.RecentProject1;
-            RecentProject2 = Properties.Settings.Default.RecentProject2;
-            RecentProject3 = Properties.Settings.Default.RecentProject3;
+            //if (name == Properties.Settings.Default.RecentProject1
+            // || name == Properties.Settings.Default.RecentProject2
+            // || name == Properties.Settings.Default.RecentProject3)
+            //{
+            //    return;
+            //}
+            //if (!string.IsNullOrEmpty(name))
+            //{
+            //    Properties.Settings.Default.RecentProject3 = Properties.Settings.Default.RecentProject2;
+            //    Properties.Settings.Default.RecentProject2 = Properties.Settings.Default.RecentProject1;
+            //    Properties.Settings.Default.RecentProject1 = name;
+            //    Properties.Settings.Default.Save();
+            //}
+            //RecentProject1 = Properties.Settings.Default.RecentProject1;
+            //RecentProject2 = Properties.Settings.Default.RecentProject2;
+            //RecentProject3 = Properties.Settings.Default.RecentProject3;
         }
 
         public void OpenLabelMouseEntered()

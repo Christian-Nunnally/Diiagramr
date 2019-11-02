@@ -1,6 +1,7 @@
 ﻿using DiiagramrAPI.Diagram.Commands;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

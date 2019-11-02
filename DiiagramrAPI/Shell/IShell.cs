@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Shell
 {
     public interface IShell
     {
-        IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; set; }
+        IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; }
 
         void AttachToViewModel(ShellViewModel shellViewModel);
 

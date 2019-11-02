@@ -1,7 +1,8 @@
 using DiiagramrAPI.Diagram.Interactors;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Shell;
+using DiiagramrCore;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

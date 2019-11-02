@@ -14,7 +14,7 @@ namespace DiiagramrAPI.Shell.Tools
     {
         private readonly Service.ShellCommandFactory _commandManager;
 
-        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; set; }
+        public ObservableCollection<TopLevelToolBarCommand> TopLevelMenuItems { get; }
 
         public ToolbarViewModel(Func<Service.ShellCommandFactory> commandManagerFactory)
         {

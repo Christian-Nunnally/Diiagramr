@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service
 {
-    public class WebResourceFetcher : IFetchWebResource
+    public sealed class WebResourceFetcher : IFetchWebResource, IDisposable
     {
         private readonly WebClient _webClient = new WebClient();
         private bool _currentlyFetching = false;
@@ -16,8 +16,10 @@ namespace DiiagramrAPI.Service
             {
                 await Task.Run(() => _webClient.DownloadFile(new Uri(url), downloadToPath));
             }
-            catch
+            catch (Exception)
             {
+                // TODO: Handle specific exceptions.
+                throw;
             }
         }
 
@@ -34,14 +36,20 @@ namespace DiiagramrAPI.Service
                 _currentlyFetching = true;
                 return await Task.Run(() => _webClient.DownloadString(url));
             }
-            catch
+            catch (Exception)
             {
-                return null;
+                // TODO: Handle specific exceptions.
+                throw;
             }
             finally
             {
                 _currentlyFetching = false;
             }
+        }
+
+        public void Dispose()
+        {
+            _webClient.Dispose();
         }
     }
 }

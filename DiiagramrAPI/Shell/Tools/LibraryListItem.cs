@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Diagram.Interoperability;
+﻿using DiiagramrModel;
 using PropertyChanged;
 
 namespace DiiagramrAPI.Shell.Tools

@@ -1,7 +1,8 @@
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
 using DiiagramrAPI.Service.Interfaces;
 using DiiagramrAPI.Shell.Commands.Transacting;
+using DiiagramrCore;
+using DiiagramrModel;
 using Stylet;
 using System;
 using System.Collections.Generic;

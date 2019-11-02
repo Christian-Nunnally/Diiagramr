@@ -2,6 +2,6 @@
 {
     public static class FeatureToggles
     {
-        public static bool WirePropagationAnimationFeatureOn = true;
+        public static bool WirePropagationAnimationFeatureOn { get; } = true;
     }
 }

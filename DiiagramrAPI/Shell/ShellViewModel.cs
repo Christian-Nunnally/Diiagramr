@@ -14,13 +14,12 @@ namespace DiiagramrAPI.Shell
     public class ShellViewModel : Conductor<IScreen>.StackNavigation
     {
         public const string StartCommandId = "start";
-        public Stack<AbstractShellWindow> WindowStack = new Stack<AbstractShellWindow>();
+        public Stack<AbstractShellWindow> WindowStack { get; } = new Stack<AbstractShellWindow>();
         private TimeSpan _lastMouseDownTime;
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         public ShellViewModel(
             Func<IProjectManager> projectManagerFactory,
-            Func<IEnumerable<IShellCommand>> commandsFactory,
             Func<ContextMenuViewModel> contextMenuViewModelFactory,
             Func<IShell> shellFactory,
             Func<ToolbarViewModel> toolbarViewModelFactory)

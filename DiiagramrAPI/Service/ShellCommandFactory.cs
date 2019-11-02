@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service
     public class ShellCommandFactory
     {
         private readonly IShell _shell;
-        private Dictionary<string, IShellCommand> _commands = new Dictionary<string, IShellCommand>();
+        private readonly Dictionary<string, IShellCommand> _commands = new Dictionary<string, IShellCommand>();
         public IEnumerable<IShellCommand> Commands => _commands.Values;
 
         public ShellCommandFactory(Func<IShell> shellFactory, Func<IEnumerable<IShellCommand>> commandsFactory)

@@ -1,7 +1,6 @@
 ﻿using DiiagramrAPI.Diagram;
-using DiiagramrAPI.Diagram.Interoperability;
-using DiiagramrAPI.Diagram.Model;
 using DiiagramrAPI.Service;
+using DiiagramrModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Linq;

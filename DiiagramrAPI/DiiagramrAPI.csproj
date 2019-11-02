@@ -1,5 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.7\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.7\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\build\Microsoft.NetFramework.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.7\build\Microsoft.NetFramework.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.NetCore.Analyzers.2.9.7\build\Microsoft.NetCore.Analyzers.props" Condition="Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.7\build\Microsoft.NetCore.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\build\Microsoft.CodeQuality.Analyzers.props" Condition="Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\build\Microsoft.CodeQuality.Analyzers.props')" />
+  <Import Project="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props" Condition="Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" />
   <Import Project="..\packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props" Condition="Exists('..\packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props')" />
   <Import Project="..\packages\NUnit.3.12.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -11,10 +16,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DiiagramrAPI</RootNamespace>
     <AssemblyName>DiiagramrAPI</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -82,8 +88,6 @@
     <Compile Include="Diagram\Interactors\UndoRedoer.cs" />
     <Compile Include="Diagram\Interactors\WireDeleter.cs" />
     <Compile Include="Diagram\IWireableType.cs" />
-    <Compile Include="Diagram\Model\OutputTerminalModel.cs" />
-    <Compile Include="Diagram\Model\InputTerminalModel.cs" />
     <Compile Include="Diagram\Nodes\AndNode.cs" />
     <Compile Include="Diagram\Nodes\ButtonNode.cs" />
     <Compile Include="Diagram\Nodes\DivideNode.cs" />
@@ -100,19 +104,13 @@
     <Compile Include="Diagram\Interactors\DiagramZoomer.cs" />
     <Compile Include="Diagram\Interactors\NodeResizer.cs" />
     <Compile Include="Diagram\Interactors\NodeDragger.cs" />
-    <Compile Include="Diagram\Model\DiagramModel.cs" />
-    <Compile Include="Service\Plugins\NodeLibrary.cs" />
-    <Compile Include="Diagram\Model\ModelBase.cs" />
-    <Compile Include="Diagram\Model\NodeModel.cs" />
-    <Compile Include="Diagram\Model\ProjectModel.cs" />
-    <Compile Include="Diagram\Model\TerminalModel.cs" />
-    <Compile Include="Diagram\Model\WireModel.cs" />
     <Compile Include="Diagram\Interactors\NodeDeleter.cs" />
     <Compile Include="Diagram\Interactors\InteractionEventArguments.cs" />
     <Compile Include="Diagram\Interactors\DiagramInteracter.cs" />
     <Compile Include="Diagram\Interactors\NodePlacer.cs" />
     <Compile Include="Diagram\Interactors\PointSelector.cs" />
     <Compile Include="Diagram\Interactors\LassoNodeSelector.cs" />
+    <Compile Include="Service\DirectionExtensions.cs" />
     <Compile Include="Shell\Commands\Transacting\GlobalTransactor.cs" />
     <Compile Include="Shell\Commands\CustomUndoCommand.cs" />
     <Compile Include="Shell\Commands\Transacting\NullTransactor.cs" />
@@ -129,8 +127,6 @@
     <Compile Include="Shell\ShellCommands\HelpCommands\SubmitBugCommand.cs" />
     <Compile Include="Shell\ShellCommands\HelpCommands\OpenWikiCommand.cs" />
     <Compile Include="Shell\ShellCommands\HelpCommands\HelpCommandGroup.cs" />
-    <Compile Include="Service\CoreUilities.cs" />
-    <Compile Include="Diagram\Direction.cs" />
     <Compile Include="Diagram\NodeSetup.cs" />
     <Compile Include="Diagram\Node.cs" />
     <Compile Include="Diagram\Interactors\HideFromNodeSelector.cs" />
@@ -174,7 +170,6 @@
     <Compile Include="Service\DiagramCopier.cs" />
     <Compile Include="Service\DiagramFactory.cs" />
     <Compile Include="Service\DirectoryService.cs" />
-    <Compile Include="Service\EnumerableExtensionMethods.cs" />
     <Compile Include="Service\Interfaces\IDirectoryService.cs" />
     <Compile Include="Service\Interfaces\IFetchWebResource.cs" />
     <Compile Include="Service\Interfaces\ILibraryManager.cs" />
@@ -220,6 +215,7 @@
     <Compile Include="Shell\ShellViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".editorconfig" />
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -230,7 +226,27 @@
   <ItemGroup>
     <None Include="FodyWeavers.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrCore\DiiagramrCore.csproj">
+      <Project>{1ccbc276-e155-42f8-b5a8-e73a5501c778}</Project>
+      <Name>DiiagramrCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj">
+      <Project>{5385fe31-c520-4507-a212-ca6823e06155}</Project>
+      <Name>DiiagramrModel</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\analyzers\dotnet\cs\Microsoft.CodeAnalysis.VersionCheckAnalyzer.resources.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\analyzers\dotnet\Microsoft.CodeAnalysis.VersionCheckAnalyzer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\analyzers\dotnet\cs\Humanizer.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.CodeQuality.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.CodeQuality.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetCore.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
@@ -244,5 +260,10 @@
     <Error Condition="!Exists('..\packages\Fody.6.0.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.6.0.3\build\Fody.targets'))" />
     <Error Condition="!Exists('..\packages\NUnit.3.12.0\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.12.0\build\NUnit.props'))" />
     <Error Condition="!Exists('..\packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\PropertyChanged.Fody.3.1.3\build\PropertyChanged.Fody.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.VersionCheckAnalyzer.2.9.7\build\Microsoft.CodeAnalysis.VersionCheckAnalyzer.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\build\Microsoft.CodeQuality.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeQuality.Analyzers.2.9.7\build\Microsoft.CodeQuality.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetCore.Analyzers.2.9.7\build\Microsoft.NetCore.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetCore.Analyzers.2.9.7\build\Microsoft.NetCore.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.NetFramework.Analyzers.2.9.7\build\Microsoft.NetFramework.Analyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.NetFramework.Analyzers.2.9.7\build\Microsoft.NetFramework.Analyzers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.7\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeAnalysis.FxCopAnalyzers.2.9.7\build\Microsoft.CodeAnalysis.FxCopAnalyzers.props'))" />
   </Target>
 </Project>
