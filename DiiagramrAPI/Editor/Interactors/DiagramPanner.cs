@@ -1,3 +1,4 @@
+using DiiagramrAPI.Editor.Diagrams;
 using System;
 using System.Windows;
 

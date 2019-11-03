@@ -1,3 +1,4 @@
+using DiiagramrAPI.Editor.Diagrams;
 using Stylet;
 using System.Windows;
 using System.Windows.Input;

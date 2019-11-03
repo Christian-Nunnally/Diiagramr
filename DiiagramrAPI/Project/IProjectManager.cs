@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Editor;
+﻿using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service;
 using DiiagramrModel;
 using System;

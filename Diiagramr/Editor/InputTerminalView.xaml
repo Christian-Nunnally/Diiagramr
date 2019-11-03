@@ -2,7 +2,7 @@
     x:Class="Diiagramr.Editor.InputTerminalView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:editor="clr-namespace:DiiagramrAPI.Editor;assembly=DiiagramrAPI"
+    xmlns:editor="clr-namespace:DiiagramrAPI.Editor.Diagrams;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     Width="{x:Static editor:Terminal.TerminalWidth}"
     Height="{x:Static editor:Terminal.TerminalHeight}"

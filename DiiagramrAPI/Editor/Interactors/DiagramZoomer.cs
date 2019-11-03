@@ -1,3 +1,5 @@
+using DiiagramrAPI.Editor.Diagrams;
+
 namespace DiiagramrAPI.Editor.Interactors
 {
     public class DiagramZoomer : DiagramInteractor

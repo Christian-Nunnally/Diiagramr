@@ -1,4 +1,5 @@
 using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;

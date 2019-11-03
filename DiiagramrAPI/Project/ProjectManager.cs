@@ -1,5 +1,5 @@
 ﻿using DiiagramrAPI.Application.Tools;
-using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Plugins;
 using DiiagramrCore;
 using DiiagramrModel;

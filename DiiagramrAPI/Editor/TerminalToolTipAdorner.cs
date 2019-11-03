@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DiiagramrAPI.Editor.Diagrams;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -8,9 +9,9 @@ namespace DiiagramrAPI.Editor
     public class TerminalToolTipAdorner : Adorner
     {
         private readonly double MarginAroundLabel = 4.0;
-        private Border border;
-        private TextBlock label;
-        private VisualCollection visualChildren;
+        private readonly Border border;
+        private readonly TextBlock label;
+        private readonly VisualCollection visualChildren;
 
         public TerminalToolTipAdorner(UIElement adornedElement, Terminal adornedTerminal) : base(adornedElement)
         {

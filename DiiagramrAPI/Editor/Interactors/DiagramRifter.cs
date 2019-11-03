@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Commands;
+using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrCore;
 using System;
 using System.Collections.Generic;

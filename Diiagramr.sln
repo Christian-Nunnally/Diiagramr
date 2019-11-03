@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrCore", "DiiagramrC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrRepositoryServer", "DiiagramrRepositoryServer\DiiagramrRepositoryServer.csproj", "{D2793823-C598-4521-8AC7-098DF83717B0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrNodes", "DiiagramrNodes\DiiagramrNodes.csproj", "{16495FAF-39FC-4933-9B36-55EC512CBBCA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,14 @@ Global
 		{D2793823-C598-4521-8AC7-098DF83717B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D2793823-C598-4521-8AC7-098DF83717B0}.Release|x86.ActiveCfg = Release|Any CPU
 		{D2793823-C598-4521-8AC7-098DF83717B0}.Release|x86.Build.0 = Release|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Debug|x86.Build.0 = Debug|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|x86.ActiveCfg = Release|Any CPU
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,9 +6,8 @@ using Diiagramr.Project;
 using Diiagramr.View.ShellScreen;
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Application.Tools;
-using DiiagramrAPI.Editor;
+using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Editor.Interactors;
-using DiiagramrAPI.Editor.Nodes;
 using DiiagramrAPI.Project;
 using Stylet;
 using System;
@@ -41,16 +40,8 @@ namespace Diiagramr.Application
             _viewModelToViewMapping.Add(typeof(OutputTerminal), typeof(OutputTerminalView));
             _viewModelToViewMapping.Add(typeof(InputTerminal), typeof(InputTerminalView));
             _viewModelToViewMapping.Add(typeof(Diagram), typeof(DiagramView));
-            _viewModelToViewMapping.Add(typeof(NumberNode), typeof(NumberNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramOutputNode), typeof(DiagramOutputNodeView));
             _viewModelToViewMapping.Add(typeof(DiagramInputNode), typeof(DiagramInputNodeView));
-            _viewModelToViewMapping.Add(typeof(ButtonNode), typeof(ButtonNodeView));
-            _viewModelToViewMapping.Add(typeof(IndexNode), typeof(IndexNodeView));
-            _viewModelToViewMapping.Add(typeof(AndNode), typeof(AndNodeView));
-            _viewModelToViewMapping.Add(typeof(AddNode), typeof(AddNodeView));
-            _viewModelToViewMapping.Add(typeof(DivideNode), typeof(DivideNodeView));
-            _viewModelToViewMapping.Add(typeof(SubtractNode), typeof(SubtractNodeView));
-            _viewModelToViewMapping.Add(typeof(MultiplyNode), typeof(MultiplyNodeView));
             _viewModelToViewMapping.Add(typeof(ContextMenu), typeof(ContextMenuView));
             _viewModelToViewMapping.Add(typeof(ToolbarViewModel), typeof(ToolbarView));
             _viewModelToViewMapping.Add(typeof(LassoNodeSelector), typeof(LassoNodeSelectorView));
@@ -80,7 +71,7 @@ namespace Diiagramr.Application
             }
 
             var viewModelName = modelType.Name;
-            var viewName = viewModelName.Substring(0, viewModelName.Length - 5);
+            var viewName = viewModelName + "View";
             var assembly = Assembly.GetAssembly(modelType);
             if (!ViewAssemblies.Contains(assembly))
             {

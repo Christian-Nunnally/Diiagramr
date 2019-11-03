@@ -1,4 +1,5 @@
-﻿using Stylet;
+﻿using DiiagramrAPI.Editor.Diagrams;
+using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Linq;

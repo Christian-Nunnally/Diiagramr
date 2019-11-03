@@ -1,4 +1,5 @@
-﻿using DiiagramrModel;
+﻿using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrModel;
 using System;
 using System.Collections.Generic;
 using System.Windows;

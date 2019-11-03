@@ -1,3 +1,4 @@
+using DiiagramrAPI.Editor.Diagrams;
 using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors

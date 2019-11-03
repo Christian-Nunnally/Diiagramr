@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using DiiagramrAPI.Editor.Diagrams;
+using PropertyChanged;
 using System.Collections.Generic;
 using System.Windows.Media;
 
