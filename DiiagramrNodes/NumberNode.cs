@@ -7,6 +7,14 @@ namespace DiiagramrNodes
 {
     public class NumberNode : Node
     {
+        public NumberNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Number";
+            ResizeEnabled = true;
+        }
+
         [NodeSetting]
         [OutputTerminal(nameof(Number), Direction.South)]
         public int Number { get; set; }
@@ -30,13 +38,6 @@ namespace DiiagramrNodes
             {
                 (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Number");
-            setup.EnableResize();
         }
     }
 }

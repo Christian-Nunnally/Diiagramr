@@ -9,6 +9,14 @@ namespace DiiagramrNodes
     {
         private byte[] _array;
 
+        public IndexNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Index";
+            ResizeEnabled = true;
+        }
+
         [NodeSetting]
         public int Index { get; set; }
 
@@ -51,13 +59,6 @@ namespace DiiagramrNodes
                     Output(array[Index], nameof(Value));
                 }
             }
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Index");
-            setup.EnableResize();
         }
     }
 }

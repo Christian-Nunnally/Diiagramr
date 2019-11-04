@@ -8,6 +8,13 @@ namespace DiiagramrAPI.Editor.Diagrams
     {
         private object diagramOutput;
 
+        public DiagramInputNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Input";
+        }
+
         [OutputTerminal("External Data", Direction.South)]
         public object DiagramOutput
         {
@@ -16,12 +23,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 diagramOutput = value;
             }
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Input");
         }
     }
 }

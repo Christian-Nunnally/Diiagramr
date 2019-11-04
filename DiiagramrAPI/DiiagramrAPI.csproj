@@ -124,7 +124,6 @@
     <Compile Include="Application\ShellCommands\HelpCommands\SubmitBugCommand.cs" />
     <Compile Include="Application\ShellCommands\HelpCommands\OpenWikiCommand.cs" />
     <Compile Include="Application\ShellCommands\HelpCommands\HelpCommandGroup.cs" />
-    <Compile Include="Editor\Diagrams\NodeSetup.cs" />
     <Compile Include="Editor\Diagrams\Node.cs" />
     <Compile Include="Editor\Interactors\HideFromNodeSelectorAttribute.cs" />
     <Compile Include="Editor\Diagrams\NodeSettingAttribute.cs" />

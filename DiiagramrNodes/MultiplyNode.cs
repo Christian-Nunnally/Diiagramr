@@ -8,6 +8,13 @@ namespace DiiagramrNodes
         private float _a;
         private float _b;
 
+        public MultiplyNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Multiply";
+        }
+
         [OutputTerminal(nameof(Result), Direction.South)]
         public string Result { get; set; }
 
@@ -23,12 +30,6 @@ namespace DiiagramrNodes
         {
             _b = b;
             Output(_a * _b, nameof(Result));
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Multiply");
         }
     }
 }

@@ -1,4 +1,5 @@
 using DiiagramrModel;
+using System.Reflection;
 using System.Windows.Controls;
 
 namespace DiiagramrAPI.Editor.Diagrams
@@ -10,6 +11,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         public InputTerminal(InputTerminalModel inputTerminal) : base(inputTerminal)
         {
         }
+
+        public MethodInfo InputHandlerMethodInfo { get; set; }
 
         public TextBox DirectEditTextBox { get; set; }
 

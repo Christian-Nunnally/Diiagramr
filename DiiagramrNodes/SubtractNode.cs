@@ -8,6 +8,13 @@ namespace DiiagramrNodes
         private float _a;
         private float _b;
 
+        public SubtractNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Subtract";
+        }
+
         [OutputTerminal(nameof(Result), Direction.South)]
         public string Result { get; set; }
 
@@ -23,12 +30,6 @@ namespace DiiagramrNodes
         {
             _b = b;
             Output(_a - _b, nameof(Result));
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Subtract");
         }
     }
 }

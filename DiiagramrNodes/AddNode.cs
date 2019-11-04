@@ -5,6 +5,13 @@ namespace DiiagramrNodes
 {
     public class AddNode : Node
     {
+        public AddNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Add";
+        }
+
         public int A { get; set; }
 
         [OutputTerminal(nameof(Result), Direction.West)]
@@ -15,12 +22,6 @@ namespace DiiagramrNodes
         {
             A = number;
             Output(A, nameof(Result));
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Add");
         }
     }
 }

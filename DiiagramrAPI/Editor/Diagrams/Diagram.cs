@@ -186,13 +186,8 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void RemoveNode(Node viewModel)
         {
-            var wiresConnectedToNode = viewModel.Terminals.SelectMany(t => t.Model.ConnectedWires);
-            var wiresToRemove = Wires.Where(w => wiresConnectedToNode.Contains(w.Model));
-            wiresToRemove.ForEach(RemoveWire);
             Model.RemoveNode(viewModel.Model);
             Nodes.Remove(viewModel);
-            viewModel.DisconnectAllTerminals();
-            viewModel.Uninitialize();
             UpdateDiagramBoundingBox();
             BoundingBoxVisible = Nodes.Any();
             NotifyOfPropertyChange(nameof(AreInstructionsVisible));
@@ -272,7 +267,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             Nodes.Add(viewModel);
             BoundingBoxVisible = Nodes.Any();
             AddWiresForNode(viewModel);
-            viewModel.Initialize();
             UpdateDiagramBoundingBox();
             NotifyOfPropertyChange(nameof(AreInstructionsVisible));
         }

@@ -7,13 +7,14 @@ namespace DiiagramrAPI.Editor.Diagrams
     [HideFromNodeSelector]
     public class DiagramOutputNode : IoNode
     {
-        public event Action<object> DataChanged;
-
-        protected override void SetupNode(NodeSetup setup)
+        public DiagramOutputNode()
         {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Output");
+            Width = 30;
+            Height = 30;
+            Name = "Output";
         }
+
+        public event Action<object> DataChanged;
 
         [InputTerminal("Output Data", Direction.North)]
         private void OutputData(object data)

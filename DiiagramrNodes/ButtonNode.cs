@@ -5,6 +5,13 @@ namespace DiiagramrNodes
 {
     public class ButtonNode : Node
     {
+        public ButtonNode()
+        {
+            Width = 30;
+            Height = 30;
+            Name = "Button";
+        }
+
         [OutputTerminal(nameof(IsPressed), Direction.South)]
         public bool IsPressed { get; set; }
 
@@ -16,12 +23,6 @@ namespace DiiagramrNodes
         public void Unpress()
         {
             Output(true, nameof(IsPressed));
-        }
-
-        protected override void SetupNode(NodeSetup setup)
-        {
-            setup.NodeSize(30, 30);
-            setup.NodeName("Button");
         }
     }
 }

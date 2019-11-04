@@ -144,14 +144,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        public virtual void DisconnectTerminal()
-        {
-            foreach (var wire in Model.ConnectedWires.ToArray())
-            {
-                Model.DisconnectWire(wire, Model is InputTerminalModel ? wire.SourceTerminal : wire.SinkTerminal);
-            }
-        }
-
         public void MouseEntered()
         {
             SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
