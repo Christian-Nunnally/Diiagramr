@@ -28,6 +28,7 @@ namespace DiiagramrAPI.Commands
                     _diagram.AddWire(wire);
                 };
             }
+
             return () => { };
         }
     }

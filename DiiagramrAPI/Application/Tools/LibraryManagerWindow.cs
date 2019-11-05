@@ -17,9 +17,13 @@ namespace DiiagramrAPI.Application.Tools
         }
 
         public bool IsRestartRequired { get; set; }
+
         public ILibraryManager LibraryManager { get; set; }
+
         public override int MaxHeight => 400;
+
         public override int MaxWidth => 550;
+
         public override string Title => "Library Manager";
 
         public async void InstallPressed(object sender, MouseEventArgs e)
@@ -29,6 +33,7 @@ namespace DiiagramrAPI.Application.Tools
             {
                 return;
             }
+
             await InstallLibraryFromListItemAsync(libraryListItem);
         }
 
@@ -44,6 +49,7 @@ namespace DiiagramrAPI.Application.Tools
             {
                 return;
             }
+
             UninstallLibraryFromListItem(libraryListItem);
         }
 
@@ -64,6 +70,7 @@ namespace DiiagramrAPI.Application.Tools
             {
                 return frameworkElement.DataContext as LibraryListItem;
             }
+
             return null;
         }
 
@@ -73,6 +80,7 @@ namespace DiiagramrAPI.Application.Tools
             {
                 return;
             }
+
             await LibraryManager.InstallLatestVersionOfLibraryAsync(libraryListItem);
             IsRestartRequired = true;
         }
@@ -83,6 +91,7 @@ namespace DiiagramrAPI.Application.Tools
             {
                 return;
             }
+
             LibraryManager.UninstallLibrary(libraryListItem);
             IsRestartRequired = true;
         }

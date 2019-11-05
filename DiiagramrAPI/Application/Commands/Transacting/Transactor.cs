@@ -6,6 +6,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
     public class Transactor : ITransactor
     {
         protected virtual Stack<UndoRedo> RedoStack { get; } = new Stack<UndoRedo>();
+
         protected virtual Stack<UndoRedo> UndoStack { get; } = new Stack<UndoRedo>();
 
         public void MoveRedoStackBackToUndo()
@@ -62,6 +63,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
             }
 
             public Func<Action> Redo { get; }
+
             public Action Undo { get; set; }
         }
     }

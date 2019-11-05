@@ -30,10 +30,12 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 return false;
             }
+
             if (endTerminal.Model.GetType() == startTerminal.Model.GetType())
             {
                 return false;
             }
+
             if (endTerminal.Model.ConnectedWires.Any(connectedWire => startTerminal.Model.ConnectedWires.Contains(connectedWire)))
             {
                 return false;
@@ -135,10 +137,10 @@ namespace DiiagramrAPI.Editor.Interactors
             _previewWire.X1 = terminal.Model.X;
             _previewWire.Y1 = terminal.Model.Y;
             var terminalColor = terminal.TerminalBackgroundBrush.Color;
-            var R = terminalColor.R;
-            var G = terminalColor.G;
-            var B = terminalColor.B;
-            _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, R, G, B));
+            var r = terminalColor.R;
+            var g = terminalColor.G;
+            var b = terminalColor.B;
+            _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, r, g, b));
             _previewWire.BannedDirectionForStart = terminal.Model.DefaultSide.Opposite();
         }
 
@@ -195,7 +197,7 @@ namespace DiiagramrAPI.Editor.Interactors
             terminal.SetAdorner(null);
             _previewWire = new Wire(terminal, x1, y1)
             {
-                LineColorBrush = _ghostWireBrush
+                LineColorBrush = _ghostWireBrush,
             };
             diagram.AddWire(_previewWire);
         }
@@ -217,6 +219,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 CancelWireInsertion(diagram);
                 return;
             }
+
             WireTerminalsToWiringTerminal(diagram, terminal);
         }
     }

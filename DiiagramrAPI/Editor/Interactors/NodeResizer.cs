@@ -32,6 +32,7 @@ namespace DiiagramrAPI.Editor.Interactors
         }
 
         public Point PreviousMouseLocation { get; set; }
+
         private ResizeMode Mode { get; set; }
 
         public static double DistanceFromPointToLine(Point point, Point lineStart, Point lineStop)
@@ -63,6 +64,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 {
                     return false;
                 }
+
                 var mousePosition = interaction.MousePosition;
                 var diagram = interaction.Diagram;
                 var absoluteLeft = diagram.GetViewPointFromDiagramPointX(node.X + Diagram.NodeBorderWidth);
@@ -103,10 +105,12 @@ namespace DiiagramrAPI.Editor.Interactors
                         {
                             return false;
                         }
+
                         return interaction.Type == InteractionType.LeftMouseDown;
                     }
                 }
             }
+
             return false;
         }
 
@@ -136,6 +140,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     node.Height = interaction.Diagram.SnapToGrid(node.Height);
                 }
             }
+
             interaction.Diagram.ShowSnapGrid = false;
             Mouse.SetCursor(Cursors.Arrow);
             var resizeCommand = new ResizeNodesToCurrentSizeCommand(_resizingNodes);
@@ -173,6 +178,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     node.Height += heightChange;
                 }
             }
+
             PreviousMouseLocation = mousePosition;
             diagram.UpdateDiagramBoundingBox();
         }

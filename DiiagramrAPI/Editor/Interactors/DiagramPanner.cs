@@ -8,8 +8,11 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private const double MinimumMouseDeltaToStartPanning = 5;
         private bool _reachedMinimunMouseDeltaToStartPanning;
+
         public Point StartMouseLocation { get; set; }
+
         public double StartPanX { get; private set; }
+
         public double StartPanY { get; private set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -66,6 +69,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 var distance = Math.Sqrt(Math.Pow(deltaX, 2) + Math.Pow(deltaY, 2));
                 _reachedMinimunMouseDeltaToStartPanning = distance > MinimumMouseDeltaToStartPanning;
             }
+
             if (_reachedMinimunMouseDeltaToStartPanning)
             {
                 diagram.PanX = StartPanX + deltaX;

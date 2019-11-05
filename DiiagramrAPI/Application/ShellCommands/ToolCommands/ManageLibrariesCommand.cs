@@ -13,7 +13,9 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
         }
 
         public override string Name => "Libraries";
+
         public override string Parent => "Tools";
+
         public override float Weight => .5f;
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)

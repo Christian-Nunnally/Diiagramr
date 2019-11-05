@@ -33,9 +33,9 @@ namespace DiiagramrAPI.Application
 
             GenerateAnimationFrames();
 
-            RecentProject1 = "Broken"; // Properties.Settings.Default.RecentProject1;
-            RecentProject2 = "Broken"; // Properties.Settings.Default.RecentProject2;
-            RecentProject3 = "Broken"; // Properties.Settings.Default.RecentProject3;
+            RecentProject1 = "Broken";
+            RecentProject2 = "Broken";
+            RecentProject3 = "Broken";
             RecentProject1 = string.IsNullOrWhiteSpace(RecentProject1) ? "Recent #1" : RecentProject1;
             RecentProject2 = string.IsNullOrWhiteSpace(RecentProject2) ? "Recent #2" : RecentProject2;
             RecentProject3 = string.IsNullOrWhiteSpace(RecentProject3) ? "Recent #3" : RecentProject3;
@@ -43,7 +43,9 @@ namespace DiiagramrAPI.Application
         }
 
         public bool OpenProjectButtonsVisible { get; set; }
+
         public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
+
         public string RecentProject1 { get; set; }
 
         public string RecentProject1DisplayString => RecentProject1.Length > _recentProjectMaxCharacterLength
@@ -127,23 +129,10 @@ namespace DiiagramrAPI.Application
 
         public void UpdateRecentProjects(string name)
         {
+            // TODO: Implement this again.
             RecentProject1 = name;
-            //if (name == Properties.Settings.Default.RecentProject1
-            // || name == Properties.Settings.Default.RecentProject2
-            // || name == Properties.Settings.Default.RecentProject3)
-            //{
-            //    return;
-            //}
-            //if (!string.IsNullOrEmpty(name))
-            //{
-            //    Properties.Settings.Default.RecentProject3 = Properties.Settings.Default.RecentProject2;
-            //    Properties.Settings.Default.RecentProject2 = Properties.Settings.Default.RecentProject1;
-            //    Properties.Settings.Default.RecentProject1 = name;
-            //    Properties.Settings.Default.Save();
-            //}
-            //RecentProject1 = Properties.Settings.Default.RecentProject1;
-            //RecentProject2 = Properties.Settings.Default.RecentProject2;
-            //RecentProject3 = Properties.Settings.Default.RecentProject3;
+            RecentProject2 = name;
+            RecentProject3 = name;
         }
 
         protected override void OnViewLoaded()
@@ -198,10 +187,10 @@ namespace DiiagramrAPI.Application
             }
 
             var random = new Random();
-            var _offsets = new List<int>();
+            var offsets = new List<int>();
             for (int i = 0; i < _targetSpectrumLogoValues.Count; i++)
             {
-                _offsets.Add(random.Next(_dripEffectDelay - 2));
+                offsets.Add(random.Next(_dripEffectDelay - 2));
             }
 
             for (int frame = 0; frame < _frames + _dripEffectDelay; frame++)
@@ -209,8 +198,8 @@ namespace DiiagramrAPI.Application
                 var currentFrame = new List<Tuple<float, SolidColorBrush>>();
                 for (int i = 0; i < _targetSpectrumLogoValues.Count; i++)
                 {
-                    var dripEffectIndex = frame > _offsets[i]
-                        ? frame - _offsets[i]
+                    var dripEffectIndex = frame > offsets[i]
+                        ? frame - offsets[i]
                         : 0;
                     dripEffectIndex = dripEffectIndex >= tempAnimationFrames.Count
                         ? tempAnimationFrames.Count - 1

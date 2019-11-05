@@ -29,8 +29,11 @@ namespace DiiagramrAPI.Editor.Interactors
         }
 
         public BindableCollection<string> ActiveDiagramInteractorNames { get; } = new BindableCollection<string>();
+
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; } = new BindableCollection<DiagramInteractor>();
+
         public bool ShowDebugInfo { get; set; } = false;
+
         public IList<DiagramInteractor> WeightedDiagramInteractors { get; } = new List<DiagramInteractor>();
 
         public void HandleDiagramInput(InteractionType type, Diagram diagram)
@@ -62,6 +65,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 var contentPresenter = elementMouseIsOver?.DataContext as ContentPresenter;
                 viewModelMouseIsOver = contentPresenter?.DataContext as Screen;
             }
+
             interaction.ViewModelUnderMouse = viewModelMouseIsOver;
         }
 
@@ -123,6 +127,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 ActiveDiagramInteractors.Remove(activeInteractor);
                 ActiveDiagramInteractorNames.Remove(activeInteractor.GetType().Name);
             }
+
             return didInteractionStop;
         }
     }

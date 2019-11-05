@@ -43,6 +43,7 @@ namespace DiiagramrAPI.Application
         }
 
         public string LoadButtonImageSource { get; set; } = "/Diiagramr;component/Resources/load.png";
+
         public string NewButtonImageSource { get; set; } = "/Diiagramr;component/Resources/new.png";
 
         public void LoadProject()
@@ -55,6 +56,7 @@ namespace DiiagramrAPI.Application
                 {
                     RequestClose();
                 }
+
                 LoadCanceled?.Invoke();
             }
         }

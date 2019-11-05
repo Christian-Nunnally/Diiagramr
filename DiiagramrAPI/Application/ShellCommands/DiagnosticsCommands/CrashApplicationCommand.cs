@@ -2,9 +2,10 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
-    public class CrashApplicationCommand : DiiagramrCommand
+    public class CrashApplicationCommand : ShellCommandBase
     {
         public override string Name => "Crash Application";
+
         public override string Parent => "Diagnostics";
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)
@@ -15,7 +16,8 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
         [Serializable]
         private class CrashApplicationCommandException : Exception
         {
-            public CrashApplicationCommandException(string message) : base(message)
+            public CrashApplicationCommandException(string message)
+                : base(message)
             {
             }
         }

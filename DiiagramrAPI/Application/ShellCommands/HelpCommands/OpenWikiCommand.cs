@@ -3,7 +3,9 @@
     public class OpenWikiCommand : ToolBarCommand
     {
         public override string Name => "Open Wiki";
+
         public override string Parent => "Help";
+
         public override float Weight => 1.0f;
 
         public static void GoToSite(string url)

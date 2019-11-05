@@ -39,9 +39,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             Y2 = Model.Y1;
         }
 
-        /// <summary>
-        /// Creates a wire that's unattched to a model.
-        /// </summary>
         public Wire(Terminal startTerminal, double x1, double y1)
         {
             X2 = startTerminal?.Model.X ?? throw new ArgumentNullException(nameof(startTerminal));
@@ -101,6 +98,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                     _isDataVisualAnimationFramesValid = false;
                 }
             }
+
             base.OnPropertyChanged(propertyName);
         }
 
@@ -152,6 +150,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 GenerateDataVisualAnimationFrames(Points);
             }
+
             View?.Dispatcher.Invoke(() =>
             {
                 IsDataVisualVisible = true;
@@ -166,6 +165,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
                 Thread.Sleep(frameDelay);
             }
+
             View?.Dispatcher.Invoke(() =>
             {
                 IsDataVisualVisible = false;
@@ -175,9 +175,9 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void AnimateWirePointsOnUiThread(int frameDelay)
         {
             var wirePoints = _wirePathingAlgorithum.GetWirePoints(Model, X1, Y1, X2, Y2, BannedDirectionForStart, BannedDirectionForEnd);
+
             // If you want the wire to draw the other way reverse wirePoints array.
             // Array.Reverse(wirePoints);
-
             GenerateFramesOfWiringAnimation(wirePoints);
             foreach (var frame in _wireDrawAnimationFrames)
             {
@@ -235,10 +235,13 @@ namespace DiiagramrAPI.Editor.Diagrams
                         AddDataVisualAnimationFrame(interpolatedPoint);
                         break;
                     }
+
                     lengthSoFar += nextLength;
                 }
             }
+
             AddDataVisualAnimationFrame(originalPoints.Last());
+
             // reverse the frames if you want the wire to draw backwards
             // _dataVisualAnimationFrames.Reverse();
             _isDataVisualAnimationFramesValid = true;
@@ -273,6 +276,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                         frame.Add(interpolatedPoint);
                         break;
                     }
+
                     lengthSoFar += nextLength;
                 }
 
@@ -289,6 +293,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 length += Point.Subtract(wirePoints[i], wirePoints[i + 1]).Length;
             }
+
             return length;
         }
 

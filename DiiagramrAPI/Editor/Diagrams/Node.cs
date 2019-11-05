@@ -37,19 +37,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         public virtual double X
         {
             get => Model?.X ?? 0;
-            set
-            {
-                if (Model != null) Model.X = value;
-            }
+            set => X.SetIfNotNull(() => X = value);
         }
 
         public virtual double Y
         {
             get => Model?.Y ?? 0;
-            set
-            {
-                if (Model != null) Model.Y = value;
-            }
+            set => Y.SetIfNotNull(() => Y = value);
         }
 
         public virtual double Width
@@ -57,10 +51,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             get => Model?.Width ?? MinimumWidth;
             set
             {
-                if (Model != null)
-                {
-                    Model.Width = Math.Max(value, MinimumWidth);
-                }
+                Model?.Width.SetIfNotNull(() => Model.Width = Math.Max(value, MinimumWidth));
                 MinimumWidth = Model == null ? value : MinimumWidth;
             }
         }
@@ -70,15 +61,10 @@ namespace DiiagramrAPI.Editor.Diagrams
             get => Model?.Height ?? MinimumHeight;
             set
             {
-                if (Model != null)
-                {
-                    Model.Height = Math.Max(value, MinimumHeight);
-                }
+                Model?.Height.SetIfNotNull(() => Model.Height = Math.Max(value, MinimumHeight));
                 MinimumHeight = Model == null ? value : MinimumHeight;
             }
         }
-
-        private bool IsAttached { get; set; }
 
         private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSettingAttribute)));
 
@@ -93,16 +79,21 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual void RemoveTerminal(Terminal terminal)
         {
+            _nameToTerminalMap.Remove(terminal.Name);
             Terminals.Remove(terminal);
             Model.RemoveTerminal(terminal.Model);
             RepositionAllTerminalsOnEdge(terminal.Model.DefaultSide);
         }
 
+        public void HighlightTerminalsOfType<T>(Type type)
+        {
+            Terminals.OfType<T>().OfType<Terminal>().ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
+        }
+
         public virtual void AttachToModel(NodeModel nodeModel)
         {
-            if (!IsAttached)
+            if (Model == null)
             {
-                IsAttached = true;
                 Model = nodeModel;
                 Model.Name = GetType().FullName;
                 InitializePluginNodeSettings();
@@ -112,16 +103,6 @@ namespace DiiagramrAPI.Editor.Diagrams
                 Model.Height = MinimumHeight;
                 Model.PropertyChanged += ModelPropertyChanged;
             }
-        }
-
-        public void HighlightInputTerminalsOfType(Type type)
-        {
-            Terminals.OfType<InputTerminal>().ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
-        }
-
-        public void HighlightOutputTerminalsOfType(Type type)
-        {
-            Terminals.OfType<OutputTerminal>().ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
         }
 
         public virtual void InitializePluginNodeSettings()
@@ -150,11 +131,8 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void UnselectTerminals()
         {
-            Terminals.ForEach(terminal =>
-            {
-                terminal.IsSelected = false;
-                terminal.HighlightVisible = false;
-            });
+            Terminals.ForEach(t => t.IsSelected = false);
+            UnhighlightTerminals();
         }
 
         public void CreateTerminals()
@@ -180,22 +158,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
-            if (Model == null)
-            {
-                return;
-            }
-            else if (propertyName.Equals(nameof(Width)))
+            if (propertyName == nameof(Width) || propertyName == nameof(Height))
             {
                 FixAllTerminals();
             }
-            else if (propertyName.Equals(nameof(Height)))
+            else if (_pluginNodeSettingCache.TryGetValue(propertyName, out PropertyInfo propertyInfo))
             {
-                FixAllTerminals();
-            }
-            if (_pluginNodeSettingCache.ContainsKey(propertyName))
-            {
-                var changedPropertyInfo = _pluginNodeSettingCache[propertyName];
-                var value = changedPropertyInfo.GetValue(this);
+                var value = propertyInfo.GetValue(this);
                 Model?.SetVariable(propertyName, value);
             }
         }
@@ -214,6 +183,22 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 propertyInfo.SetValue(this, data);
                 terminal.Data = data;
+            }
+        }
+
+        private void LoadTerminalViewModels()
+        {
+            foreach (var terminal in Model.Terminals)
+            {
+                Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
+            }
+        }
+
+        private void PersistProperty(PropertyInfo info)
+        {
+            if (!Model.PersistedVariables.ContainsKey(info.Name))
+            {
+                Model.SetVariable(info.Name, info.GetValue(this));
             }
         }
 
@@ -240,29 +225,22 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void CreateInputTerminalForMethod(MethodInfo methodInfo)
         {
             ValidateInputTerminalMethod(methodInfo);
-            var inputTerminalAttribute = GetAttribute<InputTerminalAttribute>(methodInfo);
+            var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
             var terminalType = methodInfo.GetParameters().First().ParameterType;
             var terminalModel = new InputTerminalModel(inputTerminalAttribute.TerminalName, terminalType, inputTerminalAttribute.DefaultDirection, 0);
             var terminal = new InputTerminal(terminalModel);
-            terminal.DataChanged += CreateMethodInvoker(methodInfo);
+            terminal.DataChanged += methodInfo.CreateMethodInvoker(this);
             AddTerminal(terminal);
         }
 
-        private Action<object> CreateMethodInvoker(MethodInfo method) => data => method.Invoke(this, new[] { data });
-
         private void CreateOutputTerminalForProperty(PropertyInfo property)
         {
-            var inputTerminalAttribute = GetAttribute<OutputTerminalAttribute>(property);
+            var inputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
             var terminalType = property.PropertyType;
             var terminalModel = new OutputTerminalModel(inputTerminalAttribute.TerminalName, terminalType, inputTerminalAttribute.DefaultDirection, 0);
             var terminal = new OutputTerminal(terminalModel);
             _terminalsPropertyInfos[inputTerminalAttribute.TerminalName] = property;
             AddTerminal(terminal);
-        }
-
-        private T GetAttribute<T>(MemberInfo memberInfo)
-        {
-            return (T)memberInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
         }
 
         private Direction CalculateClosestDirection(double x, double y)
@@ -294,8 +272,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void MoveTerminalToEdge(Terminal terminal, Direction edge, double precentAlongEdge)
         {
             const int extraSpace = 7;
-            var widerWidth = Width + extraSpace * 2;
-            var tallerHeight = Height + extraSpace * 2;
+            var widerWidth = Width + (extraSpace * 2);
+            var tallerHeight = Height + (extraSpace * 2);
             switch (edge)
             {
                 case Direction.North:
@@ -337,22 +315,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 MoveTerminalToEdge(terminalsOnEdge[i], edge, increment * (i + 1.0f));
                 terminalsOnEdge[i].EdgeIndex = i;
-            }
-        }
-
-        private void LoadTerminalViewModels()
-        {
-            foreach (var terminal in Model.Terminals)
-            {
-                Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
-            }
-        }
-
-        private void PersistProperty(PropertyInfo info)
-        {
-            if (!Model.PersistedVariables.ContainsKey(info.Name))
-            {
-                Model.SetVariable(info.Name, info.GetValue(this));
             }
         }
 

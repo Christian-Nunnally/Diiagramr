@@ -63,7 +63,7 @@ namespace DiiagramrAPI.Service.Editor
         public void RegisterNode(Node node, NodeLibrary dependency)
         {
             _loadedAssemblies.Add(node.GetType().Assembly);
-            var fullName = node.GetType().FullName ?? "";
+            var fullName = node.GetType().FullName ?? string.Empty;
             if (_availableNodeViewModels.Contains(node))
             {
                 return;
@@ -76,7 +76,7 @@ namespace DiiagramrAPI.Service.Editor
 
             if (_dependencyMap.ContainsKey(fullName))
             {
-                throw new ProviderException("Node registered twice");
+                throw new InvalidOperationException($"Node registered twice with {GetType().AssemblyQualifiedName}");
             }
 
             _nodeNameToViewModelMap.Add(fullName, node.GetType());
@@ -86,9 +86,9 @@ namespace DiiagramrAPI.Service.Editor
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
         }
 
-        private static Exception NoViewModelException(string typeFullName)
+        private Exception NoViewModelException(string typeFullName)
         {
-            return new ProviderException($"Tried to load unregistered view model '{typeFullName}'");
+            return new InvalidOperationException($"{GetType().AssemblyQualifiedName} tried to load unregistered view model '{typeFullName}'");
         }
 
         private Assembly AssemblyResolver(AssemblyName assemblyName)
@@ -122,14 +122,6 @@ namespace DiiagramrAPI.Service.Editor
             return assembly == null
                 ? Type.GetType(name, true, ignore)
                 : assembly.GetType(name, true, ignore);
-        }
-    }
-
-    [Serializable]
-    public class ProviderException : Exception
-    {
-        public ProviderException(string message) : base($"Node Provider Exception: {message}")
-        {
         }
     }
 }

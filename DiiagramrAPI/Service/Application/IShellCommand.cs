@@ -10,6 +10,7 @@ namespace DiiagramrAPI.Service.Application
         string Parent { get; }
 
         IList<IShellCommand> SubCommandItems { get; }
+
         float Weight { get; }
 
         bool CanExecute(IApplicationShell shell);

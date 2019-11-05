@@ -28,6 +28,7 @@ namespace DiiagramrAPI.Commands
                     node.Height = oldHeight;
                 };
             }
+
             return () => { };
         }
     }

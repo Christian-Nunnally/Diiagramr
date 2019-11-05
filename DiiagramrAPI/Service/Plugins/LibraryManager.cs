@@ -33,8 +33,11 @@ namespace DiiagramrAPI.Service.Plugins
         }
 
         public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
+
         public ObservableCollection<LibraryListItem> AvailableLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
+
         public ObservableCollection<LibraryListItem> InstalledLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
+
         public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
 
         public bool AddSource(string sourceUrl)
@@ -92,6 +95,7 @@ namespace DiiagramrAPI.Service.Plugins
             {
                 return;
             }
+
             foreach (var source in Sources)
             {
                 await LoadSourceAsync(source);
@@ -223,6 +227,7 @@ namespace DiiagramrAPI.Service.Plugins
             {
                 return;
             }
+
             var libraryPaths = GetLibraryPathsFromPackagesXml(packagesString);
             AddToAvailableLibrariesFromPaths(libraryPaths);
         }

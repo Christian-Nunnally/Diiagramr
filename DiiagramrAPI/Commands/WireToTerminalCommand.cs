@@ -28,7 +28,7 @@ namespace DiiagramrAPI.Commands
                 _fromTerminal.ConnectWire(wire, toTerminal);
                 var wireViewModel = new Wire(wire)
                 {
-                    DoAnimationWhenViewIsLoaded = _animateWireWhenLoaded
+                    DoAnimationWhenViewIsLoaded = _animateWireWhenLoaded,
                 };
                 _diagram.AddWire(wireViewModel);
                 return () =>
@@ -37,6 +37,7 @@ namespace DiiagramrAPI.Commands
                     _diagram.RemoveWire(wireViewModel);
                 };
             }
+
             return () => { };
         }
     }

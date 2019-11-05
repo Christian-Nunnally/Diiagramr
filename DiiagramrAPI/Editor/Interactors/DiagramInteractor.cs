@@ -9,7 +9,9 @@ namespace DiiagramrAPI.Editor.Interactors
     public abstract class DiagramInteractor : Screen, IDiagramInteractorService
     {
         public double Weight { get; set; }
+
         public double X { get; set; }
+
         public double Y { get; set; }
 
         public abstract void ProcessInteraction(DiagramInteractionEventArguments interaction);

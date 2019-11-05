@@ -8,7 +8,9 @@ namespace DiiagramrAPI.Editor.Interactors
         private double _endY;
         private double _startX;
         private double _startY;
+
         public double Height { get; set; }
+
         public double Width { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)

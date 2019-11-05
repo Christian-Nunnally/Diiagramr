@@ -15,7 +15,9 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         }
 
         public override string Name => "Close";
+
         public override string Parent => "Project";
+
         public override float Weight => 0.1f;
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)

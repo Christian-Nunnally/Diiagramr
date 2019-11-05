@@ -16,6 +16,7 @@ namespace DiiagramrAPI.Commands
             {
                 _nodeToSizeMap[node] = new Size(node.Width, node.Height);
             }
+
             _nodes = nodes;
         }
 

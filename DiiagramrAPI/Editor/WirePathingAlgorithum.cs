@@ -12,17 +12,29 @@ namespace DiiagramrAPI.Editor
         private const double WireDistanceOutOfTerminal = 25.0;
         private bool _uTurned = false;
         private WireModel _wireModel;
+
         public Terminal FallbackSinkTerminal { get; internal set; }
+
         public Terminal FallbackSourceTerminal { get; internal set; }
+
         private TerminalModel SinkTerminal => _wireModel?.SinkTerminal;
+
         private TerminalModel SourceTerminal => _wireModel?.SourceTerminal;
+
         private double DownUTurnLengthSink => _wireModel != null ? SinkTerminal.TerminalDownWireMinimumLength : 0;
+
         private double DownUTurnLengthSource => _wireModel != null ? SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
+
         private double LeftUTurnLengthSink => _wireModel != null ? SinkTerminal.TerminalLeftWireMinimumLength : 0;
+
         private double LeftUTurnLengthSource => _wireModel != null ? SourceTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
+
         private double RightUTurnLengthSink => _wireModel != null ? SinkTerminal.TerminalRightWireMinimumLength : 0;
+
         private double RightUTurnLengthSource => _wireModel != null ? SourceTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
+
         private double UpUTurnLengthSink => _wireModel != null ? SinkTerminal.TerminalUpWireMinimumLength : 0;
+
         private double UpUTurnLengthSource => _wireModel != null ? SourceTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
 
         public Point[] GetWirePoints(WireModel model, double x1, double y1, double x2, double y2, Direction startTerminalDefaultDirection, Direction endTerminalDefaultDirection)
@@ -58,6 +70,7 @@ namespace DiiagramrAPI.Editor
             {
                 points.Add(backwardPoints[1]);
             }
+
             points.Add(end);
             return points.ToArray();
         }
@@ -194,13 +207,14 @@ namespace DiiagramrAPI.Editor
 
             var isEndAboveStart = start.Y > end.Y;
             var isEndLeftOfStart = start.X > end.X;
-            if (bannedStartDirection == Direction.South && isEndAboveStart
-             || bannedStartDirection == Direction.North && !isEndAboveStart)
+            if ((bannedStartDirection == Direction.South && isEndAboveStart)
+             || (bannedStartDirection == Direction.North && !isEndAboveStart))
             {
                 return WireToEndRespectingNorthSouthStartPoint(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndLeftOfStart);
             }
-            if (bannedStartDirection == Direction.East && isEndLeftOfStart
-             || bannedStartDirection == Direction.West && !isEndLeftOfStart)
+
+            if ((bannedStartDirection == Direction.East && isEndLeftOfStart)
+             || (bannedStartDirection == Direction.West && !isEndLeftOfStart))
             {
                 return WireToEndRespectingEastWestStartPoint(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndAboveStart);
             }

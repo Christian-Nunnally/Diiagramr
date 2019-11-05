@@ -15,13 +15,15 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         }
 
         public override string Name => "Save";
+
         public override string Parent => "Project";
+
         public override float Weight => .5f;
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)
         {
             _projectManager.SaveProject();
-            shell.SetWindowTitle("Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : ""));
+            shell.SetWindowTitle("Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : string.Empty));
             shell.ShowScreen(_visualDropStartScreenViewModel);
         }
     }

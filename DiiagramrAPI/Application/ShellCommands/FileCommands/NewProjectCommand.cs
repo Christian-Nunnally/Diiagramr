@@ -16,7 +16,9 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         }
 
         public override string Name => "New";
+
         public override string Parent => "Project";
+
         public override float Weight => 1.0f;
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)

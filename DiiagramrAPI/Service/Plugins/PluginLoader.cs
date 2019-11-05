@@ -52,6 +52,7 @@ namespace DiiagramrAPI.Service.Plugins
                 {
                     LoadAssembly(pluginAssembly, libraryDependency);
                 }
+
                 return true;
             }
             catch (TypeLoadException)
@@ -68,7 +69,7 @@ namespace DiiagramrAPI.Service.Plugins
             var xmlElement = XElement.Parse(nuspec);
             var libraryName = xmlElement.Descendants(nameSearchString).First().Value;
             var libraryMajorVersion = int.Parse(xmlElement.Descendants(versionSearchString).First().Value.Substring(0, 1));
-            return new NodeLibrary(libraryName, "", libraryMajorVersion, 0, 0);
+            return new NodeLibrary(libraryName, string.Empty, libraryMajorVersion, 0, 0);
         }
 
         private void GetInstalledPlugins()
@@ -138,6 +139,7 @@ namespace DiiagramrAPI.Service.Plugins
             {
                 throw new PluginLoadException($".nuspec file not found in directory {directory}");
             }
+
             return _directoryService.ReadAllText(nuspecPath);
         }
 
@@ -175,7 +177,8 @@ namespace DiiagramrAPI.Service.Plugins
             {
             }
 
-            public PluginLoadException(string message) : base(message)
+            public PluginLoadException(string message)
+                : base(message)
             {
             }
         }

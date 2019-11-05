@@ -30,6 +30,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>DiiagramrAPI.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,6 +40,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>DiiagramrAPI.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -70,6 +73,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Application\ShellCommands\FileSeparatorCommand1.cs" />
+    <Compile Include="Application\ShellCommands\FileSeparatorCommand2.cs" />
+    <Compile Include="Application\ShellCommands\HelpSeparatorCommand1.cs" />
     <Compile Include="Commands\ResizeNodeCommand.cs" />
     <Compile Include="Commands\MoveNodeCommand.cs" />
     <Compile Include="Commands\MoveNodesToCurrentPositionCommand.cs" />
@@ -102,8 +108,8 @@
     <Compile Include="Editor\Interactors\NodeResizer.cs" />
     <Compile Include="Editor\Interactors\NodeDragger.cs" />
     <Compile Include="Editor\Interactors\NodeDeleter.cs" />
-    <Compile Include="Editor\Interactors\InteractionEventArguments.cs" />
-    <Compile Include="Editor\Interactors\DiagramInteracter.cs" />
+    <Compile Include="Editor\Interactors\DiagramInteractionEventArguments.cs" />
+    <Compile Include="Editor\Interactors\DiagramInteractor.cs" />
     <Compile Include="Editor\Interactors\NodePlacer.cs" />
     <Compile Include="Editor\Interactors\PointSelector.cs" />
     <Compile Include="Editor\Interactors\LassoNodeSelector.cs" />
@@ -155,7 +161,7 @@
     <Compile Include="Service\IService.cs" />
     <Compile Include="Service\IKeyedService.cs" />
     <Compile Include="Service\Application\IScreenDisplayService.cs" />
-    <Compile Include="Service\IProvideTestImplementation.cs" />
+    <Compile Include="Service\ITestImplementationOfT.cs" />
     <Compile Include="Editor\DirectEditTextBoxAdorner.cs" />
     <Compile Include="Service\Application\IShownInShellReaction.cs" />
     <Compile Include="Editor\NodeNameAdorner.cs" />
@@ -209,6 +215,7 @@
   <ItemGroup>
     <None Include=".editorconfig" />
     <None Include="app.config" />
+    <None Include="DiiagramrAPI.ruleset" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -238,6 +245,8 @@
     <Analyzer Include="..\packages\Microsoft.NetCore.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetCore.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.NetFramework.Analyzers.2.9.7\analyzers\dotnet\cs\Microsoft.NetFramework.CSharp.Analyzers.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -10,11 +10,12 @@ namespace DiiagramrAPI.Editor
     {
         private readonly Border border;
         private readonly TextBlock label;
-        private readonly double MarginAroundLabel = 4.0;
-        private readonly double MarginFromNode = Diagram.NodeBorderWidth + 5;
+        private readonly double marginAroundLabel = 4.0;
+        private readonly double marginFromNode = Diagram.NodeBorderWidth + 5;
         private readonly VisualCollection visualChildren;
 
-        public NodeNameAdorner(UIElement adornedElement, Node adornedNode) : base(adornedElement)
+        public NodeNameAdorner(UIElement adornedElement, Node adornedNode)
+            : base(adornedElement)
         {
             if (adornedNode == null)
             {
@@ -34,7 +35,7 @@ namespace DiiagramrAPI.Editor
                 FontWeight = FontWeights.Bold,
                 LineStackingStrategy = LineStackingStrategy.MaxHeight,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
             };
             label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             border = new Border
@@ -46,13 +47,14 @@ namespace DiiagramrAPI.Editor
                 Padding = new Thickness(0),
                 MaxWidth = 200,
                 Child = label,
-                Width = label.DesiredSize.Width + MarginAroundLabel * 2,
-                Height = label.DesiredSize.Height + MarginAroundLabel * 2
+                Width = label.DesiredSize.Width + marginAroundLabel * 2,
+                Height = label.DesiredSize.Height + marginAroundLabel * 2,
             };
             visualChildren.Add(border);
         }
 
         public Node AdornedNode { get; set; }
+
         protected override int VisualChildrenCount => visualChildren.Count;
 
         protected override Size ArrangeOverride(Size finalSize)
@@ -61,7 +63,7 @@ namespace DiiagramrAPI.Editor
             double height = border.Height;
 
             double x = (AdornedNode.Width / 2.0) - (width / 2.0);
-            double y = -height - MarginFromNode;
+            double y = -height - marginFromNode;
             border.Arrange(new Rect(x, y, width, height));
             return finalSize;
         }

@@ -44,7 +44,7 @@ namespace DiiagramrAPI.Project
         {
             _openFileDialog.InitialDirectory = ProjectDirectory;
             _openFileDialog.Filter = $"ProjectModel files(*{ProjectFileExtension})|*{ProjectFileExtension}|All files(*.*)|*.*";
-            _openFileDialog.FileName = "";
+            _openFileDialog.FileName = string.Empty;
 
             if (_openFileDialog.ShowDialog() != MessageBoxResult.OK)
             {
@@ -68,6 +68,7 @@ namespace DiiagramrAPI.Project
             {
                 return SaveAsProject(project);
             }
+
             SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ProjectFileExtension);
             return true;
         }

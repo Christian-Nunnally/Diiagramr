@@ -31,18 +31,27 @@ namespace DiiagramrAPI.Editor.Interactors
             Right,
             Up,
             Down,
-            None
+            None,
         }
 
         public bool IsModeHorizontial => Mode == RiftMode.Right || Mode == RiftMode.Left;
+
         public bool IsModeVertical => Mode == RiftMode.Down || Mode == RiftMode.Up;
+
         public double RiftHeight { get; set; }
+
         public double RiftHeightMinus5 => RiftHeight - RiftVisualEndCapSize;
+
         public double RiftHeightPlus5 => RiftHeight + RiftVisualEndCapSize;
+
         public Point RiftStartDiagramPoint { get; set; }
+
         public double RiftWidth { get; set; }
+
         public double RiftWidthMinus5 => RiftWidth - RiftVisualEndCapSize;
+
         public double RiftWidthPlus5 => RiftWidth + RiftVisualEndCapSize;
+
         private RiftMode Mode { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -134,6 +143,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 case RiftMode.Down:
                     return diagram.Nodes.Where(n => n.Y > RiftStartDiagramPoint.Y);
             }
+
             return Enumerable.Empty<Node>();
         }
 
@@ -143,7 +153,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 CheckIfRiftShouldStart(riftDeltaX, riftDeltaY);
             }
-            if (Mode != RiftMode.None)
+            else
             {
                 Rift(diagram, riftDeltaX, riftDeltaY);
                 diagram.UpdateDiagramBoundingBox();
@@ -157,6 +167,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 _nodesBeingRifted = GetNodesToRift(diagram).ToList();
             }
+
             RiftNodes(riftDeltaX, riftDeltaY);
         }
 
@@ -185,6 +196,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 case RiftMode.None:
                     break;
             }
+
             _lastRiftDeltaX = riftDeltaX;
             _lastRiftDeltaY = riftDeltaY;
         }

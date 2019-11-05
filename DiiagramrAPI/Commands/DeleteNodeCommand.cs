@@ -20,6 +20,7 @@ namespace DiiagramrAPI.Commands
                 _diagram.RemoveNode(node);
                 return () => _diagram.AddNode(node);
             }
+
             return () => { };
         }
     }

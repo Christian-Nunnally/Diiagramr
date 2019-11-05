@@ -33,6 +33,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     return true;
                 }
             }
+
             return false;
         }
 

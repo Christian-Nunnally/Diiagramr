@@ -56,6 +56,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 diagram.Zoom = MaximumZoom;
                 return;
             }
+
             diagram.Zoom = zoom;
         }
     }

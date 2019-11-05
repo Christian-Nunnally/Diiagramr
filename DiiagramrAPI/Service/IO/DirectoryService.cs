@@ -78,6 +78,7 @@ namespace DiiagramrAPI.Service.IO
             catch (Exception)
             {
                 return new List<string>();
+
                 // TODO: Handle specific exception
                 throw;
             }
@@ -92,6 +93,7 @@ namespace DiiagramrAPI.Service.IO
             catch (Exception)
             {
                 return new List<string>();
+
                 // TODO: Handle specific exception
                 throw;
             }

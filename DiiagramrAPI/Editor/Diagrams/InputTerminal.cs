@@ -8,7 +8,8 @@ namespace DiiagramrAPI.Editor.Diagrams
     {
         private string _directEditTextBoxText = "0";
 
-        public InputTerminal(InputTerminalModel inputTerminal) : base(inputTerminal)
+        public InputTerminal(InputTerminalModel inputTerminal)
+            : base(inputTerminal)
         {
         }
 
@@ -55,11 +56,17 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         public bool IsBoolType => Model.Type == typeof(bool);
+
         public bool IsCharType => Model.Type == typeof(char);
+
         public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
+
         public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
+
         public bool IsFloatType => Model.Type == typeof(float);
+
         public bool IsIntType => Model.Type == typeof(int);
+
         public bool IsStringType => Model.Type == typeof(string);
 
         public void TerminalDoubleClicked()

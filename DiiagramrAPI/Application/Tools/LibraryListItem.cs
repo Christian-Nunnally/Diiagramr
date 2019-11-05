@@ -13,7 +13,9 @@ namespace DiiagramrAPI.Application.Tools
         }
 
         public string ButtonText { get; set; } = "Install";
+
         public NodeLibrary Library { get; internal set; }
+
         public string LibraryDisplayName { get; }
 
         public override string ToString()

@@ -45,21 +45,37 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         public static Thickness NodeBorderExtenderThickness { get; } = new Thickness(NodeBorderWidth - 1);
+
         public static Thickness NodeBorderThickness { get; } = new Thickness(NodeBorderWidth);
+
         public static Thickness NodeSelectionBorderThickness { get; } = new Thickness(NodeBorderWidth - 16);
+
         public bool AreInstructionsVisible => !Nodes.Any();
+
         public Rect BoundingBox { get; set; }
+
         public bool BoundingBoxVisible { get; set; }
+
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
+
         public DiagramModel Model { get; }
+
         public string Name => Model.Name;
+
         public BindableCollection<Node> Nodes { get; } = new BindableCollection<Node>();
+
         public double PanX { get; set; }
+
         public double PanY { get; set; }
+
         public bool ShowSnapGrid { get; set; }
+
         public double ViewHeight { get; set; }
+
         public double ViewWidth { get; set; }
+
         public BindableCollection<Wire> Wires { get; } = new BindableCollection<Wire>();
+
         public double Zoom { get; set; } = 1;
 
         public void AddNode(Node node)
@@ -68,6 +84,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 throw new InvalidOperationException("Can not add a node to the diagram before it has been initialized");
             }
+
             Model.AddNode(node.Model);
             AddNodeViewModel(node);
         }
@@ -122,17 +139,10 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void HighlightTerminalsOfSameType(TerminalModel terminal)
         {
-            foreach (var nodeViewModel in Nodes)
-            {
-                if (terminal is OutputTerminalModel)
-                {
-                    nodeViewModel.HighlightInputTerminalsOfType(terminal.Type);
-                }
-                else
-                {
-                    nodeViewModel.HighlightOutputTerminalsOfType(terminal.Type);
-                }
-            }
+            var highlightAction = terminal is OutputTerminalModel
+                ? (Action<Node>)(node => node.HighlightTerminalsOfType<InputTerminal>(terminal.Type))
+                : (Action<Node>)(node => node.HighlightTerminalsOfType<OutputTerminal>(terminal.Type));
+            Nodes.ForEach(highlightAction);
         }
 
         public void KeyDownHandler(object sender, KeyEventArgs e)
@@ -300,12 +310,13 @@ namespace DiiagramrAPI.Editor.Diagrams
             var relativeMousePosition = e.GetPosition((IInputElement)sender);
             var interaction = new DiagramInteractionEventArguments(interactionType)
             {
-                MousePosition = relativeMousePosition
+                MousePosition = relativeMousePosition,
             };
             if (e is MouseWheelEventArgs mouseWheelEventArguments)
             {
                 interaction.MouseWheelDelta = mouseWheelEventArguments.Delta;
             }
+
             DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
     }

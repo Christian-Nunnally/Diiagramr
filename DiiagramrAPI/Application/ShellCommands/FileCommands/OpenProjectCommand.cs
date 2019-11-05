@@ -20,7 +20,9 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         }
 
         public override string Name => "Open";
+
         public override string Parent => "Project";
+
         public override float Weight => .9f;
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)
@@ -36,6 +38,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             {
                 project = _projectFileService.LoadProject();
             }
+
             if (project != null)
             {
                 LoadProject(shell, project);
@@ -50,6 +53,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             {
                 firstDiagram.Open();
             }
+
             shell.ShowScreen(_projectScreen);
         }
     }

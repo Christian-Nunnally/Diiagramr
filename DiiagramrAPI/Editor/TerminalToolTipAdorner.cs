@@ -8,12 +8,13 @@ namespace DiiagramrAPI.Editor
 {
     public class TerminalToolTipAdorner : Adorner
     {
-        private readonly double MarginAroundLabel = 4.0;
+        private readonly double marginAroundLabel = 4.0;
         private readonly Border border;
         private readonly TextBlock label;
         private readonly VisualCollection visualChildren;
 
-        public TerminalToolTipAdorner(UIElement adornedElement, Terminal adornedTerminal) : base(adornedElement)
+        public TerminalToolTipAdorner(UIElement adornedElement, Terminal adornedTerminal)
+            : base(adornedElement)
         {
             if (adornedTerminal == null)
             {
@@ -35,7 +36,7 @@ namespace DiiagramrAPI.Editor
                 FontWeight = FontWeights.Bold,
                 LineStackingStrategy = LineStackingStrategy.MaxHeight,
                 HorizontalAlignment = HorizontalAlignment.Center,
-                VerticalAlignment = VerticalAlignment.Center
+                VerticalAlignment = VerticalAlignment.Center,
             };
             label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             border = new Border
@@ -47,13 +48,14 @@ namespace DiiagramrAPI.Editor
                 Padding = new Thickness(0),
                 MaxWidth = 200,
                 Child = label,
-                Width = label.DesiredSize.Width + MarginAroundLabel * 2,
-                Height = label.DesiredSize.Height + MarginAroundLabel * 2
+                Width = label.DesiredSize.Width + marginAroundLabel * 2,
+                Height = label.DesiredSize.Height + marginAroundLabel * 2,
             };
             visualChildren.Add(border);
         }
 
         public Terminal AdornedTerminal { get; set; }
+
         protected override int VisualChildrenCount => visualChildren.Count;
 
         protected override Size ArrangeOverride(Size finalSize)

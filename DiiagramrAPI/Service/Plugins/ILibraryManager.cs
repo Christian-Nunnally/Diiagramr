@@ -10,8 +10,11 @@ namespace DiiagramrAPI.Service.Plugins
     public interface ILibraryManager : IService
     {
         ObservableCollection<NodeLibrary> AvailableLibraries { get; }
+
         ObservableCollection<LibraryListItem> AvailableLibraryItems { get; }
+
         ObservableCollection<LibraryListItem> InstalledLibraryItems { get; }
+
         ObservableCollection<string> Sources { get; }
 
         bool AddSource(string sourceUrl);

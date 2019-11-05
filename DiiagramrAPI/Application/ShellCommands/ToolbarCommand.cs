@@ -1,6 +1,6 @@
 ﻿namespace DiiagramrAPI.Application.ShellCommands
 {
-    public abstract class ToolBarCommand : DiiagramrCommand
+    public abstract class ToolBarCommand : ShellCommandBase
     {
     }
 }

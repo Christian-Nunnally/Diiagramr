@@ -3,7 +3,7 @@ using System;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
-    public class CloseProjectCommand : DiiagramrCommand
+    public class CloseProjectCommand : ShellCommandBase
     {
         private readonly ProjectManager _projectManager;
         private readonly StartScreenViewModel _startScreenViewModel;
@@ -15,6 +15,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         }
 
         public override string Name => "Close";
+
         public override string Parent => "Project";
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)

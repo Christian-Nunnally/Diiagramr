@@ -26,7 +26,7 @@ namespace DiiagramrAPI.Application.Tools
         public void ExecuteCommandHandler(object sender, MouseEventArgs e)
         {
             var control = sender as Control;
-            if (control?.DataContext is DiiagramrCommand command)
+            if (control?.DataContext is ShellCommandBase command)
             {
                 var shellRelativePosition = control.TransformToAncestor(View);
                 var correctedRelativePosition = shellRelativePosition.Transform(new Point(0, 2));
@@ -38,6 +38,7 @@ namespace DiiagramrAPI.Application.Tools
                         correctedRelativePosition = new Point(correctedRelativePosition.X + ShellViewModel.MaximizedWindowChromeRelativePositionAdjustment, correctedRelativePosition.Y + ShellViewModel.MaximizedWindowChromeRelativePositionAdjustment);
                     }
                 }
+
                 _commandManager.ExecuteCommand(command, correctedRelativePosition);
             }
         }

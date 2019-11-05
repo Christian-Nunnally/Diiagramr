@@ -33,6 +33,7 @@ namespace DiiagramrAPI.Service.IO
             {
                 return string.Empty;
             }
+
             _currentlyFetching = true;
 
             try

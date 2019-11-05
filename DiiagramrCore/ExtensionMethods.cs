@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using System.Reflection;
 
     public static class ExtensionMethods
     {
@@ -32,6 +33,24 @@
             if (newValue != null)
             {
                 newValue.PropertyChanged += handler;
+            }
+        }
+
+        public static T GetAttribute<T>(this MemberInfo memberInfo)
+        {
+            return (T)memberInfo.GetCustomAttributes(typeof(T), false).FirstOrDefault();
+        }
+
+        public static Action<object> CreateMethodInvoker(this MethodInfo method, object target) => data =>
+        {
+            method.Invoke(target, new[] { data });
+        };
+
+        public static void SetIfNotNull(this object value, Action setter)
+        {
+            if (value != null)
+            {
+                setter();
             }
         }
     }

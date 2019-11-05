@@ -12,8 +12,11 @@ namespace DiiagramrAPI.Project
         event Action CurrentProjectChanged;
 
         ObservableCollection<DiagramModel> CurrentDiagrams { get; }
+
         ProjectModel CurrentProject { get; set; }
+
         IList<Diagram> Diagrams { get; }
+
         bool IsProjectDirty { get; }
 
         bool CloseProject();

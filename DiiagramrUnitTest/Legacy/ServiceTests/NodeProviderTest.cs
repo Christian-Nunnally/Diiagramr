@@ -15,13 +15,6 @@ namespace DiiagramrUnitTests.Legacy.ServiceTests
         private NodeModel _testNode;
 
         [TestMethod]
-        [ExpectedException(typeof(ProviderException), "No registered view model for given node.")]
-        public void TestCreateNodeViewModelFromName_ViewModelNotRegistered_ThrowsException()
-        {
-            _nodeProvider.CreateNodeFromName("");
-        }
-
-        [TestMethod]
         public void TestCreateNodeViewModelFromName_ViewModelPositionChanges_UpdatesModelPosition()
         {
             _nodeProvider.RegisterNode(_nodeViewModelMoq.Object, new NodeLibrary());
@@ -68,13 +61,6 @@ namespace DiiagramrUnitTests.Legacy.ServiceTests
             {
                 Name = "TestNodeViewModel"
             };
-        }
-
-        [TestMethod]
-        [ExpectedException(typeof(ProviderException), "No registered view model for given node.")]
-        public void TestLoadNodeViewModelFromNode_ViewModelNotRegistered_ThrowsException()
-        {
-            _nodeProvider.LoadNodeViewModelFromNode(_testNode);
         }
 
         [TestMethod]

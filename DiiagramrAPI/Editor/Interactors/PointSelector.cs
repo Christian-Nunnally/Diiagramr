@@ -31,6 +31,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     {
                         interaction.Diagram.UnselectNodes();
                     }
+
                     interaction.Diagram.UnselectTerminals();
                     pluginNode.IsSelected = true;
                 }
@@ -79,6 +80,7 @@ namespace DiiagramrAPI.Editor.Interactors
                         {
                             interaction.Diagram.UnselectNodes();
                         }
+
                         interaction.Diagram.UnselectTerminals();
                         pluginNode.IsSelected = true;
                     }

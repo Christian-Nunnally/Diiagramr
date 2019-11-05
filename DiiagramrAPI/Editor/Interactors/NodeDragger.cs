@@ -43,6 +43,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 var diagram = interaction.Diagram;
                 return IsMouseOverNodeBorder(node, mouseX, mouseY, diagram);
             }
+
             return false;
         }
 
@@ -68,6 +69,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     node.Y = interaction.Diagram.SnapToGrid(node.Y);
                 }
             }
+
             interaction.Diagram.ShowSnapGrid = false;
             var doCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             _transactor.Transact(doCommand, _moveNodesToStartPointCommand, _draggingNodes);
@@ -94,6 +96,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 otherNode.X += deltaX / diagram.Zoom;
                 otherNode.Y += deltaY / diagram.Zoom;
             }
+
             PreviousMouseLocation = mousePosition;
             diagram.UpdateDiagramBoundingBox();
             diagram.ShowSnapGrid = true;

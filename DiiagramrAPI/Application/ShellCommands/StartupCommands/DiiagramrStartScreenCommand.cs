@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
 {
-    public class DiiagramrStartScreenCommand : DiiagramrCommand
+    public class DiiagramrStartScreenCommand : ShellCommandBase
     {
         private readonly StartScreenViewModel _startScreenViewModel;
 

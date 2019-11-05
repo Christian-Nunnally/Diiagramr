@@ -19,6 +19,7 @@ namespace DiiagramrAPI.Project
         }
 
         public DiagramWell DiagramWellViewModel { get; set; }
+
         public ProjectExplorer ProjectExplorerViewModel { get; set; }
     }
 }

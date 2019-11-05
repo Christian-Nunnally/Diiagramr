@@ -20,15 +20,19 @@ namespace DiiagramrAPI.Application.Tools
         }
 
         public ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
+
         public float MinimumWidth { get; set; } = 150;
+
         public bool Visible { get; set; }
+
         public float X { get; set; } = 0;
+
         public float Y { get; set; } = 22;
 
         public void ExecuteCommand(object sender, MouseEventArgs e)
         {
             var control = sender as FrameworkElement;
-            if (control?.DataContext is DiiagramrCommand command)
+            if (control?.DataContext is ShellCommandBase command)
             {
                 Visible = false;
                 _commandManager.ExecuteCommand(command);

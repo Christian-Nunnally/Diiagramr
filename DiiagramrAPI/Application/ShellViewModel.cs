@@ -32,16 +32,27 @@ namespace DiiagramrAPI.Application
         }
 
         public AbstractShellWindow ActiveWindow { get; set; }
+
         public bool CanSaveAsProject { get; set; }
+
         public bool CanSaveProject { get; set; }
+
         public ContextMenu ContextMenuViewModel { get; set; }
+
         public double Height { get; set; } = 830;
+
         public bool IsWindowOpen => ActiveWindow != null;
+
         public IProjectManager ProjectManager { get; }
+
         public IApplicationShell Shell { get; }
+
         public ToolbarViewModel ToolbarViewModel { get; set; }
+
         public double Width { get; set; } = 1010;
+
         public Stack<AbstractShellWindow> WindowStack { get; } = new Stack<AbstractShellWindow>();
+
         public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
 
         public void CloseWindow()

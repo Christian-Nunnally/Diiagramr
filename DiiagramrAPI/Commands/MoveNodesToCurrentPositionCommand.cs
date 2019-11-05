@@ -16,6 +16,7 @@ namespace DiiagramrAPI.Commands
             {
                 _nodeToPositionMap[node] = new Point(node.X, node.Y);
             }
+
             _nodes = nodes;
         }
 

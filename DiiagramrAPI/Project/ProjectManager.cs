@@ -33,8 +33,11 @@ namespace DiiagramrAPI.Project
         public event Action CurrentProjectChanged;
 
         public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
+
         public ProjectModel CurrentProject { get; set; }
+
         public IList<Diagram> Diagrams { get; }
+
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
         public bool CloseProject()
@@ -56,6 +59,7 @@ namespace DiiagramrAPI.Project
                     CurrentProject.IsDirty = false;
                 }
             }
+
             return true;
         }
 
@@ -74,6 +78,7 @@ namespace DiiagramrAPI.Project
             {
                 throw new NullReferenceException("ProjectModel does not exist");
             }
+
             if (diagram == null)
             {
                 return;
@@ -152,6 +157,7 @@ namespace DiiagramrAPI.Project
                     {
                         CurrentDiagrams.First().IsOpen = true;
                     }
+
                     // TODO: Catch specific types of exceptions.
                     throw;
                 }

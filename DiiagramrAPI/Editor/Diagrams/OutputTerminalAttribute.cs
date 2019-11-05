@@ -13,6 +13,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         public string TerminalName { get; }
+
         public Direction DefaultDirection { get; }
     }
 }

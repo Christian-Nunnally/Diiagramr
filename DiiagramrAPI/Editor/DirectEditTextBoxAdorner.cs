@@ -11,10 +11,10 @@ namespace DiiagramrAPI.Editor
     public class DirectEditTextBoxAdorner : Adorner
     {
         private readonly TextBox textBox;
-        private string _directEditTextBoxText;
         private VisualCollection visualChildren;
 
-        public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal) : base(adornedElement)
+        public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal)
+            : base(adornedElement)
         {
             if (adornedTerminal == null)
             {
@@ -35,13 +35,13 @@ namespace DiiagramrAPI.Editor
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Width = 50,
-                Height = 25
+                Height = 25,
             };
             Binding binding = new Binding
             {
                 Source = this,
                 Path = new PropertyPath(nameof(DirectEditTextBoxText)),
-                Mode = BindingMode.TwoWay
+                Mode = BindingMode.TwoWay,
             };
             textBox.SetBinding(TextBox.TextProperty, binding);
             textBox.KeyDown += KeyDownHandler;
@@ -56,49 +56,44 @@ namespace DiiagramrAPI.Editor
         public string DirectEditTextBoxText
         {
             get => AdornedTerminal.Data?.ToString() ?? string.Empty;
-
-            set
-            {
-                if (IsIntType)
-                {
-                    if (int.TryParse(value, out int parseResult))
-                    {
-                        _directEditTextBoxText = value;
-                        AdornedTerminal.Data = parseResult;
-                    }
-                }
-                else if (IsFloatType)
-                {
-                    if (float.TryParse(value, out float parseResult))
-                    {
-                        _directEditTextBoxText = value;
-                        AdornedTerminal.Data = parseResult;
-                    }
-                }
-                else if (IsStringType)
-                {
-                    _directEditTextBoxText = value;
-                    AdornedTerminal.Data = value;
-                }
-                else if (IsCharType)
-                {
-                    if (char.TryParse(value, out char parseResult))
-                    {
-                        _directEditTextBoxText = value;
-                        AdornedTerminal.Data = parseResult;
-                    }
-                }
-            }
+            set => AdornedTerminal.Data = CoerceStringToType(value);
         }
 
         public bool IsBoolType => AdornedTerminal.Model.Type == typeof(bool);
+
         public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
+
         public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
+
         public bool IsEnumType => AdornedTerminal.Model.Type.IsEnum;
+
         public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
+
         public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
+
         public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
+
         protected override int VisualChildrenCount => visualChildren.Count;
+
+        public object CoerceStringToType(string data)
+        {
+            if (IsFloatType && float.TryParse(data, out float parsedFloat))
+            {
+                return parsedFloat;
+            }
+            else if (IsCharType && char.TryParse(data, out char parsedChar))
+            {
+                return parsedChar;
+            }
+            else if (IsIntType && int.TryParse(data, out int parseResult))
+            {
+                return parseResult;
+            }
+            else
+            {
+                return data;
+            }
+        }
 
         protected override Size ArrangeOverride(Size finalSize)
         {

@@ -28,6 +28,7 @@ namespace DiiagramrAPI.Commands
                     node.Y = oldY;
                 };
             }
+
             return () => { };
         }
     }

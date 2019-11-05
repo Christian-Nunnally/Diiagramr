@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
 {
-    public class VisualDropStartScreenCommand : DiiagramrCommand
+    public class VisualDropStartScreenCommand : ShellCommandBase
     {
         private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 

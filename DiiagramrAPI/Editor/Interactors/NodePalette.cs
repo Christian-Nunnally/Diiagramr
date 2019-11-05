@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private const double NodeSelectorRightMargin = 400;
         private Diagram _diagram;
         private IProvideNodes _nodeProvider;
-        private Func<Node, bool> Filter = x => true;
+        private Func<Node, bool> filter = x => true;
         private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
@@ -31,15 +31,25 @@ namespace DiiagramrAPI.Editor.Interactors
         }
 
         public IEnumerable<Node> AvailableNodes => LibrariesList.SelectMany(l => l.Nodes);
+
         public Terminal ContextTerminal { get; set; }
+
         public List<NodePaletteLibrary> LibrariesList { get; } = new List<NodePaletteLibrary>();
+
         public Node MousedOverNode { get; set; }
+
         public bool NodePreviewVisible => MousedOverNode != null;
+
         public double PreviewNodePositionX { get; set; }
+
         public double PreviewNodePositionY { get; set; }
+
         public double PreviewNodeScaleX { get; set; }
+
         public double PreviewNodeScaleY { get; set; }
+
         public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; } = new BindableCollection<NodePaletteLibrary>();
+
         public BindableCollection<Node> VisibleNodesList { get; } = new BindableCollection<Node>();
 
         public void AddNodes()
@@ -48,13 +58,14 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 return;
             }
+
             nodesAdded = true;
 
-            foreach (var Node in _nodeProvider.GetRegisteredNodes())
+            foreach (var node in _nodeProvider.GetRegisteredNodes())
             {
-                if (CanAddNodeToPalette(Node))
+                if (CanAddNodeToPalette(node))
                 {
-                    TryAddingNode(Node);
+                    TryAddingNode(node);
                 }
             }
         }
@@ -88,6 +99,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 library.NodesLoaded = true;
             }
+
             ShowLibrary(library);
         }
 
@@ -128,6 +140,7 @@ namespace DiiagramrAPI.Editor.Interactors
                         X += Terminal.TerminalHeight;
                     }
                 }
+
                 ShowWithContextFilter(viewModelUnderMouse);
             }
         }
@@ -150,7 +163,7 @@ namespace DiiagramrAPI.Editor.Interactors
         public void ShowLibrary(NodePaletteLibrary library)
         {
             VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(library.Nodes.Where(Filter).OrderBy(n => n.Weight));
+            VisibleNodesList.AddRange(library.Nodes.Where(filter).OrderBy(n => n.Weight));
             VisibleLibrariesList.ForEach(l => l.UnselectLibraryItem());
             library.SelectLibraryItem();
             MousedOverNode = null;
@@ -170,7 +183,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void AddNode(Node node)
         {
-            NodeModel nodeModel = new NodeModel("");
+            NodeModel nodeModel = new NodeModel(string.Empty);
+
             // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
             node.AttachToModel(nodeModel);
             var library = GetOrCreateLibrary(node);
@@ -195,6 +209,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 return false;
             }
+
             var library = GetOrCreateLibrary(node);
             return !library.Nodes.Any(n => n.Equals(node));
         }
@@ -230,6 +245,7 @@ namespace DiiagramrAPI.Editor.Interactors
                     .OfType<InputTerminal>()
                     .Where(t => t.Model.Type.IsAssignableFrom(outputTerminal.Type));
             }
+
             return Enumerable.Empty<Terminal>();
         }
 
@@ -266,7 +282,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void Show(Func<Node, bool> filter)
         {
-            Filter = filter;
+            this.filter = filter;
             VisibleLibrariesList.Clear();
             VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
         }
@@ -302,6 +318,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 AddNode(node);
             }
+
             // TODO: Catch more specific exception.
             catch (Exception e)
             {

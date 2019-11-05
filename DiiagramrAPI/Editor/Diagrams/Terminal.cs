@@ -28,6 +28,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         public static CornerRadius TerminalBorderCornerRadius { get; } = new CornerRadius(2);
+
         public static CornerRadius TerminalCornerRadius { get; } = new CornerRadius(3);
 
         public virtual object Data
@@ -51,11 +52,17 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         public virtual bool HighlightVisible { get; set; }
+
         public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
+
         public virtual bool IsSelected { get; set; }
+
         public virtual TerminalModel Model { get; }
+
         public string Name { get; set; }
+
         public SolidColorBrush TerminalBackgroundBrush { get; set; }
+
         public SolidColorBrush TerminalBackgroundMouseOverBrush { get; set; }
 
         public double TerminalDownWireMinimumLength
