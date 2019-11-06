@@ -73,8 +73,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             _nameToTerminalMap[terminal.Name] = terminal;
             Terminals.Add(terminal);
             Model.AddTerminal(terminal.Model);
-            DropAndArrangeTerminal(terminal, terminal.Model.DefaultSide);
-            terminal.CalculateUTurnLimitsForTerminal(Width, Height);
+            ArrangeAllTerminals();
         }
 
         public virtual void RemoveTerminal(Terminal terminal)
@@ -82,7 +81,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             _nameToTerminalMap.Remove(terminal.Name);
             Terminals.Remove(terminal);
             Model.RemoveTerminal(terminal.Model);
-            RepositionAllTerminalsOnEdge(terminal.Model.DefaultSide);
+            ArrangeAllTerminals();
         }
 
         public void HighlightTerminalsOfType<T>(Type type)
@@ -160,7 +159,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             base.OnPropertyChanged(propertyName);
             if (propertyName == nameof(Width) || propertyName == nameof(Height))
             {
-                FixAllTerminals();
+                ArrangeAllTerminals();
             }
             else if (_pluginNodeSettingCache.TryGetValue(propertyName, out PropertyInfo propertyInfo))
             {
@@ -243,84 +242,10 @@ namespace DiiagramrAPI.Editor.Diagrams
             AddTerminal(terminal);
         }
 
-        private Direction CalculateClosestDirection(double x, double y)
+        private void ArrangeAllTerminals()
         {
-            var closestEastWest = x < Width - x ? Direction.West : Direction.East;
-            var closestNorthSouth = y < Height - y ? Direction.North : Direction.South;
-            var closestEastWestDistance = Math.Min(x, Width - x);
-            var closestNorthSouthDistance = Math.Min(y, Height - y);
-            return closestEastWestDistance < closestNorthSouthDistance ? closestEastWest : closestNorthSouth;
-        }
-
-        private void DropAndArrangeTerminal(Terminal terminal, Direction edge)
-        {
-            if (View == null)
-            {
-                _viewLoadedActions.Add(() => DropAndArrangeTerminal(terminal, edge));
-            }
-            else
-            {
-                terminal.SetTerminalDirection(edge);
-                var oldEdge = CalculateClosestDirection(terminal.XRelativeToNode, terminal.YRelativeToNode);
-                MoveTerminalToEdge(terminal, edge, 0.50f);
-                RepositionAllTerminalsOnEdge(oldEdge);
-                RepositionAllTerminalsOnEdge(edge);
-                SetUTurnLimitForTerminals();
-            }
-        }
-
-        private void MoveTerminalToEdge(Terminal terminal, Direction edge, double precentAlongEdge)
-        {
-            const int extraSpace = 7;
-            var widerWidth = Width + (extraSpace * 2);
-            var tallerHeight = Height + (extraSpace * 2);
-            switch (edge)
-            {
-                case Direction.North:
-                    terminal.XRelativeToNode = (widerWidth * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
-                    terminal.YRelativeToNode = Diagram.NodeBorderWidth;
-                    break;
-
-                case Direction.East:
-                    terminal.XRelativeToNode = Width + Diagram.NodeBorderWidth;
-                    terminal.YRelativeToNode = (tallerHeight * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
-                    break;
-
-                case Direction.South:
-                    terminal.XRelativeToNode = (widerWidth * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
-                    terminal.YRelativeToNode = Height + Diagram.NodeBorderWidth;
-                    break;
-
-                case Direction.West:
-                    terminal.XRelativeToNode = Diagram.NodeBorderWidth;
-                    terminal.YRelativeToNode = (tallerHeight * precentAlongEdge) - extraSpace + Diagram.NodeBorderWidth;
-                    break;
-            }
-        }
-
-        private void FixAllTerminals()
-        {
-            RepositionAllTerminalsOnEdge(Direction.North);
-            RepositionAllTerminalsOnEdge(Direction.East);
-            RepositionAllTerminalsOnEdge(Direction.South);
-            RepositionAllTerminalsOnEdge(Direction.West);
-            SetUTurnLimitForTerminals();
-        }
-
-        private void RepositionAllTerminalsOnEdge(Direction edge)
-        {
-            var terminalsOnEdge = Terminals.Where(t => t.Model.DefaultSide == edge).ToArray();
-            var increment = 1 / (terminalsOnEdge.Length + 1.0f);
-            for (var i = 0; i < terminalsOnEdge.Length; i++)
-            {
-                MoveTerminalToEdge(terminalsOnEdge[i], edge, increment * (i + 1.0f));
-                terminalsOnEdge[i].EdgeIndex = i;
-            }
-        }
-
-        private void SetUTurnLimitForTerminals()
-        {
-            Terminals.ForEach(t => t.CalculateUTurnLimitsForTerminal(Width, Height));
+            var placer = new TerminalPlacer(Width, Height);
+            placer.ArrangeTerminals(Terminals);
         }
     }
 }

@@ -65,3 +65,6 @@ dotnet_diagnostic.SA1407.severity = none
 
 # SA1602: Enumeration items should be documented
 dotnet_diagnostic.SA1602.severity = none
+
+# IDE0039: Use local function
+csharp_style_pattern_local_over_anonymous_function = false:suggestion

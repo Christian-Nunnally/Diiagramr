@@ -22,14 +22,11 @@ namespace DiiagramrAPI.Commands
 
         protected override void Execute(ITransactor transactor, object parameter)
         {
-            if (parameter is IEnumerable<Node> nodes)
+            foreach (var node in _nodes)
             {
-                foreach (var node in nodes)
+                if (_nodeToSizeMap.ContainsKey(node))
                 {
-                    if (_nodeToSizeMap.ContainsKey(node))
-                    {
-                        transactor.Transact(new ResizeNodeCommand(_nodeToSizeMap[node]), node);
-                    }
+                    transactor.Transact(new ResizeNodeCommand(_nodeToSizeMap[node]), node);
                 }
             }
         }

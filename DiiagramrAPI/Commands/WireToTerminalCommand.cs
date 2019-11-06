@@ -9,15 +9,13 @@ namespace DiiagramrAPI.Commands
     {
         private readonly Diagram _diagram;
         private readonly TerminalModel _fromTerminal;
-        private readonly ICommand _removeWireCommand;
-        private bool _animateWireWhenLoaded;
+        private readonly bool _animateWireWhenLoaded;
 
         public WireToTerminalCommand(Diagram diagram, TerminalModel fromTerminal, bool animateWireWhenLoaded = false)
         {
             _diagram = diagram;
             _fromTerminal = fromTerminal;
             _animateWireWhenLoaded = animateWireWhenLoaded;
-            _removeWireCommand = new DeleteWireCommand(_diagram);
         }
 
         public Action Execute(object parameter)

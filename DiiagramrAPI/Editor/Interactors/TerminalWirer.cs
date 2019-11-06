@@ -120,7 +120,6 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
-            var wireModel = new WireModel();
             var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.Model, animateWire);
             transactor.Transact(wireToTerminalCommand, endTerminal.Model);
         }

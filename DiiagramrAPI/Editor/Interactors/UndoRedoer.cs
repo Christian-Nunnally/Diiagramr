@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class UndoRedoer : DiagramInteractor
     {
-        private ITransactor _commandExecutor;
+        private readonly ITransactor _commandExecutor;
 
         public UndoRedoer(Func<ITransactor> commandExecutorFactory)
         {

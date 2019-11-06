@@ -7,7 +7,7 @@ namespace DiiagramrAPI.Commands
 {
     public class DeleteWireCommand : ICommand
     {
-        private Diagram _diagram;
+        private readonly Diagram _diagram;
 
         public DeleteWireCommand(Diagram diagram)
         {

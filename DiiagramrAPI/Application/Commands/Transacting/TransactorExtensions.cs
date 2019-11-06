@@ -7,5 +7,10 @@
             var commandWithCustomUndo = new CustomUndoCommand(command, undoCommand);
             transactor.Transact(commandWithCustomUndo, parameter);
         }
+
+        public static void Transact(this ITransactor transactor, ICommand command)
+        {
+            transactor.Transact(command, parameter: null);
+        }
     }
 }

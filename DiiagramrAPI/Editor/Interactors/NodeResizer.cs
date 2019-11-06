@@ -145,8 +145,8 @@ namespace DiiagramrAPI.Editor.Interactors
             Mouse.SetCursor(Cursors.Arrow);
             var resizeCommand = new ResizeNodesToCurrentSizeCommand(_resizingNodes);
             var positionAdjustmentCommand = new MoveNodesToCurrentPositionCommand(_resizingNodes);
-            _transactor.Transact(resizeCommand, _undoResizeCommand, _resizingNodes);
-            _transactor.Transact(positionAdjustmentCommand, _undoPositionAdjustmentCommand, _resizingNodes);
+            _transactor.Transact(resizeCommand, _undoResizeCommand);
+            _transactor.Transact(positionAdjustmentCommand, _undoPositionAdjustmentCommand);
         }
 
         private void ProcessMouseMoved(Diagram diagram, Point mousePosition)

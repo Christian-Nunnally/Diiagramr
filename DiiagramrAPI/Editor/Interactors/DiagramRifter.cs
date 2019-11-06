@@ -108,7 +108,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
 
             var doRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
-            _transactor.Transact(doRiftCommand, _undoRiftCommand, _nodesBeingRifted);
+            _transactor.Transact(doRiftCommand, _undoRiftCommand, null);
         }
 
         private void CheckIfRiftShouldStart(double riftDeltaX, double riftDeltaY)

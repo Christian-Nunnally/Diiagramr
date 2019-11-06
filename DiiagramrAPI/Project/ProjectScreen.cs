@@ -5,15 +5,10 @@ namespace DiiagramrAPI.Project
 {
     public class ProjectScreen : ViewModel
     {
-        private readonly IProjectManager _projectManager;
-
         public ProjectScreen(
             Func<ProjectExplorer> projectExplorerViewModelFactory,
-            Func<DiagramWell> diagramWellViewModelFactory,
-            Func<IProjectManager> projectManagerFactory)
+            Func<DiagramWell> diagramWellViewModelFactory)
         {
-            _projectManager = projectManagerFactory.Invoke();
-
             ProjectExplorerViewModel = projectExplorerViewModelFactory.Invoke();
             DiagramWellViewModel = diagramWellViewModelFactory.Invoke();
         }

@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Editor
     public class DirectEditTextBoxAdorner : Adorner
     {
         private readonly TextBox textBox;
-        private VisualCollection visualChildren;
+        private readonly VisualCollection visualChildren;
 
         public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal)
             : base(adornedElement)

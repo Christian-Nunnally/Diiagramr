@@ -97,6 +97,7 @@
     <Compile Include="Editor\Interactors\UndoRedoer.cs" />
     <Compile Include="Editor\Interactors\WireDeleter.cs" />
     <Compile Include="Editor\Diagrams\IWireableType.cs" />
+    <Compile Include="Editor\TerminalPlacer.cs" />
     <Compile Include="Editor\WirePathingAlgorithum.cs" />
     <Compile Include="Service\Dialog\IFileDialog.cs" />
     <Compile Include="Service\Dialog\OpenFileDialog.cs" />

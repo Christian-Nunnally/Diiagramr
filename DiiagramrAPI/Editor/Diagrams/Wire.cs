@@ -21,12 +21,12 @@ namespace DiiagramrAPI.Editor.Diagrams
         private const int WireDataAnimationFrames = 15;
         private const int WireDataAnimationRepeatDelay = 1000;
         private readonly bool _showDataPropagation = false;
+        private readonly List<Point[]> _wireDrawAnimationFrames = new List<Point[]>();
+        private readonly WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
+        private readonly List<Point> _dataVisualAnimationFrames = new List<Point>();
         private bool _configuringWirePoints;
-        private List<Point> _dataVisualAnimationFrames = new List<Point>();
         private bool _isDataVisualAnimationFramesValid;
         private bool _showingDataPropagation;
-        private List<Point[]> _wireDrawAnimationFrames = new List<Point[]>();
-        private WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
 
         public Wire(WireModel wire)
         {

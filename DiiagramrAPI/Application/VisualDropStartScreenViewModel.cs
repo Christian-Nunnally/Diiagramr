@@ -18,7 +18,7 @@ namespace DiiagramrAPI.Application
         private const int _recentProjectMaxCharacterLength = 10;
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
-        private IProjectFileService _projectFileService;
+        private readonly IProjectFileService _projectFileService;
 
         public VisualDropStartScreenViewModel(Func<IProjectFileService> projectFileServiceFactory)
         {

@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Commands
 {
     public class DeleteNodeCommand : ICommand
     {
-        private Diagram _diagram;
+        private readonly Diagram _diagram;
 
         public DeleteNodeCommand(Diagram diagram)
         {
