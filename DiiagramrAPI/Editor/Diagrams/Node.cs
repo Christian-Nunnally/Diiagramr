@@ -18,6 +18,11 @@ namespace DiiagramrAPI.Editor.Diagrams
         private readonly IDictionary<string, Terminal> _nameToTerminalMap = new Dictionary<string, Terminal>();
         private readonly List<Action> _viewLoadedActions = new List<Action>();
 
+        public Node()
+        {
+            _viewLoadedActions.Add(ArrangeAllTerminals);
+        }
+
         public virtual ObservableCollection<Terminal> Terminals { get; } = new ObservableCollection<Terminal>();
 
         public virtual double MinimumHeight { get; set; } = Diagram.GridSnapInterval;
@@ -37,13 +42,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         public virtual double X
         {
             get => Model?.X ?? 0;
-            set => X.SetIfNotNull(() => X = value);
+            set => Model.SetIfNotNull(() => Model.X = value);
         }
 
         public virtual double Y
         {
             get => Model?.Y ?? 0;
-            set => Y.SetIfNotNull(() => Y = value);
+            set => Model.SetIfNotNull(() => Model.Y = value);
         }
 
         public virtual double Width

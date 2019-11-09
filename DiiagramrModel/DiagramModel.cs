@@ -1,7 +1,7 @@
 namespace DiiagramrModel
 {
     using PropertyChanged;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Runtime.Serialization;
 
     [DataContract]
@@ -20,7 +20,7 @@ namespace DiiagramrModel
         public bool NotNameEditMode => !NameEditMode;
 
         [DataMember]
-        public virtual List<NodeModel> Nodes { get; set; } = new List<NodeModel>();
+        public virtual ObservableCollection<NodeModel> Nodes { get; set; } = new ObservableCollection<NodeModel>();
 
         public virtual void AddNode(NodeModel nodeModel)
         {
