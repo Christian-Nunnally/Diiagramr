@@ -65,7 +65,7 @@ namespace DiiagramrUnitTests.Legacy.ViewModelTests
         {
             _nodeMoq = new Mock<NodeModel>("node");
             _pluginNodeMoq = new Mock<Node>();
-            _pluginNodeMoq.SetupGet(n => n.Model).Returns(_nodeMoq.Object);
+            _pluginNodeMoq.SetupGet(n => n.NodeModel).Returns(_nodeMoq.Object);
             _diagramMoq.SetupGet(d => d.Nodes).Returns(new List<NodeModel> { _nodeMoq.Object });
             _nodeProviderMoq.Setup(n => n.LoadNodeViewModelFromNode(It.IsAny<NodeModel>())).Returns(_pluginNodeMoq.Object);
             _diagramViewModel = new Diagram(_diagramMoq.Object, _nodeProviderMoq.Object, new List<DiagramInteractor>());

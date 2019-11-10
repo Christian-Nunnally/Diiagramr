@@ -20,8 +20,11 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public Node()
         {
+            TerminalsCollection = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
             _viewLoadedActions.Add(ArrangeAllTerminals);
         }
+
+        public ViewModelCollection<Terminal, TerminalModel> TerminalsCollection { get; }
 
         public virtual ObservableCollection<Terminal> Terminals { get; } = new ObservableCollection<Terminal>();
 
@@ -33,7 +36,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual bool IsSelected { get; set; }
 
-        public virtual NodeModel Model { get; set; }
+        public virtual NodeModel NodeModel => Model as NodeModel;
 
         public virtual string Name { get; set; }
 
@@ -41,33 +44,33 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual double X
         {
-            get => Model?.X ?? 0;
-            set => Model.SetIfNotNull(() => Model.X = value);
+            get => NodeModel?.X ?? 0;
+            set => NodeModel.RunIfNotNull(() => NodeModel.X = value);
         }
 
         public virtual double Y
         {
-            get => Model?.Y ?? 0;
-            set => Model.SetIfNotNull(() => Model.Y = value);
+            get => NodeModel?.Y ?? 0;
+            set => NodeModel.RunIfNotNull(() => NodeModel.Y = value);
         }
 
         public virtual double Width
         {
-            get => Model?.Width ?? MinimumWidth;
+            get => NodeModel?.Width ?? MinimumWidth;
             set
             {
-                Model?.Width.SetIfNotNull(() => Model.Width = Math.Max(value, MinimumWidth));
-                MinimumWidth = Model == null ? value : MinimumWidth;
+                NodeModel?.Width.RunIfNotNull(() => NodeModel.Width = Math.Max(value, MinimumWidth));
+                MinimumWidth = NodeModel == null ? value : MinimumWidth;
             }
         }
 
         public virtual double Height
         {
-            get => Model?.Height ?? MinimumHeight;
+            get => NodeModel?.Height ?? MinimumHeight;
             set
             {
-                Model?.Height.SetIfNotNull(() => Model.Height = Math.Max(value, MinimumHeight));
-                MinimumHeight = Model == null ? value : MinimumHeight;
+                NodeModel?.Height.RunIfNotNull(() => NodeModel.Height = Math.Max(value, MinimumHeight));
+                MinimumHeight = NodeModel == null ? value : MinimumHeight;
             }
         }
 
@@ -77,7 +80,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             _nameToTerminalMap[terminal.Name] = terminal;
             Terminals.Add(terminal);
-            Model.AddTerminal(terminal.Model);
+            NodeModel.AddTerminal(terminal.Model);
             ArrangeAllTerminals();
         }
 
@@ -85,7 +88,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             _nameToTerminalMap.Remove(terminal.Name);
             Terminals.Remove(terminal);
-            Model.RemoveTerminal(terminal.Model);
+            NodeModel.RemoveTerminal(terminal.Model);
             ArrangeAllTerminals();
         }
 
@@ -96,16 +99,16 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual void AttachToModel(NodeModel nodeModel)
         {
-            if (Model == null)
+            if (NodeModel == null)
             {
                 Model = nodeModel;
-                Model.Name = GetType().FullName;
+                NodeModel.Name = GetType().FullName;
                 InitializePluginNodeSettings();
                 LoadTerminalViewModels();
                 CreateTerminals();
-                Model.Width = MinimumWidth;
-                Model.Height = MinimumHeight;
-                Model.PropertyChanged += ModelPropertyChanged;
+                NodeModel.Width = MinimumWidth;
+                NodeModel.Height = MinimumHeight;
+                NodeModel.PropertyChanged += ModelPropertyChanged;
             }
         }
 
@@ -113,7 +116,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             PluginNodeSettings.ForEach(info => _pluginNodeSettingCache.Add(info.Name, info));
             PluginNodeSettings.ForEach(PersistProperty);
-            PluginNodeSettings.ForEach(info => info.SetValue(this, Model?.GetVariable(info.Name)));
+            PluginNodeSettings.ForEach(info => info.SetValue(this, NodeModel?.GetVariable(info.Name)));
         }
 
         public void MouseEntered()
@@ -169,7 +172,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             else if (_pluginNodeSettingCache.TryGetValue(propertyName, out PropertyInfo propertyInfo))
             {
                 var value = propertyInfo.GetValue(this);
-                Model?.SetVariable(propertyName, value);
+                NodeModel?.SetVariable(propertyName, value);
             }
         }
 
@@ -192,7 +195,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void LoadTerminalViewModels()
         {
-            foreach (var terminal in Model.Terminals)
+            foreach (var terminal in NodeModel.Terminals)
             {
                 Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
             }
@@ -200,9 +203,9 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void PersistProperty(PropertyInfo info)
         {
-            if (!Model.PersistedVariables.ContainsKey(info.Name))
+            if (!NodeModel.PersistedVariables.ContainsKey(info.Name))
             {
-                Model.SetVariable(info.Name, info.GetValue(this));
+                NodeModel.SetVariable(info.Name, info.GetValue(this));
             }
         }
 
@@ -210,8 +213,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             switch (e.PropertyName)
             {
-                case nameof(NodeModel.X):
-                case nameof(NodeModel.Y):
+                case nameof(DiiagramrModel.NodeModel.X):
+                case nameof(DiiagramrModel.NodeModel.Y):
                     OnPropertyChanged(e.PropertyName);
                     break;
             }

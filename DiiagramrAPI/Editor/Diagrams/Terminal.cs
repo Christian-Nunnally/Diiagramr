@@ -15,7 +15,6 @@ namespace DiiagramrAPI.Editor.Diagrams
     {
         public const double TerminalHeight = 2 * Diagram.NodeBorderWidth;
         public const double TerminalWidth = TerminalHeight - 10;
-        private object _data;
 
         public Terminal(TerminalModel terminal)
         {
@@ -33,11 +32,10 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual object Data
         {
-            get => _data;
+            get => Model.Data;
 
             set
             {
-                _data = value;
                 Model.Data = value;
                 DataChanged?.Invoke(Data);
             }

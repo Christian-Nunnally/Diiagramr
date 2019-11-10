@@ -1,6 +1,7 @@
 namespace DiiagramrModel
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Runtime.Serialization;
 
@@ -35,7 +36,7 @@ namespace DiiagramrModel
         public virtual double Height { get; set; }
 
         [DataMember]
-        public List<TerminalModel> Terminals { get; set; } = new List<TerminalModel>();
+        public ObservableCollection<TerminalModel> Terminals { get; set; } = new ObservableCollection<TerminalModel>();
 
         [DataMember]
         public virtual double Width { get; set; }

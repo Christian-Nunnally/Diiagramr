@@ -80,12 +80,12 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void AddNode(Node node)
         {
-            if (node.Model == null)
+            if (node.NodeModel == null)
             {
                 throw new InvalidOperationException("Can not add a node to the diagram before it has been initialized");
             }
 
-            Model.AddNode(node.Model);
+            Model.AddNode(node.NodeModel);
             AddNodeViewModel(node);
         }
 
@@ -196,7 +196,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void RemoveNode(Node viewModel)
         {
-            Model.RemoveNode(viewModel.Model);
+            Model.RemoveNode(viewModel.NodeModel);
             Nodes.Remove(viewModel);
             UpdateDiagramBoundingBox();
             BoundingBoxVisible = Nodes.Any();
@@ -283,7 +283,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void AddWiresForNode(Node viewModel)
         {
-            foreach (var inputTerminal in viewModel.Model.Terminals.OfType<InputTerminalModel>())
+            foreach (var inputTerminal in viewModel.NodeModel.Terminals.OfType<InputTerminalModel>())
             {
                 inputTerminal.ConnectedWires
                     .Select(w => new Wire(w))

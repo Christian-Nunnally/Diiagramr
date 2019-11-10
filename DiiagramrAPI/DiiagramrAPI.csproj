@@ -76,6 +76,7 @@
     <Compile Include="Application\ShellCommands\FileSeparatorCommand1.cs" />
     <Compile Include="Application\ShellCommands\FileSeparatorCommand2.cs" />
     <Compile Include="Application\ShellCommands\HelpSeparatorCommand1.cs" />
+    <Compile Include="Application\ViewModelCollection.cs" />
     <Compile Include="Commands\ResizeNodeCommand.cs" />
     <Compile Include="Commands\MoveNodeCommand.cs" />
     <Compile Include="Commands\MoveNodesToCurrentPositionCommand.cs" />

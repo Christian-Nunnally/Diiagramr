@@ -46,7 +46,7 @@
             method.Invoke(target, new[] { data });
         };
 
-        public static void SetIfNotNull(this object value, Action setter)
+        public static void RunIfNotNull(this object value, Action setter)
         {
             if (value != null)
             {

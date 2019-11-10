@@ -1,10 +1,13 @@
-﻿using Stylet;
+﻿using DiiagramrModel;
+using Stylet;
 using System.Windows.Documents;
 
 namespace DiiagramrAPI.Application
 {
     public abstract class ViewModel : Screen
     {
+        public ModelBase Model { get; set; }
+
         public Adorner Adorner { get; private set; }
 
         public virtual bool Visible { get; set; } = true;

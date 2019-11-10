@@ -23,8 +23,8 @@ namespace DiiagramrUnitTests.Legacy.ServiceTests
             nodeViewModel.X++;
             nodeViewModel.Y++;
 
-            Assert.AreEqual(nodeViewModel.Model.X, nodeViewModel.X);
-            Assert.AreEqual(nodeViewModel.Model.Y, nodeViewModel.Y);
+            Assert.AreEqual(nodeViewModel.NodeModel.X, nodeViewModel.X);
+            Assert.AreEqual(nodeViewModel.NodeModel.Y, nodeViewModel.Y);
         }
 
         [TestMethod]
@@ -44,7 +44,7 @@ namespace DiiagramrUnitTests.Legacy.ServiceTests
 
             var nodeViewModel = _nodeProvider.CreateNodeFromName(_nodeViewModelMoq.Object.GetType().FullName);
 
-            Assert.IsNotNull(nodeViewModel.Model);
+            Assert.IsNotNull(nodeViewModel.NodeModel);
         }
 
         [TestInitialize]
@@ -124,7 +124,7 @@ namespace DiiagramrUnitTests.Legacy.ServiceTests
 
             var nodeViewModel = _nodeProvider.LoadNodeViewModelFromNode(_testNode);
 
-            Assert.AreEqual(nodeViewModel.Model, _testNode);
+            Assert.AreEqual(nodeViewModel.NodeModel, _testNode);
         }
 
         [TestMethod]
