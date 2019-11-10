@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="CoreUilities.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="FeatureToggles.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
