@@ -55,7 +55,6 @@
   <ItemGroup>
     <Compile Include="DiagramModel.cs" />
     <Compile Include="Direction.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="InputTerminalModel.cs" />
     <Compile Include="ModelBase.cs" />
     <Compile Include="ModelValidationException.cs" />

@@ -16,7 +16,7 @@ namespace DiiagramrUnitTests.Editor.Diagrams
         private class TestNode : Node
         {
             [InputTerminal(nameof(Input), DiiagramrModel.Direction.North)]
-            public void Input(int number)
+            public void Input(int _)
             {
             }
         }

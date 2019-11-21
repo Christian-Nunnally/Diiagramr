@@ -88,11 +88,9 @@
     <Compile Include="Legacy\ServiceTests\ProjectFileServiceTest.cs" />
     <Compile Include="Legacy\ServiceTests\DiagramCopierTest.cs" />
     <Compile Include="Legacy\ServiceTests\LibraryManagerTest.cs" />
-    <Compile Include="Legacy\ViewModelTests\DiagramViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\DiagramWellViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\ProjectExplorerViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\StartScreenViewModelTest.cs" />
-    <Compile Include="Legacy\ViewModelTests\ProjectScreenViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\Window\LibrarySourceManagerWindowViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\Window\LibraryManagerWindowViewModelTest.cs" />
     <Compile Include="Legacy\ViewModelTests\NodeSelectorViewModelTest.cs" />
