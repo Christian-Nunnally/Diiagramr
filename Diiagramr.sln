@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diiagramr", "Diiagramr\Diiagramr.csproj", "{6EFB487A-7176-4F27-92BA-2401FC1B6629}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B781F174-51D7-42C9-8536-579F8159DBE9} = {B781F174-51D7-42C9-8536-579F8159DBE9}
+		{16495FAF-39FC-4933-9B36-55EC512CBBCA} = {16495FAF-39FC-4933-9B36-55EC512CBBCA}
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6} = {94AFCFBE-7A33-486A-9E80-1C70543EF8B6}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrUnitTest", "DiiagramrUnitTest\DiiagramrUnitTest.csproj", "{4684600E-834A-43C6-A421-22F0EF0DBB09}"
 EndProject
@@ -16,6 +21,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrRepositoryServer", "DiiagramrRepositoryServer\DiiagramrRepositoryServer.csproj", "{D2793823-C598-4521-8AC7-098DF83717B0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrNodes", "DiiagramrNodes\DiiagramrNodes.csproj", "{16495FAF-39FC-4933-9B36-55EC512CBBCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrCore2", "DiiagramrCore2\DiiagramrCore2.csproj", "{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrFadeCandy", "DiiagramrFadeCandy\DiiagramrFadeCandy.csproj", "{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisualDrop", "VisualDrop\VisualDrop.csproj", "{B781F174-51D7-42C9-8536-579F8159DBE9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +92,30 @@ Global
 		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|x86.ActiveCfg = Release|Any CPU
 		{16495FAF-39FC-4933-9B36-55EC512CBBCA}.Release|x86.Build.0 = Release|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Debug|x86.Build.0 = Debug|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Release|x86.ActiveCfg = Release|Any CPU
+		{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}.Release|x86.Build.0 = Release|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Debug|x86.Build.0 = Debug|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Release|x86.ActiveCfg = Release|Any CPU
+		{94AFCFBE-7A33-486A-9E80-1C70543EF8B6}.Release|x86.Build.0 = Release|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Debug|x86.Build.0 = Debug|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|x86.ActiveCfg = Release|Any CPU
+		{B781F174-51D7-42C9-8536-579F8159DBE9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
