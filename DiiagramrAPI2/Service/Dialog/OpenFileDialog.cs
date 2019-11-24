@@ -9,7 +9,7 @@ namespace DiiagramrAPI.Service.Dialog
 
         public OpenFileDialog()
         {
-            throw new NotSupportedException("Not yet supported in .net core version");
+            // throw new NotSupportedException("Not yet supported in .net core version");
             // _dialog = new System.Windows.Forms.OpenFileDialog();
         }
 

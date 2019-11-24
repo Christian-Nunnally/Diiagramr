@@ -192,11 +192,16 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
+        private static SolidColorBrush GetBrushFromColor(System.Drawing.Color color)
+        {
+            return new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+        }
+
         private void SetTerminalColor()
         {
             var color = TypeColorProvider.Instance.GetColorForType(Model.Type);
-            TerminalBackgroundBrush = new SolidColorBrush(color);
-            TerminalBackgroundMouseOverBrush = new SolidColorBrush(CoreUilities.ChangeColorBrightness(color, 0.5f));
+            TerminalBackgroundBrush = GetBrushFromColor(color);
+            TerminalBackgroundMouseOverBrush = GetBrushFromColor(CoreUilities.ChangeColorBrightness(color, 0.5f));
         }
 
         private void SetTerminalRotationBasedOnDirection()

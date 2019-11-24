@@ -6,4 +6,159 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
+    <None Remove="Resources\Fonts\Aldrich\OFL.txt" />
+    <None Remove="Resources\load.png" />
+    <None Remove="Resources\loadHover.png" />
+    <None Remove="Resources\logo32x32_e3S_icon.ico" />
+    <None Remove="Resources\new.png" />
+    <None Remove="Resources\newHover.png" />
+    <None Remove="Resources\startscreenclear.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Application\App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include="Application\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stylet" Version="1.3.0.190" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrAPI2\DiiagramrAPI2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
+    <Resource Include="Resources\Fonts\Aldrich\OFL.txt" />
+    <Resource Include="Resources\load.png" />
+    <Resource Include="Resources\loadHover.png" />
+    <Resource Include="Resources\logo32x32_e3S_icon.ico" />
+    <Resource Include="Resources\new.png" />
+    <Resource Include="Resources\newHover.png" />
+    <Resource Include="Resources\startscreenclear.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Application\WindowStyle.xaml.cs">
+      <DependentUpon>WindowStyle.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Application\ShellView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\StartScreenView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Tools\ContextMenuView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Tools\LibraryManagerWindowView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Tools\LibrarySourceManagerWindowView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Tools\ToolbarView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\VisualDropStartScreenView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\WindowStyle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\DiagramInputNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\DiagramInteractorManagerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\DiagramOutputNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\DiagramView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\InputTerminalView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\DiagramPannerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\DiagramRifterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\DiagramZoomerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\HotkeyHelpView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\LassoNodeSelectorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\NodeDeleterView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\NodeDraggerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\NodePaletteView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\NodePlacerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\NodeResizerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\PointSelectorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\Interactors\TerminalWirerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\NodeStyle.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\OutputTerminalView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\TerminalView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Editor\WireView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Project\DiagramWellView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Project\ProjectExplorerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Project\ProjectScreenView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Colors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\LightTheme.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
 </Project>

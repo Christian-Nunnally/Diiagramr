@@ -50,7 +50,7 @@ namespace DiiagramrAPI.Application
                 _models.RunIfNotNull(() => _models.CollectionChanged -= ModelCollectionChanged);
                 _models = value;
                 _models.RunIfNotNull(() => _models.CollectionChanged += ModelCollectionChanged);
-                ViewModels.AddRange(_models.Select(_viewModelFactory));
+                _models.RunIfNotNull(() => ViewModels.AddRange(_models.Select(_viewModelFactory)));
             }
         }
 

@@ -124,6 +124,11 @@ namespace DiiagramrAPI.Editor.Diagrams
             return interpolatedPoint;
         }
 
+        private static SolidColorBrush GetBrushFromColor(System.Drawing.Color color)
+        {
+            return new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+        }
+
         private void AddDataVisualAnimationFrame(Point p)
         {
             var pointOffsetForVisualToBeCentered = new Point(p.X - _dataVisualRadius, p.Y - _dataVisualRadius);
@@ -329,7 +334,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var typeToGetColorOf = terminalToGetColorFrom.Type;
             var color = TypeColorProvider.Instance.GetColorForType(typeToGetColorOf);
             var darkenedColor = CoreUilities.ChangeColorBrightness(color, DimWireColorAmount);
-            LineColorBrush = new SolidColorBrush(darkenedColor);
+            LineColorBrush = GetBrushFromColor(darkenedColor);
         }
 
         private void ValidateDataVisualAnimationFrames()

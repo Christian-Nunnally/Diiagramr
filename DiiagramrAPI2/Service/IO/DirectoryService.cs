@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Security.AccessControl;
 
 namespace DiiagramrAPI.Service.IO
 {
@@ -11,9 +10,7 @@ namespace DiiagramrAPI.Service.IO
     {
         public void CreateDirectory(string path)
         {
-            var directorySecurity = new DirectorySecurity();
-            directorySecurity.AddAccessRule(new FileSystemAccessRule("Users", FileSystemRights.FullControl, AccessControlType.Allow));
-            Directory.CreateDirectory(path, directorySecurity);
+            Directory.CreateDirectory(path);
         }
 
         public void Delete(string path, bool recursive)
