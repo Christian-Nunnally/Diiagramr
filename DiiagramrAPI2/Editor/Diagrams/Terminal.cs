@@ -206,24 +206,13 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void SetTerminalRotationBasedOnDirection()
         {
-            switch (Model.DefaultSide)
+            TerminalRotation = Model.DefaultSide switch
             {
-                case Direction.North:
-                    TerminalRotation = 0;
-                    break;
-
-                case Direction.East:
-                    TerminalRotation = 90;
-                    break;
-
-                case Direction.South:
-                    TerminalRotation = 180;
-                    break;
-
-                default:
-                    TerminalRotation = 270;
-                    break;
-            }
+                Direction.North => 0,
+                Direction.East => 90,
+                Direction.South => 180,
+                _ => 270,
+            };
         }
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)

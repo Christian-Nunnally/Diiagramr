@@ -1,6 +1,7 @@
 ﻿using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Editor.Diagrams;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace DiiagramrAPI.Commands
@@ -12,8 +13,8 @@ namespace DiiagramrAPI.Commands
 
         public MoveNodesToCurrentPositionCommand(IEnumerable<Node> nodes)
         {
-            _nodes = nodes;
-            foreach (var node in nodes)
+            _nodes = nodes ?? Enumerable.Empty<Node>();
+            foreach (var node in _nodes)
             {
                 _nodeToPositionMap[node] = new Point(node.X, node.Y);
             }

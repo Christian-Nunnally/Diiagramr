@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(SolutionDir)DiiagramrPrimitives2\bin\Debug\netcoreapp3.0\DiiagramrPrimitives2.dll&quot; &quot;$(SolutionDir)DiiagramrApplication\bin\Debug\netcoreapp3.0\Plugins\&quot; /Y" />
+  </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrAPI2\DiiagramrAPI2.csproj" />
+    <ProjectReference Include="..\DiiagramrModel2\DiiagramrModel2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="NumberNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="IndexNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>
