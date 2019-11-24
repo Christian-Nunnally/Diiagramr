@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>DiiagramrAPI</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Stylet" Version="1.3.0.190" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrCore2\DiiagramrCore2.csproj" />
+    <ProjectReference Include="..\DiiagramrModel2\DiiagramrModel2.csproj" />
+  </ItemGroup>
+
+</Project>
