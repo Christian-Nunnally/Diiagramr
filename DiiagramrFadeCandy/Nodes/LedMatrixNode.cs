@@ -22,7 +22,7 @@ using WicBitmap = SharpDX.WIC.Bitmap;
 
 namespace DiiagramrFadeCandy
 {
-    public class LedMatrixViewModel : Node, ILedDataProvider
+    public class LedMatrixNode : Node, ILedDataProvider
     {
         private const int FrameDelay = 33;
         private static readonly ImagingFactory wicFactory = new ImagingFactory();
@@ -40,7 +40,7 @@ namespace DiiagramrFadeCandy
         private WicRenderTarget _cachedRenderTarget;
         private int _lastRenderedFrame;
 
-        public LedMatrixViewModel()
+        public LedMatrixNode()
         {
             Width = 60;
             Height = 60;
@@ -160,7 +160,7 @@ namespace DiiagramrFadeCandy
             }
         }
 
-        [InputTerminal("Driver", Direction.West)]
+        [InputTerminal("Driver", Direction.South)]
         public void LedDriverTerminalDataChanged(LedChannelDriver data)
         {
             if (data == null)
@@ -248,7 +248,7 @@ namespace DiiagramrFadeCandy
         {
             if (View != null)
             {
-                var bitmap = CopyWicBitmapToBitmap();
+                Bitmap bitmap = CopyWicBitmapToBitmap();
                 View.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
                 {
                     BitmapImageSource = ConvertBitmapToSource(bitmap);

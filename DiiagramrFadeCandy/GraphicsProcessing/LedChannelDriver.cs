@@ -126,7 +126,7 @@ namespace DiiagramrFadeCandy
 
         internal ILedDataProvider ImageDataProvider { get; set; }
 
-        public byte[] GetLedData(int frameNumber)
+        public byte[] GetLedData()
         {
             if (!ImageDataProvider?.HasData() ?? true)
             {

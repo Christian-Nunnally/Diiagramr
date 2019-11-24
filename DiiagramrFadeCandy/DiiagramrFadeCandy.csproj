@@ -10,11 +10,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DiiagramrFadeCandy</RootNamespace>
     <AssemblyName>DiiagramrFadeCandy</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,19 +73,19 @@
     <Compile Include="GraphicsProcessing\GraphicEffect\SpectrumEffect.cs" />
     <Compile Include="GraphicsProcessing\ILedDataProvider.cs" />
     <Compile Include="NodeViews\PointsToPathConverter.cs" />
-    <Compile Include="Nodes\SpectrumEffectNodeViewModel.cs" />
-    <Compile Include="Nodes\LedMatrixViewModel.cs" />
+    <Compile Include="Nodes\SpectrumEffectNode.cs" />
+    <Compile Include="Nodes\LedMatrixNode.cs" />
     <Compile Include="GraphicsProcessing\GraphicEffect\SimpleShapeEffect.cs" />
     <Compile Include="GraphicsProcessing\Color.cs" />
-    <Compile Include="Nodes\ColorNodeViewModel.cs" />
+    <Compile Include="Nodes\ColorNode.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Nodes\SineAnimationNodeViewModel.cs" />
-    <Compile Include="Nodes\ShapeEffectNodeViewModel.cs" />
-    <Compile Include="Nodes\FadeCandyNodeViewModel.cs" />
+    <Compile Include="Nodes\SineAnimationNode.cs" />
+    <Compile Include="Nodes\ShapeEffectNode.cs" />
+    <Compile Include="Nodes\FadeCandyNode.cs" />
     <Compile Include="Interoperability\FadeCandyClient.cs" />
     <Compile Include="GraphicsProcessing\LedChannelDriver.cs" />
     <Compile Include="GraphicsProcessing\PixelStrip.cs" />
@@ -103,7 +104,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NodeViews\LedMatrixView.xaml">
+    <Page Include="NodeViews\LedMatrixNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -169,7 +170,7 @@
     </PropertyGroup>
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "C:\Users\chris\source\repos\DiiagramrFadeCandy\DiiagramrFadeCandy\bin\Debug\DiiagramrFadeCandy.dll" "C:\Users\chris\source\repos\Diiagramr\Diiagramr\bin\Debug\Plugins" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)DiiagramrFadeCandy\bin\Debug\DiiagramrFadeCandy.dll" "$(SolutionDir)Diiagramr\bin\Debug\Plugins" /Y</PostBuildEvent>
   </PropertyGroup>
   <Import Project="..\..\Diiagramr\packages\Fody.3.2.16\build\Fody.targets" Condition="Exists('..\..\Diiagramr\packages\Fody.3.2.16\build\Fody.targets')" />
 </Project>

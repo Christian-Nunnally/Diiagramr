@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\..\Diiagramr\packages\PropertyChanged.Fody.2.6.1\build\PropertyChanged.Fody.props" Condition="Exists('..\..\Diiagramr\packages\PropertyChanged.Fody.2.6.1\build\PropertyChanged.Fody.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -10,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VisualDrop</RootNamespace>
     <AssemblyName>VisualDrop</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,14 +51,14 @@
     <Compile Include="AudioProcessing\AudioDeviceInformation.cs" />
     <Compile Include="AudioProcessing\AudioSourceDevice.cs" />
     <Compile Include="AudioProcessing\BasicSpectrumProvider.cs" />
-    <Compile Include="Nodes\AudioSourceViewModel.cs" />
+    <Compile Include="Nodes\AudioSourceNode.cs" />
     <Compile Include="AudioProcessing\CScoreAudioSourceAnalyzer.cs" />
-    <Compile Include="Nodes\ExponentialMovingAverageViewModel.cs" />
+    <Compile Include="Nodes\ExponentialMovingAverageNode.cs" />
     <Compile Include="AudioProcessing\IAudioSourceAnalyzer.cs" />
     <Compile Include="AudioProcessing\ISpectrumProvider.cs" />
-    <Compile Include="Nodes\SumArrayViewModel.cs" />
-    <Compile Include="Nodes\LevelThresholdViewModel.cs" />
-    <Compile Include="Nodes\NormalizeSpectrumViewModel.cs" />
+    <Compile Include="Nodes\SumArrayNode.cs" />
+    <Compile Include="Nodes\LevelThresholdNode.cs" />
+    <Compile Include="Nodes\NormalizeSpectrumNode.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -74,23 +74,23 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="NodeViews\AudioSourceView.xaml">
+    <Page Include="NodeViews\AudioSourceNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NodeViews\ExponentialMovingAverageView.xaml">
+    <Page Include="NodeViews\ExponentialMovingAverageNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NodeViews\SumArrayView.xaml">
+    <Page Include="NodeViews\SumArrayNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NodeViews\LevelThresholdView.xaml">
+    <Page Include="NodeViews\LevelThresholdNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="NodeViews\NormalizeSpectrumView.xaml">
+    <Page Include="NodeViews\NormalizeSpectrumNodeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -134,17 +134,13 @@
       <Project>{27b53540-1ffb-490c-9db1-d829179869ea}</Project>
       <Name>DiiagramrAPI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj">
+      <Project>{5385FE31-C520-4507-A212-CA6823E06155}</Project>
+      <Name>DiiagramrModel</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\..\Diiagramr\packages\Fody.4.2.1\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Diiagramr\packages\Fody.4.2.1\build\Fody.targets'))" />
-    <Error Condition="!Exists('..\..\Diiagramr\packages\PropertyChanged.Fody.2.6.1\build\PropertyChanged.Fody.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\Diiagramr\packages\PropertyChanged.Fody.2.6.1\build\PropertyChanged.Fody.props'))" />
-  </Target>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "C:\Users\chris\source\repos\VisualDrop\VisualDrop\bin\Debug\VisualDrop.dll" "C:\Users\chris\source\repos\Diiagramr\Diiagramr\bin\Debug\Plugins" /Y</PostBuildEvent>
+    <PostBuildEvent>xcopy "$(SolutionDir)VisualDrop\bin\Debug\VisualDrop.dll" "$(SolutionDir)Diiagramr\bin\Debug\Plugins" /Y</PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\..\Diiagramr\packages\Fody.4.2.1\build\Fody.targets" Condition="Exists('..\..\Diiagramr\packages\Fody.4.2.1\build\Fody.targets')" />
 </Project>

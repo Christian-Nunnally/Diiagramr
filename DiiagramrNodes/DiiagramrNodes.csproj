@@ -105,4 +105,7 @@
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy "$(SolutionDir)DiiagramrNodes\bin\Debug\DiiagramrNodes.dll" "$(SolutionDir)Diiagramr\bin\Debug\Plugins" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

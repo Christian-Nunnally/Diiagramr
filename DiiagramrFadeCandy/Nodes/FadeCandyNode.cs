@@ -11,14 +11,14 @@ using System.Windows.Input;
 
 namespace DiiagramrFadeCandy
 {
-    public class FadeCandyNodeViewModel : Node
+    public class FadeCandyNode : Node
     {
         public LedChannelDriver[] _ledDrivers = new LedChannelDriver[NumberOfDrivers];
         private const int NumberOfDrivers = 8;
         private static bool FadeCandyConnected;
         private FadeCandyClient _fadeCandyClient;
 
-        public FadeCandyNodeViewModel()
+        public FadeCandyNode()
         {
             Width = 180;
             Height = 180;
@@ -149,7 +149,7 @@ namespace DiiagramrFadeCandy
         private void OpenOrRestartFadeCandyServer()
         {
             KillProcess("fcserver");
-            StartProcess("fcserver.exe", "fcserver.exe");
+            StartProcess("fcserver.exe");
         }
 
         private void KillProcess(string processName)
@@ -161,7 +161,7 @@ namespace DiiagramrFadeCandy
             }
         }
 
-        private void StartProcess(string processName, string argument)
+        private void StartProcess(string processName)
         {
             var enviromentPath = System.Environment.GetEnvironmentVariable("PATH");
 

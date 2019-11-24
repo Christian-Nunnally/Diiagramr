@@ -10,9 +10,9 @@ using System.Windows.Media.Imaging;
 
 namespace DiiagramrFadeCandy
 {
-    public class ColorNodeViewModel : Node
+    public class ColorNode : Node
     {
-        public ColorNodeViewModel()
+        public ColorNode()
         {
             Name = "Color Picker";
             Width = 60;
@@ -28,7 +28,7 @@ namespace DiiagramrFadeCandy
         }
 
         [OutputTerminal("Color", Direction.South)]
-        public Color ColorOutput { get; set; }
+        public Color ColorOutput { get; set; } = new Color();
 
         public Bitmap ColorWheelBitmap { get; set; }
 
@@ -48,9 +48,9 @@ namespace DiiagramrFadeCandy
                 var random = new Random();
                 var randomBytes = new byte[3];
                 random.NextBytes(randomBytes);
-                var floatR = 0f;
-                var floatG = 0f;
-                var floatB = 0f;
+                float floatR;
+                float floatG;
+                float floatB;
                 if (random.Next(2) > 0)
                 {
                     if (random.Next(2) > 0)

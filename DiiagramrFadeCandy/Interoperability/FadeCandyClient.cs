@@ -6,6 +6,12 @@ namespace DiiagramrFadeCandy
 {
     public class FadeCandyClient : IDisposable
     {
+        public bool _verbose;
+        public bool _long_connection;
+        public string _ip;
+        public string Status;
+        public int _port;
+        public Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         private const int LedsPerDevice = 64;
         private const int NumberOfDevices = 8;
         private const int HeaderByteLength = 4;
@@ -16,13 +22,6 @@ namespace DiiagramrFadeCandy
         private const byte LengthLowByte = BytesPerPacket % 256;
         private const byte Channel = 0;
         private const byte Command = 0;
-        public bool _verbose;
-        public bool _long_connection;
-        public string _ip;
-        public string Status;
-        public int _port;
-        public Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-        private int frameNumber;
         private readonly byte[] _messageByteBuffer = new byte[TotalNumberOfLeds * BytesPerLed + HeaderByteLength];
 
         public FadeCandyClient(string ip, int port, bool long_connecton = true, bool verbose = false)
@@ -38,6 +37,64 @@ namespace DiiagramrFadeCandy
             _messageByteBuffer[3] = LengthLowByte;
 
             Debug(string.Format("{0}:{1}", _ip, _port));
+        }
+
+        public void Dispose()
+        {
+            Debug("Disconnecting");
+            if (_socket.Connected)
+            {
+                _socket.Dispose();
+            }
+            Status = "Disconnected";
+        }
+
+        public bool CanConnect()
+        {
+            bool success = EnsureConnected();
+            if (!_long_connection)
+            {
+                Dispose();
+            }
+            return success;
+        }
+
+        public void PutPixels(LedChannelDriver[] drivers)
+        {
+            Debug("put pixels: connecting");
+            bool is_connected = EnsureConnected();
+            if (!is_connected)
+            {
+                Debug("Put pixels not connected. Ignoring these pixels.");
+                Status = "Disconnected";
+                return;
+            }
+            Status = "Connected";
+
+            int bufferPosition = HeaderByteLength;
+            foreach (var driver in drivers)
+            {
+                if (driver == null)
+                {
+                    continue;
+                }
+
+                var ledData = driver.GetLedData();
+                for (int i = 0; i < LedsPerDevice * BytesPerLed;)
+                {
+                    _messageByteBuffer[bufferPosition++] = ledData[i++];
+                    _messageByteBuffer[bufferPosition++] = ledData[i++];
+                    _messageByteBuffer[bufferPosition++] = ledData[i++];
+                }
+            }
+
+            try
+            {
+                _socket.Send(_messageByteBuffer);
+            }
+            catch (Exception)
+            {
+            }
         }
 
         private static void Debug(string message)
@@ -75,64 +132,6 @@ namespace DiiagramrFadeCandy
                     Status = "Invalid Operation";
                     return false;
                 }
-            }
-        }
-
-        public void Dispose()
-        {
-            Debug("Disconnecting");
-            if (_socket.Connected)
-            {
-                _socket.Dispose();
-            }
-            Status = "Disconnected";
-        }
-
-        private bool CanConnect()
-        {
-            bool success = EnsureConnected();
-            if (!_long_connection)
-            {
-                Dispose();
-            }
-            return success;
-        }
-
-        public void PutPixels(LedChannelDriver[] drivers)
-        {
-            Debug("put pixels: connecting");
-            bool is_connected = EnsureConnected();
-            if (!is_connected)
-            {
-                Debug("Put pixels not connected. Ignoring these pixels.");
-                Status = "Disconnected";
-                return;
-            }
-            Status = "Connected";
-
-            int bufferPosition = HeaderByteLength;
-            foreach (var driver in drivers)
-            {
-                if (driver == null)
-                {
-                    continue;
-                }
-
-                var ledData = driver.GetLedData(frameNumber++);
-                for (int i = 0; i < LedsPerDevice * BytesPerLed;)
-                {
-                    _messageByteBuffer[bufferPosition++] = ledData[i++];
-                    _messageByteBuffer[bufferPosition++] = ledData[i++];
-                    _messageByteBuffer[bufferPosition++] = ledData[i++];
-                }
-            }
-
-            try
-            {
-                _socket.Send(_messageByteBuffer);
-            }
-            catch (Exception)
-            {
             }
         }
     }
