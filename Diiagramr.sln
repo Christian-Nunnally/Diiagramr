@@ -37,7 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrApplication", "Dii
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrAPI2", "DiiagramrAPI2\DiiagramrAPI2.csproj", "{FC3A2885-E660-480D-A530-68338C59B671}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrPrimitives2", "DiiagramrPrimitives2\DiiagramrPrimitives2.csproj", "{557FF68D-E6D1-48F8-8C87-4A818DB66470}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrPrimitives", "DiiagramrPrimitives\DiiagramrPrimitives.csproj", "{557FF68D-E6D1-48F8-8C87-4A818DB66470}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

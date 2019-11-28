@@ -2,9 +2,9 @@ using System;
 
 namespace DiiagramrAPI.Application
 {
-    public abstract class AbstractShellWindow : ViewModel
+    public abstract class ShellWindow : ViewModel
     {
-        public event Action<AbstractShellWindow> OpenWindow;
+        public event Action<ShellWindow> OpenWindow;
 
         public abstract int MaxHeight { get; }
 
@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Application
 
         public abstract string Title { get; }
 
-        protected void OpenOtherWindow(AbstractShellWindow otherWindow)
+        protected void OpenOtherWindow(ShellWindow otherWindow)
         {
             OpenWindow?.Invoke(otherWindow);
         }

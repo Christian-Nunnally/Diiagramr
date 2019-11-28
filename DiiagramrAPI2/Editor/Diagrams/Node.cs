@@ -20,6 +20,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public Node()
         {
+            // Currently not used.
             TerminalsCollection = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
             _viewLoadedActions.Add(ArrangeAllTerminals);
         }

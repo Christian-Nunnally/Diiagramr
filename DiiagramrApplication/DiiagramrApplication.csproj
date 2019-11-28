@@ -63,6 +63,9 @@
     <Page Update="Application\Tools\ContextMenuView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Application\Tools\SaveFileWindowView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Application\Tools\LibraryManagerWindowView.xaml">
       <SubType>Designer</SubType>
     </Page>

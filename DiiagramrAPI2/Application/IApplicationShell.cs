@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Application
 
         void AttachToViewModel(ShellViewModel shellViewModel);
 
-        void OpenWindow(AbstractShellWindow window);
+        void OpenWindow(ShellWindow window);
 
         void SetWindowTitle(string title);
 

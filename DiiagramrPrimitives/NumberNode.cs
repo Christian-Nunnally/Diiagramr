@@ -7,12 +7,13 @@ namespace DiiagramrPrimitives
 {
     public class NumberNode : Node
     {
-        public NumberNode()
+        public NumberNode() : base()
         {
             Width = 30;
             Height = 30;
             Name = "Number";
             ResizeEnabled = true;
+            Number = 60;
         }
 
         [NodeSetting]

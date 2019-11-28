@@ -31,7 +31,7 @@ namespace DiiagramrAPI.Application
             ShellCommand.Execute(StartCommandId);
         }
 
-        public AbstractShellWindow ActiveWindow { get; set; }
+        public ShellWindow ActiveWindow { get; set; }
 
         public bool CanSaveAsProject { get; set; }
 
@@ -51,7 +51,7 @@ namespace DiiagramrAPI.Application
 
         public double Width { get; set; } = 1010;
 
-        public Stack<AbstractShellWindow> WindowStack { get; } = new Stack<AbstractShellWindow>();
+        public Stack<ShellWindow> WindowStack { get; } = new Stack<ShellWindow>();
 
         public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
 
@@ -82,7 +82,7 @@ namespace DiiagramrAPI.Application
             }
         }
 
-        public void OpenWindow(AbstractShellWindow window)
+        public void OpenWindow(ShellWindow window)
         {
             window.OpenWindow += OpenWindow;
             if (ActiveWindow != null)

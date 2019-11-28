@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class LibraryManagerWindow : AbstractShellWindow
+    public class LibraryManagerWindow : ShellWindow
     {
         private readonly LibrarySourceManagerWindow _librarySourceManagerViewModel;
 

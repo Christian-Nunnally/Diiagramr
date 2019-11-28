@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Application
             ExecuteAllActions();
         }
 
-        public void OpenWindow(AbstractShellWindow window)
+        public void OpenWindow(ShellWindow window)
         {
             ExecuteWhenAttached(shell => shell.OpenWindow(window));
         }

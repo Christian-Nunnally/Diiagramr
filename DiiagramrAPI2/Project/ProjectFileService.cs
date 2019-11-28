@@ -1,7 +1,8 @@
-﻿using DiiagramrAPI.Service.Dialog;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Service.Dialog;
 using DiiagramrAPI.Service.IO;
+using DiiagramrAPI2.Application.Tools;
 using DiiagramrModel;
-using StyletIoC;
 using System;
 using System.Linq;
 using System.Windows;
@@ -12,16 +13,23 @@ namespace DiiagramrAPI.Project
     {
         public const string ProjectFileExtension = ".xml";
         private readonly IDialogService _dialogService;
+        private readonly SaveFileWindow _saveFileWindow;
         private readonly IProjectLoadSave _loadSave;
-        private readonly IFileDialog _openFileDialog;
-        private readonly IFileDialog _saveFileDialog;
+        private readonly IApplicationShell _applicationShell;
 
-        public ProjectFileService(IDirectoryService directoryService, [Inject(Key = "open")] IFileDialog openDialog, [Inject(Key = "save")] IFileDialog saveDialog, IProjectLoadSave loadSave, IDialogService dialogService)
+        public ProjectFileService(
+            Func<IApplicationShell> applicationShellFactory,
+            Func<IDirectoryService> directoryServiceFactory,
+            Func<IProjectLoadSave> loadSaveFactory,
+            Func<IDialogService> dialogServiceFactory,
+            Func<SaveFileWindow> saveFileWindowFactory)
         {
-            _openFileDialog = openDialog;
-            _saveFileDialog = saveDialog;
-            _loadSave = loadSave;
-            _dialogService = dialogService;
+            _applicationShell = applicationShellFactory.Invoke();
+            _loadSave = loadSaveFactory.Invoke();
+            _dialogService = dialogServiceFactory.Invoke();
+            _saveFileWindow = saveFileWindowFactory.Invoke();
+
+            var directoryService = directoryServiceFactory.Invoke();
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
             if (!directoryService.Exists(ProjectDirectory))
@@ -42,16 +50,10 @@ namespace DiiagramrAPI.Project
 
         public ProjectModel LoadProject()
         {
-            _openFileDialog.InitialDirectory = ProjectDirectory;
-            _openFileDialog.Filter = $"ProjectModel files(*{ProjectFileExtension})|*{ProjectFileExtension}|All files(*.*)|*.*";
-            _openFileDialog.FileName = string.Empty;
+            _saveFileWindow.InitialDirectory = ProjectDirectory;
+            _applicationShell.OpenWindow(_saveFileWindow);
 
-            if (_openFileDialog.ShowDialog() != MessageBoxResult.OK)
-            {
-                return null;
-            }
-
-            return LoadProject(_openFileDialog.FileName);
+            return LoadProject(_saveFileWindow.FileName);
         }
 
         public ProjectModel LoadProject(string path)
@@ -75,6 +77,10 @@ namespace DiiagramrAPI.Project
 
         private bool SaveAsProject(ProjectModel project)
         {
+            _saveFileWindow.InitialDirectory = ProjectDirectory;
+            _saveFileWindow.FileName = project.Name;
+            _applicationShell.OpenWindow(_saveFileWindow);
+
             if (project.Name != null)
             {
                 _saveFileDialog.FileName = project.Name;

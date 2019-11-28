@@ -11,8 +11,8 @@ namespace DiiagramrPrimitives
 
         public IndexNode()
         {
-            Width = 30;
-            Height = 30;
+            Width = 60;
+            Height = 60;
             Name = "Index";
             ResizeEnabled = true;
         }
