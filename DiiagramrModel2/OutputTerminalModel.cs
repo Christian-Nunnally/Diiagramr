@@ -44,6 +44,7 @@
             wire.SourceTerminal = this;
             otherTerminal.ConnectedWires.Add(wire);
             ConnectedWires.Add(wire);
+            otherTerminal.Data = Data;
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)

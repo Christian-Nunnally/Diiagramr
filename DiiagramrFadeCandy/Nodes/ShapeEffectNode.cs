@@ -10,6 +10,7 @@ namespace DiiagramrFadeCandy
             Width = 90;
             Height = 90;
             Name = "Shape Effect";
+            Output(ShapeGraphic, nameof(Effect));
         }
 
         public ShapeEffect ShapeGraphic { get; set; } = new ShapeEffect();
@@ -92,6 +93,7 @@ namespace DiiagramrFadeCandy
             ShapeGraphic.G = color.G;
             ShapeGraphic.B = color.B;
             ShapeGraphic.A = color.A;
+            Output(ShapeGraphic, nameof(Effect));
         }
     }
 }

@@ -10,7 +10,7 @@
 
         public static void GoToSite(string url)
         {
-            System.Diagnostics.Process.Start(url);
+            System.Diagnostics.Process.Start("cmd", $"/C start {url}");
         }
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)

@@ -46,10 +46,11 @@ namespace DiiagramrFadeCandy
                 {
                     for (double d = 0.0; d <= CircleQuadrents; d += CircleQuadrents / (_frames - 1))
                     {
-                        OutputFrame = (float)(_startPosition + (_amplitude * Math.Sin(d)));
+                        var output = (float)(_startPosition + (_amplitude * Math.Sin(d)));
+                        Output(output, nameof(Output));
                         Thread.Sleep(_timeBetweenFrames);
                     }
-                    OutputFrame = _startPosition;
+                    Output(_startPosition, nameof(Output));
                 }).Start();
             }
         }
@@ -61,7 +62,7 @@ namespace DiiagramrFadeCandy
             SetQuadrents(_quadrents);
         }
 
-        [InputTerminal("Frames", Direction.North)]
+        [InputTerminal("Offset", Direction.North)]
         public void SetOffset(float offset)
         {
             _startPosition = offset;

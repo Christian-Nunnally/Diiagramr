@@ -36,8 +36,12 @@ namespace DiiagramrAPI.Editor.Diagrams
 
             set
             {
-                Model.Data = value;
-                DataChanged?.Invoke(Data);
+                if (Model.Data != value)
+                {
+                    Model.Data = value;
+                    DataChanged?.Invoke(value);
+                    SetTerminalColor();
+                }
             }
         }
 

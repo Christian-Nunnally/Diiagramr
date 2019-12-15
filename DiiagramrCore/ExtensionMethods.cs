@@ -29,7 +29,7 @@
                 oldValue.PropertyChanged -= handler;
             }
 
-            setAction();
+            setAction?.Invoke();
             if (newValue != null)
             {
                 newValue.PropertyChanged += handler;

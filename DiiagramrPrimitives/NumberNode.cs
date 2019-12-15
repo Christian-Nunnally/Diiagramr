@@ -17,7 +17,7 @@ namespace DiiagramrPrimitives
         }
 
         [NodeSetting]
-        [OutputTerminal(nameof(Number), Direction.South)]
+        [OutputTerminal(Direction.South)]
         public int Number { get; set; }
 
         public string StringValue
@@ -28,7 +28,7 @@ namespace DiiagramrPrimitives
             {
                 if (int.TryParse(value, out int result))
                 {
-                    Output(result, nameof(Number));
+                    Number = result;
                 }
             }
         }

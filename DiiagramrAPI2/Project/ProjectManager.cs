@@ -166,17 +166,23 @@ namespace DiiagramrAPI.Project
 
         public void SaveAsProject()
         {
-            if (_projectFileService.SaveProject(CurrentProject, true))
+            if (CurrentProject != null)
             {
-                CurrentProject.IsDirty = false;
+                if (_projectFileService.SaveProject(CurrentProject, true))
+                {
+                    CurrentProject.IsDirty = false;
+                }
             }
         }
 
         public void SaveProject()
         {
-            if (_projectFileService.SaveProject(CurrentProject, false))
+            if (CurrentProject != null)
             {
-                CurrentProject.IsDirty = false;
+                if (_projectFileService.SaveProject(CurrentProject, false))
+                {
+                    CurrentProject.IsDirty = false;
+                }
             }
         }
 

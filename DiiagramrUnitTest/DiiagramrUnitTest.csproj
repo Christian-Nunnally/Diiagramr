@@ -81,16 +81,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj">
-      <Project>{27B53540-1FFB-490C-9DB1-D829179869EA}</Project>
-      <Name>DiiagramrAPI</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj">
-      <Project>{5385FE31-C520-4507-A212-CA6823E06155}</Project>
-      <Name>DiiagramrModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="..\Diiagramr\Properties\Resources.resx">
       <Link>Resources.resx</Link>
       <SubType>Designer</SubType>

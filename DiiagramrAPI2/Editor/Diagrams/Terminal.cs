@@ -36,8 +36,10 @@ namespace DiiagramrAPI.Editor.Diagrams
 
             set
             {
-                Model.Data = value;
-                DataChanged?.Invoke(Data);
+                if (Model.Data != value)
+                {
+                    Model.Data = value;
+                }
             }
         }
 
@@ -223,7 +225,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
             else if (e.PropertyName == nameof(TerminalModel.Data))
             {
-                Data = Model.Data;
+                NotifyOfPropertyChange(nameof(Data));
+                DataChanged?.Invoke(Data);
             }
             else if (e.PropertyName == nameof(TerminalModel.Type))
             {

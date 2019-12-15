@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public event Action<object> DataChanged;
 
-        [InputTerminal("Output Data", Direction.North)]
+        [InputTerminal(Direction.North)]
         public void OutputData(object data)
         {
             DataChanged?.Invoke(data);

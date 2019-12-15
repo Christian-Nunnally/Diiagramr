@@ -7,12 +7,12 @@ namespace DiiagramrPrimitives
 {
     public class IndexNode : Node
     {
-        private byte[] _array;
+        private object[] _array;
 
         public IndexNode()
         {
-            Width = 60;
-            Height = 60;
+            Width = 30;
+            Height = 30;
             Name = "Index";
             ResizeEnabled = true;
         }
@@ -20,8 +20,8 @@ namespace DiiagramrPrimitives
         [NodeSetting]
         public int Index { get; set; }
 
-        [OutputTerminal(nameof(Value), Direction.South)]
-        public byte Value { get; set; }
+        [OutputTerminal(Direction.South)]
+        public object Value { get; set; }
 
         public string StringValue
         {
@@ -48,15 +48,15 @@ namespace DiiagramrPrimitives
             }
         }
 
-        [InputTerminal("Array", Direction.North)]
-        public void ArrayInput(byte[] array)
+        [InputTerminal(Direction.North)]
+        public void ArrayInput(object[] array)
         {
             _array = array;
             if (array != null)
             {
                 if (Index < array.Length)
                 {
-                    Output(array[Index], nameof(Value));
+                    Value = array[Index];
                 }
             }
         }

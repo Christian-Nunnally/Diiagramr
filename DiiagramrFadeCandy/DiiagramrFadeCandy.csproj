@@ -154,10 +154,6 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj">
-      <Project>{27b53540-1ffb-490c-9db1-d829179869ea}</Project>
-      <Name>DiiagramrAPI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj">
       <Project>{5385FE31-C520-4507-A212-CA6823E06155}</Project>
       <Name>DiiagramrModel</Name>

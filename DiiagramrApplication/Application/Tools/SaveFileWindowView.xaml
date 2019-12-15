@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Application.Tools.LibraryManagerWindowView"
+    x:Class="Diiagramr.Application.Tools.SaveFileWindowView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:s="https://github.com/canton7/Stylet"

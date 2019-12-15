@@ -61,12 +61,6 @@
     <None Include=".editorconfig" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrCore\DiiagramrCore.csproj">
-      <Project>{1CCBC276-E155-42F8-B5A8-E73A5501C778}</Project>
-      <Name>DiiagramrCore</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <PackageReference Include="Fody">
       <Version>6.0.3</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

@@ -23,13 +23,15 @@ namespace DiiagramrFadeCandy
             if (data != null)
             {
                 SpectrumEffect.Color = data;
+                Output(SpectrumEffect, nameof(Effect));
             }
         }
 
-        [InputTerminal("Color", Direction.North)]
+        [InputTerminal("Signal", Direction.North)]
         public void SignalChanged(byte[] data)
         {
             SpectrumEffect.SpectrumData = data;
+            Output(SpectrumEffect, nameof(Effect));
         }
     }
 }

@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             Name = "Input";
         }
 
-        [OutputTerminal("External Data", Direction.South)]
+        [OutputTerminal(Direction.South)]
         public object DiagramOutput
         {
             get => diagramOutput;

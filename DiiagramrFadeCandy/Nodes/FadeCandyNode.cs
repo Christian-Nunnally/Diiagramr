@@ -139,6 +139,14 @@ namespace DiiagramrFadeCandy
             Drivers.Add(Driver6);
             Drivers.Add(Driver7);
             Drivers.Add(Driver8);
+            _ledDrivers[0] = Driver1;
+            _ledDrivers[1] = Driver2;
+            _ledDrivers[2] = Driver3;
+            _ledDrivers[3] = Driver4;
+            _ledDrivers[4] = Driver5;
+            _ledDrivers[5] = Driver6;
+            _ledDrivers[6] = Driver7;
+            _ledDrivers[7] = Driver8;
         }
 
         private void Drivers_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

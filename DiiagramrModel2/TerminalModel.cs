@@ -113,6 +113,12 @@ namespace DiiagramrModel
         public Type Type { get; set; }
 
         /// <summary>
+        /// Gets the data type of the data currently on the terminal.
+        /// </summary>
+        [IgnoreDataMember]
+        public Type CurrentType => Data?.GetType() ?? Type;
+
+        /// <summary>
         /// Gets or sets the fully qualified name of <see cref="Type"/>.
         /// </summary>
         [DataMember]

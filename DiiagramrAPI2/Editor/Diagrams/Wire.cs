@@ -331,7 +331,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalToGetColorFrom = Model.SinkTerminal.Type == typeof(object)
                             ? Model.SourceTerminal
                             : Model.SinkTerminal;
-            var typeToGetColorOf = terminalToGetColorFrom.Type;
+            var typeToGetColorOf = terminalToGetColorFrom.CurrentType;
             var color = TypeColorProvider.Instance.GetColorForType(typeToGetColorOf);
             var darkenedColor = CoreUilities.ChangeColorBrightness(color, DimWireColorAmount);
             LineColorBrush = GetBrushFromColor(darkenedColor);

@@ -6,13 +6,10 @@ namespace DiiagramrAPI.Editor.Diagrams
     [AttributeUsage(AttributeTargets.Method)]
     public class InputTerminalAttribute : Attribute
     {
-        public InputTerminalAttribute(string terminalName, Direction defaultDirection)
+        public InputTerminalAttribute(Direction defaultDirection)
         {
-            TerminalName = terminalName;
             DefaultDirection = defaultDirection;
         }
-
-        public string TerminalName { get; }
 
         public Direction DefaultDirection { get; }
     }

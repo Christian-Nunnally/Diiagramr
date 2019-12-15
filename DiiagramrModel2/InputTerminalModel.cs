@@ -39,6 +39,7 @@
             wire.SourceTerminal = otherTerminal;
             otherTerminal.ConnectedWires.Add(wire);
             ConnectedWires.Add(wire);
+            Data = otherTerminal.Data;
         }
     }
 }

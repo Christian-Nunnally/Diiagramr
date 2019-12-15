@@ -22,7 +22,9 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             // Currently not used.
             TerminalsCollection = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
+
             _viewLoadedActions.Add(ArrangeAllTerminals);
+            PropertyChanged += NodePropertyChanged;
         }
 
         public ViewModelCollection<Terminal, TerminalModel> TerminalsCollection { get; }
@@ -184,13 +186,12 @@ namespace DiiagramrAPI.Editor.Diagrams
             _viewLoadedActions.Clear();
         }
 
-        protected void Output(object data, string terminalName)
+        private void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_terminalsPropertyInfos.TryGetValue(terminalName, out PropertyInfo propertyInfo)
-                && _nameToTerminalMap.TryGetValue(terminalName, out Terminal terminal))
+            if (_terminalsPropertyInfos.TryGetValue(e.PropertyName, out PropertyInfo propertyInfo)
+                && _nameToTerminalMap.TryGetValue(e.PropertyName, out Terminal terminal))
             {
-                propertyInfo.SetValue(this, data);
-                terminal.Data = data;
+                terminal.Data = propertyInfo.GetValue(this);
             }
         }
 
@@ -235,25 +236,26 @@ namespace DiiagramrAPI.Editor.Diagrams
             ValidateInputTerminalMethod(methodInfo);
             var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
             var terminalType = methodInfo.GetParameters().First().ParameterType;
-            var terminalModel = new InputTerminalModel(inputTerminalAttribute.TerminalName, terminalType, inputTerminalAttribute.DefaultDirection, 0);
+            var terminalModel = new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection, 0);
             var terminal = new InputTerminal(terminalModel);
-            terminal.DataChanged += methodInfo.CreateMethodInvoker(this);
+            terminal.DataChanged = methodInfo.CreateMethodInvoker(this);
             AddTerminal(terminal);
         }
 
         private void CreateOutputTerminalForProperty(PropertyInfo property)
         {
-            var inputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
+            var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
             var terminalType = property.PropertyType;
-            var terminalModel = new OutputTerminalModel(inputTerminalAttribute.TerminalName, terminalType, inputTerminalAttribute.DefaultDirection, 0);
+            var terminalModel = new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection, 0);
             var terminal = new OutputTerminal(terminalModel);
-            _terminalsPropertyInfos[inputTerminalAttribute.TerminalName] = property;
+            _terminalsPropertyInfos[property.Name] = property;
             AddTerminal(terminal);
+            NotifyOfPropertyChange(property.Name);
         }
 
         private void ArrangeAllTerminals()
         {
-            var placer = new TerminalPlacer(Width, Height);
+            var placer = new TerminalPlacer(Height, Width);
             placer.ArrangeTerminals(Terminals);
         }
     }

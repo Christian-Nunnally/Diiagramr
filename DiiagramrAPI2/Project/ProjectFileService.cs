@@ -79,29 +79,17 @@ namespace DiiagramrAPI.Project
         {
             _saveFileWindow.InitialDirectory = ProjectDirectory;
             _saveFileWindow.FileName = project.Name;
+            _saveFileWindow.SaveAction = fileName => SerializeAndSave(project, fileName);
             _applicationShell.OpenWindow(_saveFileWindow);
 
-            if (project.Name != null)
-            {
-                _saveFileDialog.FileName = project.Name;
-            }
-
-            _saveFileDialog.InitialDirectory = ProjectDirectory;
-            _saveFileDialog.Filter = $"ProjectModel files(*{ProjectFileExtension})|*{ProjectFileExtension}|All files(*.*)|*.*";
-
-            if (_saveFileDialog.ShowDialog() != MessageBoxResult.OK)
-            {
-                return false;
-            }
-
-            SetProjectNameFromPath(project, _saveFileDialog.FileName);
-            SerializeAndSave(project, _saveFileDialog.FileName);
+            // TODO: Make this return void.
             return true;
         }
 
-        private void SerializeAndSave(ProjectModel project, string name)
+        private void SerializeAndSave(ProjectModel project, string fileName)
         {
-            _loadSave.Save(project, name);
+            SetProjectNameFromPath(project, fileName);
+            _loadSave.Save(project, fileName);
             ProjectSaved(project);
         }
 

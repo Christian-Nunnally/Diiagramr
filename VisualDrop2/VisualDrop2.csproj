@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\headphoneicon.png" />
+    <None Remove="Resources\noneicon.png" />
+    <None Remove="Resources\questionicon.png" />
+    <None Remove="Resources\speakericon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CSCore" Version="1.2.1.2" />
+    <PackageReference Include="PropertyChanged.Fody" Version="3.1.3" />
+    <PackageReference Include="Stylet" Version="1.3.0.190" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiiagramrAPI2\DiiagramrAPI2.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\headphoneicon.png" />
+    <Resource Include="Resources\noneicon.png" />
+    <Resource Include="Resources\questionicon.png" />
+    <Resource Include="Resources\speakericon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="NodeViews\AudioSourceNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeViews\ExponentialMovingAverageNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeViews\LevelThresholdNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeViews\NormalizeSpectrumNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeViews\SumArrayNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(SolutionDir)VisualDrop2\bin\Debug\netcoreapp3.0\VisualDrop2.dll&quot; &quot;$(SolutionDir)DiiagramrApplication\bin\Debug\netcoreapp3.0\Plugins\&quot; /Y" />
+  </Target>
+
+</Project>
