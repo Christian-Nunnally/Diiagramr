@@ -1,3 +1,4 @@
+using DiiagramrApplication.Application;
 using Stylet;
 using System;
 using System.Collections.Generic;
@@ -17,28 +18,34 @@ namespace Diiagramr.Application
 
         protected override Type LocateViewForModel(Type modelType)
         {
-            if (_viewModelToViewMapping.ContainsKey(modelType))
+            if (_viewModelToViewMapping.TryGetValue(modelType, out var viewType))
             {
-                return _viewModelToViewMapping[modelType];
+                return viewType;
             }
+            viewType = FindViewTypeFromViewAssemblies(modelType);
+            _viewModelToViewMapping.Add(modelType, viewType);
+            return viewType;
+        }
 
+        private Type FindViewTypeFromViewAssemblies(Type modelType)
+        {
+            AddTypesAssemblyToListOfPossibleViewAssemblies(modelType);
             var viewModelName = modelType.Name;
             var viewName = GuessViewName(viewModelName);
+            var viewType = ViewAssemblies
+                .SelectMany(a => a.ExportedTypes)
+                .FirstOrDefault(t => t.Name == viewName)
+                ?? typeof(MissingView);
+            return viewType;
+        }
 
-            var assembly = Assembly.GetAssembly(modelType);
+        private void AddTypesAssemblyToListOfPossibleViewAssemblies(Type type)
+        {
+            var assembly = Assembly.GetAssembly(type);
             if (!ViewAssemblies.Contains(assembly))
             {
                 ViewAssemblies.Add(assembly);
             }
-            var viewType = ViewAssemblies.SelectMany(a => a.ExportedTypes).FirstOrDefault(t => t.Name == viewName);
-            _viewModelToViewMapping.Add(modelType, viewType);
-
-            if (viewType == null)
-            {
-                throw new ViewNotFoundException(modelType.FullName);
-            }
-
-            return viewType;
         }
 
         private string GuessViewName(string viewModelName)
@@ -46,14 +53,6 @@ namespace Diiagramr.Application
             return viewModelName.EndsWith("ViewModel")
                 ? viewModelName.Substring(0, viewModelName.Length - 5)
                 : viewModelName + "View";
-        }
-    }
-
-    [Serializable]
-    public class ViewNotFoundException : Exception
-    {
-        public ViewNotFoundException(string message) : base(message)
-        {
         }
     }
 }

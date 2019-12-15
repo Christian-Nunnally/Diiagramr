@@ -17,7 +17,7 @@ namespace Diiagramr.Application
             builder.Bind<IViewManager>().To<DiiagramrViewManager>().InSingletonScope();
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<LibraryManagerWindow>().To<LibraryManagerWindow>().InSingletonScope();
-            builder.Bind<IApplicationShell>().To<DiiagramrAPI.Application.ApplicationShell>().InSingletonScope();
+            builder.Bind<IApplicationShell>().To<ApplicationShell>().InSingletonScope();
             builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
         }
     }

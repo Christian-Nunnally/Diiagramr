@@ -33,9 +33,7 @@ namespace Diiagramr.Application
 
         public static void BindServices(IStyletIoCBuilder builder)
         {
-            var loadedTypes = AppDomain.CurrentDomain.GetAssemblies()
-                            .Where(a => !a.GlobalAssemblyCache)
-                            .SelectMany(x => x.GetExportedTypes())
+            var loadedTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache()
                             .Where(t => t.GetInterface("ITestImplementationOf`1") == null);
             var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
 
@@ -47,13 +45,11 @@ namespace Diiagramr.Application
 
         public static void BindTestServices(IStyletIoCBuilder builder)
         {
-            var allTypes = AppDomain.CurrentDomain.GetAssemblies()
-                            .Where(a => !a.GlobalAssemblyCache)
-                            .SelectMany(x => x.GetTypes());
-            var loadedTypes = allTypes.Where(t => t.GetInterface("ITestImplementationOf`1") == null);
-            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
+            var allLoadedTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache();
+            var testImplementationTypes = allLoadedTypes.Where(t => t.GetInterface("ITestImplementationOf`1") == null);
+            var loadedServiceInterfaces = testImplementationTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
 
-            var fakeTypes = allTypes.Where(t => t.IsClass && !t.IsAbstract && t.GetInterface("ITestImplementationOf`1") != null);
+            var fakeTypes = allLoadedTypes.Where(t => t.IsClass && !t.IsAbstract && t.GetInterface("ITestImplementationOf`1") != null);
             var realToFakeTypeDictionary = new Dictionary<Type, Type>();
             foreach (var fakeType in fakeTypes)
             {
@@ -70,15 +66,13 @@ namespace Diiagramr.Application
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
-                BindEverythingThatImplementsInterface(loadedService, builder, loadedTypes, realToFakeTypeDictionary);
+                BindEverythingThatImplementsInterface(loadedService, builder, testImplementationTypes, realToFakeTypeDictionary);
             }
         }
 
         public static void LoadColorInformation()
         {
-            var wireableTypes = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(a => !a.GlobalAssemblyCache)
-                .SelectMany(x => x.GetExportedTypes())
+            var wireableTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache()
                 .Where(t => t.GetInterface("IWireableType") != null);
             foreach (var wireableType in wireableTypes)
             {
@@ -86,6 +80,13 @@ namespace Diiagramr.Application
                 var color = wireableInstance.GetTypeColor();
                 TypeColorProvider.Instance.RegisterColorForType(wireableType, color);
             }
+        }
+
+        private static IEnumerable<Type> GetAllLoadedTypesNotInTheGlobalAssemblyCache()
+        {
+            return AppDomain.CurrentDomain.GetAssemblies()
+                                          .Where(a => !a.GlobalAssemblyCache)
+                                          .SelectMany(x => x.GetTypes());
         }
     }
 }

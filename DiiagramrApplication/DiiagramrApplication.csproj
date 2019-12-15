@@ -97,13 +97,7 @@
     <Page Update="Editor\InputTerminalView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Editor\Interactors\DiagramPannerView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Editor\Interactors\DiagramRifterView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\DiagramZoomerView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editor\Interactors\HotkeyHelpView.xaml">
@@ -112,25 +106,7 @@
     <Page Update="Editor\Interactors\LassoNodeSelectorView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Editor\Interactors\NodeDeleterView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\NodeDraggerView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Editor\Interactors\NodePaletteView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\NodePlacerView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\NodeResizerView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\PointSelectorView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\TerminalWirerView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editor\NodeStyle.xaml">
