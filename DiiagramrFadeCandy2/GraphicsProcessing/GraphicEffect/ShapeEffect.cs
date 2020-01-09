@@ -42,16 +42,16 @@ namespace DiiagramrFadeCandy
         public float Height { get; set; }
 
         [DataMember]
-        public float R { get; set; } = 0.1f;
+        public float R { get; set; } = 0.5f;
 
         [DataMember]
-        public float G { get; set; } = 0.1f;
+        public float G { get; set; } = 0.5f;
 
         [DataMember]
-        public float B { get; set; } = 0.1f;
+        public float B { get; set; } = 0.9f;
 
         [DataMember]
-        public float A { get; set; } = 0.05f;
+        public float A { get; set; } = 1.0f;
 
         [DataMember]
         public bool Fill { get; set; } = true;

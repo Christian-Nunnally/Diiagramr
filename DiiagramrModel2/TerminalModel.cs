@@ -157,6 +157,12 @@ namespace DiiagramrModel
                 throw new ModelValidationException(this, "Remove this wire from a terminal before connecting it again");
             }
 
+            if (!CanWireToType(otherTerminal.Type))
+            {
+                // TODO: Not sure if we should throw or not for situations like these.
+                return;
+            }
+
             wire.SinkTerminal = this;
             wire.SourceTerminal = otherTerminal;
             otherTerminal.ConnectedWires.Add(wire);
@@ -179,6 +185,15 @@ namespace DiiagramrModel
             ConnectedWires.Remove(wire);
             wire.SinkTerminal = null;
             wire.SourceTerminal = null;
+        }
+
+        public virtual bool CanWireToType(Type type)
+        {
+            if (type.IsArray && Type.IsArray && (type.GetElementType() == typeof(object) || Type.GetElementType().IsAssignableFrom(type.GetElementType())))
+            {
+                return true;
+            }
+            return Type.IsAssignableFrom(type) || type == typeof(object);
         }
 
         private void ParentNodePropertyChanged(object sender, PropertyChangedEventArgs e)

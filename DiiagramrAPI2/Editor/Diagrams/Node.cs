@@ -95,7 +95,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             ArrangeAllTerminals();
         }
 
-        public void HighlightTerminalsOfType<T>(Type type)
+        public void HighlightWirableTerminals<T>(Type type)
         {
             Terminals.OfType<T>().OfType<Terminal>().ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
         }

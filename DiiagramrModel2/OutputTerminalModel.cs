@@ -53,7 +53,19 @@
             {
                 foreach (var wire in ConnectedWires)
                 {
-                    wire.SinkTerminal.Data = Data;
+                    if (Type.IsArray)
+                    {
+                        wire.SinkTerminal.Data = Array.ConvertAll<byte, object>((byte[])Data, obj =>
+                         {
+                             return (object)obj;
+                         }
+                        );
+                    }
+                    else
+                    {
+                        // TODO: Add coersion.
+                        wire.SinkTerminal.Data = Data;
+                    }
                 }
             }
         }

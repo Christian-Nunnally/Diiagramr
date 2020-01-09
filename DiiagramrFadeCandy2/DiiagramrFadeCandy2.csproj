@@ -40,6 +40,9 @@
     <Page Update="NodeViews\SineAnimationNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="NodeViews\KalidoscopeEffectNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="NodeViews\SpectrumEffectNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>

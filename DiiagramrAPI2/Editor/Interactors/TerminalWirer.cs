@@ -43,16 +43,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
             var sinkTerminal = startTerminal.Model is InputTerminalModel ? startTerminal.Model : endTerminal.Model;
             var sourceTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal.Model : endTerminal.Model;
-
-            if (!sourceTerminal.Type.IsSubclassOf(sinkTerminal.Type) && sourceTerminal.Type != sinkTerminal.Type)
-            {
-                if (sourceTerminal.Type != typeof(object))
-                {
-                    return false;
-                }
-            }
-
-            return true;
+            return sourceTerminal.CanWireToType(sinkTerminal.Type);
         }
 
         public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
@@ -189,7 +180,7 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             diagram.UnselectTerminals();
             diagram.UnselectNodes();
-            diagram.HighlightTerminalsOfSameType(terminal.Model);
+            diagram.HighlightWirableTerminals(terminal.Model);
 
             var x1 = terminal.Model.X;
             var y1 = terminal.Model.Y;

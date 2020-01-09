@@ -12,10 +12,10 @@ namespace DiiagramrFadeCandy
             Name = "Spectrum Visualizer Effect";
         }
 
-        public SpectrumEffect SpectrumEffect { get; set; } = new SpectrumEffect { Color = new Color(255f, 255f, 255f, 255f) };
+        public SpectrumEffect SpectrumEffect => Effect as SpectrumEffect;
 
         [OutputTerminal(Direction.South)]
-        public GraphicEffect Effect { get; set; }
+        public GraphicEffect Effect { get; set; } = new SpectrumEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
         [InputTerminal(Direction.West)]
         public void SetColor(Color data)

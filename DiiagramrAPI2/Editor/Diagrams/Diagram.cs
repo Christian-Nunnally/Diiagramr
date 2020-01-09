@@ -137,11 +137,11 @@ namespace DiiagramrAPI.Editor.Diagrams
             return (Zoom * y) + PanY;
         }
 
-        public void HighlightTerminalsOfSameType(TerminalModel terminal)
+        public void HighlightWirableTerminals(TerminalModel terminal)
         {
             var highlightAction = terminal is OutputTerminalModel
-                ? (Action<Node>)(node => node.HighlightTerminalsOfType<InputTerminal>(terminal.Type))
-                : (Action<Node>)(node => node.HighlightTerminalsOfType<OutputTerminal>(terminal.Type));
+                ? (Action<Node>)(node => node.HighlightWirableTerminals<InputTerminal>(terminal.Type))
+                : (Action<Node>)(node => node.HighlightWirableTerminals<OutputTerminal>(terminal.Type));
             Nodes.ForEach(highlightAction);
         }
 

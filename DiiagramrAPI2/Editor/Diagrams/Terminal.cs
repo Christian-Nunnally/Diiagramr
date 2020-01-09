@@ -173,8 +173,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             if (!IsConnected)
             {
-                HighlightVisible = Model.Type.IsAssignableFrom(type);
-                NotifyOfPropertyChange(nameof(HighlightVisible));
+                HighlightVisible = Model.CanWireToType(type);
             }
         }
 
