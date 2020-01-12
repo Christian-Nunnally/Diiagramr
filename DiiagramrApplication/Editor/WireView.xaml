@@ -10,6 +10,12 @@
     <Canvas>
         <Path
             Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
+            Stroke="#101010"
+            StrokeLineJoin="Miter"
+            StrokeMiterLimit="1"
+            StrokeThickness="6" />
+        <Path
+            Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
             Stroke="{Binding LineColorBrush}"
             StrokeLineJoin="Miter"
             StrokeMiterLimit="1"

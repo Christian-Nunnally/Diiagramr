@@ -14,11 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrAPI2\DiiagramrAPI2.csproj" />
-    <ProjectReference Include="..\DiiagramrModel2\DiiagramrModel2.csproj" />
+    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj" />
+    <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj" />
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="BufferNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="NumberNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>

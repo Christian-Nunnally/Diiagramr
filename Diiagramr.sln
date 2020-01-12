@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrRepositoryServer", "DiiagramrRepositoryServer\DiiagramrRepositoryServer.csproj", "{D2793823-C598-4521-8AC7-098DF83717B0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrCore2", "DiiagramrCore2\DiiagramrCore2.csproj", "{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrCore", "DiiagramrCore\DiiagramrCore.csproj", "{8C0FABA0-7B0B-4DC9-BBF2-C2A52C878C41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrModel2", "DiiagramrModel2\DiiagramrModel2.csproj", "{866BCD4E-9935-43E0-9EF3-895A82A521BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrModel", "DiiagramrModel\DiiagramrModel.csproj", "{866BCD4E-9935-43E0-9EF3-895A82A521BD}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrApplication", "DiiagramrApplication\DiiagramrApplication.csproj", "{81C2FEDC-BEDF-4A94-A981-1F9EF58B43AC}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,13 +16,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrApplication", "Dii
 		{E1F1CFC0-3ABC-4D3E-95A6-C1BFEE226E6A} = {E1F1CFC0-3ABC-4D3E-95A6-C1BFEE226E6A}
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrAPI2", "DiiagramrAPI2\DiiagramrAPI2.csproj", "{FC3A2885-E660-480D-A530-68338C59B671}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrAPI", "DiiagramrAPI\DiiagramrAPI.csproj", "{FC3A2885-E660-480D-A530-68338C59B671}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrPrimitives", "DiiagramrPrimitives\DiiagramrPrimitives.csproj", "{557FF68D-E6D1-48F8-8C87-4A818DB66470}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualDrop2", "VisualDrop2\VisualDrop2.csproj", "{86F9EA85-3EB4-40F1-9FB8-C40292440C41}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VisualDrop", "VisualDrop\VisualDrop.csproj", "{86F9EA85-3EB4-40F1-9FB8-C40292440C41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrFadeCandy2", "DiiagramrFadeCandy2\DiiagramrFadeCandy2.csproj", "{E1F1CFC0-3ABC-4D3E-95A6-C1BFEE226E6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrFadeCandy", "DiiagramrFadeCandy\DiiagramrFadeCandy.csproj", "{E1F1CFC0-3ABC-4D3E-95A6-C1BFEE226E6A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

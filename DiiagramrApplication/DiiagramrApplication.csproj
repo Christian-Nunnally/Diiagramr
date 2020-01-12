@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrAPI2\DiiagramrAPI2.csproj" />
+    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
