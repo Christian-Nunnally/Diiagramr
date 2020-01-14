@@ -26,6 +26,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         private readonly List<Point[]> _wireDrawAnimationFrames = new List<Point[]>();
         private readonly WirePathingAlgorithum _wirePathingAlgorithum;
         private readonly List<Point> _dataVisualAnimationFrames = new List<Point>();
+        private readonly Brush BrokenWireBrush = new SolidColorBrush(Color.FromRgb(90, 9, 9));
         private bool _configuringWirePoints;
         private bool _isDataVisualAnimationFramesValid;
         private bool _showingDataPropagation;
@@ -36,7 +37,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             _wirePathingAlgorithum = new WirePathingAlgorithum(this);
             WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
-            SetWireColor();
+            UpdateWireColor();
         }
 
         public Wire(Terminal startTerminal, double x1, double y1)
@@ -59,6 +60,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         public Direction BannedDirectionForEnd { get; set; }
 
         public Direction BannedDirectionForStart { get; set; }
+
+        public DoubleCollection StrokeDashArray { get; set; }
 
         public double DataVisualDiameter { get; } = _dataVisualDiameter;
 
@@ -94,13 +97,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         public void MouseEntered()
         {
             _isMouseOver = true;
-            SetWireColor();
+            UpdateWireColor();
         }
 
         public void MouseLeft()
         {
             _isMouseOver = false;
-            SetWireColor();
+            UpdateWireColor();
         }
 
         protected override void OnPropertyChanged(string propertyName)
@@ -330,6 +333,10 @@ namespace DiiagramrAPI.Editor.Diagrams
                     break;
 
                 case nameof(WireModel.IsBroken):
+                    VisuallyBreakWire();
+                    NotifyOfPropertyChange(e.PropertyName);
+                    break;
+
                 case nameof(WireModel.X1):
                 case nameof(WireModel.X2):
                 case nameof(WireModel.Y1):
@@ -339,10 +346,22 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        private void SetWireColor()
+        private void VisuallyBreakWire()
+        {
+            StrokeDashArray = new DoubleCollection(new[] { 3.0, 1.0 });
+            UpdateWireColor();
+        }
+
+        private void UpdateWireColor()
         {
             if (WireModel.SourceTerminal == null || WireModel.SinkTerminal == null)
             {
+                return;
+            }
+
+            if (IsBroken)
+            {
+                LineColorBrush = BrokenWireBrush;
                 return;
             }
 

@@ -3,6 +3,7 @@ namespace DiiagramrModel
     using DiiagramrCore;
     using DiiagramrModel2;
     using PropertyChanged;
+    using System;
     using System.ComponentModel;
     using System.Runtime.Serialization;
 
@@ -76,36 +77,59 @@ namespace DiiagramrModel
 
         public void PropagateData()
         {
-            if (SourceTerminal == null || SinkTerminal == null)
+            if (IsBroken || SourceTerminal == null || SinkTerminal == null)
             {
-                IsBroken = true;
                 return;
-            }
-            if (SourceTerminal.Type == typeof(object))
-            {
-                if (SinkTerminal.Type.IsAssignableFrom(SourceTerminal.Data?.GetType()))
-                {
-                    SinkTerminal.Data = SourceTerminal?.Data;
-                }
-                else
-                {
-                    IsBroken = true;
-                    return;
-                }
-            }
-            if (SinkTerminal.Type.IsAssignableFrom(SourceTerminal.Type))
-            {
-                SinkTerminal.Data = SourceTerminal?.Data;
-            }
-            else if (ValueCoersionHelper.CanCoerseValue(SourceTerminal.Type, SinkTerminal.Type))
-            {
-                SinkTerminal.Data = ValueCoersionHelper.CoerseValue(SourceTerminal.Type, SinkTerminal.Type, SourceTerminal?.Data);
             }
             else
             {
-                IsBroken = true;
-                return;
+                PropagateDataCore();
             }
+        }
+
+        private void PropagateDataCore()
+        {
+            object newData;
+            if (SourceTerminal.Type == typeof(object))
+            {
+                if (SourceTerminal.Data == null)
+                {
+                    newData = null;
+                }
+                else
+                {
+                    var fromType = SourceTerminal.Data.GetType();
+                    if (!TryCoerseValue(SourceTerminal.Type, fromType, SourceTerminal?.Data, out newData))
+                    {
+                        IsBroken = true;
+                    }
+                }
+            }
+            else
+            {
+                var fromType = SinkTerminal.Type;
+                if (!TryCoerseValue(SourceTerminal.Type, fromType, SourceTerminal?.Data, out newData))
+                {
+                    IsBroken = true;
+                }
+            }
+            SinkTerminal.Data = newData;
+        }
+
+        private bool TryCoerseValue(Type fromType, Type toType, object value, out object coersedValue)
+        {
+            if (toType.IsAssignableFrom(fromType))
+            {
+                coersedValue = value;
+                return true;
+            }
+            if (ValueCoersionHelper.CanCoerseValue(SourceTerminal.Type, SinkTerminal.Type))
+            {
+                coersedValue = ValueCoersionHelper.CoerseValue(SourceTerminal.Type, SinkTerminal.Type, SourceTerminal?.Data);
+                return true;
+            }
+            coersedValue = null;
+            return false;
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)

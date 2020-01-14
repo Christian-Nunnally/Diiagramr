@@ -17,6 +17,7 @@
         <Path
             Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
             Stroke="{Binding LineColorBrush}"
+            StrokeDashArray="{Binding StrokeDashArray}"
             StrokeLineJoin="Miter"
             StrokeMiterLimit="1"
             StrokeThickness="4" />

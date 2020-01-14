@@ -27,10 +27,13 @@ namespace DiiagramrModel2
         {
             AddCoersionFunction(typeof(byte[]), typeof(object[]), ByteArrayToObjectArrayCoersion);
             AddCoersionFunction(typeof(byte[]), typeof(int[]), ByteArrayToIntArrayCoersion);
+            AddCoersionFunction(typeof(int[]), typeof(object[]), IntArrayToObjectArrayCoersion);
+            AddCoersionFunction(typeof(int[]), typeof(byte[]), IntArrayToByteArrayCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(float), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(double), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(short), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(long), ImplicitCoersion);
+            AddTwoWayCoersionFunction(typeof(int), typeof(byte), ImplicitCoersion);
         }
 
         public static void AddTwoWayCoersionFunction(Type type1, Type type2, Func<object, object> function)
@@ -51,6 +54,10 @@ namespace DiiagramrModel2
         private static object ByteArrayToObjectArrayCoersion(object value) => Array.ConvertAll(value as byte[], obj => (object)obj);
 
         private static object ByteArrayToIntArrayCoersion(object value) => Array.ConvertAll(value as byte[], obj => (int)obj);
+
+        private static object IntArrayToObjectArrayCoersion(object value) => Array.ConvertAll(value as int[], obj => (object)obj);
+
+        private static object IntArrayToByteArrayCoersion(object value) => Array.ConvertAll(value as int[], obj => (byte)obj);
 
         private static object ImplicitCoersion(object value) => value;
     }
