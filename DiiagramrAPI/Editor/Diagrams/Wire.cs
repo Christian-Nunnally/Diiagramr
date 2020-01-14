@@ -348,7 +348,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void VisuallyBreakWire()
         {
-            StrokeDashArray = new DoubleCollection(new[] { 3.0, 1.0 });
+            StrokeDashArray = new DoubleCollection(new[] { 1.0, 1.0 });
             UpdateWireColor();
         }
 

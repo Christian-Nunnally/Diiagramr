@@ -15,6 +15,10 @@ namespace DiiagramrModel2
 
         public static object CoerseValue(Type fromType, Type toType, object value)
         {
+            if (toType == typeof(object))
+            {
+                return value;
+            }
             if (CoersionFunctionDictionary.TryGetValue(fromType, out Dictionary<Type, Func<object, object>> innerDictionary)
                    && innerDictionary.TryGetValue(toType, out Func<object, object> coersionFunction))
             {
@@ -27,8 +31,10 @@ namespace DiiagramrModel2
         {
             AddCoersionFunction(typeof(byte[]), typeof(object[]), ByteArrayToObjectArrayCoersion);
             AddCoersionFunction(typeof(byte[]), typeof(int[]), ByteArrayToIntArrayCoersion);
+            AddTwoWayCoersionFunction(typeof(byte[]), typeof(object), ImplicitCoersion);
             AddCoersionFunction(typeof(int[]), typeof(object[]), IntArrayToObjectArrayCoersion);
             AddCoersionFunction(typeof(int[]), typeof(byte[]), IntArrayToByteArrayCoersion);
+            AddTwoWayCoersionFunction(typeof(int[]), typeof(object), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(float), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(double), ImplicitCoersion);
             AddTwoWayCoersionFunction(typeof(int), typeof(short), ImplicitCoersion);

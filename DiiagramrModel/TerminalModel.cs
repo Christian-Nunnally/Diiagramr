@@ -183,6 +183,10 @@ namespace DiiagramrModel
 
             otherTerminal.ConnectedWires.Remove(wire);
             ConnectedWires.Remove(wire);
+            if (wire.SinkTerminal.ConnectedWires.Count == 0)
+            {
+                wire.SinkTerminal.Data = null;
+            }
             wire.SinkTerminal = null;
             wire.SourceTerminal = null;
         }

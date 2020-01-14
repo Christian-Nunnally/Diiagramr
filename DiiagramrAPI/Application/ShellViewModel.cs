@@ -132,6 +132,7 @@ namespace DiiagramrAPI.Application
             {
                 e.Cancel = true;
             }
+            BackgroundTaskManager.Instance.CancelAllTasks();
         }
 
         private void CloseCurrentScreens()

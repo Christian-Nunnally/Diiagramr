@@ -1,11 +1,11 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrAPI.Service.Application;
 using DiiagramrModel;
 using SharpDX.Mathematics.Interop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -77,15 +77,8 @@ namespace DiiagramrFadeCandy
             }
 
             FadeCandyConnected = true;
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    Thread.Sleep(33);
-                    _fadeCandyClient.PutPixels(_ledDrivers);
-                    ServerStatusString = _fadeCandyClient.Status;
-                }
-            }).Start();
+            var backgroundTaskStreamingToFadeCandyServer = BackgroundTaskManager.Instance.CreateBackgroundTask(PushPixelsToFadeCandyServer, 33);
+            backgroundTaskStreamingToFadeCandyServer.Start();
         }
 
         public void SelectDriver(LedChannelDriver driver)
@@ -128,6 +121,12 @@ namespace DiiagramrFadeCandy
             Box = new RawBox(0, 0, 8, 8),
             Name = "pin " + pinNumber
         };
+
+        private void PushPixelsToFadeCandyServer()
+        {
+            _fadeCandyClient.PutPixels(_ledDrivers);
+            ServerStatusString = _fadeCandyClient.Status;
+        }
 
         private void InitializeDriversToDefaults()
         {

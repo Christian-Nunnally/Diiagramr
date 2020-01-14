@@ -148,12 +148,7 @@ namespace DiiagramrAPI.Application
                 {
                     for (int frame = 0; frame < _frames + _dripEffectDelay; frame++)
                     {
-                        if (View == null)
-                        {
-                            return;
-                        }
-
-                        View.Dispatcher.Invoke(() =>
+                        View?.Dispatcher.Invoke(() =>
                         {
                             for (int j = 0; j < _targetSpectrumLogoValues.Count; j++)
                             {

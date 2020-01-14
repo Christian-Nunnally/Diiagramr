@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrAPI.Service.Application;
 using DiiagramrModel;
 using SharpDX;
 using SharpDX.Direct2D1;
@@ -10,7 +11,6 @@ using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
@@ -39,30 +39,17 @@ namespace DiiagramrFadeCandy
         private WicBitmap _cachedBitmap;
         private WicRenderTarget _cachedRenderTarget;
         private int _lastRenderedFrame;
+        private BackgroundTask _backgroundRefreshTask;
 
         public LedMatrixNode()
         {
             Width = 60;
             Height = 60;
-            Name = "Led Matrix Effect";
+            Name = "Graphics Canvas";
             ResizeEnabled = true;
 
-            // TODO: Don't just always update the frame.
-            // TODO: Clean up resources when application is closed.
-            new Thread(() =>
-            {
-                while (true)
-                {
-                    if (View != null)
-                    {
-                        Thread.Sleep(FrameDelay);
-                        View.Dispatcher.Invoke(() =>
-                        {
-                            RenderFrame(_lastRenderedFrame + 1);
-                        });
-                    }
-                }
-            }).Start();
+            _backgroundRefreshTask = BackgroundTaskManager.Instance.CreateBackgroundTask(RenderFrameOnUIThread, FrameDelay);
+            _backgroundRefreshTask.Start();
         }
 
         public ObservableCollection<LedChannelDriver> Drivers { get; set; } = new ObservableCollection<LedChannelDriver>();
@@ -130,16 +117,12 @@ namespace DiiagramrFadeCandy
         [InputTerminal(Direction.North)]
         public void SetEffect(GraphicEffect data)
         {
-            if (data == null)
-            {
-                return;
-            }
-
             Effects.Clear();
             foreach (var effect in NodeModel.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<GraphicEffect>())
             {
                 Effects.Add(effect);
             }
+            _backgroundRefreshTask.Paused = !Effects.Any();
         }
 
         [InputTerminal(Direction.West)]
@@ -193,6 +176,14 @@ namespace DiiagramrFadeCandy
         public bool HasData()
         {
             return WicBitmap != null;
+        }
+
+        private void RenderFrameOnUIThread()
+        {
+            View?.Dispatcher.Invoke(() =>
+            {
+                RenderFrame(_lastRenderedFrame + 1);
+            });
         }
 
         private WicBitmap CreateAndCacheBitmap()
