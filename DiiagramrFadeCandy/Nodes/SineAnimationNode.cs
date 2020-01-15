@@ -19,13 +19,13 @@ namespace DiiagramrFadeCandy
         private int _frames = 30;
         private float _startPosition = 0;
         private float _quadrents = 4;
-        private float _amplitude;
+        private float _amplitude = 1;
 
         public SineAnimationNode()
         {
             Width = 60;
             Height = 60;
-            Name = "Animation";
+            Name = "Sine Animation";
         }
 
         public Point[] UIPoints { get; set; }
@@ -55,27 +55,27 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void SetFrames(int frames)
+        public void AnimationFrames(int frames)
         {
             _frames = frames;
-            SetQuadrents(_quadrents);
+            AnimationQuadrents(_quadrents);
         }
 
         [InputTerminal(Direction.North)]
-        public void SetOffset(float offset)
+        public void StartOffset(float offset)
         {
             _startPosition = offset;
         }
 
         [InputTerminal(Direction.South)]
-        public void SetQuadrents(float quadrents)
+        public void AnimationQuadrents(float quadrents)
         {
             _quadrents = quadrents;
             RenderFunctionOnView();
         }
 
         [InputTerminal(Direction.West)]
-        public void SetAmplitude(float amplitude)
+        public void Amplitude(float amplitude)
         {
             _amplitude = amplitude;
             RenderFunctionOnView();

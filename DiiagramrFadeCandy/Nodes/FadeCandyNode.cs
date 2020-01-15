@@ -22,7 +22,7 @@ namespace DiiagramrFadeCandy
         {
             Width = 180;
             Height = 180;
-            Name = "Fade Candy";
+            Name = "Fade Candy Server Client";
 
             Drivers.CollectionChanged += Drivers_CollectionChanged;
             InitializeDriversToDefaults();

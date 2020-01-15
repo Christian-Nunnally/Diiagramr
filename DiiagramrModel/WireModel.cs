@@ -99,7 +99,8 @@ namespace DiiagramrModel
                 else
                 {
                     var fromType = SourceTerminal.Data.GetType();
-                    if (!TryCoerseValue(SourceTerminal.Type, fromType, SourceTerminal?.Data, out newData))
+                    var toType = SinkTerminal.Type;
+                    if (!TryCoerseValue(fromType, toType, SourceTerminal?.Data, out newData))
                     {
                         IsBroken = true;
                     }
@@ -107,8 +108,9 @@ namespace DiiagramrModel
             }
             else
             {
-                var fromType = SinkTerminal.Type;
-                if (!TryCoerseValue(SourceTerminal.Type, fromType, SourceTerminal?.Data, out newData))
+                var fromType = SourceTerminal.Type;
+                var toType = SinkTerminal.Type;
+                if (!TryCoerseValue(fromType, toType, SourceTerminal?.Data, out newData))
                 {
                     IsBroken = true;
                 }
@@ -123,9 +125,9 @@ namespace DiiagramrModel
                 coersedValue = value;
                 return true;
             }
-            if (ValueCoersionHelper.CanCoerseValue(SourceTerminal.Type, SinkTerminal.Type))
+            if (ValueCoersionHelper.CanCoerseValue(fromType, toType))
             {
-                coersedValue = ValueCoersionHelper.CoerseValue(SourceTerminal.Type, SinkTerminal.Type, SourceTerminal?.Data);
+                coersedValue = ValueCoersionHelper.CoerseValue(fromType, toType, SourceTerminal?.Data);
                 return true;
             }
             coersedValue = null;

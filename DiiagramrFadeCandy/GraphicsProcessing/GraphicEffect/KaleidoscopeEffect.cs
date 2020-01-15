@@ -17,7 +17,9 @@ namespace DiiagramrFadeCandy
 
         public GraphicEffect Effect { get; set; }
 
-        public int NumberOfSides { get; private set; } = 8;
+        public float Rotation { get; set; } = 30;
+
+        public int NumberOfSides { get; set; } = 8;
 
         public override void Draw(RenderTarget target)
         {
@@ -29,7 +31,7 @@ namespace DiiagramrFadeCandy
 
             for (int i = 0; i < NumberOfSides; i++)
             {
-                var radians = 360 / NumberOfSides * i * (float)Math.PI / 180f;
+                var radians = (Rotation + (360 / NumberOfSides * i)) * ((float)Math.PI / 180f);
                 var matrix = Matrix3x2.CreateRotation(radians, centerVector);
                 target.Transform = new RawMatrix3x2(matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.M31, matrix.M32);
 

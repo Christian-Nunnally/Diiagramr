@@ -18,14 +18,14 @@ namespace DiiagramrPrimitives
         }
 
         [NodeSetting]
-        public int Index { get; set; }
+        public int IndexValue { get; set; }
 
         [OutputTerminal(Direction.South)]
         public object Value { get; set; }
 
         public string StringValue
         {
-            get => Index.ToString();
+            get => IndexValue.ToString();
 
             set
             {
@@ -33,8 +33,8 @@ namespace DiiagramrPrimitives
                 {
                     if (result >= 0)
                     {
-                        Index = result;
-                        ArrayInput(_array);
+                        IndexValue = result;
+                        Array(_array);
                     }
                 }
             }
@@ -49,14 +49,21 @@ namespace DiiagramrPrimitives
         }
 
         [InputTerminal(Direction.North)]
-        public void ArrayInput(object[] array)
+        public void Index(int index)
+        {
+            IndexValue = index;
+            OnPropertyChanged(nameof(StringValue));
+        }
+
+        [InputTerminal(Direction.East)]
+        public void Array(object[] array)
         {
             _array = array;
             if (array != null)
             {
-                if (Index < array.Length)
+                if (IndexValue < array.Length)
                 {
-                    Value = array[Index];
+                    Value = array[IndexValue];
                 }
             }
         }

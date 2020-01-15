@@ -9,7 +9,7 @@ namespace DiiagramrFadeCandy
         {
             Width = 30;
             Height = 30;
-            Name = "Spectrum Visualizer Effect";
+            Name = "Array Visualizer Effect";
         }
 
         public SpectrumEffect SpectrumEffect => Effect as SpectrumEffect;
@@ -18,7 +18,7 @@ namespace DiiagramrFadeCandy
         public GraphicEffect Effect { get; set; } = new SpectrumEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
         [InputTerminal(Direction.West)]
-        public void SetColor(Color data)
+        public void Color(Color data)
         {
             if (data != null)
             {
@@ -27,7 +27,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void SignalChanged(int[] data)
+        public void Array(int[] data)
         {
             SpectrumEffect.SpectrumData = data;
         }

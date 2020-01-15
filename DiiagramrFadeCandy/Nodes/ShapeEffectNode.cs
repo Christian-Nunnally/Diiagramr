@@ -10,6 +10,13 @@ namespace DiiagramrFadeCandy
             Width = 90;
             Height = 90;
             Name = "Shape Effect";
+            ShapeGraphic.Visible = true;
+            ShapeGraphic.X = 0.5f;
+            ShapeGraphic.Y = 0.5f;
+            ShapeGraphic.Width = 1.0f;
+            ShapeGraphic.Height = 1.0f;
+            ShapeGraphic.Thickness = 1;
+            ShapeGraphic.Fill = false;
         }
 
         public ShapeEffect ShapeGraphic => Effect as ShapeEffect;

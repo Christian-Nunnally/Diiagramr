@@ -43,8 +43,8 @@ namespace DiiagramrFadeCandy
 
         public LedMatrixNode()
         {
-            Width = 60;
-            Height = 60;
+            base.Width = 60;
+            base.Height = 60;
             Name = "Graphics Canvas";
             ResizeEnabled = true;
 
@@ -115,7 +115,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void SetEffect(GraphicEffect data)
+        public void AddEffect(GraphicEffect data)
         {
             Effects.Clear();
             foreach (var effect in NodeModel.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<GraphicEffect>())
@@ -126,7 +126,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.West)]
-        public void BitmapWidthTerminalDataChanged(int width)
+        public void Width(int width)
         {
             if (width != 0)
             {
@@ -135,7 +135,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.West)]
-        public void BitmapHeightTerminalDataChanged(int height)
+        public void Height(int height)
         {
             if (height != 0)
             {
@@ -144,7 +144,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.South)]
-        public void LedDriverTerminalDataChanged(LedChannelDriver data)
+        public void LedDrivers(LedChannelDriver data)
         {
             if (data == null)
             {
