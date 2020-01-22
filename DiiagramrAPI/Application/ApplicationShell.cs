@@ -18,15 +18,10 @@ namespace DiiagramrAPI.Application
 
         public IObservableCollection<TopLevelToolBarCommand> ToolBarItems { get; } = new BindableCollection<TopLevelToolBarCommand>();
 
-        public void AttachToViewModel(ShellViewModel shellViewModel)
+        public void AttachToShell(ShellViewModel shellViewModel)
         {
             _shellViewModel = shellViewModel;
             ExecuteAllActions();
-        }
-
-        public void OpenWindow(ShellWindow window)
-        {
-            ExecuteWhenAttached(shell => shell.OpenWindow(window));
         }
 
         public void SetWindowTitle(string title)

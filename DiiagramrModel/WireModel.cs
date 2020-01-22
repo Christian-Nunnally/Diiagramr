@@ -3,7 +3,6 @@ namespace DiiagramrModel
     using DiiagramrCore;
     using DiiagramrModel2;
     using PropertyChanged;
-    using System;
     using System.ComponentModel;
     using System.Runtime.Serialization;
 
@@ -77,61 +76,22 @@ namespace DiiagramrModel
 
         public void PropagateData()
         {
-            if (IsBroken || SourceTerminal == null || SinkTerminal == null)
+            if (IsBroken || SinkTerminal == null)
             {
                 return;
             }
-            else
-            {
-                PropagateDataCore();
-            }
+            NotifyPropertyChanged("Data");
+            SinkTerminal.Data = GetCoersedSourceTerminalDataOrBreakWire();
         }
 
-        private void PropagateDataCore()
+        private object GetCoersedSourceTerminalDataOrBreakWire()
         {
-            object newData;
-            if (SourceTerminal.Type == typeof(object))
+            if (ValueCoersionHelper.CanCoerseValue(SourceTerminal?.Data, SinkTerminal.Type))
             {
-                if (SourceTerminal.Data == null)
-                {
-                    newData = null;
-                }
-                else
-                {
-                    var fromType = SourceTerminal.Data.GetType();
-                    var toType = SinkTerminal.Type;
-                    if (!TryCoerseValue(fromType, toType, SourceTerminal?.Data, out newData))
-                    {
-                        IsBroken = true;
-                    }
-                }
+                return ValueCoersionHelper.CoerseValue(SourceTerminal?.Data, SinkTerminal.Type);
             }
-            else
-            {
-                var fromType = SourceTerminal.Type;
-                var toType = SinkTerminal.Type;
-                if (!TryCoerseValue(fromType, toType, SourceTerminal?.Data, out newData))
-                {
-                    IsBroken = true;
-                }
-            }
-            SinkTerminal.Data = newData;
-        }
-
-        private bool TryCoerseValue(Type fromType, Type toType, object value, out object coersedValue)
-        {
-            if (toType.IsAssignableFrom(fromType))
-            {
-                coersedValue = value;
-                return true;
-            }
-            if (ValueCoersionHelper.CanCoerseValue(fromType, toType))
-            {
-                coersedValue = ValueCoersionHelper.CoerseValue(fromType, toType, SourceTerminal?.Data);
-                return true;
-            }
-            coersedValue = null;
-            return false;
+            IsBroken = true;
+            return null;
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)

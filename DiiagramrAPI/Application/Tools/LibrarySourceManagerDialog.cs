@@ -5,9 +5,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class LibrarySourceManagerWindow : ShellWindow
+    public class LibrarySourceManagerDialog : ShellDialog
     {
-        public LibrarySourceManagerWindow(Func<ILibraryManager> libraryManagerFactory)
+        public LibrarySourceManagerDialog(Func<ILibraryManager> libraryManagerFactory)
         {
             LibraryManager = libraryManagerFactory.Invoke();
             LibraryManager.AddSource("http://diiagramrlibraries.azurewebsites.net/nuget/Packages");

@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Service.Dialog
 {
-    public interface IDialogService : IService
+    public interface IDialogService : ISingletonService
     {
         Task<MessageBoxResult> Show(string prompt, string title, MessageBoxButton button);
     }

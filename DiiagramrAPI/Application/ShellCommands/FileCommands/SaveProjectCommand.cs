@@ -6,12 +6,10 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     public class SaveProjectCommand : ToolBarCommand
     {
         private readonly IProjectManager _projectManager;
-        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
 
-        public SaveProjectCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
+        public SaveProjectCommand(Func<IProjectManager> projectManagerFactory)
         {
-            _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
-            _projectManager = projectManagerFactory.Invoke();
+            _projectManager = projectManagerFactory();
         }
 
         public override string Name => "Save";
@@ -24,7 +22,6 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         {
             _projectManager.SaveProject();
             shell.SetWindowTitle("Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : string.Empty));
-            shell.ShowScreen(_visualDropStartScreenViewModel);
         }
     }
 }

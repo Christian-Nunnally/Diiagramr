@@ -3,7 +3,7 @@ using DiiagramrModel;
 
 namespace DiiagramrAPI.Project
 {
-    public interface IProjectLoadSave : IService
+    public interface IProjectLoadSave : ISingletonService
     {
         ProjectModel Open(string fileName);
 

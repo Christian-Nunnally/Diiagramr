@@ -18,13 +18,13 @@ namespace Diiagramr.Application
         private void MaximizeRestoreClick(object sender, RoutedEventArgs e)
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
-            if (window.WindowState == System.Windows.WindowState.Normal)
+            if (window.WindowState == WindowState.Normal)
             {
-                window.WindowState = System.Windows.WindowState.Maximized;
+                window.WindowState = WindowState.Maximized;
             }
             else
             {
-                window.WindowState = System.Windows.WindowState.Normal;
+                window.WindowState = WindowState.Normal;
 
                 window.ResizeMode = ResizeMode.NoResize;
             }
@@ -33,7 +33,7 @@ namespace Diiagramr.Application
         private void MinimizeClick(object sender, RoutedEventArgs e)
         {
             var window = (Window)((FrameworkElement)sender).TemplatedParent;
-            window.WindowState = System.Windows.WindowState.Minimized;
+            window.WindowState = WindowState.Minimized;
         }
     }
 }

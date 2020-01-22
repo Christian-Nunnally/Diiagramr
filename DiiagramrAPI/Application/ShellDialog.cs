@@ -2,9 +2,9 @@ using System;
 
 namespace DiiagramrAPI.Application
 {
-    public abstract class ShellWindow : ViewModel
+    public abstract class ShellDialog : ViewModel
     {
-        public event Action<ShellWindow> OpenWindow;
+        public Action<ShellDialog> OpenDialog;
 
         public abstract int MaxHeight { get; }
 
@@ -12,9 +12,9 @@ namespace DiiagramrAPI.Application
 
         public abstract string Title { get; }
 
-        protected void OpenOtherWindow(ShellWindow otherWindow)
+        protected void OpenOtherDialog(ShellDialog dialogToOpen)
         {
-            OpenWindow?.Invoke(otherWindow);
+            OpenDialog?.Invoke(dialogToOpen);
         }
     }
 }

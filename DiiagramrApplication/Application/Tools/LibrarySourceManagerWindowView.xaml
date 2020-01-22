@@ -49,7 +49,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border>
-        <Grid Background="{StaticResource ToolbarBackgroundBrush}">
+        <Grid Background="{StaticResource DialogBorderBackgroundBrush}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition />

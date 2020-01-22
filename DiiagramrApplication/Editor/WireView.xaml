@@ -26,7 +26,12 @@
             Canvas.Top="{Binding DataVisualY}"
             Width="{Binding DataVisualDiameter}"
             Height="{Binding DataVisualDiameter}"
-            Fill="#bbbbff"
+            Fill="{Binding PropagationVisualColorBrush}"
+            Visibility="{Binding IsDataVisualVisible, Converter={StaticResource Btv}}" />
+        <Label
+            Canvas.Left="{Binding DataVisualX}"
+            Canvas.Top="{Binding DataVisualY}"
+            Content="{Binding WirePropagationVisualNumberString}"
             Visibility="{Binding IsDataVisualVisible, Converter={StaticResource Btv}}" />
     </Canvas>
 </UserControl>

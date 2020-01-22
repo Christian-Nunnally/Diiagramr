@@ -6,11 +6,11 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class LibraryManagerWindow : ShellWindow
+    public class LibraryManagerDialog : ShellDialog
     {
-        private readonly LibrarySourceManagerWindow _librarySourceManagerViewModel;
+        private readonly LibrarySourceManagerDialog _librarySourceManagerViewModel;
 
-        public LibraryManagerWindow(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerWindow> librarySourceManagerWindowViewModelFactory)
+        public LibraryManagerDialog(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerDialog> librarySourceManagerWindowViewModelFactory)
         {
             LibraryManager = libraryManagerFactory.Invoke();
             _librarySourceManagerViewModel = librarySourceManagerWindowViewModelFactory.Invoke();
@@ -55,7 +55,7 @@ namespace DiiagramrAPI.Application.Tools
 
         public void ViewSources()
         {
-            OpenOtherWindow(_librarySourceManagerViewModel);
+            OpenOtherDialog(_librarySourceManagerViewModel);
         }
 
         protected override void OnViewLoaded()

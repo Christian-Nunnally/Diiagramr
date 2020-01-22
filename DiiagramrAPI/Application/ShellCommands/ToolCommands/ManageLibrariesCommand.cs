@@ -5,11 +5,15 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 {
     public class ManageLibrariesCommand : ToolBarCommand
     {
-        private readonly LibraryManagerWindow _libraryManagerWindowViewModel;
+        private readonly LibraryManagerDialog _libraryManagerDialog;
+        private readonly DialogHost _dialogHost;
 
-        public ManageLibrariesCommand(Func<LibraryManagerWindow> startScreenViewModelFactory)
+        public ManageLibrariesCommand(
+            Func<LibraryManagerDialog> startScreenViewModelFactory,
+            Func<DialogHost> dialogHostFactory)
         {
-            _libraryManagerWindowViewModel = startScreenViewModelFactory.Invoke();
+            _libraryManagerDialog = startScreenViewModelFactory();
+            _dialogHost = dialogHostFactory();
         }
 
         public override string Name => "Libraries";
@@ -20,7 +24,7 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         internal override void ExecuteInternal(IApplicationShell shell, object parameter)
         {
-            shell.OpenWindow(_libraryManagerWindowViewModel);
+            _dialogHost.OpenDialog(_libraryManagerDialog);
         }
     }
 }

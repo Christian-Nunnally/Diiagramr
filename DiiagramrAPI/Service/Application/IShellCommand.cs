@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Application
 {
-    public interface IShellCommand : IService
+    public interface IShellCommand : ISingletonService
     {
         string Name { get; }
 

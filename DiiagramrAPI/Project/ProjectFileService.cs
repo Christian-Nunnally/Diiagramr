@@ -13,23 +13,23 @@ namespace DiiagramrAPI.Project
     {
         public const string ProjectFileExtension = ".xml";
         private readonly IDialogService _dialogService;
-        private readonly SaveFileWindow _saveFileWindow;
+        private readonly SaveFileDialog _saveFileWindow;
         private readonly IProjectLoadSave _loadSave;
-        private readonly IApplicationShell _applicationShell;
+        private readonly DialogHost _dialogHost;
 
         public ProjectFileService(
-            Func<IApplicationShell> applicationShellFactory,
             Func<IDirectoryService> directoryServiceFactory,
             Func<IProjectLoadSave> loadSaveFactory,
             Func<IDialogService> dialogServiceFactory,
-            Func<SaveFileWindow> saveFileWindowFactory)
+            Func<SaveFileDialog> saveFileWindowFactory,
+            Func<DialogHost> dialogHostFactory)
         {
-            _applicationShell = applicationShellFactory.Invoke();
-            _loadSave = loadSaveFactory.Invoke();
-            _dialogService = dialogServiceFactory.Invoke();
-            _saveFileWindow = saveFileWindowFactory.Invoke();
+            _loadSave = loadSaveFactory();
+            _dialogService = dialogServiceFactory();
+            _saveFileWindow = saveFileWindowFactory();
+            _dialogHost = dialogHostFactory();
 
-            var directoryService = directoryServiceFactory.Invoke();
+            var directoryService = directoryServiceFactory();
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
             if (!directoryService.Exists(ProjectDirectory))
@@ -51,8 +51,7 @@ namespace DiiagramrAPI.Project
         public ProjectModel LoadProject()
         {
             _saveFileWindow.InitialDirectory = ProjectDirectory;
-            _applicationShell.OpenWindow(_saveFileWindow);
-
+            _dialogHost.OpenDialog(_saveFileWindow);
             return LoadProject(_saveFileWindow.FileName);
         }
 
@@ -69,6 +68,7 @@ namespace DiiagramrAPI.Project
             if (saveAs || project.Name == "NewProject")
             {
                 SaveAsProject(project);
+                return;
             }
 
             SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ProjectFileExtension);
@@ -79,7 +79,7 @@ namespace DiiagramrAPI.Project
             _saveFileWindow.InitialDirectory = ProjectDirectory;
             _saveFileWindow.FileName = project.Name;
             _saveFileWindow.SaveAction = fileName => SerializeAndSave(project, fileName);
-            _applicationShell.OpenWindow(_saveFileWindow);
+            _dialogHost.OpenDialog(_saveFileWindow);
         }
 
         private void SerializeAndSave(ProjectModel project, string fileName)

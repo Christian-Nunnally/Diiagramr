@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Service.IO
 {
-    public interface IFetchWebResource : IService
+    public interface IFetchWebResource : ISingletonService
     {
         Task DownloadFileAsync(string url, string downloadToPath);
 

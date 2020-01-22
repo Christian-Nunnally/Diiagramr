@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Service.Application
 {
-    public interface IScreenDisplayService : IService
+    public interface IScreenDisplayService : ISingletonService
     {
         void ShowScreen(IScreen screen);
     }

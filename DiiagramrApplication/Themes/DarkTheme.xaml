@@ -12,9 +12,9 @@
             <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />
             <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=DarkHighlightGray}" />
             <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=AlmostWhite}" />
-            <SolidColorBrush x:Key="WindowBackgroundBrush" Color="{StaticResource ResourceKey=TransparentBlack}" />
-            <SolidColorBrush x:Key="WindowBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />
-            <SolidColorBrush x:Key="WindowBorderBackgroundBrush" Color="{StaticResource ResourceKey=ToolWindowBackground}" />
+            <SolidColorBrush x:Key="DialogBackgroundBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />
+            <SolidColorBrush x:Key="DialogBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=TransparentBlack}" />
+            <SolidColorBrush x:Key="DialogBorderBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
             <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=ButtonHoverBlue}" />
             <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=LightGray}" />
             <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=HighlightedGray}" />
@@ -22,6 +22,8 @@
             <SolidColorBrush x:Key="NodeBorderBrush" Color="{StaticResource ResourceKey=NodeBorderGray}" />
             <SolidColorBrush x:Key="SoftDiagramForeground" Color="{StaticResource ResourceKey=LightSoftDiagramForeground}" />
             <SolidColorBrush x:Key="DiagramBoundingBoxBorderBrush" Color="{StaticResource ResourceKey=LightDiagramBoundingBoxBorder}" />
+            <SolidColorBrush x:Key="DialogTitleBackgroundBrush" Color="{StaticResource ResourceKey=DarkGray}" />
+            <SolidColorBrush x:Key="DialogTitleForegroundBrush" Color="{StaticResource ResourceKey=LightSoftDiagramForeground}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

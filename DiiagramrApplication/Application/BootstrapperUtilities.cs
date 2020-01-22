@@ -2,15 +2,20 @@
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service;
 using StyletIoC;
+using StyletIoC.Creation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace Diiagramr.Application
 {
+    // TODO: This class is too large. Maybe split up into service loaders?
     public static class BootstrapperUtilities
     {
-        public static void BindEverythingThatImplementsInterface(Type interfaceType, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
+        private static Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
+
+        public static void BindEverythingThatImplementsInterfaceAsASingleton(Type interfaceType, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
         {
             var serviceImplementations = loadedTypes.Where(t => t.IsClass && t.GetInterface(interfaceType.Name) != null && !t.IsAbstract);
             foreach (var serviceImplementation in serviceImplementations)
@@ -33,21 +38,20 @@ namespace Diiagramr.Application
 
         public static void BindServices(IStyletIoCBuilder builder)
         {
-            var loadedTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache()
-                            .Where(t => t.GetInterface("ITestImplementationOf`1") == null);
-            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
+            IEnumerable<Type> loadedTypes = GetAllLoadedNonTestTypes();
+            var loadedServiceInterfaces = loadedTypes.Where(t => t.IsInterface && t.GetInterface(nameof(ISingletonService)) != null);
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
-                BindEverythingThatImplementsInterface(loadedService, builder, loadedTypes, new Dictionary<Type, Type>());
+                BindEverythingThatImplementsInterfaceAsASingleton(loadedService, builder, loadedTypes, new Dictionary<Type, Type>());
             }
         }
 
         public static void BindTestServices(IStyletIoCBuilder builder)
         {
             var allLoadedTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache();
-            var testImplementationTypes = allLoadedTypes.Where(t => t.GetInterface("ITestImplementationOf`1") == null);
-            var loadedServiceInterfaces = testImplementationTypes.Where(t => t.IsInterface && t.GetInterface(nameof(IService)) != null);
+            var testImplementationTypes = GetAllLoadedNonTestTypes();
+            var loadedServiceInterfaces = testImplementationTypes.Where(t => t.IsInterface && t.GetInterface(nameof(ISingletonService)) != null);
 
             var fakeTypes = allLoadedTypes.Where(t => t.IsClass && !t.IsAbstract && t.GetInterface("ITestImplementationOf`1") != null);
             var realToFakeTypeDictionary = new Dictionary<Type, Type>();
@@ -66,7 +70,7 @@ namespace Diiagramr.Application
 
             foreach (var loadedService in loadedServiceInterfaces)
             {
-                BindEverythingThatImplementsInterface(loadedService, builder, testImplementationTypes, realToFakeTypeDictionary);
+                BindEverythingThatImplementsInterfaceAsASingleton(loadedService, builder, testImplementationTypes, realToFakeTypeDictionary);
             }
         }
 
@@ -82,11 +86,30 @@ namespace Diiagramr.Application
             }
         }
 
+        private static object GetOrInstantiateSingletonInstanceOfType(Type type, IRegistrationContext context)
+        {
+            if (_singletons.TryGetValue(type, out var instance))
+            {
+                return instance;
+            }
+            context.Get(type);
+            _singletons.Add(type, instance);
+            return instance;
+        }
+
+        private static IEnumerable<Type> GetAllLoadedNonTestTypes()
+        {
+            return GetAllLoadedTypesNotInTheGlobalAssemblyCache().Where(t => t.GetInterface("ITestImplementationOf`1") == null);
+        }
+
         private static IEnumerable<Type> GetAllLoadedTypesNotInTheGlobalAssemblyCache()
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                                          .Where(a => !a.GlobalAssemblyCache)
-                                          .SelectMany(x => x.GetTypes());
+            return GetLoadedAssemblies(a => !a.GlobalAssemblyCache).SelectMany(a => a.GetTypes());
+        }
+
+        private static IEnumerable<Assembly> GetLoadedAssemblies(Func<Assembly, bool> filter)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GlobalAssemblyCache);
         }
     }
 }

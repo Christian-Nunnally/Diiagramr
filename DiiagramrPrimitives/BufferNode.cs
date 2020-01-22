@@ -29,14 +29,11 @@ namespace DiiagramrPrimitives
                 UpdateBufferLength();
             }
 
-            var modifiedBuffer = Buffer;
-            for (int i = modifiedBuffer.Length - 1; i > 1; i--)
+            for (int i = Buffer.Length - 1; i > 0; i--)
             {
-                modifiedBuffer[i] = modifiedBuffer[i - 1];
+                Buffer[i] = Buffer[i - 1];
             }
-            modifiedBuffer[0] = data;
-            Buffer = null;
-            Buffer = modifiedBuffer;
+            Buffer[0] = data;
 
             OnPropertyChanged(nameof(Buffer));
         }

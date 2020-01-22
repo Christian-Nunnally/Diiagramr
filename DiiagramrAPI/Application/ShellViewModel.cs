@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Input;
 
 namespace DiiagramrAPI.Application
 {
@@ -16,34 +15,35 @@ namespace DiiagramrAPI.Application
     {
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
         public const string StartCommandId = "start";
-        private TimeSpan _lastMouseDownTime;
 
         public ShellViewModel(
             Func<IProjectManager> projectManagerFactory,
             Func<ContextMenu> contextMenuViewModelFactory,
             Func<IApplicationShell> shellFactory,
-            Func<ToolbarViewModel> toolbarViewModelFactory)
+            Func<ToolbarViewModel> toolbarViewModelFactory,
+            Func<DialogHost> dialogHostFactory)
         {
-            Shell = shellFactory.Invoke();
-            Shell.AttachToViewModel(this);
-            ContextMenuViewModel = contextMenuViewModelFactory.Invoke();
-            ProjectManager = projectManagerFactory.Invoke();
-            ToolbarViewModel = toolbarViewModelFactory.Invoke();
+            Shell = shellFactory();
+            Shell.AttachToShell(this);
+            ContextMenuViewModel = contextMenuViewModelFactory();
+            ProjectManager = projectManagerFactory();
+            ToolbarViewModel = toolbarViewModelFactory();
+            DialogHost = dialogHostFactory();
             ShellCommand.Execute(StartCommandId);
             ValueCoersionHelper.InitializeDefaultCoersionFunctions();
         }
-
-        public ShellWindow ActiveWindow { get; set; }
 
         public bool CanSaveAsProject { get; set; }
 
         public bool CanSaveProject { get; set; }
 
-        public ContextMenu ContextMenuViewModel { get; set; }
+        public double Width { get; set; } = 1010;
 
         public double Height { get; set; } = 830;
 
-        public bool IsWindowOpen => ActiveWindow != null;
+        public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
+
+        public ContextMenu ContextMenuViewModel { get; set; }
 
         public IProjectManager ProjectManager { get; }
 
@@ -51,49 +51,7 @@ namespace DiiagramrAPI.Application
 
         public ToolbarViewModel ToolbarViewModel { get; set; }
 
-        public double Width { get; set; } = 1010;
-
-        public Stack<ShellWindow> WindowStack { get; } = new Stack<ShellWindow>();
-
-        public string WindowTitle { get; set; } = "Visual Drop - " + Assembly.GetEntryAssembly().GetName().Version.ToString(4);
-
-        public void CloseWindow()
-        {
-            if (ActiveWindow != null)
-            {
-                ActiveWindow.OpenWindow -= OpenWindow;
-                ActiveWindow = WindowStack.Count > 0 ? WindowStack.Pop() : null;
-            }
-        }
-
-        public void MouseDownHandled(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        public void MouseDownHandler()
-        {
-            _lastMouseDownTime = DateTime.Now.TimeOfDay;
-        }
-
-        public void MouseUpHandler()
-        {
-            if (DateTime.Now.TimeOfDay.Subtract(_lastMouseDownTime).TotalMilliseconds < 700)
-            {
-                CloseWindow();
-            }
-        }
-
-        public void OpenWindow(ShellWindow window)
-        {
-            window.OpenWindow += OpenWindow;
-            if (ActiveWindow != null)
-            {
-                WindowStack.Push(ActiveWindow);
-            }
-
-            ActiveWindow = window;
-        }
+        public DialogHost DialogHost { get; set; }
 
         public override void RequestClose(bool? dialogResult = null)
         {
@@ -132,6 +90,7 @@ namespace DiiagramrAPI.Application
             {
                 e.Cancel = true;
             }
+            CloseCurrentScreens();
             BackgroundTaskManager.Instance.CancelAllTasks();
         }
 

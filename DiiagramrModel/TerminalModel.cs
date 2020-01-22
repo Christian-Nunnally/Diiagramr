@@ -47,7 +47,7 @@ namespace DiiagramrModel
         /// Gets the list of wires connected to the terminal.
         /// </summary>
         [DataMember]
-        public virtual List<WireModel> ConnectedWires { get; } = new List<WireModel>();
+        public virtual List<WireModel> ConnectedWires { get; set; } = new List<WireModel>();
 
         /// <summary>
         /// Gets or sets the current value held by the terminal.
@@ -132,13 +132,11 @@ namespace DiiagramrModel
         /// <summary>
         /// Gets the overall x position of the terminal on the diagram.  NodeX + offsetX.
         /// </summary>
-        [DataMember]
         public virtual double X => (ParentNode?.X ?? 0) + OffsetX;
 
         /// <summary>
         /// Gets the overall y position of the terminal on the diagram.  NodeY + offsetY.
         /// </summary>
-        [DataMember]
         public virtual double Y => (ParentNode?.Y ?? 0) + OffsetY;
 
         /// <summary>
@@ -193,25 +191,20 @@ namespace DiiagramrModel
 
         public virtual bool CanWireToType(Type type)
         {
-            return CanWireFromTypeToType(Type, type);
+            return CanWireFromTypeToType(Data?.GetType() ?? Type, type);
         }
 
         public virtual bool CanWireFromType(Type type)
         {
-            return CanWireFromTypeToType(type, Type);
+            return CanWireFromTypeToType(type, Data?.GetType() ?? Type);
         }
 
         private bool CanWireFromTypeToType(Type from, Type to)
         {
-            if (ValueCoersionHelper.CanCoerseValue(from, to))
-            {
-                return true;
-            }
-            // if (to.IsArray && from.IsArray && (to.GetElementType() == typeof(object) || from.GetElementType().IsAssignableFrom(to.GetElementType())))
-            // {
-            //     return true;
-            // }
-            return from.IsAssignableFrom(to) || to == typeof(object);
+            return to == typeof(object) || from.IsAssignableFrom(to)
+                ? true
+                : ValueCoersionHelper.CanCoerseValue(from, to);
+            ;
         }
 
         private void ParentNodePropertyChanged(object sender, PropertyChangedEventArgs e)

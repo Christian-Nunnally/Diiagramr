@@ -8,6 +8,7 @@
     /// A terminal that can only be wired to an <see cref="InputTerminal"/>.
     /// </summary>
     [DataContract(IsReference = true)]
+    [KnownType(typeof(OutputTerminalModel))]
     public class OutputTerminalModel : TerminalModel
     {
         /// <summary>

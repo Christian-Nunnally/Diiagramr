@@ -1,5 +1,6 @@
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Editor.Interactors;
+using DiiagramrAPI.Service.Application;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;
@@ -14,23 +15,27 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public class Wire : ViewModel, IMouseEnterLeaveReaction
     {
-        private const double _dataVisualDiameter = 3;
+        public static bool ShowDataPropagation = true;
+        private const double _dataVisualDiameter = 6;
         private const double _dataVisualRadius = _dataVisualDiameter / 2.0;
         private const float DimWireColorAmount = -0.3f;
         private const float SuperDimWireColorAmount = -0.7f;
-        private const int WireAnimationFrameDelay = 15;
+        private const float BrightWireColorAmount = 0.8f;
+        private const int WireAnimationFrameDelay = 20;
         private const int WireAnimationFrames = 15;
-        private const int WireDataAnimationFrames = 15;
-        private const int WireDataAnimationRepeatDelay = 1000;
-        private readonly bool _showDataPropagation = false;
+        private const int WireDataAnimationFrames = 30;
+        private const int WireDataAnimationRepeatDelay = 500;
         private readonly List<Point[]> _wireDrawAnimationFrames = new List<Point[]>();
         private readonly WirePathingAlgorithum _wirePathingAlgorithum;
         private readonly List<Point> _dataVisualAnimationFrames = new List<Point>();
         private readonly Brush BrokenWireBrush = new SolidColorBrush(Color.FromRgb(90, 9, 9));
         private bool _configuringWirePoints;
-        private bool _isDataVisualAnimationFramesValid;
-        private bool _showingDataPropagation;
+        private bool _doDataVisualAnimationFramesNeedToBeRefreshed;
         private bool _isMouseOver;
+
+        private int _dataChangedCount;
+        private bool _repeatDataPropagation;
+        private BackgroundTask _wirePropagationAnimationTask;
 
         public Wire(WireModel wire)
         {
@@ -51,12 +56,15 @@ namespace DiiagramrAPI.Editor.Diagrams
             };
             BannedDirectionForEnd = startTerminal.Model.DefaultSide.Opposite();
             BannedDirectionForStart = Direction.None;
-            _wirePathingAlgorithum = new WirePathingAlgorithum(this);
-            _wirePathingAlgorithum.FallbackSourceTerminal = startTerminal.Model is InputTerminalModel ? startTerminal : null;
-            _wirePathingAlgorithum.FallbackSinkTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal : null;
+            _wirePathingAlgorithum = new WirePathingAlgorithum(this)
+            {
+                FallbackSourceTerminal = startTerminal.Model is InputTerminalModel ? startTerminal : null,
+                FallbackSinkTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal : null
+            };
             LineColorBrush = new SolidColorBrush(Colors.White);
         }
 
+        public string WirePropagationVisualNumberString { get; set; }
         public Direction BannedDirectionForEnd { get; set; }
 
         public Direction BannedDirectionForStart { get; set; }
@@ -76,6 +84,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         public bool IsDataVisualVisible { get; set; }
 
         public Brush LineColorBrush { get; set; } = Brushes.Black;
+        public Brush PropagationVisualColorBrush { get; set; } = Brushes.Black;
 
         public WireModel WireModel { get; private set; }
 
@@ -88,6 +97,10 @@ namespace DiiagramrAPI.Editor.Diagrams
         public double Y1 => WireModel.Y1;
 
         public double Y2 => WireModel.Y2;
+
+        private bool CanStartPropagationAnimationTask => ShowDataPropagation && !IsPropagationAnimationTaskRunning;
+
+        private bool IsPropagationAnimationTaskRunning => _wirePropagationAnimationTask != null && _wirePropagationAnimationTask.IsRunning;
 
         public void DisconnectWire()
         {
@@ -116,7 +129,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                 if (View != null)
                 {
                     Points = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
-                    _isDataVisualAnimationFramesValid = false;
+                    _doDataVisualAnimationFramesNeedToBeRefreshed = false;
                 }
             }
 
@@ -132,7 +145,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             else
             {
                 Points = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
-                _isDataVisualAnimationFramesValid = false;
+                _doDataVisualAnimationFramesNeedToBeRefreshed = false;
             }
         }
 
@@ -215,21 +228,29 @@ namespace DiiagramrAPI.Editor.Diagrams
                 Thread.Sleep(frameDelay);
             }
 
-            _isDataVisualAnimationFramesValid = false;
+            _doDataVisualAnimationFramesNeedToBeRefreshed = false;
+        }
+
+        private void TryStartPropagationAnimationTask()
+        {
+            if (CanStartPropagationAnimationTask)
+            {
+                _wirePropagationAnimationTask = BackgroundTaskManager.Instance.CreateBackgroundTask(DoWirePropagationAnimation);
+                WirePropagationVisualNumberString = _dataChangedCount > 1 ? _dataChangedCount.ToString() : string.Empty;
+                _dataChangedCount = 0;
+                _wirePropagationAnimationTask.Start();
+            }
         }
 
         private void DoWirePropagationAnimation()
         {
-            if (_showDataPropagation && !_showingDataPropagation)
+            _repeatDataPropagation = false;
+            ValidateDataVisualAnimationFrames();
+            AnimateDataPropagation(WireAnimationFrameDelay);
+            Thread.Sleep(WireDataAnimationRepeatDelay);
+            if (_repeatDataPropagation)
             {
-                _showingDataPropagation = true;
-                new Thread(() =>
-                {
-                    ValidateDataVisualAnimationFrames();
-                    AnimateDataPropagation(WireAnimationFrameDelay);
-                    Thread.Sleep(WireDataAnimationRepeatDelay);
-                    _showingDataPropagation = false;
-                }).Start();
+                DoWirePropagationAnimation();
             }
         }
 
@@ -244,7 +265,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             AddDataVisualAnimationFrame(originalPoints.First());
             var totalLength = GetLengthOfWire(originalPoints);
 
-            for (int frameNumber = 0; frameNumber < WireAnimationFrames; frameNumber++)
+            for (int frameNumber = 0; frameNumber < WireDataAnimationFrames; frameNumber++)
             {
                 var lengthSoFar = 0.0;
 
@@ -269,8 +290,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             AddDataVisualAnimationFrame(originalPoints.Last());
 
             // reverse the frames if you want the wire to draw backwards
-            // _dataVisualAnimationFrames.Reverse();
-            _isDataVisualAnimationFramesValid = true;
+            _dataVisualAnimationFrames.Reverse();
+            _doDataVisualAnimationFramesNeedToBeRefreshed = true;
         }
 
         private void GenerateFramesOfWiringAnimation(Point[] originalPoints)
@@ -319,7 +340,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 length += Point.Subtract(wirePoints[i], wirePoints[i + 1]).Length;
             }
-
             return length;
         }
 
@@ -327,6 +347,10 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             switch (e.PropertyName)
             {
+                case "Data":
+                    AnimateWirePropagationIfNecessary();
+                    break;
+
                 case nameof(WireModel.SourceTerminal):
                 case nameof(WireModel.SinkTerminal):
                     WireModel.PropertyChanged -= ModelPropertyChanged;
@@ -343,6 +367,19 @@ namespace DiiagramrAPI.Editor.Diagrams
                 case nameof(WireModel.Y2):
                     NotifyOfPropertyChange(e.PropertyName);
                     break;
+            }
+        }
+
+        private void AnimateWirePropagationIfNecessary()
+        {
+            _dataChangedCount++;
+            if (!_repeatDataPropagation)
+            {
+                TryStartPropagationAnimationTask();
+            }
+            else if (_wirePropagationAnimationTask == null || _wirePropagationAnimationTask.IsRunning)
+            {
+                _repeatDataPropagation = true;
             }
         }
 
@@ -374,13 +411,14 @@ namespace DiiagramrAPI.Editor.Diagrams
                 ? CoreUilities.ChangeColorBrightness(color, SuperDimWireColorAmount)
                 : CoreUilities.ChangeColorBrightness(color, DimWireColorAmount);
             LineColorBrush = GetBrushFromColor(finalColor);
+            PropagationVisualColorBrush = GetBrushFromColor(CoreUilities.ChangeColorBrightness(color, BrightWireColorAmount));
         }
 
         private void ValidateDataVisualAnimationFrames()
         {
-            if (!_isDataVisualAnimationFramesValid)
+            if (!_doDataVisualAnimationFramesNeedToBeRefreshed)
             {
-                GenerateDataVisualAnimationFrames(Points);
+                GenerateDataVisualAnimationFrames(Points ?? new List<Point>());
             }
         }
     }

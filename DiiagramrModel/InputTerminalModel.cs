@@ -4,6 +4,7 @@
     using System.Runtime.Serialization;
 
     [DataContract(IsReference = true)]
+    [KnownType(typeof(InputTerminalModel))]
     public class InputTerminalModel : TerminalModel
     {
         /// <summary>

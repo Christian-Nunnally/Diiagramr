@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Plugins
 {
-    public interface IPluginLoader : IService
+    public interface IPluginLoader : ISingletonService
     {
         IEnumerable<Type> SerializeableTypes { get; set; }
 

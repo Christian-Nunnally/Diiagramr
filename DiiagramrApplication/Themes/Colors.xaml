@@ -11,9 +11,9 @@
     <Color x:Key="AlmostWhite">#FBFBFB</Color>
     <Color x:Key="Black">#000000</Color>
     <Color x:Key="AlmostBlack">#080808</Color>
-    <Color x:Key="TransparentBlack">#60202020</Color>
-    <Color x:Key="LessTransparentBlack">#10101010</Color>
-    <Color x:Key="ToolWindowBackground">#333337</Color>
+    <Color x:Key="TransparentBlack">#45303030</Color>
+    <Color x:Key="LessTransparentBlack">#60303030</Color>
+    <Color x:Key="DiiagramrBlackContrast">#313131</Color>
     <Color x:Key="ButtonHoverBlue">#007ACC</Color>
     <Color x:Key="HighlightedGray">#3F3F46</Color>
     <Color x:Key="Gray">#333337</Color>

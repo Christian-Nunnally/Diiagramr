@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Project
 {
-    public interface IProjectFileService : IService
+    public interface IProjectFileService : ISingletonService
     {
         event Action<ProjectModel> ProjectSaved;
 

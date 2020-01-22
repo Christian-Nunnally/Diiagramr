@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.Plugins
 {
-    public interface ILibraryManager : IService
+    public interface ILibraryManager : ISingletonService
     {
         ObservableCollection<NodeLibrary> AvailableLibraries { get; }
 

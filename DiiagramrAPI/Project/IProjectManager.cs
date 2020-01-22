@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Project
 {
-    public interface IProjectManager : IService
+    public interface IProjectManager : ISingletonService
     {
         event Action CurrentProjectChanged;
 
