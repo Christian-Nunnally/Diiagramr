@@ -8,9 +8,9 @@ namespace DiiagramrAPI.Application.Commands
     /// </summary>
     public abstract class BasicComposingCommand : TransactingCommand
     {
-        private readonly IList<ICommand> _composedCommands = new List<ICommand>();
+        private readonly IList<IReversableCommand> _composedCommands = new List<IReversableCommand>();
 
-        public void ComposeCommand(ICommand command)
+        public void ComposeCommand(IReversableCommand command)
         {
             _composedCommands.Add(command);
         }

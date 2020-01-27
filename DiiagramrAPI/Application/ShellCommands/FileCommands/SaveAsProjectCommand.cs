@@ -18,10 +18,14 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override float Weight => .4f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             _projectManager.SaveAsProject();
-            shell.SetWindowTitle("Visual Drop" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : string.Empty));
+        }
+
+        protected override bool CanExecuteInternal()
+        {
+            return _projectManager.CurrentProject is object;
         }
     }
 }

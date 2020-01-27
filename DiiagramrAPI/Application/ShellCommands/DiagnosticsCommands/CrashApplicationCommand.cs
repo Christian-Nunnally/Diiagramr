@@ -8,7 +8,12 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 
         public override string Parent => "Diagnostics";
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override bool CanExecuteInternal()
+        {
+            return true;
+        }
+
+        protected override void ExecuteInternal(object parameter)
         {
             throw new CrashApplicationCommandException("The application has crashed intentionally so that crash behavior can be tested.");
         }

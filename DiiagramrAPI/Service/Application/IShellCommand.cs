@@ -1,5 +1,4 @@
-﻿using DiiagramrAPI.Application;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DiiagramrAPI.Service.Application
 {
@@ -9,12 +8,14 @@ namespace DiiagramrAPI.Service.Application
 
         string Parent { get; }
 
+        bool LastCanExecute { get; set; }
+
         IList<IShellCommand> SubCommandItems { get; }
 
         float Weight { get; }
 
-        bool CanExecute(IApplicationShell shell);
+        bool CanExecute();
 
-        void Execute(IApplicationShell shell, object parameter);
+        void Execute(object parameter);
     }
 }

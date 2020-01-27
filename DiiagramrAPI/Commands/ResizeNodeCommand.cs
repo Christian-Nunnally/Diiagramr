@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Commands
 {
-    public class ResizeNodeCommand : ICommand
+    public class ResizeNodeCommand : IReversableCommand
     {
         private readonly Size _size;
 

@@ -64,13 +64,13 @@
     <Page Update="Application\Tools\ContextMenuView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\SaveFileWindowView.xaml">
+    <Page Update="Application\Tools\SaveFileDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\LibraryManagerWindowView.xaml">
+    <Page Update="Application\Tools\LibraryManagerDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\LibrarySourceManagerWindowView.xaml">
+    <Page Update="Application\Tools\LibrarySourceManagerDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\Tools\ToolbarView.xaml">

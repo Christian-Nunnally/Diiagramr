@@ -22,7 +22,7 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         public override float Weight => .5f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             _dialogHost.OpenDialog(_libraryManagerDialog);
         }

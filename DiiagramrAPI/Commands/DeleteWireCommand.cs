@@ -5,7 +5,7 @@ using System;
 
 namespace DiiagramrAPI.Commands
 {
-    public class DeleteWireCommand : ICommand
+    public class DeleteWireCommand : IReversableCommand
     {
         private readonly Diagram _diagram;
 

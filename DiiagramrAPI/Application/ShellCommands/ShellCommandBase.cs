@@ -13,19 +13,24 @@ namespace DiiagramrAPI.Application.ShellCommands
 
         public virtual float Weight => 0f;
 
-        public bool CanExecute(IApplicationShell shell)
+        public bool LastCanExecute { get; set; }
+
+        public bool CanExecute()
         {
-            return true;
+            LastCanExecute = CanExecuteInternal();
+            return LastCanExecute;
         }
 
-        public void Execute(IApplicationShell shell, object parameter)
+        public void Execute(object parameter)
         {
-            if (CanExecute(shell))
+            if (CanExecute())
             {
-                ExecuteInternal(shell, parameter);
+                ExecuteInternal(parameter);
             }
         }
 
-        internal abstract void ExecuteInternal(IApplicationShell shell, object parameter);
+        protected abstract void ExecuteInternal(object parameter);
+
+        protected abstract bool CanExecuteInternal();
     }
 }

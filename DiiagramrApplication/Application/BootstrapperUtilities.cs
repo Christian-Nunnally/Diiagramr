@@ -2,7 +2,6 @@
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service;
 using StyletIoC;
-using StyletIoC.Creation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +9,8 @@ using System.Reflection;
 
 namespace Diiagramr.Application
 {
-    // TODO: This class is too large. Maybe split up into service loaders?
     public static class BootstrapperUtilities
     {
-        private static Dictionary<Type, object> _singletons = new Dictionary<Type, object>();
-
         public static void BindEverythingThatImplementsInterfaceAsASingleton(Type interfaceType, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
         {
             var serviceImplementations = loadedTypes.Where(t => t.IsClass && t.GetInterface(interfaceType.Name) != null && !t.IsAbstract);
@@ -86,17 +82,6 @@ namespace Diiagramr.Application
             }
         }
 
-        private static object GetOrInstantiateSingletonInstanceOfType(Type type, IRegistrationContext context)
-        {
-            if (_singletons.TryGetValue(type, out var instance))
-            {
-                return instance;
-            }
-            context.Get(type);
-            _singletons.Add(type, instance);
-            return instance;
-        }
-
         private static IEnumerable<Type> GetAllLoadedNonTestTypes()
         {
             return GetAllLoadedTypesNotInTheGlobalAssemblyCache().Where(t => t.GetInterface("ITestImplementationOf`1") == null);
@@ -109,7 +94,7 @@ namespace Diiagramr.Application
 
         private static IEnumerable<Assembly> GetLoadedAssemblies(Func<Assembly, bool> filter)
         {
-            return AppDomain.CurrentDomain.GetAssemblies().Where(a => !a.GlobalAssemblyCache);
+            return AppDomain.CurrentDomain.GetAssemblies().Where(filter);
         }
     }
 }

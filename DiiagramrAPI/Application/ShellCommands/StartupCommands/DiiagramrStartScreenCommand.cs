@@ -4,19 +4,28 @@ namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
 {
     public class DiiagramrStartScreenCommand : ShellCommandBase
     {
-        private readonly StartScreenViewModel _startScreenViewModel;
+        private readonly StartScreen _startScreenViewModel;
+        private readonly ScreenHost _screenHost;
 
-        public DiiagramrStartScreenCommand(Func<StartScreenViewModel> startScreenViewModelFactory)
+        public DiiagramrStartScreenCommand(
+            Func<ScreenHost> screenHostFactory,
+            Func<StartScreen> startScreenFactory)
         {
-            _startScreenViewModel = startScreenViewModelFactory.Invoke();
+            _screenHost = screenHostFactory();
+            _startScreenViewModel = startScreenFactory();
         }
 
-        public override string Name => ShellViewModel.StartCommandId + "DISABLED";
+        public override string Name => Shell.StartCommandId + "DISABLED";
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override bool CanExecuteInternal()
         {
-            shell.ShowScreen(_startScreenViewModel);
-            _startScreenViewModel.LoadCanceled += () => shell.ShowScreen(_startScreenViewModel);
+            return true;
+        }
+
+        protected override void ExecuteInternal(object parameter)
+        {
+            _screenHost.ShowScreen(_startScreenViewModel);
+            _startScreenViewModel.LoadCanceled += () => _screenHost.ShowScreen(_startScreenViewModel);
         }
     }
 }

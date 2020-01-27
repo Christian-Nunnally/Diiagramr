@@ -98,8 +98,7 @@ namespace DiiagramrAPI.Project
             }
 
             ProjectDirectory = path.Substring(0, lastBackslashIndex);
-            var lastPeriod = path.LastIndexOf(".", StringComparison.Ordinal);
-            project.Name = path.Substring(lastBackslashIndex + 1, lastPeriod - lastBackslashIndex - 1);
+            project.Name = path.Substring(lastBackslashIndex + 1, path.Length - lastBackslashIndex - 1);
         }
 
         private void ThrowIfDuplicateAssemblies()

@@ -28,7 +28,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
             }
         }
 
-        public void Transact(ICommand command, object parameter)
+        public void Transact(IReversableCommand command, object parameter)
         {
             RedoStack.Clear();
             Action undo = command.Execute(parameter);

@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application
 {
+    // NOTE: Currently not really used. Just experimenting.
     public class ViewModelCollection<TViewModel, TModel> : IObservableCollection<TViewModel>
         where TViewModel : ViewModel
         where TModel : ModelBase

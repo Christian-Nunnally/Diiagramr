@@ -5,9 +5,9 @@ namespace DiiagramrAPI.Application.Commands
 {
     public class MapCommand : TransactingCommand
     {
-        private readonly ICommand _commandToMap;
+        private readonly IReversableCommand _commandToMap;
 
-        public MapCommand(ICommand commandToMap)
+        public MapCommand(IReversableCommand commandToMap)
         {
             _commandToMap = commandToMap;
         }

@@ -4,20 +4,29 @@ namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
 {
     public class VisualDropStartScreenCommand : ShellCommandBase
     {
-        private readonly VisualDropStartScreenViewModel _visualDropStartScreenViewModel;
+        private readonly VisualDropStartScreen _visualDropStartScreenViewModel;
+        private readonly ScreenHost _screenHost;
 
-        public VisualDropStartScreenCommand(Func<VisualDropStartScreenViewModel> visualDropStartScreenViewModelFactory)
+        public VisualDropStartScreenCommand(
+            Func<VisualDropStartScreen> visualDropStartScreenFactory,
+            Func<ScreenHost> screenHostFactory)
         {
-            _visualDropStartScreenViewModel = visualDropStartScreenViewModelFactory.Invoke();
+            _visualDropStartScreenViewModel = visualDropStartScreenFactory();
+            _screenHost = screenHostFactory();
         }
 
-        public override string Name => ShellViewModel.StartCommandId;
+        public override string Name => Shell.StartCommandId;
 
         public override float Weight => 0.2f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override bool CanExecuteInternal()
         {
-            shell.ShowScreen(_visualDropStartScreenViewModel);
+            return true;
+        }
+
+        protected override void ExecuteInternal(object parameter)
+        {
+            _screenHost.ShowScreen(_visualDropStartScreenViewModel);
         }
     }
 }

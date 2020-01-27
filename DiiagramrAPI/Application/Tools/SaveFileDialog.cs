@@ -3,7 +3,7 @@ using System;
 
 namespace DiiagramrAPI2.Application.Tools
 {
-    public class SaveFileDialog : ShellDialog
+    public class SaveFileDialog : Dialog
     {
         public override int MaxHeight => 300;
 

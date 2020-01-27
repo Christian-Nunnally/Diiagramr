@@ -4,7 +4,7 @@ using System;
 
 namespace DiiagramrAPI.Commands
 {
-    public class DeleteNodeCommand : ICommand
+    public class DeleteNodeCommand : IReversableCommand
     {
         private readonly Diagram _diagram;
 

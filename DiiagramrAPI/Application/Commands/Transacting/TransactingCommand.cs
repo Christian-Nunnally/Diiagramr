@@ -5,7 +5,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
     /// <summary>
     /// A command with free undo functionality as long as the only actions <see cref="Execute(ITransactor)"/> does are other commands.
     /// </summary>
-    public abstract class TransactingCommand : ICommand
+    public abstract class TransactingCommand : IReversableCommand
     {
         public virtual Action Execute(object parameter)
         {

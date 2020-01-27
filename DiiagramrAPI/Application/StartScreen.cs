@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application
 {
-    public class StartScreenViewModel : Screen
+    public class StartScreen : Screen
     {
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
         private bool _isMouseOverLoadProjectButton;
         private bool _isMouseOverNewProjectButton;
 
-        public StartScreenViewModel(Func<IProjectManager> projectManagerFactory, Func<IProjectFileService> projectFileServiceFactory)
+        public StartScreen(Func<IProjectManager> projectManagerFactory, Func<IProjectFileService> projectFileServiceFactory)
         {
             _projectFileService = projectFileServiceFactory.Invoke();
             _projectManager = projectManagerFactory.Invoke();

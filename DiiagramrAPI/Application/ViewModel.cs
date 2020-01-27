@@ -14,7 +14,7 @@ namespace DiiagramrAPI.Application
 
         public void SetAdorner(Adorner adorner)
         {
-            RemoveAllAdornersFromTerminal();
+            RemoveExistingAdorners();
             Adorner = adorner;
             if (adorner != null)
             {
@@ -22,7 +22,7 @@ namespace DiiagramrAPI.Application
             }
         }
 
-        private void RemoveAllAdornersFromTerminal()
+        private void RemoveExistingAdorners()
         {
             var adornerLayer = AdornerLayer.GetAdornerLayer(View);
             if (adornerLayer != null)

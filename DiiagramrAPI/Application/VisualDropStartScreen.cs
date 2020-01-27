@@ -10,7 +10,7 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Application
 {
-    public class VisualDropStartScreenViewModel : Screen, IShownInShellReaction
+    public class VisualDropStartScreen : Screen, IShownInShellReaction
     {
         private const int _dripEffectDelay = 30;
         private const int _frames = 100;
@@ -20,9 +20,10 @@ namespace DiiagramrAPI.Application
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
         private readonly IProjectFileService _projectFileService;
 
-        public VisualDropStartScreenViewModel(Func<IProjectFileService> projectFileServiceFactory)
+        public VisualDropStartScreen(
+            Func<IProjectFileService> projectFileServiceFactory)
         {
-            _projectFileService = projectFileServiceFactory.Invoke();
+            _projectFileService = projectFileServiceFactory();
             _projectFileService.ProjectSaved += ProjectSavedHandler;
             PopulateTargetSpectrumValues();
 
@@ -68,12 +69,12 @@ namespace DiiagramrAPI.Application
 
         public void BrowseButtonPressed()
         {
-            ShellCommand.Execute("Project:Open");
+            CommandExecutor.Execute("Project:Open");
         }
 
         public void NewButtonPressed()
         {
-            ShellCommand.Execute("Project:New");
+            CommandExecutor.Execute("Project:New");
         }
 
         public void OpenButtonsMouseLeave()
@@ -210,7 +211,7 @@ namespace DiiagramrAPI.Application
 
         private void LoadProject(string projectName)
         {
-            ShellCommand.Execute("Project:Open", projectName);
+            CommandExecutor.Execute("Project:Open", projectName);
         }
 
         private void PopulateTargetSpectrumValues()

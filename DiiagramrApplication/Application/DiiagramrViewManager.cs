@@ -51,7 +51,7 @@ namespace Diiagramr.Application
         private string GuessViewName(string viewModelName)
         {
             return viewModelName.EndsWith("ViewModel")
-                ? viewModelName.Substring(0, viewModelName.Length - 5)
+                ? viewModelName.Substring(viewModelName.Length - 5)
                 : viewModelName + "View";
         }
     }

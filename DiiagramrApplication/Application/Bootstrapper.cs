@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Diiagramr.Application
 {
-    public class Bootstrapper : Bootstrapper<ShellViewModel>
+    public class Bootstrapper : Bootstrapper<Shell>
     {
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
@@ -18,6 +18,8 @@ namespace Diiagramr.Application
             builder.Assemblies.Add(Assembly.Load(nameof(DiiagramrAPI)));
             builder.Bind<LibraryManagerDialog>().To<LibraryManagerDialog>().InSingletonScope();
             builder.Bind<DialogHost>().To<DialogHost>().InSingletonScope();
+            builder.Bind<ScreenHost>().To<ScreenHost>().InSingletonScope();
+            builder.Bind<ContextMenu>().To<ContextMenu>().InSingletonScope();
             builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
         }
     }

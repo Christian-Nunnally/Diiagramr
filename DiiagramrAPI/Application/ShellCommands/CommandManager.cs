@@ -5,16 +5,14 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application.ShellCommands
 {
-    public class ShellCommandFactory
+    public class CommandManager
     {
         private readonly Dictionary<string, IShellCommand> _commands = new Dictionary<string, IShellCommand>();
-        private readonly IApplicationShell _shell;
 
-        public ShellCommandFactory(Func<IApplicationShell> shellFactory, Func<IEnumerable<IShellCommand>> commandsFactory)
+        public CommandManager(Func<IEnumerable<IShellCommand>> commandsFactory)
         {
-            ShellCommand.CommandManager = this;
-            _shell = shellFactory.Invoke();
-            var commands = commandsFactory.Invoke().OrderBy(c => c.Weight);
+            CommandExecutor.CommandManager = this;
+            var commands = commandsFactory().OrderBy(c => c.Weight);
             SetupCommands(commands);
         }
 
@@ -44,7 +42,7 @@ namespace DiiagramrAPI.Application.ShellCommands
 
         public void ExecuteCommand(IShellCommand command, object parameter)
         {
-            command.Execute(_shell, parameter);
+            command.Execute(parameter);
         }
 
         private string GenerateCommandPath(IShellCommand command)

@@ -6,12 +6,17 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     public class VisualDropCloseProjectCommand : ToolBarCommand
     {
         private readonly IProjectManager _projectManager;
-        private readonly VisualDropStartScreenViewModel _startScreenViewModel;
+        private readonly VisualDropStartScreen _startScreen;
+        private readonly ScreenHost _screenHost;
 
-        public VisualDropCloseProjectCommand(Func<VisualDropStartScreenViewModel> startScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
+        public VisualDropCloseProjectCommand(
+            Func<VisualDropStartScreen> startScreenFactory,
+            Func<IProjectManager> projectManagerFactory,
+            Func<ScreenHost> screenHostFactory)
         {
-            _startScreenViewModel = startScreenViewModelFactory.Invoke();
-            _projectManager = projectManagerFactory.Invoke();
+            _startScreen = startScreenFactory();
+            _projectManager = projectManagerFactory();
+            _screenHost = screenHostFactory();
         }
 
         public override string Name => "Close";
@@ -20,12 +25,17 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override float Weight => 0.1f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             if (_projectManager.CloseProject())
             {
-                shell.ShowScreen(_startScreenViewModel);
+                _screenHost.ShowScreen(_startScreen);
             }
+        }
+
+        protected override bool CanExecuteInternal()
+        {
+            return _projectManager.CurrentProject is object;
         }
     }
 }

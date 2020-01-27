@@ -5,13 +5,13 @@ namespace DiiagramrAPI.Application.Commands
     /// <summary>
     /// Wraps a command so that, when transacted, it becomes an undo action on the stack. This command, once undone, can not be redone.
     /// </summary>
-    public class UndoCommand : ICommand
+    public class UndoCommand : IReversableCommand
     {
-        private readonly ICommand _command;
+        private readonly IReversableCommand _command;
 
         private bool _hasBeenUndone;
 
-        public UndoCommand(ICommand command)
+        public UndoCommand(IReversableCommand command)
         {
             _command = command;
         }

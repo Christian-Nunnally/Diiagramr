@@ -4,13 +4,13 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application
 {
-    public class DialogHost : ViewModel, IDialogOpener
+    public class DialogHost : ViewModel
     {
-        private readonly Stack<ShellDialog> _dialogStack = new Stack<ShellDialog>();
-        private ShellDialog _activeDialog;
+        private readonly Stack<Dialog> _dialogStack = new Stack<Dialog>();
+        private Dialog _activeDialog;
         private TimeSpan _lastMouseDownTime;
 
-        public ShellDialog ActiveDialog
+        public Dialog ActiveDialog
         {
             get => _activeDialog;
             set
@@ -30,7 +30,7 @@ namespace DiiagramrAPI.Application
 
         public bool IsWindowOpen { get; set; }
 
-        public void OpenDialog(ShellDialog dialog)
+        public void OpenDialog(Dialog dialog)
         {
             if (ActiveDialog != null)
             {

@@ -5,7 +5,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class LibrarySourceManagerDialog : ShellDialog
+    public class LibrarySourceManagerDialog : Dialog
     {
         public LibrarySourceManagerDialog(Func<ILibraryManager> libraryManagerFactory)
         {

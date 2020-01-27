@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace DiiagramrAPI.Commands
 {
-    public class MoveNodeCommand : ICommand
+    public class MoveNodeCommand : IReversableCommand
     {
         private readonly Point _point;
 

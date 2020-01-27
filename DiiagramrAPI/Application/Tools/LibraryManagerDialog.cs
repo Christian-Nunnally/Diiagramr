@@ -6,7 +6,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class LibraryManagerDialog : ShellDialog
+    public class LibraryManagerDialog : Dialog
     {
         private readonly LibrarySourceManagerDialog _librarySourceManagerViewModel;
 

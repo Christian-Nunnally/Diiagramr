@@ -7,12 +7,17 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     public class NewProjectCommand : ToolBarCommand
     {
         private readonly IProjectManager _projectManager;
-        private readonly ProjectScreen _projectScreenViewModel;
+        private readonly ProjectScreen _projectScreen;
+        private readonly ScreenHost _screenHost;
 
-        public NewProjectCommand(Func<ProjectScreen> projectScreenViewModelFactory, Func<IProjectManager> projectManagerFactory)
+        public NewProjectCommand(
+            Func<IProjectManager> projectManagerFactory,
+            Func<ProjectScreen> projectScreenFactory,
+            Func<ScreenHost> screenHostFactory)
         {
-            _projectManager = projectManagerFactory.Invoke();
-            _projectScreenViewModel = projectScreenViewModelFactory.Invoke();
+            _projectManager = projectManagerFactory();
+            _projectScreen = projectScreenFactory();
+            _screenHost = screenHostFactory();
         }
 
         public override string Name => "New";
@@ -21,12 +26,12 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override float Weight => 1.0f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             _projectManager.CreateProject();
             _projectManager.CreateDiagram();
             _projectManager.CurrentDiagrams.First().IsOpen = true;
-            shell.ShowScreen(_projectScreenViewModel);
+            _screenHost.ShowScreen(_projectScreen);
         }
     }
 }

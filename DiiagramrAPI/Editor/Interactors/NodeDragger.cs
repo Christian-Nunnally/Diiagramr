@@ -13,7 +13,7 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private readonly ITransactor _transactor;
         private IEnumerable<Node> _draggingNodes;
-        private ICommand _moveNodesToStartPointCommand;
+        private IReversableCommand _moveNodesToStartPointCommand;
 
         public NodeDragger(Func<ITransactor> transactorFactory)
         {

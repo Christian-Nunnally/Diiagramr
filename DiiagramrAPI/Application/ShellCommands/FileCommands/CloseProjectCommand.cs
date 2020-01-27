@@ -6,23 +6,33 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     public class CloseProjectCommand : ShellCommandBase
     {
         private readonly ProjectManager _projectManager;
-        private readonly StartScreenViewModel _startScreenViewModel;
+        private readonly ScreenHost _screenHost;
+        private readonly StartScreen _startScreen;
 
-        public CloseProjectCommand(Func<StartScreenViewModel> startScreenViewModelFactory, Func<ProjectManager> projectManagerFactory)
+        public CloseProjectCommand(
+            Func<StartScreen> startScreenFactory,
+            Func<ProjectManager> projectManagerFactory,
+            Func<ScreenHost> screenHostFactory)
         {
-            _startScreenViewModel = startScreenViewModelFactory.Invoke();
-            _projectManager = projectManagerFactory.Invoke();
+            _startScreen = startScreenFactory();
+            _projectManager = projectManagerFactory();
+            _screenHost = screenHostFactory();
         }
 
         public override string Name => "Close";
 
         public override string Parent => "Project";
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override bool CanExecuteInternal()
+        {
+            return _projectManager.CurrentProject is object;
+        }
+
+        protected override void ExecuteInternal(object parameter)
         {
             if (_projectManager.CloseProject())
             {
-                shell.ShowScreen(_startScreenViewModel);
+                _screenHost.ShowScreen(_startScreen);
             }
         }
     }

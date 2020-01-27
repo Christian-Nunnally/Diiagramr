@@ -7,7 +7,7 @@
     xmlns:viewModel="clr-namespace:DiiagramrAPI.Application;assembly=DiiagramrAPI"
     xmlns:s="https://github.com/canton7/Stylet"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance viewModel:ShellViewModel}"
+    d:DataContext="{d:DesignInstance viewModel:Shell}"
     Closing="{s:Action WindowClosing}"
     Style="{StaticResource CustomWindowStyle}"
     Title="{Binding WindowTitle}"
@@ -33,19 +33,18 @@
                 DockPanel.Dock="Top"
                 VerticalAlignment="Top"
                 HorizontalContentAlignment="Left"
-                s:View.Model="{Binding ToolbarViewModel}"
-                Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}" />
+                s:View.Model="{Binding Toolbar}" />
             <Grid>
-                <ContentControl s:View.Model="{Binding ActiveItem}" />
+                <ContentControl s:View.Model="{Binding ScreenHost.ActiveItem}" />
                 <ContentControl s:View.Model="{Binding DialogHost}" />
             </Grid>
         </DockPanel>
         <Canvas>
             <ContentControl
-                Canvas.Left="{Binding ContextMenuViewModel.X}"
-                Canvas.Top="{Binding ContextMenuViewModel.Y}"
-                s:View.Model="{Binding ContextMenuViewModel}"
-                Visibility="{Binding ContextMenuViewModel.Visible, Converter={StaticResource Btv}}" />
+                Canvas.Left="{Binding ContextMenu.X}"
+                Canvas.Top="{Binding ContextMenu.Y}"
+                s:View.Model="{Binding ContextMenu}"
+                Visibility="{Binding ContextMenu.Visible, Converter={StaticResource Btv}}" />
         </Canvas>
     </Grid>
 </Window>

@@ -4,7 +4,7 @@
     {
         public override string Name => string.Empty;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
         }
     }

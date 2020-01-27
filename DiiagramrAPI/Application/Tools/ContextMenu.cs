@@ -1,8 +1,6 @@
 using DiiagramrAPI.Application.ShellCommands;
 using DiiagramrAPI.Service.Application;
-using DiiagramrCore;
 using Stylet;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -12,11 +10,8 @@ namespace DiiagramrAPI.Application.Tools
 {
     public class ContextMenu : Screen
     {
-        private readonly ShellCommandFactory _commandManager;
-
-        public ContextMenu(Func<ShellCommandFactory> commandManagerFactory)
+        public ContextMenu()
         {
-            _commandManager = commandManagerFactory.Invoke();
         }
 
         public ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
@@ -29,28 +24,37 @@ namespace DiiagramrAPI.Application.Tools
 
         public float Y { get; set; } = 22;
 
+        public bool CloseWhenMouseLeaves { get; set; } = true;
+
         public void ExecuteCommand(object sender, MouseEventArgs e)
         {
             var control = sender as FrameworkElement;
             if (control?.DataContext is ShellCommandBase command)
             {
                 Visible = false;
-                _commandManager.ExecuteCommand(command);
+                CommandExecutor.Execute(command);
             }
         }
 
         public void MouseLeft()
         {
-            Visible = false;
+            if (CloseWhenMouseLeaves)
+            {
+                Visible = false;
+            }
         }
 
         public void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             X = (float)position.X;
             Y = (float)position.Y;
-            Visible = !Visible;
+            Visible = true;
             Commands.Clear();
-            commands.ForEach(Commands.Add);
+            foreach (var command in commands)
+            {
+                command.CanExecute();
+                Commands.Add(command);
+            }
         }
     }
 }

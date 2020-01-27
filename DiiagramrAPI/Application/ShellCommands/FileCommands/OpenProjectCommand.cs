@@ -6,17 +6,24 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
-    public class OpenProjectCommand : ToolBarCommand
+    public class
+        OpenProjectCommand : ToolBarCommand
     {
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
+        private readonly ScreenHost _screenHost;
 
-        public OpenProjectCommand(Func<IProjectFileService> projectFileServiceFactory, Func<IProjectManager> projectManagerFactory, Func<ProjectScreen> projectScreenViewModelFactory)
+        public OpenProjectCommand(
+            Func<IProjectFileService> projectFileServiceFactory,
+            Func<IProjectManager> projectManagerFactory,
+            Func<ProjectScreen> projectScreenFactory,
+            Func<ScreenHost> screenHostFactory)
         {
-            _projectFileService = projectFileServiceFactory.Invoke();
-            _projectManager = projectManagerFactory.Invoke();
-            _projectScreen = projectScreenViewModelFactory.Invoke();
+            _projectFileService = projectFileServiceFactory();
+            _projectManager = projectManagerFactory();
+            _projectScreen = projectScreenFactory();
+            _screenHost = screenHostFactory();
         }
 
         public override string Name => "Open";
@@ -25,7 +32,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override float Weight => .9f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             ProjectModel project;
             if (parameter is string projectName)
@@ -41,11 +48,11 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
             if (project != null)
             {
-                LoadProject(shell, project);
+                LoadProject(project);
             }
         }
 
-        private void LoadProject(IApplicationShell shell, ProjectModel project)
+        private void LoadProject(ProjectModel project)
         {
             _projectManager.LoadProject(project);
             var firstDiagram = _projectManager?.CurrentDiagrams?.FirstOrDefault();
@@ -54,7 +61,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
                 firstDiagram.Open();
             }
 
-            shell.ShowScreen(_projectScreen);
+            _screenHost.ShowScreen(_projectScreen);
         }
     }
 }

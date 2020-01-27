@@ -10,13 +10,17 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    public class ToolbarViewModel : Screen
+    public class Toolbar : Screen
     {
-        private readonly ShellCommandFactory _commandManager;
+        private readonly ContextMenu _contextMenu;
 
-        public ToolbarViewModel(Func<ShellCommandFactory> commandManagerFactory)
+        // TODO: This is now the owner of the command manager. We should probaby move ownership to another class and get commands from somewhere else.
+        private readonly ShellCommands.CommandManager _commandManager;
+
+        public Toolbar(Func<ShellCommands.CommandManager> commandManagerFactory, Func<ContextMenu> contextMenuFactory)
         {
-            _commandManager = commandManagerFactory.Invoke();
+            _contextMenu = contextMenuFactory();
+            _commandManager = commandManagerFactory();
             var toolbarCommands = _commandManager.Commands.OfType<ToolBarCommand>();
             SetupToolbarCommands(toolbarCommands);
         }
@@ -35,11 +39,12 @@ namespace DiiagramrAPI.Application.Tools
                 {
                     if (window.WindowState == WindowState.Maximized)
                     {
-                        correctedRelativePosition = new Point(correctedRelativePosition.X + ShellViewModel.MaximizedWindowChromeRelativePositionAdjustment, correctedRelativePosition.Y + ShellViewModel.MaximizedWindowChromeRelativePositionAdjustment);
+                        correctedRelativePosition = new Point(correctedRelativePosition.X + Shell.MaximizedWindowChromeRelativePositionAdjustment, correctedRelativePosition.Y + Shell.MaximizedWindowChromeRelativePositionAdjustment);
                     }
                 }
 
-                _commandManager.ExecuteCommand(command, correctedRelativePosition);
+                var pointBelowMenuItem = new Point(correctedRelativePosition.X, correctedRelativePosition.Y + 19);
+                _contextMenu.ShowContextMenu(command.SubCommandItems, pointBelowMenuItem);
             }
         }
 

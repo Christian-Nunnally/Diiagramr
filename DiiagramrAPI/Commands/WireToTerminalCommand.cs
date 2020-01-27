@@ -5,7 +5,7 @@ using System;
 
 namespace DiiagramrAPI.Commands
 {
-    public class WireToTerminalCommand : ICommand
+    public class WireToTerminalCommand : IReversableCommand
     {
         private readonly Diagram _diagram;
         private readonly TerminalModel _fromTerminal;

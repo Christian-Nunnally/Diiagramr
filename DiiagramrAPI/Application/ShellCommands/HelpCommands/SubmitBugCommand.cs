@@ -13,7 +13,7 @@
             System.Diagnostics.Process.Start("cmd", $"/C start {url}");
         }
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             GoToSite("https://github.com/Christian-Nunnally/visual-drop/issues");
         }

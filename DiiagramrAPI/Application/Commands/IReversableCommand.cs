@@ -5,7 +5,7 @@ namespace DiiagramrAPI.Application.Commands
     /// <summary>
     /// A command to wrap around complex editor operations.
     /// </summary>
-    public interface ICommand
+    public interface IReversableCommand
     {
         /// <summary>
         /// Do the action.

@@ -1,10 +1,22 @@
 ﻿using DiiagramrAPI.Application.ShellCommands;
+using DiiagramrAPI.Service.Application;
 
 namespace DiiagramrAPI.Application
 {
-    public static class ShellCommand
+    public static class CommandExecutor
     {
-        internal static ShellCommandFactory CommandManager { get; set; }
+        internal static CommandManager CommandManager { get; set; }
+
+        /// <summary>
+        /// Attempts to execute a command from a static context.
+        /// </summary>
+        /// <param name="command">The command.</param>
+        /// <returns>True if the command suceeded</returns>
+        public static bool Execute(IShellCommand command)
+        {
+            CommandManager?.ExecuteCommand(command);
+            return CommandManager != null;
+        }
 
         /// <summary>
         /// Attempts to execute a command from a static context.

@@ -18,10 +18,14 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override float Weight => .5f;
 
-        internal override void ExecuteInternal(IApplicationShell shell, object parameter)
+        protected override void ExecuteInternal(object parameter)
         {
             _projectManager.SaveProject();
-            shell.SetWindowTitle("Diiagramr" + (_projectManager.CurrentProject != null ? " - " + _projectManager.CurrentProject.Name : string.Empty));
+        }
+
+        protected override bool CanExecuteInternal()
+        {
+            return _projectManager.CurrentProject is object;
         }
     }
 }
