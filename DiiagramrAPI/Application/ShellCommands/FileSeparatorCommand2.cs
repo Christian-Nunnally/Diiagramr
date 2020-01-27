@@ -4,6 +4,6 @@
     {
         public override string Parent => "Project";
 
-        public override float Weight => 0.3f;
+        public override float Weight => 0.7f;
     }
 }

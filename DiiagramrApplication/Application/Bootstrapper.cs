@@ -1,5 +1,6 @@
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Application.Tools;
 using Stylet;
 using StyletIoC;

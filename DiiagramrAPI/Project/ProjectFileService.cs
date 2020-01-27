@@ -1,35 +1,35 @@
 ﻿using DiiagramrAPI.Application;
-using DiiagramrAPI.Service.Dialog;
+using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Service.IO;
-using DiiagramrAPI2.Application.Tools;
+using DiiagramrAPI2.Application.Dialogs;
 using DiiagramrModel;
 using System;
 using System.Linq;
-using System.Windows;
+using System.Threading;
 
 namespace DiiagramrAPI.Project
 {
     public class ProjectFileService : IProjectFileService
     {
         public const string ProjectFileExtension = ".xml";
-        private readonly IDialogService _dialogService;
-        private readonly SaveFileDialog _saveFileWindow;
         private readonly IProjectLoadSave _loadSave;
+        private readonly SaveProjectDialog _saveProjectDialog;
+        private readonly LoadProjectDialog _loadProjectDialog;
         private readonly DialogHost _dialogHost;
 
         public ProjectFileService(
             Func<IDirectoryService> directoryServiceFactory,
             Func<IProjectLoadSave> loadSaveFactory,
-            Func<IDialogService> dialogServiceFactory,
-            Func<SaveFileDialog> saveFileWindowFactory,
+            Func<SaveProjectDialog> saveProjectDialogFactory,
+            Func<LoadProjectDialog> loadProjectDialogFactory,
             Func<DialogHost> dialogHostFactory)
         {
+            var directoryService = directoryServiceFactory();
             _loadSave = loadSaveFactory();
-            _dialogService = dialogServiceFactory();
-            _saveFileWindow = saveFileWindowFactory();
+            _saveProjectDialog = saveProjectDialogFactory();
+            _loadProjectDialog = loadProjectDialogFactory();
             _dialogHost = dialogHostFactory();
 
-            var directoryService = directoryServiceFactory();
             ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
 
             if (!directoryService.Exists(ProjectDirectory))
@@ -42,17 +42,11 @@ namespace DiiagramrAPI.Project
 
         public string ProjectDirectory { get; set; }
 
-        public MessageBoxResult ConfirmProjectClose()
+        public void LoadProject(Action<ProjectModel> continuation)
         {
-            const string message = "Do you want to save before closing?";
-            return _dialogService.Show(message, "Diiagramr", MessageBoxButton.YesNoCancel).Result;
-        }
-
-        public ProjectModel LoadProject()
-        {
-            _saveFileWindow.InitialDirectory = ProjectDirectory;
-            _dialogHost.OpenDialog(_saveFileWindow);
-            return LoadProject(_saveFileWindow.FileName);
+            _loadProjectDialog.InitialDirectory = ProjectDirectory;
+            _loadProjectDialog.LoadAction = s => { _dialogHost.CloseDialog(); continuation(LoadProject(s)); };
+            _dialogHost.OpenDialog(_loadProjectDialog);
         }
 
         public ProjectModel LoadProject(string path)
@@ -71,15 +65,29 @@ namespace DiiagramrAPI.Project
                 return;
             }
 
-            SerializeAndSave(project, ProjectDirectory + "\\" + project.Name + ProjectFileExtension);
+            var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
+            SaveProjectWithNotificationDialog(project, fileName);
         }
 
         private void SaveAsProject(ProjectModel project)
         {
-            _saveFileWindow.InitialDirectory = ProjectDirectory;
-            _saveFileWindow.FileName = project.Name;
-            _saveFileWindow.SaveAction = fileName => SerializeAndSave(project, fileName);
-            _dialogHost.OpenDialog(_saveFileWindow);
+            _saveProjectDialog.InitialDirectory = ProjectDirectory;
+            _saveProjectDialog.FileName = project.Name;
+            _saveProjectDialog.SaveAction = fileName => SaveProjectWithNotificationDialog(project, fileName);
+            _dialogHost.OpenDialog(_saveProjectDialog);
+        }
+
+        private void SaveProjectWithNotificationDialog(ProjectModel project, string fileName)
+        {
+            var notificationDialog = new NotificationDialog("Saving...");
+            _dialogHost.OpenDialog(notificationDialog);
+            SerializeAndSave(project, fileName);
+            notificationDialog.Title = "Saved";
+            new Thread(() =>
+            {
+                Thread.Sleep(600);
+                _dialogHost.CloseDialog();
+            }).Start();
         }
 
         private void SerializeAndSave(ProjectModel project, string fileName)

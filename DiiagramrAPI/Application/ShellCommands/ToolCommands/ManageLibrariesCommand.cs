@@ -1,4 +1,4 @@
-﻿using DiiagramrAPI.Application.Tools;
+﻿using DiiagramrAPI.Application.Dialogs;
 using System;
 
 namespace DiiagramrAPI.Application.ShellCommands.ToolCommands

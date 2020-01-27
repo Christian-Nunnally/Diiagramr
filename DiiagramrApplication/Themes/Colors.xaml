@@ -21,4 +21,5 @@
     <Color x:Key="LightSoftDiagramForeground">#A4A4A4</Color>
     <Color x:Key="LightDiagramBoundingBoxBorder">#404542</Color>
     <Color x:Key="LighterGray">#aaaaaa</Color>
+    <Color x:Key="DisabledGray">#999999</Color>
 </ResourceDictionary>

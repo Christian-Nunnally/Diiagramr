@@ -1,30 +1,34 @@
+using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Service.Plugins;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.Application.Tools
+namespace DiiagramrAPI.Application.Dialogs
 {
     public class LibraryManagerDialog : Dialog
     {
-        private readonly LibrarySourceManagerDialog _librarySourceManagerViewModel;
+        private readonly LibrarySourceManagerDialog _librarySourceManagerDialog;
 
-        public LibraryManagerDialog(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerDialog> librarySourceManagerWindowViewModelFactory)
+        public LibraryManagerDialog(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerDialog> librarySourceManagerDialogFactory)
         {
-            LibraryManager = libraryManagerFactory.Invoke();
-            _librarySourceManagerViewModel = librarySourceManagerWindowViewModelFactory.Invoke();
+            LibraryManager = libraryManagerFactory();
+            _librarySourceManagerDialog = librarySourceManagerDialogFactory();
+
+            CommandBarCommands.Add(new DialogCommandBarCommand("Open Plugin Directory", OpenPluginsDirectory));
+            CommandBarCommands.Add(new DialogCommandBarCommand("Manage Plugin Sources", ViewSources));
         }
 
         public bool IsRestartRequired { get; set; }
 
         public ILibraryManager LibraryManager { get; set; }
 
-        public override int MaxHeight => 400;
+        public override int MaxHeight => 350;
 
-        public override int MaxWidth => 550;
+        public override int MaxWidth => 530;
 
-        public override string Title => "Library Manager";
+        public override string Title { get; set; } = "Library Manager";
 
         public async void InstallPressed(object sender, MouseEventArgs e)
         {
@@ -55,7 +59,7 @@ namespace DiiagramrAPI.Application.Tools
 
         public void ViewSources()
         {
-            OpenOtherDialog(_librarySourceManagerViewModel);
+            OpenOtherDialog(_librarySourceManagerDialog);
         }
 
         protected override void OnViewLoaded()

@@ -1,6 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Input;
+using static DiiagramrAPI.Application.Dialog;
 
 namespace DiiagramrAPI.Application
 {
@@ -8,7 +9,6 @@ namespace DiiagramrAPI.Application
     {
         private readonly Stack<Dialog> _dialogStack = new Stack<Dialog>();
         private Dialog _activeDialog;
-        private TimeSpan _lastMouseDownTime;
 
         public Dialog ActiveDialog
         {
@@ -17,12 +17,14 @@ namespace DiiagramrAPI.Application
             {
                 if (_activeDialog != null)
                 {
-                    _activeDialog.OpenDialog = null;
+                    _activeDialog.OpenDialogAction = null;
+                    _activeDialog.CloseDialogAction = null;
                 }
                 _activeDialog = value;
                 if (_activeDialog != null)
                 {
-                    _activeDialog.OpenDialog = OpenDialog;
+                    _activeDialog.OpenDialogAction = OpenDialog;
+                    _activeDialog.CloseDialogAction = CloseDialog;
                 }
                 IsWindowOpen = ActiveDialog != null;
             }
@@ -49,17 +51,11 @@ namespace DiiagramrAPI.Application
             e.Handled = true;
         }
 
-        public void MouseDownHandler()
+        public void CommandBarActionClicked(object sender, MouseButtonEventArgs e)
         {
-            _lastMouseDownTime = DateTime.Now.TimeOfDay;
-        }
-
-        public void MouseUpHandler()
-        {
-            if (DateTime.Now.TimeOfDay.Subtract(_lastMouseDownTime).TotalMilliseconds < 700)
-            {
-                CloseDialog();
-            }
+            var dataContext = (sender as FrameworkElement)?.DataContext;
+            var choiceAction = (dataContext as DialogCommandBarCommand)?.Action;
+            choiceAction?.Invoke();
         }
     }
 }

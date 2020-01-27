@@ -55,6 +55,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Application\Dialogs\MessageBoxView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Dialogs\NotificationDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Dialogs\LoadProjectDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Application\ShellView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -64,13 +73,13 @@
     <Page Update="Application\Tools\ContextMenuView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\SaveFileDialogView.xaml">
+    <Page Update="Application\Dialogs\SaveProjectDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\LibraryManagerDialogView.xaml">
+    <Page Update="Application\Dialogs\LibraryManagerDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Application\Tools\LibrarySourceManagerDialogView.xaml">
+    <Page Update="Application\Dialogs\LibrarySourceManagerDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\Tools\ToolbarView.xaml">

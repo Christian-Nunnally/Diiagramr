@@ -12,8 +12,15 @@
     d:DesignWidth="300"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <tools:NotSeparatorCommandVisibilityConverter x:Key="IsNotSeparatorConverter" />
-        <tools:SeparatorCommandVisibilityConverter x:Key="IsSeparatorConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary>
+                    <tools:NotSeparatorCommandVisibilityConverter x:Key="IsNotSeparatorConverter" />
+                    <tools:SeparatorCommandVisibilityConverter x:Key="IsSeparatorConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="-10" IsHitTestVisible="True" MouseLeave="{s:Action MouseLeft}" Background="Transparent">
         <Border Margin="10" Background="#1B1B1C" BorderBrush="#333337" BorderThickness="1" Padding="2">
@@ -23,7 +30,18 @@
                         <Grid>
                             <Border Height="3" BorderBrush="#1B1B1C" Background="#333337" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
                             <Border MouseDown="{s:Action ExecuteCommand}" Visibility="{Binding Converter={StaticResource IsNotSeparatorConverter}}">
-                                <Label Content="{Binding Name}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" Margin="5,0,0,0" Foreground="White" />
+                                <Label Content="{Binding Name}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" Margin="5,0,0,0">
+                                    <Label.Style>
+                                        <Style TargetType="Label">
+                                            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding LastCanExecute}" Value="False">
+                                                    <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Label.Style>
+                                </Label>
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Setter Property="Height" Value="20" />
@@ -31,6 +49,9 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="#333334" />
                                             </Trigger>
+                                            <DataTrigger Binding="{Binding LastCanExecute}" Value="False">
+                                                <Setter Property="Background" Value="#131313" />
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </Border.Style>

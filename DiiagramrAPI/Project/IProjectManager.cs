@@ -19,13 +19,13 @@ namespace DiiagramrAPI.Project
 
         bool IsProjectDirty { get; }
 
-        bool CloseProject();
+        void CloseProject(Action contiuation);
 
         void CreateDiagram();
 
         void CreateDiagram(DiagramModel diagram);
 
-        void CreateProject();
+        void CreateProject(Action contiuation);
 
         void DeleteDiagram(DiagramModel diagram);
 

@@ -21,7 +21,9 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Name => "Close";
 
-        public override string Parent => "Project";
+        public override string Parent => "Diagnostics";
+
+        public override float Weight => 1.1f;
 
         protected override bool CanExecuteInternal()
         {
@@ -30,10 +32,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         protected override void ExecuteInternal(object parameter)
         {
-            if (_projectManager.CloseProject())
-            {
-                _screenHost.ShowScreen(_startScreen);
-            }
+            _projectManager.CloseProject(() => _screenHost.ShowScreen(_startScreen));
         }
     }
 }

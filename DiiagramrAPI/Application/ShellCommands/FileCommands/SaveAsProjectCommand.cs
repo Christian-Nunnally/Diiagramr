@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Parent => "Project";
 
-        public override float Weight => .4f;
+        public override float Weight => .5f;
 
         protected override void ExecuteInternal(object parameter)
         {

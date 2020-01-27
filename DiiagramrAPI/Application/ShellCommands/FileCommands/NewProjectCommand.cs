@@ -24,14 +24,16 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Parent => "Project";
 
-        public override float Weight => 1.0f;
+        public override float Weight => 0.0f;
 
         protected override void ExecuteInternal(object parameter)
         {
-            _projectManager.CreateProject();
-            _projectManager.CreateDiagram();
-            _projectManager.CurrentDiagrams.First().IsOpen = true;
-            _screenHost.ShowScreen(_projectScreen);
+            _projectManager.CreateProject(() =>
+            {
+                _projectManager.CreateDiagram();
+                _projectManager.CurrentDiagrams.First().IsOpen = true;
+                _screenHost.ShowScreen(_projectScreen);
+            });
         }
     }
 }

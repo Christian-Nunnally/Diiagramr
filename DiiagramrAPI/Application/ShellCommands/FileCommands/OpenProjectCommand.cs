@@ -30,25 +30,20 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Parent => "Project";
 
-        public override float Weight => .9f;
+        public override float Weight => .1f;
 
         protected override void ExecuteInternal(object parameter)
         {
-            ProjectModel project;
             if (parameter is string projectName)
             {
                 projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
                 var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
-                project = _projectFileService.LoadProject(projectPath);
+                var project = _projectFileService.LoadProject(projectPath);
+                LoadProject(project);
             }
             else
             {
-                project = _projectFileService.LoadProject();
-            }
-
-            if (project != null)
-            {
-                LoadProject(project);
+                _projectFileService.LoadProject(LoadProject);
             }
         }
 

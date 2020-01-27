@@ -17,6 +17,7 @@
             <SolidColorBrush x:Key="DialogBorderBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
             <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=ButtonHoverBlue}" />
             <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=LightGray}" />
+            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{StaticResource ResourceKey=DisabledGray}" />
             <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=HighlightedGray}" />
             <SolidColorBrush x:Key="NodeBackgroundBrush" Color="{StaticResource ResourceKey=LighterGray}" />
             <SolidColorBrush x:Key="NodeBorderBrush" Color="{StaticResource ResourceKey=NodeBorderGray}" />

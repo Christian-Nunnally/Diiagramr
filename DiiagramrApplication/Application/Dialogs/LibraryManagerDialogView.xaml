@@ -1,8 +1,10 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Application.Tools.LibrarySourceManagerDialogView"
+    x:Class="Diiagramr.Application.Tools.LibraryManagerDialogView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:s="https://github.com/canton7/Stylet">
+    xmlns:s="https://github.com/canton7/Stylet"
+    Width="{Binding MaxWidth}"
+    Height="{Binding MaxHeight}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -44,31 +46,39 @@
                         <Setter Property="VerticalAlignment" Value="Stretch" />
                         <Setter Property="HorizontalAlignment" Value="Right" />
                     </Style>
+
+                    <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <Border>
-        <Grid Background="{StaticResource DialogBorderBackgroundBrush}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="40" />
                 <RowDefinition />
-                <RowDefinition Height="40" />
             </Grid.RowDefinitions>
-
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
             <Label
                 Grid.Row="0"
                 Grid.Column="0"
-                Content="Library Sources"
+                Content="Available"
                 Style="{StaticResource HeaderLabelStyle}" />
-
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Content="Installed"
+                Style="{StaticResource HeaderLabelStyle}" />
             <ScrollViewer
                 Grid.Row="1"
                 Grid.Column="0"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch"
                 VerticalScrollBarVisibility="Auto">
-                <ItemsControl ItemsSource="{Binding LibraryManager.Sources}">
+                <ItemsControl ItemsSource="{Binding LibraryManager.AvailableLibraryItems}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Grid Height="25">
@@ -76,45 +86,53 @@
                                     Padding="10,0,0,0"
                                     HorizontalAlignment="Left"
                                     Content="{Binding}"
-                                    FontSize="11"
                                     Style="{StaticResource RegularLabelStyle}" />
                                 <Border
                                     Width="75"
-                                    MouseDown="{s:Action RemoveSource}"
+                                    MouseDown="{s:Action InstallPressed}"
                                     Style="{StaticResource InlinedButtonStyle}">
-                                    <Label Content="Remove" Style="{StaticResource RegularLabelStyle}" />
+                                    <Label Content="{Binding ButtonText}" Style="{StaticResource RegularLabelStyle}" />
                                 </Border>
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
-
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition Width="85" />
-                </Grid.ColumnDefinitions>
-                <TextBox
-                    Grid.Column="0"
-                    Margin="5"
-                    Background="{StaticResource TextboxBackgroundBrush}"
-                    BorderBrush="{StaticResource DiagramBackgroundBrush}"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Stretch"
-                    VerticalContentAlignment="Center"
-                    FontSize="13"
-                    Foreground="{StaticResource ForegroundBrush}"
-                    Text="{Binding SourceTextBoxText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <Border
-                    Grid.Column="1"
-                    Width="75"
-                    Margin="5"
-                    MouseDown="{s:Action AddSource}"
-                    Style="{StaticResource ButtonStyleBase}">
-                    <Label Content="Add" Style="{StaticResource RegularLabelStyle}" />
-                </Border>
-            </Grid>
+            <ScrollViewer
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding LibraryManager.InstalledLibraryItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Height="25">
+                                <Label
+                                    Padding="10,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Content="{Binding}"
+                                    Style="{StaticResource RegularLabelStyle}" />
+                                <Border Width="75" Style="{StaticResource InlinedButtonStyle}" MouseDown="{s:Action UninstallPressed}">
+                                    <Label Content="{Binding ButtonText}" Style="{StaticResource RegularLabelStyle}" />
+                                </Border>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Content="Restart required!"
+                Foreground="IndianRed"
+                FontSize="14"
+                FontWeight="Bold"
+                HorizontalAlignment="Stretch"
+                HorizontalContentAlignment="Center"
+                Visibility="{Binding IsRestartRequired, Converter={StaticResource Btv}}"
+                VerticalAlignment="Bottom" />
         </Grid>
     </Border>
 </UserControl>

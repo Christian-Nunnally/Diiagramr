@@ -7,15 +7,13 @@ namespace DiiagramrAPI.Application
 {
     public class StartScreen : Screen
     {
-        private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
         private bool _isMouseOverLoadProjectButton;
         private bool _isMouseOverNewProjectButton;
 
-        public StartScreen(Func<IProjectManager> projectManagerFactory, Func<IProjectFileService> projectFileServiceFactory)
+        public StartScreen(Func<IProjectManager> projectManagerFactory)
         {
-            _projectFileService = projectFileServiceFactory.Invoke();
-            _projectManager = projectManagerFactory.Invoke();
+            _projectManager = projectManagerFactory();
         }
 
         public event Action LoadCanceled;
@@ -46,21 +44,6 @@ namespace DiiagramrAPI.Application
 
         public string NewButtonImageSource { get; set; } = "/Diiagramr;component/Resources/new.png";
 
-        public void LoadProject()
-        {
-            var project = _projectFileService.LoadProject();
-            _projectManager.LoadProject(project, autoOpenDiagram: true);
-            if (_projectManager.CurrentProject != null)
-            {
-                if (Parent != null)
-                {
-                    RequestClose();
-                }
-
-                LoadCanceled?.Invoke();
-            }
-        }
-
         public void LoadProjectButtonMouseEntered()
         {
             IsMouseOverLoadProjectButton = true;
@@ -78,9 +61,11 @@ namespace DiiagramrAPI.Application
                 RequestClose();
             }
 
-            _projectManager.CreateProject();
-            _projectManager.CreateDiagram();
-            _projectManager.CurrentDiagrams.First().Open();
+            _projectManager.CreateProject(() =>
+            {
+                _projectManager.CreateDiagram();
+                _projectManager.CurrentDiagrams.First().Open();
+            });
         }
 
         public void NewProjectButtonMouseEntered()

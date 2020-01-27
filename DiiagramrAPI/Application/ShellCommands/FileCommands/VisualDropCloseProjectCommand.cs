@@ -23,14 +23,11 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Parent => "Project";
 
-        public override float Weight => 0.1f;
+        public override float Weight => 1.0f;
 
         protected override void ExecuteInternal(object parameter)
         {
-            if (_projectManager.CloseProject())
-            {
-                _screenHost.ShowScreen(_startScreen);
-            }
+            _projectManager.CloseProject(() => _screenHost.ShowScreen(_startScreen));
         }
 
         protected override bool CanExecuteInternal()

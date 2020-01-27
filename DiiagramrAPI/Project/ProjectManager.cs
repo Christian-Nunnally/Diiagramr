@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Application.Tools;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Plugins;
 using DiiagramrCore;
@@ -8,25 +9,27 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace DiiagramrAPI.Project
 {
     public class ProjectManager : IProjectManager
     {
         private readonly DiagramFactory _diagramViewModelFactory;
+        private readonly DialogHost _dialogHost;
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
 
         public ProjectManager(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<ILibraryManager> libraryManagerFactory,
+            Func<DialogHost> dialogHostFactory,
             Func<DiagramFactory> diagramViewModelFactoryFactory)
         {
             Diagrams = new List<Diagram>();
-            _libraryManager = libraryManagerFactory.Invoke();
-            _projectFileService = projectFileServiceFactory.Invoke();
-            _diagramViewModelFactory = diagramViewModelFactoryFactory.Invoke();
+            _libraryManager = libraryManagerFactory();
+            _projectFileService = projectFileServiceFactory();
+            _diagramViewModelFactory = diagramViewModelFactoryFactory();
+            _dialogHost = dialogHostFactory();
             CurrentProjectChanged += OnCurrentProjectChanged;
         }
 
@@ -40,27 +43,20 @@ namespace DiiagramrAPI.Project
 
         public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
 
-        public bool CloseProject()
+        public void CloseProject(Action continuation)
         {
-            if (IsProjectDirty)
+            if (CurrentProject == null)
             {
-                var result = _projectFileService.ConfirmProjectClose();
-                if (result == MessageBoxResult.Cancel)
-                {
-                    return false;
-                }
-
-                if (result == MessageBoxResult.Yes)
-                {
-                    _projectFileService.SaveProject(CurrentProject, false);
-                }
-                else if (result == MessageBoxResult.No)
-                {
-                    CurrentProject.IsDirty = false;
-                }
+                continuation();
+                return;
             }
 
-            return true;
+            var saveBeforeCloseMessageBox = new Application.Dialogs.MessageBox.Builder("Close Project", "Save before closing?")
+                .WithChoice("Yes", () => { _projectFileService.SaveProject(CurrentProject, false); continuation(); })
+                .WithChoice("No", () => { CurrentProject = null; continuation(); })
+                .WithChoice("Cancel", () => { })
+                .Build();
+            _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
         }
 
         public void CreateDiagram()
@@ -96,13 +92,24 @@ namespace DiiagramrAPI.Project
             CurrentProject.AddDiagram(diagram);
         }
 
-        public void CreateProject()
+        public void CreateProject(Action continuation)
         {
-            if (CloseProject())
+            if (CurrentProject == null)
             {
                 CurrentProject = new ProjectModel();
                 CurrentProjectChanged?.Invoke();
                 CurrentProject.IsDirty = false;
+                continuation();
+            }
+            else
+            {
+                CloseProject(() =>
+                {
+                    CurrentProject = new ProjectModel();
+                    CurrentProjectChanged?.Invoke();
+                    CurrentProject.IsDirty = false;
+                    continuation();
+                });
             }
         }
 
@@ -123,45 +130,7 @@ namespace DiiagramrAPI.Project
 
         public void LoadProject(ProjectModel project, bool autoOpenDiagram = false)
         {
-            if (CloseProject())
-            {
-                CurrentProject = project;
-                if (CurrentProject == null)
-                {
-                    return;
-                }
-
-                try
-                {
-                    CurrentProjectChanged?.Invoke();
-                    CurrentProject.IsDirty = false;
-                    if (autoOpenDiagram && CurrentDiagrams.Any())
-                    {
-                        CurrentDiagrams.First().IsOpen = true;
-                    }
-                    else if (autoOpenDiagram)
-                    {
-                        CreateDiagram();
-                    }
-                }
-                catch (Exception)
-                {
-                    // This code is so that if a project fails to load because it contains a node from an uninstalled library,
-                    // it will attempt to download and install the missing library. I'm pretty sure this code work as intended
-                    // because nodes that fail to load are handled by printing a message to the output and just ignoring that node.
-                    // TODO: Make async
-                    DownloadProjectDependencies().Wait();
-                    CurrentProjectChanged?.Invoke();
-                    CurrentProject.IsDirty = false;
-                    if (autoOpenDiagram && CurrentDiagrams.Any())
-                    {
-                        CurrentDiagrams.First().IsOpen = true;
-                    }
-
-                    // TODO: Catch specific types of exceptions.
-                    throw;
-                }
-            }
+            CloseProject(() => LoadProjectInternal(project, autoOpenDiagram));
         }
 
         public void SaveAsProject()
@@ -179,6 +148,46 @@ namespace DiiagramrAPI.Project
             {
                 _projectFileService.SaveProject(CurrentProject, false);
                 CurrentProject.IsDirty = false;
+            }
+        }
+
+        private void LoadProjectInternal(ProjectModel project, bool autoOpenDiagram)
+        {
+            CurrentProject = project;
+            if (CurrentProject == null)
+            {
+                return;
+            }
+
+            try
+            {
+                CurrentProjectChanged?.Invoke();
+                CurrentProject.IsDirty = false;
+                if (autoOpenDiagram && CurrentDiagrams.Any())
+                {
+                    CurrentDiagrams.First().IsOpen = true;
+                }
+                else if (autoOpenDiagram)
+                {
+                    CreateDiagram();
+                }
+            }
+            catch (Exception)
+            {
+                // This code is so that if a project fails to load because it contains a node from an uninstalled library,
+                // it will attempt to download and install the missing library. I'm pretty sure this code work as intended
+                // because nodes that fail to load are handled by printing a message to the output and just ignoring that node.
+                // TODO: Make async
+                DownloadProjectDependencies().Wait();
+                CurrentProjectChanged?.Invoke();
+                CurrentProject.IsDirty = false;
+                if (autoOpenDiagram && CurrentDiagrams.Any())
+                {
+                    CurrentDiagrams.First().IsOpen = true;
+                }
+
+                // TODO: Catch specific types of exceptions.
+                throw;
             }
         }
 

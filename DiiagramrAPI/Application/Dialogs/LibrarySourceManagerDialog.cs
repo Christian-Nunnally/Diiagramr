@@ -3,7 +3,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 
-namespace DiiagramrAPI.Application.Tools
+namespace DiiagramrAPI.Application.Dialogs
 {
     public class LibrarySourceManagerDialog : Dialog
     {
@@ -23,7 +23,7 @@ namespace DiiagramrAPI.Application.Tools
 
         public string SourceTextBoxText { get; set; } = "http://";
 
-        public override string Title => "Library Source Manager";
+        public override string Title { get; set; } = "Library Source Manager";
 
         public void AddSource()
         {

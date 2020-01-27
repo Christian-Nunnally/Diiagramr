@@ -1,7 +1,6 @@
 ﻿using DiiagramrAPI.Service;
 using DiiagramrModel;
 using System;
-using System.Windows;
 
 namespace DiiagramrAPI.Project
 {
@@ -12,16 +11,10 @@ namespace DiiagramrAPI.Project
         string ProjectDirectory { get; set; }
 
         /// <summary>
-        /// Confirms ProjectModel Close.
-        /// </summary>
-        /// <returns>The Result from the calling Dialog.</returns>
-        MessageBoxResult ConfirmProjectClose();
-
-        /// <summary>
         /// Loads the project.
         /// </summary>
         /// <returns>The loaded project.</returns>
-        ProjectModel LoadProject();
+        void LoadProject(Action<ProjectModel> continuation);
 
         /// <summary>
         /// Loads the project.

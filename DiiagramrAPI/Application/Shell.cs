@@ -48,23 +48,29 @@ namespace DiiagramrAPI.Application
 
         public override void RequestClose(bool? dialogResult = null)
         {
-            if (ProjectManager.CloseProject())
+            if (dialogResult == true)
+            {
+                return;
+            }
+            ProjectManager.CloseProject(() =>
             {
                 if (Parent != null)
                 {
                     base.RequestClose(dialogResult);
                 }
-            }
+            });
         }
 
         public void WindowClosing(object sender, CancelEventArgs e)
         {
-            if (!ProjectManager.CloseProject())
+            ProjectManager.CloseProject(() =>
             {
-                e.Cancel = true;
-            }
-            ScreenHost.CloseCurrentScreens();
-            BackgroundTaskManager.Instance.CancelAllTasks();
+                RequestClose(true);
+                ScreenHost.CloseCurrentScreens();
+                BackgroundTaskManager.Instance.CancelAllTasks();
+                System.Windows.Application.Current.Shutdown();
+            });
+            e.Cancel = true;
         }
     }
 }
