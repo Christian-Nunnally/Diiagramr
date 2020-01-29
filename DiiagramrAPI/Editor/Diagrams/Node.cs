@@ -2,9 +2,10 @@ using DiiagramrAPI.Application;
 using DiiagramrAPI.Editor.Interactors;
 using DiiagramrCore;
 using DiiagramrModel;
+using Stylet;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -15,21 +16,18 @@ namespace DiiagramrAPI.Editor.Diagrams
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
         private readonly IDictionary<string, PropertyInfo> _terminalsPropertyInfos = new Dictionary<string, PropertyInfo>();
-        private readonly IDictionary<string, Terminal> _nameToTerminalMap = new Dictionary<string, Terminal>();
+        private readonly IDictionary<string, TerminalModel> _nameToTerminalMap = new Dictionary<string, TerminalModel>();
         private readonly List<Action> _viewLoadedActions = new List<Action>();
 
         public Node()
         {
-            // Currently not used.
-            TerminalsCollection = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
-
+            Terminals = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
+            Terminals.CollectionChanged += TerminalsCollectionChanged;
             _viewLoadedActions.Add(ArrangeAllTerminals);
             PropertyChanged += NodePropertyChanged;
         }
 
-        public ViewModelCollection<Terminal, TerminalModel> TerminalsCollection { get; }
-
-        public virtual ObservableCollection<Terminal> Terminals { get; set; } = new ObservableCollection<Terminal>();
+        public virtual IObservableCollection<Terminal> Terminals { get; set; }
 
         public virtual double MinimumHeight { get; set; } = Diagram.GridSnapInterval;
 
@@ -79,20 +77,16 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSettingAttribute)));
 
-        public virtual void AddTerminal(Terminal terminal)
+        public virtual void AddTerminal(TerminalModel terminalModel)
         {
-            _nameToTerminalMap[terminal.Name] = terminal;
-            Terminals.Add(terminal);
-            NodeModel.AddTerminal(terminal.Model);
-            ArrangeAllTerminals();
+            _nameToTerminalMap[terminalModel.Name] = terminalModel;
+            NodeModel.AddTerminal(terminalModel);
         }
 
-        public virtual void RemoveTerminal(Terminal terminal)
+        public virtual void RemoveTerminal(TerminalModel terminalModel)
         {
-            _nameToTerminalMap.Remove(terminal.Name);
-            Terminals.Remove(terminal);
-            NodeModel.RemoveTerminal(terminal.Model);
-            ArrangeAllTerminals();
+            _nameToTerminalMap.Remove(terminalModel.Name);
+            NodeModel.RemoveTerminal(terminalModel);
         }
 
         public void HighlightWirableTerminals<T>(Type type)
@@ -182,16 +176,21 @@ namespace DiiagramrAPI.Editor.Diagrams
         protected override void OnViewLoaded()
         {
             base.OnViewLoaded();
-            _viewLoadedActions.ForEach(action => action.Invoke());
+            _viewLoadedActions.ForEach(action => action());
             _viewLoadedActions.Clear();
+        }
+
+        private void TerminalsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ArrangeAllTerminals();
         }
 
         private void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (_terminalsPropertyInfos.TryGetValue(e.PropertyName, out PropertyInfo propertyInfo)
-                && _nameToTerminalMap.TryGetValue(e.PropertyName, out Terminal terminal))
+                && _nameToTerminalMap.TryGetValue(e.PropertyName, out TerminalModel terminalModel))
             {
-                terminal.Data = propertyInfo.GetValue(this);
+                terminalModel.Data = propertyInfo.GetValue(this);
             }
         }
 
@@ -238,9 +237,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalType = methodInfo.GetParameters().First().ParameterType;
             var terminalModel = new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection, 0);
             terminalModel.DataChanged += methodInfo.CreateMethodInvoker(this);
-            var terminal = new InputTerminal(terminalModel);
-            terminal.DataChanged = methodInfo.CreateMethodInvoker(this);
-            AddTerminal(terminal);
+            AddTerminal(terminalModel);
         }
 
         private void CreateOutputTerminalForProperty(PropertyInfo property)
@@ -248,9 +245,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
             var terminalType = property.PropertyType;
             var terminalModel = new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection, 0);
-            var terminal = new OutputTerminal(terminalModel);
             _terminalsPropertyInfos[property.Name] = property;
-            AddTerminal(terminal);
+            AddTerminal(terminalModel);
             NotifyOfPropertyChange(property.Name);
         }
 

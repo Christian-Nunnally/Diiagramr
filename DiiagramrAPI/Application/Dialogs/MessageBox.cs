@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Application.Dialogs
             Message = message;
             foreach (var choice in choices)
             {
-                CommandBarCommands.Add(new DialogCommandBarCommand(choice.Label, () => { choice.Action(); CloseDialog(); }));
+                CommandBarCommands.Add(new DialogCommandBarCommand(choice.Label, () => { CloseDialog(); choice.Action(); }));
             }
         }
 

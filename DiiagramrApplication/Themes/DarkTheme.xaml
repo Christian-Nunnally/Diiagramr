@@ -10,6 +10,8 @@
             <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffWhite}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />
+            <SolidColorBrush x:Key="DiagramAutoWireRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffGreen}" />
+            <SolidColorBrush x:Key="DiagramAutoWireRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffGreen}" />
             <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=DarkHighlightGray}" />
             <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=AlmostWhite}" />
             <SolidColorBrush x:Key="DialogBackgroundBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />

@@ -1,4 +1,3 @@
-using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
@@ -84,7 +83,11 @@ namespace DiiagramrAPI.Editor.Interactors
             nodeToInsert.NodeModel.X = _diagram.GetDiagramPointFromViewPointX(X);
             nodeToInsert.NodeModel.Y = _diagram.GetDiagramPointFromViewPointX(Y);
             _diagram.AddNodeInteractively(nodeToInsert);
-            AutoWireTerminals(nodeToInsert);
+            if (ContextTerminal != null)
+            {
+                var autoWirer = new NodeAutoWirer();
+                autoWirer.TryAutoWireTerminals(_diagram, ContextTerminal, nodeToInsert);
+            }
             ContextTerminal = null;
         }
 
@@ -191,18 +194,6 @@ namespace DiiagramrAPI.Editor.Interactors
             library.Nodes.Add(node);
         }
 
-        private void AutoWireTerminals(Node nodeToInsert)
-        {
-            if (ContextTerminal != null)
-            {
-                var terminalsThatCouldBeWired = GetWireableTerminals(ContextTerminal, nodeToInsert);
-                if (terminalsThatCouldBeWired.Count() == 1)
-                {
-                    TerminalWirer.TryWireTwoTerminalsOnDiagram(_diagram, ContextTerminal, terminalsThatCouldBeWired.First(), NullTransactor.Instance, false);
-                }
-            }
-        }
-
         private bool CanAddNodeToPalette(Node node)
         {
             if (IsHiddenFromSelector(node))
@@ -229,24 +220,6 @@ namespace DiiagramrAPI.Editor.Interactors
             }
 
             return LibrariesList.First(l => l.Name == libraryName);
-        }
-
-        private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
-        {
-            if (startTerminal.Model is InputTerminalModel inputTerminal)
-            {
-                return node.Terminals
-                    .OfType<OutputTerminal>()
-                    .Where(t => t.Model.CanWireToType(inputTerminal.Type));
-            }
-            else if (startTerminal.Model is OutputTerminalModel outputTerminal)
-            {
-                return node.Terminals
-                    .OfType<InputTerminal>()
-                    .Where(t => t.Model.CanWireFromType(outputTerminal.Type));
-            }
-
-            return Enumerable.Empty<Terminal>();
         }
 
         private bool IsHiddenFromSelector(Node node)
@@ -318,7 +291,6 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 AddNode(node);
             }
-
             // TODO: Catch more specific exception.
             catch (Exception e)
             {

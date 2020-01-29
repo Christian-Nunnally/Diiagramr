@@ -39,7 +39,7 @@
         <Grid
             Width="500"
             Height="400"
-            Background="{StaticResource WindowBorderBackgroundBrush}">
+            Background="{StaticResource DiagramBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
                 <ColumnDefinition Width="20" />
@@ -59,7 +59,8 @@
                 <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Create new node" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Delete selected nodes" Style="{StaticResource RightHelpLabelStyle}" />
-                <Label Content="Group select nodes" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Lasso select nodes" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Lasso wire nodes" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Delete wire" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Set terminal (only some support)" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Wire to terminal" Style="{StaticResource RightHelpLabelStyle}" />
@@ -75,6 +76,7 @@
                     Foreground="{StaticResource GrayedForegroundBrush}"
                     Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
@@ -97,6 +99,7 @@
                 <Label Content="Right click diagram" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Del'" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Ctrl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Atl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Ctrl' + Click wire" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Double click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Right click terminal" Style="{StaticResource LeftHelpLabelStyle}" />

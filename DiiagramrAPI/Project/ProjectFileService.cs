@@ -57,23 +57,24 @@ namespace DiiagramrAPI.Project
             return project;
         }
 
-        public void SaveProject(ProjectModel project, bool saveAs)
+        public void SaveProject(ProjectModel project, bool saveAs, Action continuation)
         {
             if (saveAs || project.Name == "NewProject")
             {
-                SaveAsProject(project);
+                SaveAsProject(project, continuation);
                 return;
             }
 
             var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
             SaveProjectWithNotificationDialog(project, fileName);
+            continuation();
         }
 
-        private void SaveAsProject(ProjectModel project)
+        private void SaveAsProject(ProjectModel project, Action continuation)
         {
             _saveProjectDialog.InitialDirectory = ProjectDirectory;
             _saveProjectDialog.ProjectName = project.Name;
-            _saveProjectDialog.SaveAction = fileName => SaveProjectWithNotificationDialog(project, fileName);
+            _saveProjectDialog.SaveAction = fileName => { SaveProjectWithNotificationDialog(project, fileName); continuation(); };
             _dialogHost.OpenDialog(_saveProjectDialog);
         }
 

@@ -51,9 +51,10 @@ namespace DiiagramrAPI.Project
                 return;
             }
 
+            void newContinuation() { CurrentProject = null; continuation(); }
             var saveBeforeCloseMessageBox = new Application.Dialogs.MessageBox.Builder("Close Project", "Save before closing?")
-                .WithChoice("Yes", () => { _projectFileService.SaveProject(CurrentProject, false); continuation(); })
-                .WithChoice("No", () => { CurrentProject = null; continuation(); })
+                .WithChoice("Yes", () => { _projectFileService.SaveProject(CurrentProject, false, newContinuation); })
+                .WithChoice("No", () => { CurrentProject = null; newContinuation(); })
                 .WithChoice("Cancel", () => { })
                 .Build();
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
@@ -137,7 +138,7 @@ namespace DiiagramrAPI.Project
         {
             if (CurrentProject != null)
             {
-                _projectFileService.SaveProject(CurrentProject, true);
+                _projectFileService.SaveProject(CurrentProject, true, () => { });
                 CurrentProject.IsDirty = false;
             }
         }
@@ -146,7 +147,7 @@ namespace DiiagramrAPI.Project
         {
             if (CurrentProject != null)
             {
-                _projectFileService.SaveProject(CurrentProject, false);
+                _projectFileService.SaveProject(CurrentProject, false, () => { });
                 CurrentProject.IsDirty = false;
             }
         }

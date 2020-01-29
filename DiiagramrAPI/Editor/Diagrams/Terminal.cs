@@ -43,8 +43,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        public Action<object> DataChanged { get; set; }
-
         public int EdgeIndex
         {
             get => Model.EdgeIndex;

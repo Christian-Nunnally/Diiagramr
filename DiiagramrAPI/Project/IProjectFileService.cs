@@ -28,6 +28,6 @@ namespace DiiagramrAPI.Project
         /// </summary>
         /// <param name="project">The project.</param>
         /// <param name="saveAs">Whether this should be saved with saveAs.</param>
-        void SaveProject(ProjectModel project, bool saveAs);
+        void SaveProject(ProjectModel project, bool saveAs, Action continuation);
     }
 }

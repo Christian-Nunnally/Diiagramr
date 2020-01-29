@@ -1,0 +1,23 @@
+﻿<UserControl
+    x:Class="Diiagramr.Editor.Interactors.LassoNodeWirerView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary>
+                    <BooleanToVisibilityConverter x:Key="Btv" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Rectangle
+        Width="{Binding Width}"
+        Height="{Binding Height}"
+        Fill="{StaticResource DiagramAutoWireRectangleFill}"
+        RadiusX="3"
+        RadiusY="3"
+        Stroke="{StaticResource DiagramAutoWireRectangleStroke}"
+        StrokeThickness="2" />
+</UserControl>

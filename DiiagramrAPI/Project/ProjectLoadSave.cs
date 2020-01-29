@@ -18,11 +18,6 @@ namespace DiiagramrAPI.Project
             _pluginLoader = pluginLoaderFactory.Invoke();
         }
 
-        private IEnumerable<Type> GetSerializableTypes()
-        {
-            return _pluginLoader.SerializeableTypes.Concat(new[] { typeof(InputTerminalModel), typeof(OutputTerminalModel) });
-        }
-
         public ProjectModel Open(string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), GetSerializableTypes());
@@ -35,20 +30,21 @@ namespace DiiagramrAPI.Project
         public void Save(ProjectModel project, string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), GetSerializableTypes());
-            using (var writer = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite))
+            using var writer = new FileStream(fullPath, FileMode.Create, FileAccess.ReadWrite);
+            using var w = XmlWriter.Create(writer);
+            try
             {
-                using (var w = XmlWriter.Create(writer))
-                {
-                    try
-                    {
-                        serializer.WriteObject(w, project);
-                    }
-                    catch (XmlException e)
-                    {
-                        Console.WriteLine(e.InnerException.Message);
-                    }
-                }
+                serializer.WriteObject(w, project);
             }
+            catch (XmlException e)
+            {
+                Console.WriteLine(e.InnerException.Message);
+            }
+        }
+
+        private IEnumerable<Type> GetSerializableTypes()
+        {
+            return _pluginLoader.SerializeableTypes.Concat(new[] { typeof(InputTerminalModel), typeof(OutputTerminalModel) });
         }
     }
 }

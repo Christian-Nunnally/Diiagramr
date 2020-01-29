@@ -55,8 +55,7 @@ namespace DiiagramrAPI2.Application.Dialogs
 
         public void ProjectLoadOptionClicked(object sender, MouseButtonEventArgs e)
         {
-            var dataContext = (sender as FrameworkElement)?.DataContext as LoadProjectOption;
-            if (dataContext != null)
+            if ((sender as FrameworkElement)?.DataContext is LoadProjectOption dataContext)
             {
                 CloseDialog();
                 LoadAction(dataContext.Path);
@@ -70,7 +69,7 @@ namespace DiiagramrAPI2.Application.Dialogs
             {
                 Path = path;
                 var splitPath = path.Split("\\");
-                Name = splitPath[splitPath.Length - 1];
+                Name = splitPath[^1];
             }
 
             public string Path { get; set; }

@@ -5,6 +5,8 @@
     <Color x:Key="DiiagramrBlack">#101010</Color>
     <Color x:Key="DiiagramrOffWhite">#E6E6E6</Color>
     <Color x:Key="TransparentDiiagramrOffWhite">#11E6E6E6</Color>
+    <Color x:Key="DiiagramrOffGreen">#E1FFE1</Color>
+    <Color x:Key="TransparentDiiagramrOffGreen">#11E3FFE3</Color>
     <Color x:Key="LightGray">#C8C8C8</Color>
     <Color x:Key="DarkHighlightGray">#424245</Color>
     <Color x:Key="White">#FFFFFF</Color>
