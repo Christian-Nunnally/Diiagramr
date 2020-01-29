@@ -6,23 +6,28 @@ namespace DiiagramrAPI2.Application.Dialogs
 {
     public class SaveProjectDialog : Dialog
     {
-        public override int MaxHeight => 300;
+        public SaveProjectDialog()
+        {
+            CommandBarCommands.Add(new DialogCommandBarCommand("Save", Save));
+        }
 
-        public override int MaxWidth => 300;
+        public override int MaxHeight => 110;
+
+        public override int MaxWidth => 290;
 
         public override string Title { get; set; } = "Save Project";
 
-        public string InitialDirectory { get; internal set; }
+        public string InitialDirectory { get; set; }
 
-        public string FileName { get; internal set; }
+        public string ProjectName { get; set; }
 
-        public Action<string> SaveAction { get; internal set; }
+        public Action<string> SaveAction { get; set; }
 
-        public void SaveProjectButtonClicked()
+        public void Save()
         {
-            string path = !FileName.EndsWith(ProjectFileService.ProjectFileExtension)
-                ? InitialDirectory + "\\" + FileName + ProjectFileService.ProjectFileExtension
-                : InitialDirectory + "\\" + FileName;
+            string path = !ProjectName.EndsWith(ProjectFileService.ProjectFileExtension)
+                ? InitialDirectory + "\\" + ProjectName + ProjectFileService.ProjectFileExtension
+                : InitialDirectory + "\\" + ProjectName;
             CloseDialog();
             SaveAction(path);
         }

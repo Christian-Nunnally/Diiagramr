@@ -44,7 +44,7 @@ namespace DiiagramrAPI.Project
 
         public void LoadProject(Action<ProjectModel> continuation)
         {
-            _loadProjectDialog.InitialDirectory = ProjectDirectory;
+            _loadProjectDialog.ProjectDirectory = ProjectDirectory;
             _loadProjectDialog.LoadAction = s => { _dialogHost.CloseDialog(); continuation(LoadProject(s)); };
             _dialogHost.OpenDialog(_loadProjectDialog);
         }
@@ -72,7 +72,7 @@ namespace DiiagramrAPI.Project
         private void SaveAsProject(ProjectModel project)
         {
             _saveProjectDialog.InitialDirectory = ProjectDirectory;
-            _saveProjectDialog.FileName = project.Name;
+            _saveProjectDialog.ProjectName = project.Name;
             _saveProjectDialog.SaveAction = fileName => SaveProjectWithNotificationDialog(project, fileName);
             _dialogHost.OpenDialog(_saveProjectDialog);
         }

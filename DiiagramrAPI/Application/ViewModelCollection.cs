@@ -28,15 +28,14 @@ namespace DiiagramrAPI.Application
             collectionOwner.PropertyChanged += CollectionOwnerPropertyChanged;
             _modelCollectionGetter = modelCollectionGetter;
             _viewModelFactory = viewModelFactory;
-
-            Models = _modelCollectionGetter.Invoke();
+            UpdateModels();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        public IObservableCollection<TViewModel> ViewModels { get; } = new BindableCollection<TViewModel>();
+        public IObservableCollection<TViewModel> ViewModels { get; set; } = new BindableCollection<TViewModel>();
 
         public int Count => ViewModels.Count;
 
@@ -81,6 +80,11 @@ namespace DiiagramrAPI.Application
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
+        private void UpdateModels()
+        {
+            Models = _modelCollectionGetter();
+        }
+
         private void ModelCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
@@ -101,7 +105,7 @@ namespace DiiagramrAPI.Application
         {
             if (e.PropertyName == nameof(ViewModel.Model))
             {
-                Models = _modelCollectionGetter.Invoke();
+                UpdateModels();
             }
         }
     }

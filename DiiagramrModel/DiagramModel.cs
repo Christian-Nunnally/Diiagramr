@@ -10,6 +10,7 @@ namespace DiiagramrModel
     {
         public DiagramModel()
         {
+            Nodes = new ObservableCollection<NodeModel>();
             Name = string.Empty;
         }
 
@@ -20,7 +21,7 @@ namespace DiiagramrModel
         public bool NotNameEditMode => !NameEditMode;
 
         [DataMember]
-        public virtual ObservableCollection<NodeModel> Nodes { get; set; } = new ObservableCollection<NodeModel>();
+        public virtual ObservableCollection<NodeModel> Nodes { get; set; }
 
         public virtual void AddNode(NodeModel nodeModel)
         {

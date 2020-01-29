@@ -226,14 +226,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             else if (e.PropertyName == nameof(TerminalModel.Data))
             {
                 NotifyOfPropertyChange(nameof(Data));
-                try
-                {
-                    DataChanged?.Invoke(Data);
-                }
-                catch
-                {
-                    Model.ConnectedWires.ForEach(w => Model.DisconnectWire(w, w.SinkTerminal == Model ? w.SourceTerminal : w.SinkTerminal));
-                }
             }
             else if (e.PropertyName == nameof(TerminalModel.Type))
             {

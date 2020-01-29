@@ -17,6 +17,7 @@ namespace DiiagramrModel
     {
         private string _typeName;
         private NodeModel _parentNode;
+        private object data;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalModel"/> class.
@@ -32,6 +33,8 @@ namespace DiiagramrModel
             Type = type;
             Name = name;
         }
+
+        public event Action<object> DataChanged;
 
         /// <summary>
         /// Gets or sets the node that this terminal belongs to.
@@ -53,7 +56,15 @@ namespace DiiagramrModel
         /// Gets or sets the current value held by the terminal.
         /// </summary>
         [DataMember]
-        public virtual object Data { get; set; }
+        public virtual object Data
+        {
+            get => data;
+            set
+            {
+                data = value;
+                DataChanged?.Invoke(data);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the side of the <see cref="ParentNode"/> the terminal is on.

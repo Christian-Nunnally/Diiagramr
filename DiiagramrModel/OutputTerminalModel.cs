@@ -1,7 +1,6 @@
 ﻿namespace DiiagramrModel
 {
     using System;
-    using System.ComponentModel;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -21,7 +20,7 @@
         public OutputTerminalModel(string name, Type type, Direction defaultSide, int index)
             : base(name, type, defaultSide, index)
         {
-            PropertyChanged += PropertyChangedHandler;
+            DataChanged += PropagateDataToAllWires;
         }
 
         /// <summary>
@@ -45,18 +44,10 @@
             wire.SourceTerminal = this;
             otherTerminal.ConnectedWires.Add(wire);
             ConnectedWires.Add(wire);
-            PropagateDataToAllWires();
+            PropagateDataToAllWires(Data);
         }
 
-        private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == nameof(Data))
-            {
-                PropagateDataToAllWires();
-            }
-        }
-
-        private void PropagateDataToAllWires()
+        private void PropagateDataToAllWires(object data)
         {
             for (int i = 0; i < ConnectedWires.Count; i++)
             {

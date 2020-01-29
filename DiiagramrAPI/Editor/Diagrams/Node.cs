@@ -29,7 +29,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public ViewModelCollection<Terminal, TerminalModel> TerminalsCollection { get; }
 
-        public virtual ObservableCollection<Terminal> Terminals { get; } = new ObservableCollection<Terminal>();
+        public virtual ObservableCollection<Terminal> Terminals { get; set; } = new ObservableCollection<Terminal>();
 
         public virtual double MinimumHeight { get; set; } = Diagram.GridSnapInterval;
 
@@ -237,6 +237,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
             var terminalType = methodInfo.GetParameters().First().ParameterType;
             var terminalModel = new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection, 0);
+            terminalModel.DataChanged += methodInfo.CreateMethodInvoker(this);
             var terminal = new InputTerminal(terminalModel);
             terminal.DataChanged = methodInfo.CreateMethodInvoker(this);
             AddTerminal(terminal);

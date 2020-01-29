@@ -20,7 +20,7 @@ namespace DiiagramrModel
         }
 
         [DataMember]
-        public virtual ObservableCollection<DiagramModel> Diagrams { get; } = new ObservableCollection<DiagramModel>();
+        public virtual ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
 
         public bool IsDirty { get; set; }
 

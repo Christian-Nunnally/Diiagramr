@@ -61,7 +61,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ItemsControl>
+        <ItemsControl ItemsSource="{Binding LoadProjectOptions}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />
@@ -69,9 +69,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Grid>
-                        <Label Content="{Binding Name}"></Label>
-                    </Grid>
+                    <Border Style="{StaticResource ButtonStyleBase}" MouseDown="{s:Action ProjectLoadOptionClicked}">
+                        <Label Style="{StaticResource LabelStyleBase}" Content="{Binding Name}"></Label>
+                    </Border>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>

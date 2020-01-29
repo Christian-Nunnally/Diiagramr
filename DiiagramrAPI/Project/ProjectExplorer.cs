@@ -15,13 +15,13 @@ namespace DiiagramrAPI.Project
     {
         public ProjectExplorer(Func<IProjectManager> projectManagerFactory)
         {
-            ProjectManager = projectManagerFactory.Invoke();
+            ProjectManager = projectManagerFactory();
             ProjectManager.CurrentProjectChanged += ProjectManagerOnCurrentProjectChanged;
         }
 
         public bool CanDeleteDiagram => SelectedDiagram != null;
 
-        public ObservableCollection<DiagramModel> Diagrams { get; private set; } = new ObservableCollection<DiagramModel>();
+        public ObservableCollection<DiagramModel> Diagrams { get; set; } = new ObservableCollection<DiagramModel>();
 
         public bool IsAddDiagramButtonVisible { get; set; }
 

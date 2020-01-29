@@ -49,7 +49,7 @@
                     <Style
                         x:Key="TextBoxStyle"
                         TargetType="TextBox">
-                        <Setter Property="Background" Value="Black" />
+                        <Setter Property="Background" Value="#111111" />
                         <Setter Property="Foreground" Value="#878787" />
                         <Setter Property="BorderThickness" Value="1" />
                         <Setter Property="BorderBrush" Value="#656565" />
@@ -61,52 +61,23 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="40" />
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label Style="{StaticResource HeaderLabelStyle}" Content="Name" Margin="12" Grid.Column="0" HorizontalAlignment="Right" />
-        <TextBox Grid.Column="1" Text="{Binding ProjectName}"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Center"
-                VerticalContentAlignment="Center"
-                HorizontalContentAlignment="Center"
-                Style="{StaticResource TextBoxStyle}"
-                    Width="150"
-                Height="30" />
-        <Border
-            Grid.Column="0"
-            Grid.Row="1"
-            Margin="5"
-            Width="50"
-            Height="30"
-            HorizontalAlignment="Left"
-            MouseDown="{s:Action OpenProjectsDirectoryClicked}"
-            Style="{StaticResource ButtonStyleBase}">
-            <Label
-                Margin="5"
-                Content="Save"
-                IsHitTestVisible="False"
-                Style="{StaticResource RegularLabelStyle}" />
-        </Border>
-        <Border
-            Grid.Column="1"
-            Grid.Row="1"
-            Margin="5"
-            Width="50"
-            Height="30"
-            HorizontalAlignment="Right"
-            MouseDown="{s:Action SaveProjectButtonClicked}"
-            Style="{StaticResource ButtonStyleBase}">
-            <Label
-                Margin="5"
-                Content="Save"
-                IsHitTestVisible="False"
-                Style="{StaticResource HeaderLabelStyle}" />
-        </Border>
+        <Label Style="{StaticResource RegularLabelStyle}"
+               Content="Name"
+               Margin="14"
+               HorizontalAlignment="Right" />
+
+        <TextBox Grid.Column="1"
+                 Text="{Binding ProjectName, UpdateSourceTrigger=PropertyChanged}"
+                 Margin="0,0,20,0"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Center"
+                 VerticalContentAlignment="Center"
+                 HorizontalContentAlignment="Center"
+                 Style="{StaticResource TextBoxStyle}"
+                 Height="28" />
     </Grid>
 </UserControl>
