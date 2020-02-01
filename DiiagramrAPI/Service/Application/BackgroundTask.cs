@@ -31,10 +31,11 @@ namespace DiiagramrAPI.Service.Application
             _shouldCancel = true;
         }
 
-        public void Start()
+        public BackgroundTask Start()
         {
             Paused = false;
             new Thread(ThreadFunction).Start();
+            return this;
         }
 
         private void ThreadFunction()

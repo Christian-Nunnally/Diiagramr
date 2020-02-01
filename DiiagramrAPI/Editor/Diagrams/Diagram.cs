@@ -16,13 +16,13 @@ namespace DiiagramrAPI.Editor.Diagrams
     public class Diagram : ViewModel, IMouseEnterLeaveReaction
     {
         public const double DiagramBorderThickness = 2.0;
-        public const int DiagramMargin = 100;
         public const double GridSnapInterval = 30.0;
         public const double GridSnapIntervalOffSetCorrection = 13.0;
         public const double NodeBorderWidth = 15.0;
         public const double NodeBorderWidthMinus1 = NodeBorderWidth - 1;
         public const double NodeSelectorBottomMargin = 250;
         public const double NodeSelectorRightMargin = 400;
+        public const int DiagramMargin = 100;
         private static readonly Rect BoundingBoxDefault = new Rect(-400, -275, 800, 550);
 
         public Diagram(
