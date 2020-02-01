@@ -25,7 +25,7 @@ namespace DiiagramrAPI.Project
         {
             if (ActiveItem != null)
             {
-                ActiveItem.Model.IsOpen = false;
+                ActiveItem.DiagramModel.IsOpen = false;
             }
         }
 
@@ -41,7 +41,7 @@ namespace DiiagramrAPI.Project
 
         private void CloseDiagram(DiagramModel diagram)
         {
-            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.Model == diagram);
+            var diagramViewModel = Items.FirstOrDefault(viewModel => viewModel.DiagramModel == diagram);
             if (diagramViewModel != null)
             {
                 CloseItem(diagramViewModel);
@@ -117,7 +117,8 @@ namespace DiiagramrAPI.Project
                 return;
             }
 
-            var diagramViewModel = _projectManager.Diagrams.First(m => m.Model == diagram);
+            var diagramViewModel = _projectManager.Diagrams.First(m => m.DiagramModel == diagram);
+            diagramViewModel.ResetPanAndZoom();
             diagramViewModel.PropertyChanged += DiagramViewModelOnPropertyChanged;
             Items.Insert(0, diagramViewModel);
 

@@ -55,19 +55,19 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        public bool IsBoolType => Model.Type == typeof(bool);
+        public bool IsBoolType => TerminalModel.Type == typeof(bool);
 
-        public bool IsCharType => Model.Type == typeof(char);
+        public bool IsCharType => TerminalModel.Type == typeof(char);
 
         public bool IsDirectEditTextBoxVisible => IsDirectlyEditableType && IsSelected && !IsConnected;
 
         public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
 
-        public bool IsFloatType => Model.Type == typeof(float);
+        public bool IsFloatType => TerminalModel.Type == typeof(float);
 
-        public bool IsIntType => Model.Type == typeof(int);
+        public bool IsIntType => TerminalModel.Type == typeof(int);
 
-        public bool IsStringType => Model.Type == typeof(string);
+        public bool IsStringType => TerminalModel.Type == typeof(string);
 
         public void TerminalDoubleClicked()
         {

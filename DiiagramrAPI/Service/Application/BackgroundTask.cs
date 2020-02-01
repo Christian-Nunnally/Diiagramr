@@ -5,10 +5,10 @@ namespace DiiagramrAPI.Service.Application
 {
     public class BackgroundTask
     {
+        private readonly Action _action;
+        private readonly bool _repeatTask;
+        private readonly int _repeatDelay;
         private bool _shouldCancel;
-        private Action _action;
-        private bool _repeatTask;
-        private int _repeatDelay;
 
         public BackgroundTask(Action action)
         {

@@ -4,29 +4,30 @@
         <ResourceDictionary Source="Colors.xaml" />
 
         <ResourceDictionary>
-            <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="{StaticResource ResourceKey=DarkGray}" />
+            <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=Black6}" />
+            <SolidColorBrush x:Key="DialogBorderBackgroundBrush" Color="{StaticResource ResourceKey=Black6}" />
+            <SolidColorBrush x:Key="ContextMenuBackgroundBrush" Color="{StaticResource ResourceKey=Black10}" />
+            <SolidColorBrush x:Key="ToolbarBackgroundBrush" Color="{StaticResource ResourceKey=Black18}" />
+            <SolidColorBrush x:Key="DialogTitleBackgroundBrush" Color="{StaticResource ResourceKey=Black18}" />
+            <SolidColorBrush x:Key="NodeBorderBrush" Color="{StaticResource ResourceKey=Black24}" />
+            <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=Black24}" />
+            <SolidColorBrush x:Key="DiagramBoundingBoxBorderBrush" Color="{StaticResource ResourceKey=Black24}" />
+            <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=Black24}" />
+            <SolidColorBrush x:Key="DialogBackgroundBrush" Color="{StaticResource ResourceKey=Black24Transparent33}" />
+            <SolidColorBrush x:Key="DialogBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=Black24Transparent66}" />
+            <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=SelectionBlue}" />
             <SolidColorBrush x:Key="NodeSelectionStyleBrush" Color="{StaticResource ResourceKey=SelectionBlue}" />
-            <SolidColorBrush x:Key="NodeDragAreaStyleBrush" Color="{StaticResource ResourceKey=NodeDragBorderTransparentBlue}" />
-            <SolidColorBrush x:Key="DiagramBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
-            <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffWhite}" />
-            <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffWhite}" />
-            <SolidColorBrush x:Key="DiagramAutoWireRectangleStroke" Color="{StaticResource ResourceKey=DiiagramrOffGreen}" />
-            <SolidColorBrush x:Key="DiagramAutoWireRectangleFill" Color="{StaticResource ResourceKey=TransparentDiiagramrOffGreen}" />
-            <SolidColorBrush x:Key="MenuItemMouseOverBrush" Color="{StaticResource ResourceKey=DarkHighlightGray}" />
-            <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=AlmostWhite}" />
-            <SolidColorBrush x:Key="DialogBackgroundBrush" Color="{StaticResource ResourceKey=LessTransparentBlack}" />
-            <SolidColorBrush x:Key="DialogBackgroundMouseOverBrush" Color="{StaticResource ResourceKey=TransparentBlack}" />
-            <SolidColorBrush x:Key="DialogBorderBackgroundBrush" Color="{StaticResource ResourceKey=DiiagramrBlack}" />
-            <SolidColorBrush x:Key="ButtonHoverBrush" Color="{StaticResource ResourceKey=ButtonHoverBlue}" />
-            <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=LightGray}" />
-            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{StaticResource ResourceKey=DisabledGray}" />
-            <SolidColorBrush x:Key="TextboxBackgroundBrush" Color="{StaticResource ResourceKey=HighlightedGray}" />
-            <SolidColorBrush x:Key="NodeBackgroundBrush" Color="{StaticResource ResourceKey=LighterGray}" />
-            <SolidColorBrush x:Key="NodeBorderBrush" Color="{StaticResource ResourceKey=NodeBorderGray}" />
-            <SolidColorBrush x:Key="SoftDiagramForeground" Color="{StaticResource ResourceKey=LightSoftDiagramForeground}" />
-            <SolidColorBrush x:Key="DiagramBoundingBoxBorderBrush" Color="{StaticResource ResourceKey=LightDiagramBoundingBoxBorder}" />
-            <SolidColorBrush x:Key="DialogTitleBackgroundBrush" Color="{StaticResource ResourceKey=DarkGray}" />
-            <SolidColorBrush x:Key="DialogTitleForegroundBrush" Color="{StaticResource ResourceKey=LightSoftDiagramForeground}" />
+            <SolidColorBrush x:Key="NodeDragAreaStyleBrush" Color="{StaticResource ResourceKey=SelectionBlueTransparent}" />
+            <SolidColorBrush x:Key="DiagramAutoWireRectangleStroke" Color="{StaticResource ResourceKey=SelectionGreen}" />
+            <SolidColorBrush x:Key="DiagramAutoWireRectangleFill" Color="{StaticResource ResourceKey=SelectionGreenTransparent}" />
+            <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{StaticResource ResourceKey=White60}" />
+            <SolidColorBrush x:Key="NodeBackgroundBrush" Color="{StaticResource ResourceKey=White70}" />
+            <SolidColorBrush x:Key="SoftDiagramForeground" Color="{StaticResource ResourceKey=White70}" />
+            <SolidColorBrush x:Key="DialogTitleForegroundBrush" Color="{StaticResource ResourceKey=White70}" />
+            <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=White80}" />
+            <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=White92}" />
+            <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=White92}" />
+            <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=White92Transparent}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

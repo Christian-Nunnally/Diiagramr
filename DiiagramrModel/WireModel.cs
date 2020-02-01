@@ -1,7 +1,6 @@
 namespace DiiagramrModel
 {
     using DiiagramrCore;
-    using DiiagramrModel2;
     using PropertyChanged;
     using System.ComponentModel;
     using System.Runtime.Serialization;
@@ -86,9 +85,9 @@ namespace DiiagramrModel
 
         private object GetCoersedSourceTerminalDataOrBreakWire()
         {
-            if (ValueCoersionHelper.CanCoerseValue(SourceTerminal?.Data, SinkTerminal.Type))
+            if (ValueConverter.TryCoerseValue(SourceTerminal?.Data, SinkTerminal.Type, out var coersedData))
             {
-                return ValueCoersionHelper.CoerseValue(SourceTerminal?.Data, SinkTerminal.Type);
+                return coersedData;
             }
             IsBroken = true;
             return null;

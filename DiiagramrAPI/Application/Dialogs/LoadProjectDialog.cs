@@ -1,6 +1,5 @@
 ﻿using DiiagramrAPI.Application;
 using DiiagramrCore;
-using PropertyChanged;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
@@ -10,7 +9,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI2.Application.Dialogs
 {
-    public class LoadProjectDialog : Dialog
+    public partial class LoadProjectDialog : Dialog
     {
         private string projectDirectory;
 
@@ -60,23 +59,6 @@ namespace DiiagramrAPI2.Application.Dialogs
                 CloseDialog();
                 LoadAction(dataContext.Path);
             }
-        }
-
-        [AddINotifyPropertyChangedInterface]
-        public class LoadProjectOption
-        {
-            public LoadProjectOption(string path)
-            {
-                Path = path;
-                var splitPath = path.Split("\\");
-                Name = splitPath[^1];
-            }
-
-            public string Path { get; set; }
-
-            public string Name { get; set; }
-
-            public static LoadProjectOption Create(string path) => new LoadProjectOption(path);
         }
     }
 }

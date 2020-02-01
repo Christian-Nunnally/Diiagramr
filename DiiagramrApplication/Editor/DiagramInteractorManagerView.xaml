@@ -6,15 +6,9 @@
     xmlns:s="https://github.com/canton7/Stylet">
     <UserControl.Resources>
         <ResourceDictionary>
-            <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
-                <Canvas />
-            </ItemsPanelTemplate>
-
-            <ItemsPanelTemplate x:Key="StackItemsPanelTemplate">
-                <StackPanel />
-            </ItemsPanelTemplate>
-
-            <BooleanToVisibilityConverter x:Key="Btv" />
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="DiagramInteractorPresenterStyle" TargetType="ContentPresenter">
                 <Setter Property="Canvas.Left" Value="{Binding X}" />
@@ -49,12 +43,12 @@
     <Grid>
         <ItemsControl
             ItemContainerStyle="{StaticResource DiagramInteractorNamePresenterStyle}"
-            ItemsPanel="{StaticResource StackItemsPanelTemplate}"
+            ItemsPanel="{StaticResource StackItemsPanel}"
             ItemsSource="{Binding ActiveDiagramInteractorNames}"
             Visibility="{Binding ShowDebugInfo, Converter={StaticResource Btv}}" />
         <ItemsControl
             ItemContainerStyle="{StaticResource DiagramInteractorPresenterStyle}"
-            ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+            ItemsPanel="{StaticResource CanvasItemsPanel}"
             ItemsSource="{Binding ActiveDiagramInteractors}" />
     </Grid>
 </UserControl>

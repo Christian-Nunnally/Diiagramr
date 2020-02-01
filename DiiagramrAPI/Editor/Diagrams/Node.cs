@@ -15,8 +15,6 @@ namespace DiiagramrAPI.Editor.Diagrams
     public abstract class Node : ViewModel, IMouseEnterLeaveReaction
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
-        private readonly IDictionary<string, PropertyInfo> _terminalsPropertyInfos = new Dictionary<string, PropertyInfo>();
-        private readonly IDictionary<string, TerminalModel> _nameToTerminalMap = new Dictionary<string, TerminalModel>();
         private readonly List<Action> _viewLoadedActions = new List<Action>();
 
         public Node()
@@ -24,7 +22,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             Terminals = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
             Terminals.CollectionChanged += TerminalsCollectionChanged;
             _viewLoadedActions.Add(ArrangeAllTerminals);
-            PropertyChanged += NodePropertyChanged;
         }
 
         public virtual IObservableCollection<Terminal> Terminals { get; set; }
@@ -79,13 +76,11 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual void AddTerminal(TerminalModel terminalModel)
         {
-            _nameToTerminalMap[terminalModel.Name] = terminalModel;
             NodeModel.AddTerminal(terminalModel);
         }
 
         public virtual void RemoveTerminal(TerminalModel terminalModel)
         {
-            _nameToTerminalMap.Remove(terminalModel.Name);
             NodeModel.RemoveTerminal(terminalModel);
         }
 
@@ -101,8 +96,8 @@ namespace DiiagramrAPI.Editor.Diagrams
                 Model = nodeModel;
                 NodeModel.Name = GetType().FullName;
                 InitializePluginNodeSettings();
-                LoadTerminalViewModels();
-                CreateTerminals();
+                var terminalCreator = new NodeTerminalCreator(this);
+                terminalCreator.CreateTerminals();
                 NodeModel.Width = MinimumWidth;
                 NodeModel.Height = MinimumHeight;
                 NodeModel.PropertyChanged += ModelPropertyChanged;
@@ -139,18 +134,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             UnhighlightTerminals();
         }
 
-        public void CreateTerminals()
-        {
-            GetType()
-                .GetMethods()
-                .Where(x => Attribute.IsDefined(x, typeof(InputTerminalAttribute)))
-                .ForEach(CreateInputTerminalForMethod);
-            GetType()
-                .GetProperties()
-                .Where(x => Attribute.IsDefined(x, typeof(OutputTerminalAttribute)))
-                .ForEach(CreateOutputTerminalForProperty);
-        }
-
         protected virtual void MouseEnteredNode()
         {
         }
@@ -185,23 +168,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             ArrangeAllTerminals();
         }
 
-        private void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (_terminalsPropertyInfos.TryGetValue(e.PropertyName, out PropertyInfo propertyInfo)
-                && _nameToTerminalMap.TryGetValue(e.PropertyName, out TerminalModel terminalModel))
-            {
-                terminalModel.Data = propertyInfo.GetValue(this);
-            }
-        }
-
-        private void LoadTerminalViewModels()
-        {
-            foreach (var terminal in NodeModel.Terminals)
-            {
-                Terminals.Add(Terminal.CreateTerminalViewModel(terminal));
-            }
-        }
-
         private void PersistProperty(PropertyInfo info)
         {
             if (!NodeModel.PersistedVariables.ContainsKey(info.Name))
@@ -219,35 +185,6 @@ namespace DiiagramrAPI.Editor.Diagrams
                     OnPropertyChanged(e.PropertyName);
                     break;
             }
-        }
-
-        private void ValidateInputTerminalMethod(MethodInfo methodInfo)
-        {
-            if (methodInfo.GetParameters().Length != 1)
-            {
-                var errorMessage = $"Input terminal method `{GetType().AssemblyQualifiedName}.{methodInfo.Name}` must have exactly one parameter.";
-                throw new InvalidOperationException(errorMessage);
-            }
-        }
-
-        private void CreateInputTerminalForMethod(MethodInfo methodInfo)
-        {
-            ValidateInputTerminalMethod(methodInfo);
-            var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
-            var terminalType = methodInfo.GetParameters().First().ParameterType;
-            var terminalModel = new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection, 0);
-            terminalModel.DataChanged += methodInfo.CreateMethodInvoker(this);
-            AddTerminal(terminalModel);
-        }
-
-        private void CreateOutputTerminalForProperty(PropertyInfo property)
-        {
-            var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
-            var terminalType = property.PropertyType;
-            var terminalModel = new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection, 0);
-            _terminalsPropertyInfos[property.Name] = property;
-            AddTerminal(terminalModel);
-            NotifyOfPropertyChange(property.Name);
         }
 
         private void ArrangeAllTerminals()

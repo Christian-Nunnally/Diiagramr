@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
         {
-            _nodeProvider = nodeProvider.Invoke();
+            _nodeProvider = nodeProvider();
             _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
             AddNodes();
         }
@@ -138,7 +138,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
                 if (viewModelUnderMouse is Terminal terminal)
                 {
-                    if (terminal.Model.DefaultSide != Direction.West)
+                    if (terminal.TerminalModel.DefaultSide != Direction.West)
                     {
                         X += Terminal.TerminalHeight;
                     }
@@ -265,13 +265,13 @@ namespace DiiagramrAPI.Editor.Interactors
             if (mousedOverViewModel is InputTerminal inputTerminalMouseIsOver)
             {
                 ContextTerminal = inputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is OutputTerminal && t.Model.CanWireToType(inputTerminalMouseIsOver.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is OutputTerminal && ValueConverter.NonExaustiveCanConvertToType(t.TerminalModel.Type, inputTerminalMouseIsOver.TerminalModel.Type)));
                 inputTerminalMouseIsOver.HighlightVisible = true;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is InputTerminal && t.Model.CanWireFromType(outputTerminalMouseIsOver.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is InputTerminal && ValueConverter.NonExaustiveCanConvertToType(outputTerminalMouseIsOver.TerminalModel.Type, t.TerminalModel.Type)));
                 outputTerminalMouseIsOver.HighlightVisible = true;
             }
             else

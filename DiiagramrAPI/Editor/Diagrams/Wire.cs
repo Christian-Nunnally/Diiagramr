@@ -50,16 +50,16 @@ namespace DiiagramrAPI.Editor.Diagrams
             WireModel = new WireModel()
             {
                 X1 = x1,
-                X2 = startTerminal?.Model.X ?? throw new ArgumentNullException(nameof(startTerminal)),
+                X2 = startTerminal?.TerminalModel.X ?? throw new ArgumentNullException(nameof(startTerminal)),
                 Y1 = y1,
-                Y2 = startTerminal.Model.Y,
+                Y2 = startTerminal.TerminalModel.Y,
             };
-            BannedDirectionForEnd = startTerminal.Model.DefaultSide.Opposite();
+            BannedDirectionForEnd = startTerminal.TerminalModel.DefaultSide.Opposite();
             BannedDirectionForStart = Direction.None;
             _wirePathingAlgorithum = new WirePathingAlgorithum(this)
             {
-                FallbackSourceTerminal = startTerminal.Model is InputTerminalModel ? startTerminal : null,
-                FallbackSinkTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal : null
+                FallbackSourceTerminal = startTerminal.TerminalModel is InputTerminalModel ? startTerminal : null,
+                FallbackSinkTerminal = startTerminal.TerminalModel is OutputTerminalModel ? startTerminal : null
             };
             LineColorBrush = new SolidColorBrush(Colors.White);
         }
@@ -256,7 +256,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void GenerateDataVisualAnimationFrames(IList<Point> originalPoints)
         {
-            if (originalPoints.Count == 0)
+            if (originalPoints == null || originalPoints.Count == 0)
             {
                 return;
             }

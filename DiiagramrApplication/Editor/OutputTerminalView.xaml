@@ -6,19 +6,17 @@
     xmlns:s="https://github.com/canton7/Stylet"
     Width="{x:Static editor:Terminal.TerminalWidth}"
     Height="{x:Static editor:Terminal.TerminalHeight}"
-    FocusVisualStyle="{x:Null}"
     LostFocus="{s:Action LostFocus}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
-    <Grid FocusVisualStyle="{x:Null}" RenderTransformOrigin="0.5, 0.5">
+    <Grid RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
             <RotateTransform Angle="{Binding TerminalRotation}" />
         </Grid.RenderTransform>
         <Border
             Margin="1"
-            CornerRadius="{x:Static editor:Terminal.TerminalCornerRadius}"
-            FocusVisualStyle="{x:Null}">
+            CornerRadius="{x:Static editor:Terminal.TerminalCornerRadius}">
             <Border.Style>
                 <Style>
                     <Setter Property="Border.Background" Value="{Binding TerminalBackgroundBrush}" />

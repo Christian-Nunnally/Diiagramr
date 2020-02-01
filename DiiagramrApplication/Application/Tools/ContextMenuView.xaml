@@ -15,6 +15,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
                 <ResourceDictionary>
                     <tools:NotSeparatorCommandVisibilityConverter x:Key="IsNotSeparatorConverter" />
                     <tools:SeparatorCommandVisibilityConverter x:Key="IsSeparatorConverter" />
@@ -23,12 +24,12 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Border Margin="-10" IsHitTestVisible="True" MouseLeave="{s:Action MouseLeft}" Background="Transparent">
-        <Border Margin="10" Background="#1B1B1C" BorderBrush="#333337" BorderThickness="1" Padding="2">
-            <ItemsControl ItemsSource="{Binding Commands}" MinWidth="{Binding MinimumWidth}">
+        <Border Margin="10" Background="{StaticResource ContextMenuBackgroundBrush}" BorderBrush="#333337" BorderThickness="1" Padding="2">
+            <ItemsControl ItemsSource="{Binding Commands}" MinWidth="{Binding MinimumWidth}" ItemsPanel="{StaticResource StackItemsPanel}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Border Height="3" BorderBrush="#1B1B1C" Background="#333337" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
+                            <Border Height="3" BorderBrush="{StaticResource ContextMenuBackgroundBrush}" Background="#333337" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
                             <Border MouseDown="{s:Action ExecuteCommand}" Visibility="{Binding Converter={StaticResource IsNotSeparatorConverter}}">
                                 <Label Content="{Binding Name}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" Margin="5,0,0,0">
                                     <Label.Style>
@@ -59,11 +60,6 @@
                         </Grid>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
             </ItemsControl>
         </Border>
     </Border>

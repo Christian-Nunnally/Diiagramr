@@ -117,7 +117,7 @@ namespace DiiagramrAPI.Project
         public void DeleteDiagram(DiagramModel diagram)
         {
             CurrentProject.RemoveDiagram(diagram);
-            var diagramViewModel = Diagrams.FirstOrDefault(m => m.Model == diagram);
+            var diagramViewModel = Diagrams.FirstOrDefault(m => m.DiagramModel == diagram);
             if (diagramViewModel != null)
             {
                 Diagrams.Remove(diagramViewModel);

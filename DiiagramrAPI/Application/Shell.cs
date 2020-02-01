@@ -1,7 +1,6 @@
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
-using DiiagramrModel2;
 using Stylet;
 using System;
 using System.ComponentModel;
@@ -26,7 +25,6 @@ namespace DiiagramrAPI.Application
             ScreenHost = screenHostFactory();
             DialogHost = dialogHostFactory();
             Toolbar = toolbarFactory();
-            ValueCoersionHelper.InitializeDefaultCoersionFunctions();
             CommandExecutor.Execute(StartCommandId);
         }
 

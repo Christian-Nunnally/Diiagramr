@@ -10,6 +10,8 @@
     [KnownType(typeof(OutputTerminalModel))]
     public class OutputTerminalModel : TerminalModel
     {
+        public Func<object> GetDataFromSource;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputTerminalModel"/> class.
         /// </summary>
@@ -20,7 +22,12 @@
         public OutputTerminalModel(string name, Type type, Direction defaultSide, int index)
             : base(name, type, defaultSide, index)
         {
-            DataChanged += PropagateDataToAllWires;
+        }
+
+        public void UpdateDataFromSource()
+        {
+            Data = GetDataFromSource?.Invoke();
+            PropagateDataToAllWires();
         }
 
         /// <summary>
@@ -44,10 +51,10 @@
             wire.SourceTerminal = this;
             otherTerminal.ConnectedWires.Add(wire);
             ConnectedWires.Add(wire);
-            PropagateDataToAllWires(Data);
+            PropagateDataToAllWires();
         }
 
-        private void PropagateDataToAllWires(object data)
+        private void PropagateDataToAllWires()
         {
             for (int i = 0; i < ConnectedWires.Count; i++)
             {

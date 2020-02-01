@@ -28,6 +28,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public Diagram Diagram { get; internal set; }
 
+        public bool IsModifierKeyPressed => IsAltKeyPressed || IsCtrlKeyPressed || IsShiftKeyPressed;
+
         public bool IsAltKeyPressed { get; internal set; }
 
         public bool IsCtrlKeyPressed { get; internal set; }

@@ -4,8 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:diagram="clr-namespace:Diiagramr.Editor">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="Btv" />
-        <diagram:PointsToPathConverter x:Key="PointsToPathConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <diagram:PointsToPathConverter x:Key="PointsToPathConverter" />
+        </ResourceDictionary>
     </UserControl.Resources>
     <Canvas>
         <Path
@@ -31,7 +36,9 @@
         <Label
             Canvas.Left="{Binding DataVisualX}"
             Canvas.Top="{Binding DataVisualY}"
+            Margin="7,7"
             Content="{Binding WirePropagationVisualNumberString}"
+            Style="{StaticResource LabelStyleBase}"
             Visibility="{Binding IsDataVisualVisible, Converter={StaticResource Btv}}" />
     </Canvas>
 </UserControl>

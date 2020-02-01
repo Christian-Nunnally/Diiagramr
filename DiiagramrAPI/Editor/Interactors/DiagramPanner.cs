@@ -33,9 +33,7 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             return interaction.Type == InteractionType.LeftMouseDown
                 && interaction.ViewModelUnderMouse is Diagram
-                && !interaction.IsCtrlKeyPressed
-                && !interaction.IsAltKeyPressed
-                && !interaction.IsShiftKeyPressed;
+                && !interaction.IsModifierKeyPressed;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)

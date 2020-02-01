@@ -18,10 +18,10 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public Terminal(TerminalModel terminal)
         {
-            Model = terminal ?? throw new ArgumentNullException(nameof(terminal));
-            Model.PropertyChanged += TerminalOnPropertyChanged;
-            Data = Model.Data;
-            Name = Model.Name;
+            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
+            Data = TerminalModel.Data;
+            Name = TerminalModel.Name;
             SetTerminalRotationBasedOnDirection();
             SetTerminalColor();
         }
@@ -32,30 +32,30 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual object Data
         {
-            get => Model.Data;
+            get => TerminalModel.Data;
 
             set
             {
-                if (Model.Data != value)
+                if (TerminalModel.Data != value)
                 {
-                    Model.Data = value;
+                    TerminalModel.Data = value;
                 }
             }
         }
 
         public int EdgeIndex
         {
-            get => Model.EdgeIndex;
-            set => Model.EdgeIndex = value;
+            get => TerminalModel.EdgeIndex;
+            set => TerminalModel.EdgeIndex = value;
         }
 
         public virtual bool HighlightVisible { get; set; }
 
-        public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
+        public bool IsConnected => TerminalModel.ConnectedWires?.Any() ?? false;
 
         public virtual bool IsSelected { get; set; }
 
-        public virtual TerminalModel Model { get; }
+        public virtual TerminalModel TerminalModel { get; }
 
         public string Name { get; set; }
 
@@ -65,28 +65,28 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public double TerminalDownWireMinimumLength
         {
-            get => Model.TerminalDownWireMinimumLength;
-            set => Model.TerminalDownWireMinimumLength = value;
+            get => TerminalModel.TerminalDownWireMinimumLength;
+            set => TerminalModel.TerminalDownWireMinimumLength = value;
         }
 
         public double TerminalLeftWireMinimumLength
         {
-            get => Model.TerminalLeftWireMinimumLength;
-            set => Model.TerminalLeftWireMinimumLength = value;
+            get => TerminalModel.TerminalLeftWireMinimumLength;
+            set => TerminalModel.TerminalLeftWireMinimumLength = value;
         }
 
         public double TerminalRightWireMinimumLength
         {
-            get => Model.TerminalRightWireMinimumLength;
-            set => Model.TerminalRightWireMinimumLength = value;
+            get => TerminalModel.TerminalRightWireMinimumLength;
+            set => TerminalModel.TerminalRightWireMinimumLength = value;
         }
 
         public float TerminalRotation { get; set; }
 
         public double TerminalUpWireMinimumLength
         {
-            get => Model.TerminalUpWireMinimumLength;
-            set => Model.TerminalUpWireMinimumLength = value;
+            get => TerminalModel.TerminalUpWireMinimumLength;
+            set => TerminalModel.TerminalUpWireMinimumLength = value;
         }
 
         public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
@@ -95,14 +95,14 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public double XRelativeToNode
         {
-            get => Model.OffsetX;
-            set => Model.OffsetX = value;
+            get => TerminalModel.OffsetX;
+            set => TerminalModel.OffsetX = value;
         }
 
         public double YRelativeToNode
         {
-            get => Model.OffsetY;
-            set => Model.OffsetY = value;
+            get => TerminalModel.OffsetY;
+            set => TerminalModel.OffsetY = value;
         }
 
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
@@ -115,10 +115,10 @@ namespace DiiagramrAPI.Editor.Diagrams
         public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
         {
             const double marginFromEdgeOfNode = Diagram.NodeBorderWidth + 10;
-            var offsetX = Model.OffsetX;
-            var offsetY = Model.OffsetY;
+            var offsetX = TerminalModel.OffsetX;
+            var offsetY = TerminalModel.OffsetY;
             var halfTerminalHeight = (TerminalHeight / 2);
-            var terminalDirection = Model.DefaultSide;
+            var terminalDirection = TerminalModel.DefaultSide;
 
             if (terminalDirection == Direction.North)
             {
@@ -165,14 +165,14 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual void SetTerminalDirection(Direction direction)
         {
-            Model.DefaultSide = direction;
+            TerminalModel.DefaultSide = direction;
         }
 
         public virtual void ShowHighlightIfCompatibleType(Type type)
         {
             if (!IsConnected)
             {
-                HighlightVisible = Model.CanWireToType(type) || Model.CanWireFromType(type);
+                HighlightVisible = ValueConverter.NonExaustiveCanConvertToType(type, TerminalModel.Type);
             }
         }
 
@@ -199,14 +199,14 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void SetTerminalColor()
         {
-            var color = TypeColorProvider.Instance.GetColorForType(Model.Type);
+            var color = TypeColorProvider.Instance.GetColorForType(TerminalModel.Type);
             TerminalBackgroundBrush = GetBrushFromColor(color);
             TerminalBackgroundMouseOverBrush = GetBrushFromColor(CoreUilities.ChangeColorBrightness(color, 0.5f));
         }
 
         private void SetTerminalRotationBasedOnDirection()
         {
-            TerminalRotation = Model.DefaultSide switch
+            TerminalRotation = TerminalModel.DefaultSide switch
             {
                 Direction.North => 0,
                 Direction.East => 90,
@@ -217,15 +217,15 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void TerminalOnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Model.DefaultSide))
+            if (e.PropertyName == nameof(TerminalModel.DefaultSide))
             {
                 SetTerminalRotationBasedOnDirection();
             }
-            else if (e.PropertyName == nameof(TerminalModel.Data))
+            else if (e.PropertyName == nameof(DiiagramrModel.TerminalModel.Data))
             {
-                NotifyOfPropertyChange(nameof(Data));
+                base.NotifyOfPropertyChange(nameof(Data));
             }
-            else if (e.PropertyName == nameof(TerminalModel.Type))
+            else if (e.PropertyName == nameof(DiiagramrModel.TerminalModel.Type))
             {
                 SetTerminalColor();
             }

@@ -6,8 +6,6 @@ namespace DiiagramrAPI.Editor.Diagrams
     [HideFromNodeSelector]
     public class DiagramInputNode : IoNode
     {
-        private object diagramOutput;
-
         public DiagramInputNode()
         {
             Width = 30;
@@ -16,13 +14,6 @@ namespace DiiagramrAPI.Editor.Diagrams
         }
 
         [OutputTerminal(Direction.South)]
-        public object DiagramOutput
-        {
-            get => diagramOutput;
-            set
-            {
-                diagramOutput = value;
-            }
-        }
+        public object DiagramInput { get; set; }
     }
 }

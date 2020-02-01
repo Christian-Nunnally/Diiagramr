@@ -8,6 +8,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
                 <ResourceDictionary Source="..\NodeStyle.xaml" />
                 <ResourceDictionary>
                     <Style x:Key="TerminalContainerStyle" TargetType="ContentPresenter">
@@ -21,10 +22,6 @@
                             </Setter.Value>
                         </Setter>
                     </Style>
-
-                    <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
-                        <Canvas />
-                    </ItemsPanelTemplate>
 
                     <Style x:Key="NodeBorderStyle" TargetType="Border">
                         <Setter Property="Background" Value="{StaticResource NodeBackgroundBrush}" />
@@ -58,8 +55,6 @@
                         <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
                         <Setter Property="VerticalContentAlignment" Value="Center" />
                     </Style>
-
-                    <BooleanToVisibilityConverter x:Key="Btv" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -151,7 +146,7 @@
                                 HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 ItemContainerStyle="{StaticResource TerminalContainerStyle}"
-                                ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                                ItemsPanel="{StaticResource CanvasItemsPanel}"
                                 ItemsSource="{Binding MousedOverNode.Terminals}" />
 
                             <Border

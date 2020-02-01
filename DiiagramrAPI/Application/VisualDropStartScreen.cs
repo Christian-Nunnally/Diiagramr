@@ -1,10 +1,13 @@
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
+using DiiagramrAPI2.Application.Dialogs;
 using DiiagramrModel;
 using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows.Media;
 
@@ -34,13 +37,16 @@ namespace DiiagramrAPI.Application
 
             GenerateAnimationFrames();
 
-            RecentProject1 = "Broken";
-            RecentProject2 = "Broken";
-            RecentProject3 = "Broken";
+            var possibleProjects = Directory.GetFiles(_projectFileService.ProjectDirectory).Select(LoadProjectOption.Create);
+            RecentProject1 = possibleProjects.Count() > 0 ? possibleProjects.ElementAt(0).Name : string.Empty;
+            RecentProject2 = possibleProjects.Count() > 1 ? possibleProjects.ElementAt(1).Name : string.Empty;
+            RecentProject3 = possibleProjects.Count() > 2 ? possibleProjects.ElementAt(2).Name : string.Empty;
             RecentProject1 = string.IsNullOrWhiteSpace(RecentProject1) ? "Recent #1" : RecentProject1;
             RecentProject2 = string.IsNullOrWhiteSpace(RecentProject2) ? "Recent #2" : RecentProject2;
             RecentProject3 = string.IsNullOrWhiteSpace(RecentProject3) ? "Recent #3" : RecentProject3;
-            UpdateRecentProjects(string.Empty);
+            NotifyOfPropertyChange(nameof(RecentProject1DisplayString));
+            NotifyOfPropertyChange(nameof(RecentProject2DisplayString));
+            NotifyOfPropertyChange(nameof(RecentProject3DisplayString));
         }
 
         public bool OpenProjectButtonsVisible { get; set; }
@@ -130,9 +136,8 @@ namespace DiiagramrAPI.Application
 
         public void UpdateRecentProjects(string name)
         {
-            // TODO: Implement this again.
-            RecentProject1 = name;
-            RecentProject2 = name;
+            RecentProject1 = RecentProject2;
+            RecentProject2 = RecentProject3;
             RecentProject3 = name;
         }
 

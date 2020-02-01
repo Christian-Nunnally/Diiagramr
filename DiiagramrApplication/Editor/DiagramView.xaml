@@ -17,12 +17,9 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
                 <ResourceDictionary Source="NodeStyle.xaml" />
                 <ResourceDictionary>
-                    <ItemsPanelTemplate x:Key="CanvasItemsPanelTemplate">
-                        <Canvas />
-                    </ItemsPanelTemplate>
-
                     <Style x:Key="WireContainerStyle" TargetType="ContentPresenter">
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
@@ -60,8 +57,7 @@
                         </VisualBrush.Visual>
                     </VisualBrush>
 
-                    <BooleanToVisibilityConverter x:Key="Btv" />
-
+                    <!--Canidate for x-->
                     <Style x:Key="HelpLabelStyle" TargetType="Label">
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="HorizontalAlignment" Value="Center" />
@@ -112,11 +108,11 @@
                 <!--  Wire Items Control  -->
                 <ItemsControl
                     ItemContainerStyle="{StaticResource WireContainerStyle}"
-                    ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                    ItemsPanel="{StaticResource CanvasItemsPanel}"
                     ItemsSource="{Binding Wires}" />
 
                 <!--  Node Items Control  -->
-                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanelTemplate}" ItemsSource="{Binding Nodes}">
+                <ItemsControl ItemsPanel="{StaticResource CanvasItemsPanel}" ItemsSource="{Binding Nodes}">
                     <ItemsControl.ItemContainerStyle>
                         <Style TargetType="ContentPresenter">
                             <Setter Property="Canvas.Left" Value="{Binding X, Mode=TwoWay}" />
@@ -132,7 +128,7 @@
                                             <!--  Terminal Items Control  -->
                                             <ItemsControl
                                                 ItemContainerStyle="{StaticResource TerminalContainerStyle}"
-                                                ItemsPanel="{StaticResource CanvasItemsPanelTemplate}"
+                                                ItemsPanel="{StaticResource CanvasItemsPanel}"
                                                 ItemsSource="{Binding Terminals}" />
 
                                             <!--  Node  -->

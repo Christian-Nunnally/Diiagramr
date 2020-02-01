@@ -1,7 +1,6 @@
 namespace DiiagramrModel
 {
     using DiiagramrCore;
-    using DiiagramrModel2;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -202,20 +201,21 @@ namespace DiiagramrModel
 
         public virtual bool CanWireToType(Type type)
         {
-            return CanWireFromTypeToType(Data?.GetType() ?? Type, type);
+            return CanWireDataToType(Data, type);
         }
 
-        public virtual bool CanWireFromType(Type type)
+        public virtual bool CanWireFromData(object data)
         {
-            return CanWireFromTypeToType(type, Data?.GetType() ?? Type);
+            return CanWireDataToType(data, Data?.GetType() ?? Type);
         }
 
-        private bool CanWireFromTypeToType(Type from, Type to)
+        private bool CanWireDataToType(object data, Type to)
         {
-            return to == typeof(object) || from.IsAssignableFrom(to)
-                ? true
-                : ValueCoersionHelper.CanCoerseValue(from, to);
-            ;
+            if (data == null)
+            {
+                return true;
+            }
+            return ValueConverter.TryCoerseValue(data, to, out _);
         }
 
         private void ParentNodePropertyChanged(object sender, PropertyChangedEventArgs e)

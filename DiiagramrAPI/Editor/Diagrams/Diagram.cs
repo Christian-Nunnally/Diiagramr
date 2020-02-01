@@ -32,8 +32,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);
 
-            Model = diagram;
-            Model.PropertyChanged += DiagramOnPropertyChanged;
+            DiagramModel = diagram;
+            DiagramModel.PropertyChanged += DiagramOnPropertyChanged;
             if (diagram.Nodes != null)
             {
                 foreach (var nodeModel in diagram.Nodes)
@@ -58,9 +58,9 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
 
-        public DiagramModel Model { get; }
+        public DiagramModel DiagramModel { get; }
 
-        public string Name => Model.Name;
+        public string Name => DiagramModel.Name;
 
         public BindableCollection<Node> Nodes { get; } = new BindableCollection<Node>();
 
@@ -85,7 +85,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                 throw new InvalidOperationException("Can not add a node to the diagram before it has been initialized");
             }
 
-            Model.AddNode(node.NodeModel);
+            DiagramModel.AddNode(node.NodeModel);
             AddNodeViewModel(node);
         }
 
@@ -147,12 +147,12 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void KeyDownHandler(object sender, KeyEventArgs e)
         {
-            KeyInputHandler(e, InteractionType.KeyDown);
+            KeyInputHandler(sender as IInputElement, e, InteractionType.KeyDown);
         }
 
         public void KeyUpHandler(object sender, KeyEventArgs e)
         {
-            KeyInputHandler(e, InteractionType.KeyUp);
+            KeyInputHandler(sender as IInputElement, e, InteractionType.KeyUp);
         }
 
         public void MouseEntered()
@@ -196,7 +196,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void RemoveNode(Node viewModel)
         {
-            Model.RemoveNode(viewModel.NodeModel);
+            DiagramModel.RemoveNode(viewModel.NodeModel);
             Nodes.Remove(viewModel);
             UpdateDiagramBoundingBox();
             BoundingBoxVisible = Nodes.Any();
@@ -299,9 +299,14 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        private void KeyInputHandler(KeyEventArgs e, InteractionType type)
+        private void KeyInputHandler(IInputElement sender, KeyEventArgs e, InteractionType type)
         {
-            var interaction = new DiagramInteractionEventArguments(type) { Key = e.Key };
+            var mousePosition = Mouse.GetPosition(sender);
+            var interaction = new DiagramInteractionEventArguments(type)
+            {
+                MousePosition = mousePosition,
+                Key = e.Key
+            };
             DiagramInteractionManager.HandleDiagramInput(interaction, this);
         }
 
