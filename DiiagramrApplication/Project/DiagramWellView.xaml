@@ -10,59 +10,11 @@
     d:DesignHeight="300"
     d:DesignWidth="300"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="Btvconverter" />
-
-        <ControlTemplate x:Key="TabTemplate" TargetType="TabItem">
-            <Grid Name="Panel">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <ContentPresenter
-                    x:Name="ContentSite"
-                    Margin="5,5"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    ContentSource="Header" />
-                <Button
-                    Grid.Column="1"
-                    Width="18"
-                    Height="{Binding Path=ActualWidth, RelativeSource={RelativeSource Self}}"
-                    Margin="2"
-                    Background="Transparent"
-                    BorderBrush="Transparent"
-                    Command="{s:Action CloseActiveDiagram}"
-                    Content="×"
-                    FontSize="8"
-                    FontWeight="ExtraBold"
-                    Visibility="{Binding IsSelected, RelativeSource={RelativeSource TemplatedParent}, Converter={StaticResource Btvconverter}}" />
-            </Grid>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsSelected" Value="True">
-                    <Setter TargetName="Panel" Property="Background" Value="LightSkyBlue" />
-                </Trigger>
-
-                <Trigger Property="IsSelected" Value="False">
-                    <Setter TargetName="Panel" Property="Background" Value="White" />
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <DataTemplate x:Key="TabContentTemplate">
-            <Grid>
-
-                <ContentControl
-                    HorizontalContentAlignment="Stretch"
-                    VerticalContentAlignment="Stretch"
-                    s:View.Model="{Binding}"
-                    ClipToBounds="True"
-                    IsTabStop="False" />
-            </Grid>
-        </DataTemplate>
-    </UserControl.Resources>
-    <Grid>
+    <Grid HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
         <ContentControl
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             s:View.Model="{Binding ActiveItem}"

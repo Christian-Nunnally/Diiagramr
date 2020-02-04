@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Service.Editor
 
         IEnumerable<Node> GetRegisteredNodes();
 
-        Node LoadNodeViewModelFromNode(NodeModel node);
+        Node CreateNodeFromModel(NodeModel node);
 
         void RegisterNode(Node node, NodeLibrary library);
     }

@@ -13,9 +13,9 @@ namespace DiiagramrAPI.Project
 
         ObservableCollection<DiagramModel> CurrentDiagrams { get; }
 
-        ProjectModel CurrentProject { get; set; }
+        ProjectModel Project { get; set; }
 
-        IList<Diagram> Diagrams { get; }
+        ObservableCollection<Diagram> Diagrams { get; }
 
         bool IsProjectDirty { get; }
 

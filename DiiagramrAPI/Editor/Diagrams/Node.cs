@@ -1,5 +1,6 @@
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Editor.Interactors;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;
 using Stylet;
@@ -14,14 +15,14 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public abstract class Node : ViewModel, IMouseEnterLeaveReaction
     {
+        public NodeServiceProvider _nodeServiceProvider;
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
-        private readonly List<Action> _viewLoadedActions = new List<Action>();
 
         public Node()
         {
             Terminals = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
             Terminals.CollectionChanged += TerminalsCollectionChanged;
-            _viewLoadedActions.Add(ArrangeAllTerminals);
+            ExecuteWhenViewLoaded(ArrangeAllTerminals);
         }
 
         public virtual IObservableCollection<Terminal> Terminals { get; set; }
@@ -74,6 +75,13 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSettingAttribute)));
 
+        public void SetServiceProvider(NodeServiceProvider nodeServiceProvider)
+        {
+            _nodeServiceProvider = nodeServiceProvider;
+            _nodeServiceProvider.ServiceRegistered += NodeServiceProviderServiceRegistered;
+            UpdateServices(nodeServiceProvider);
+        }
+
         public virtual void AddTerminal(TerminalModel terminalModel)
         {
             NodeModel.AddTerminal(terminalModel);
@@ -96,7 +104,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                 Model = nodeModel;
                 NodeModel.Name = GetType().FullName;
                 InitializePluginNodeSettings();
-                var terminalCreator = new NodeTerminalCreator(this);
+                var terminalCreator = new NodeTerminalManager(this);
                 terminalCreator.CreateTerminals();
                 NodeModel.Width = MinimumWidth;
                 NodeModel.Height = MinimumHeight;
@@ -134,6 +142,10 @@ namespace DiiagramrAPI.Editor.Diagrams
             UnhighlightTerminals();
         }
 
+        protected virtual void UpdateServices(NodeServiceProvider nodeServiceProvider)
+        {
+        }
+
         protected virtual void MouseEnteredNode()
         {
         }
@@ -156,11 +168,9 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        protected override void OnViewLoaded()
+        private void NodeServiceProviderServiceRegistered()
         {
-            base.OnViewLoaded();
-            _viewLoadedActions.ForEach(action => action());
-            _viewLoadedActions.Clear();
+            throw new NotImplementedException();
         }
 
         private void TerminalsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

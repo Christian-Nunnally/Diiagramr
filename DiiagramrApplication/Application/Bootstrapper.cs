@@ -2,6 +2,8 @@ using DiiagramrAPI.Application;
 using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Application.Tools;
+using DiiagramrAPI.Project;
+using DiiagramrAPI.Service.Editor;
 using Stylet;
 using StyletIoC;
 using System.Reflection;
@@ -22,6 +24,8 @@ namespace Diiagramr.Application
             builder.Bind<ScreenHost>().To<ScreenHost>().InSingletonScope();
             builder.Bind<ContextMenu>().To<ContextMenu>().InSingletonScope();
             builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
+            builder.Bind<NodeServiceProvider>().To<NodeServiceProvider>().InSingletonScope();
+            builder.Bind<DiagramWell>().To<DiagramWell>().InSingletonScope();
         }
     }
 }

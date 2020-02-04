@@ -71,6 +71,8 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             return interaction.Type == InteractionType.LeftMouseDown
                 && interaction.IsShiftKeyPressed
+                && !interaction.IsAltKeyPressed
+                && !interaction.IsCtrlKeyPressed
                 && interaction.ViewModelUnderMouse is Diagram;
         }
 
@@ -113,6 +115,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
             var doRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
             _transactor.Transact(doRiftCommand, _undoRiftCommand, null);
+            _nodesBeingRifted = null;
         }
 
         private void CheckIfRiftShouldStart(double riftDeltaX, double riftDeltaY)
@@ -146,6 +149,9 @@ namespace DiiagramrAPI.Editor.Interactors
 
                 case RiftMode.Down:
                     return diagram.Nodes.Where(n => n.Y > RiftStartDiagramPoint.Y);
+
+                case RiftMode.None:
+                    break;
             }
 
             return Enumerable.Empty<Node>();

@@ -35,7 +35,14 @@ namespace DiiagramrModel
             }
         }
 
+        protected bool WasDeserialized { get; set; }
         private static int StaticId { get; set; }
+
+        [OnDeserialized()]
+        internal void OnDeserializedMethod(StreamingContext context)
+        {
+            WasDeserialized = true;
+        }
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {

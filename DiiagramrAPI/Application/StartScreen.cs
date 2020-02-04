@@ -64,7 +64,7 @@ namespace DiiagramrAPI.Application
             _projectManager.CreateProject(() =>
             {
                 _projectManager.CreateDiagram();
-                _projectManager.CurrentDiagrams.First().Open();
+                _projectManager.Diagrams.First().OpenIfViewerAvailable();
             });
         }
 

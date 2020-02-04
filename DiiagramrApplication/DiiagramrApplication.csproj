@@ -112,6 +112,9 @@
     <Page Update="Editor\Interactors\HotkeyHelpView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Editor\Interactors\LassoDiagramNodeCreatorView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editor\Interactors\SearchPaletteView.xaml">
       <SubType>Designer</SubType>
     </Page>

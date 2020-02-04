@@ -18,15 +18,19 @@
         /// <param name="name">The user visible name of the terminal.</param>
         /// <param name="type">The data type of the terminal.</param>
         /// <param name="defaultSide">The default side of a node the terminal belongs on.</param>
-        /// <param name="index">The unique index of the terminal.</param>
-        public OutputTerminalModel(string name, Type type, Direction defaultSide, int index)
-            : base(name, type, defaultSide, index)
+        public OutputTerminalModel(string name, Type type, Direction defaultSide)
+            : base(name, type, defaultSide)
         {
         }
 
         public void UpdateDataFromSource()
         {
-            Data = GetDataFromSource?.Invoke();
+            UpdateData(GetDataFromSource?.Invoke());
+        }
+
+        public void UpdateData(object data)
+        {
+            Data = data;
             PropagateDataToAllWires();
         }
 

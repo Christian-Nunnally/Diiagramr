@@ -14,12 +14,6 @@ namespace DiiagramrModel
             Name = string.Empty;
         }
 
-        public virtual bool IsOpen { get; set; }
-
-        public bool NameEditMode { get; set; } = false;
-
-        public bool NotNameEditMode => !NameEditMode;
-
         [DataMember]
         public virtual ObservableCollection<NodeModel> Nodes { get; set; }
 
@@ -51,12 +45,6 @@ namespace DiiagramrModel
             }
 
             Nodes.Remove(nodeModel);
-        }
-
-        public virtual void Open()
-        {
-            IsOpen = false;
-            IsOpen = true;
         }
     }
 }

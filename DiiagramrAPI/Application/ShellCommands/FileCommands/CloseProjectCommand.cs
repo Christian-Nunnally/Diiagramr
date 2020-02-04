@@ -27,7 +27,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         protected override bool CanExecuteInternal()
         {
-            return _projectManager.CurrentProject is object;
+            return _projectManager.Project is object;
         }
 
         protected override void ExecuteInternal(object parameter)

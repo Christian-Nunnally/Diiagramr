@@ -15,9 +15,11 @@ namespace DiiagramrAPI.Service.Editor
         private readonly IDictionary<string, NodeLibrary> _dependencyMap;
         private readonly HashSet<Assembly> _loadedAssemblies = new HashSet<Assembly>();
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
+        private readonly NodeServiceProvider _nodeServiceProvider;
 
-        public NodeProvider()
+        public NodeProvider(Func<NodeServiceProvider> nodeServiceProviderFactory)
         {
+            _nodeServiceProvider = nodeServiceProviderFactory();
             _availableNodeViewModels = new List<Node>();
             _nodeNameToViewModelMap = new Dictionary<string, Type>();
             _dependencyMap = new Dictionary<string, NodeLibrary>();
@@ -33,7 +35,7 @@ namespace DiiagramrAPI.Service.Editor
             }
 
             var node = new NodeModel(typeFullName, _dependencyMap[typeFullName]);
-            return LoadNodeViewModelFromNode(node);
+            return CreateNodeFromModel(node);
         }
 
         public IEnumerable<Node> GetRegisteredNodes()
@@ -41,23 +43,19 @@ namespace DiiagramrAPI.Service.Editor
             return _availableNodeViewModels.ToArray();
         }
 
-        public Node LoadNodeViewModelFromNode(NodeModel node)
+        public Node CreateNodeFromModel(NodeModel node)
         {
             var fullName = node.Name;
-
             if (fullName == null)
             {
                 return null;
             }
 
-            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is Node viewModel))
-            {
-                throw NoViewModelException(fullName);
-            }
-
-            viewModel.AttachToModel(node);
-            ResolveTerminalTypes(viewModel);
-            return viewModel;
+            Node newNode = InstantiateNode(fullName);
+            newNode.AttachToModel(node);
+            newNode.SetServiceProvider(_nodeServiceProvider);
+            ResolveTerminalTypes(newNode);
+            return newNode;
         }
 
         public void RegisterNode(Node node, NodeLibrary dependency)
@@ -84,6 +82,15 @@ namespace DiiagramrAPI.Service.Editor
             _dependencyMap.Add(fullName, dependency);
 
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
+        }
+
+        private Node InstantiateNode(string fullName)
+        {
+            if (!(Activator.CreateInstance(GetViewModelTypeFromName(fullName)) is Node newNode))
+            {
+                throw NoViewModelException(fullName);
+            }
+            return newNode;
         }
 
         private Exception NoViewModelException(string typeFullName)

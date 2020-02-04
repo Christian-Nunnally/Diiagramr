@@ -20,7 +20,6 @@ namespace DiiagramrAPI.Editor.Interactors
         private readonly IProvideNodes _nodeProvider;
         private Diagram _diagram;
         private Func<Node, bool> filter = x => true;
-        private bool nodesAdded = false;
 
         public NodePalette(Func<IProvideNodes> nodeProvider)
         {
@@ -53,13 +52,6 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public void AddNodes()
         {
-            if (nodesAdded)
-            {
-                return;
-            }
-
-            nodesAdded = true;
-
             foreach (var node in _nodeProvider.GetRegisteredNodes())
             {
                 if (CanAddNodeToPalette(node))
@@ -196,6 +188,10 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private bool CanAddNodeToPalette(Node node)
         {
+            if (AvailableNodes.Any(n => n.Name == node.Name))
+            {
+                return false;
+            }
             if (IsHiddenFromSelector(node))
             {
                 return false;

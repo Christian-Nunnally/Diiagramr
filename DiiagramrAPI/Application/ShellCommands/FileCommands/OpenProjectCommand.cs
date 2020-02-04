@@ -50,12 +50,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         private void LoadProject(ProjectModel project)
         {
             _projectManager.LoadProject(project);
-            var firstDiagram = _projectManager?.CurrentDiagrams?.FirstOrDefault();
-            if (firstDiagram != null)
-            {
-                firstDiagram.Open();
-            }
-
+            _projectManager.Diagrams?.FirstOrDefault()?.OpenIfViewerAvailable();
             _screenHost.ShowScreen(_projectScreen);
         }
     }

@@ -38,7 +38,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 foreach (var nodeModel in diagram.Nodes)
                 {
-                    var viewModel = nodeProvider.LoadNodeViewModelFromNode(nodeModel);
+                    var viewModel = nodeProvider.CreateNodeFromModel(nodeModel);
                     AddNodeViewModel(viewModel);
                 }
             }
@@ -77,6 +77,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         public BindableCollection<Wire> Wires { get; } = new BindableCollection<Wire>();
 
         public double Zoom { get; set; } = 1;
+
+        public IDiagramViewer Viewer { get; set; }
+
+        public void OpenIfViewerAvailable()
+        {
+            Viewer?.OpenDiagram(this);
+        }
 
         public void AddNode(Node node)
         {

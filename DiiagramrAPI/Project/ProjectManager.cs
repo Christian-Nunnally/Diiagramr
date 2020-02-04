@@ -1,6 +1,7 @@
 ﻿using DiiagramrAPI.Application;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Service.Plugins;
 using DiiagramrCore;
 using DiiagramrModel;
@@ -14,47 +15,50 @@ namespace DiiagramrAPI.Project
 {
     public class ProjectManager : IProjectManager
     {
-        private readonly DiagramFactory _diagramViewModelFactory;
+        private readonly DiagramFactory _diagramFactory;
         private readonly DialogHost _dialogHost;
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
+        private readonly NodeServiceProvider _nodeServiceProvider;
 
         public ProjectManager(
-            Func<IProjectFileService> projectFileServiceFactory,
-            Func<ILibraryManager> libraryManagerFactory,
             Func<DialogHost> dialogHostFactory,
-            Func<DiagramFactory> diagramViewModelFactoryFactory)
+            Func<DiagramFactory> diagramFactoryFactory,
+            Func<ILibraryManager> libraryManagerFactory,
+            Func<IProjectFileService> projectFileServiceFactory,
+            Func<NodeServiceProvider> nodeServiceProviderFactory)
         {
-            Diagrams = new List<Diagram>();
+            _dialogHost = dialogHostFactory();
             _libraryManager = libraryManagerFactory();
             _projectFileService = projectFileServiceFactory();
-            _diagramViewModelFactory = diagramViewModelFactoryFactory();
-            _dialogHost = dialogHostFactory();
+            _diagramFactory = diagramFactoryFactory();
+            _nodeServiceProvider = nodeServiceProviderFactory();
             CurrentProjectChanged += OnCurrentProjectChanged;
+            _nodeServiceProvider.RegisterService<IProjectManager>(this);
         }
 
         public event Action CurrentProjectChanged;
 
-        public ObservableCollection<DiagramModel> CurrentDiagrams => CurrentProject?.Diagrams;
+        public ObservableCollection<DiagramModel> CurrentDiagrams => Project?.Diagrams;
 
-        public ProjectModel CurrentProject { get; set; }
+        public ProjectModel Project { get; set; }
 
-        public IList<Diagram> Diagrams { get; }
+        public ObservableCollection<Diagram> Diagrams { get; } = new ObservableCollection<Diagram>();
 
-        public bool IsProjectDirty => CurrentProject?.IsDirty ?? false;
+        public bool IsProjectDirty => Project?.IsDirty ?? false;
 
         public void CloseProject(Action continuation)
         {
-            if (CurrentProject == null)
+            if (Project == null)
             {
                 continuation();
                 return;
             }
 
-            void newContinuation() { CurrentProject = null; continuation(); }
+            void newContinuation() { Project = null; continuation(); }
             var saveBeforeCloseMessageBox = new Application.Dialogs.MessageBox.Builder("Close Project", "Save before closing?")
-                .WithChoice("Yes", () => { _projectFileService.SaveProject(CurrentProject, false, newContinuation); })
-                .WithChoice("No", () => { CurrentProject = null; newContinuation(); })
+                .WithChoice("Yes", () => { _projectFileService.SaveProject(Project, false, newContinuation); })
+                .WithChoice("No", () => { Project = null; newContinuation(); })
                 .WithChoice("Cancel", () => { })
                 .Build();
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
@@ -63,15 +67,11 @@ namespace DiiagramrAPI.Project
         public void CreateDiagram()
         {
             CreateDiagram(new DiagramModel());
-            if (CurrentDiagrams.Count == 1 && CurrentDiagrams.First().Nodes.Count == 0)
-            {
-                CurrentProject.IsDirty = false;
-            }
         }
 
         public void CreateDiagram(DiagramModel diagram)
         {
-            if (CurrentProject == null)
+            if (Project == null)
             {
                 throw new NullReferenceException("ProjectModel does not exist");
             }
@@ -83,32 +83,32 @@ namespace DiiagramrAPI.Project
 
             var diagramName = string.IsNullOrEmpty(diagram.Name) ? "diagram" : diagram.Name;
             var diagramNumber = 1;
-            while (CurrentProject.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber)))
+            while (Project.Diagrams.Any(x => x.Name.Equals(diagramName + diagramNumber)))
             {
                 diagramNumber++;
             }
 
             diagram.Name = diagramName + diagramNumber;
             CreateDiagramViewModel(diagram);
-            CurrentProject.AddDiagram(diagram);
+            Project.AddDiagram(diagram);
         }
 
         public void CreateProject(Action continuation)
         {
-            if (CurrentProject == null)
+            if (Project == null)
             {
-                CurrentProject = new ProjectModel();
+                Project = new ProjectModel();
                 CurrentProjectChanged?.Invoke();
-                CurrentProject.IsDirty = false;
+                Project.IsDirty = false;
                 continuation();
             }
             else
             {
                 CloseProject(() =>
                 {
-                    CurrentProject = new ProjectModel();
+                    Project = new ProjectModel();
                     CurrentProjectChanged?.Invoke();
-                    CurrentProject.IsDirty = false;
+                    Project.IsDirty = false;
                     continuation();
                 });
             }
@@ -116,7 +116,7 @@ namespace DiiagramrAPI.Project
 
         public void DeleteDiagram(DiagramModel diagram)
         {
-            CurrentProject.RemoveDiagram(diagram);
+            Project.RemoveDiagram(diagram);
             var diagramViewModel = Diagrams.FirstOrDefault(m => m.DiagramModel == diagram);
             if (diagramViewModel != null)
             {
@@ -136,26 +136,24 @@ namespace DiiagramrAPI.Project
 
         public void SaveAsProject()
         {
-            if (CurrentProject != null)
+            if (Project != null)
             {
-                _projectFileService.SaveProject(CurrentProject, true, () => { });
-                CurrentProject.IsDirty = false;
+                _projectFileService.SaveProject(Project, true, () => { Project.IsDirty = false; });
             }
         }
 
         public void SaveProject()
         {
-            if (CurrentProject != null)
+            if (Project != null)
             {
-                _projectFileService.SaveProject(CurrentProject, false, () => { });
-                CurrentProject.IsDirty = false;
+                _projectFileService.SaveProject(Project, false, () => { Project.IsDirty = false; });
             }
         }
 
         private void LoadProjectInternal(ProjectModel project, bool autoOpenDiagram)
         {
-            CurrentProject = project;
-            if (CurrentProject == null)
+            Project = project;
+            if (Project == null)
             {
                 return;
             }
@@ -163,10 +161,9 @@ namespace DiiagramrAPI.Project
             try
             {
                 CurrentProjectChanged?.Invoke();
-                CurrentProject.IsDirty = false;
-                if (autoOpenDiagram && CurrentDiagrams.Any())
+                if (autoOpenDiagram && Diagrams.Any())
                 {
-                    CurrentDiagrams.First().IsOpen = true;
+                    Diagrams.First().OpenIfViewerAvailable();
                 }
                 else if (autoOpenDiagram)
                 {
@@ -181,10 +178,9 @@ namespace DiiagramrAPI.Project
                 // TODO: Make async
                 DownloadProjectDependencies().Wait();
                 CurrentProjectChanged?.Invoke();
-                CurrentProject.IsDirty = false;
-                if (autoOpenDiagram && CurrentDiagrams.Any())
+                if (autoOpenDiagram && Diagrams.Any())
                 {
-                    CurrentDiagrams.First().IsOpen = true;
+                    Diagrams.First().OpenIfViewerAvailable();
                 }
 
                 // TODO: Catch specific types of exceptions.
@@ -194,13 +190,13 @@ namespace DiiagramrAPI.Project
 
         private void CreateDiagramViewModel(DiagramModel diagram)
         {
-            var diagramViewModel = _diagramViewModelFactory.CreateDiagramViewModel(diagram);
+            var diagramViewModel = _diagramFactory.CreateDiagramViewModel(diagram);
             Diagrams.Add(diagramViewModel);
         }
 
         private async Task DownloadProjectDependencies()
         {
-            foreach (var diagram in CurrentProject.Diagrams)
+            foreach (var diagram in Project.Diagrams)
             {
                 foreach (var node in diagram.Nodes)
                 {
@@ -215,7 +211,7 @@ namespace DiiagramrAPI.Project
         private void OnCurrentProjectChanged()
         {
             Diagrams.Clear();
-            CurrentDiagrams?.ForEach(CreateDiagramViewModel);
+            Project.Diagrams?.ForEach(CreateDiagramViewModel);
         }
     }
 }

@@ -7,11 +7,11 @@ using System.Reflection;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
-    public class NodeTerminalCreator
+    public class NodeTerminalManager
     {
         private readonly Node _node;
 
-        public NodeTerminalCreator(Node node)
+        public NodeTerminalManager(Node node)
         {
             _node = node;
             _node.PropertyChanged += NodePropertyChanged;
@@ -36,7 +36,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalType = methodInfo.GetParameters().First().ParameterType;
             var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == methodInfo.Name);
             var terminalModel = existingTerminalWithSameName?.TerminalModel
-                ?? new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection, 0);
+                ?? new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection);
             terminalModel.DataChanged += methodInfo.CreateMethodInvoker(_node);
             if (existingTerminalWithSameName == null)
             {
@@ -50,7 +50,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalType = property.PropertyType;
             var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
             var outputTerminalModel = existingTerminalWithSameName?.TerminalModel as OutputTerminalModel
-                ?? new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection, 0);
+                ?? new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection);
             outputTerminalModel.GetDataFromSource = () => property.GetValue(_node);
             outputTerminalModel.UpdateDataFromSource();
             if (existingTerminalWithSameName == null)

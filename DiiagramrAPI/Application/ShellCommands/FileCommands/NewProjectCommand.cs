@@ -31,7 +31,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             _projectManager.CreateProject(() =>
             {
                 _projectManager.CreateDiagram();
-                _projectManager.CurrentDiagrams.First().IsOpen = true;
+                _projectManager.Diagrams.First().OpenIfViewerAvailable();
                 _screenHost.ShowScreen(_projectScreen);
             });
         }

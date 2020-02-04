@@ -38,7 +38,10 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.LeftMouseDown && interaction.IsAltKeyPressed;
+            return interaction.Type == InteractionType.LeftMouseDown
+                && interaction.IsAltKeyPressed
+                && !interaction.IsCtrlKeyPressed
+                && !interaction.IsShiftKeyPressed;
         }
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
