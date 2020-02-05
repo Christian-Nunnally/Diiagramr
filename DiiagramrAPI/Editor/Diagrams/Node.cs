@@ -170,7 +170,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void NodeServiceProviderServiceRegistered()
         {
-            throw new NotImplementedException();
+            UpdateServices(_nodeServiceProvider);
         }
 
         private void TerminalsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

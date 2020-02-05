@@ -101,7 +101,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(RecentProject1);
+                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject1);
             }
         }
 
@@ -113,7 +113,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(RecentProject2);
+                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject2);
             }
         }
 
@@ -125,7 +125,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(RecentProject3);
+                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject3);
             }
         }
 

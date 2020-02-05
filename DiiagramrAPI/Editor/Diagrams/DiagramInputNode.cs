@@ -1,9 +1,7 @@
-using DiiagramrAPI.Editor.Interactors;
 using DiiagramrModel;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
-    [HideFromNodeSelector]
     public class DiagramInputNode : IoNode
     {
         public DiagramInputNode()

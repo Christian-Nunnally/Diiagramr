@@ -61,7 +61,9 @@
                 <Label Content="Delete selected nodes" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Lasso select nodes" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Lasso wire nodes" Style="{StaticResource RightHelpLabelStyle}" />
-                <Label Content="Delete wire" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Lasso create sub diagram" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Shift nodes" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Disconnect wire" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Set terminal (only some support)" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Wire to terminal" Style="{StaticResource RightHelpLabelStyle}" />
             </StackPanel>
@@ -76,6 +78,8 @@
                     Foreground="{StaticResource GrayedForegroundBrush}"
                     Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
@@ -100,7 +104,9 @@
                 <Label Content="'Del'" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Ctrl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Atl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
-                <Label Content="'Ctrl' + Click wire" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Ctrl' + 'Shift' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Shift' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Click wire" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Double click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Right click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
             </StackPanel>

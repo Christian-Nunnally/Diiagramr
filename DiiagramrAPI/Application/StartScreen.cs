@@ -1,7 +1,6 @@
 using DiiagramrAPI.Project;
 using Stylet;
 using System;
-using System.Linq;
 
 namespace DiiagramrAPI.Application
 {
@@ -15,8 +14,6 @@ namespace DiiagramrAPI.Application
         {
             _projectManager = projectManagerFactory();
         }
-
-        public event Action LoadCanceled;
 
         public bool IsMouseOverLoadProjectButton
         {
@@ -64,7 +61,6 @@ namespace DiiagramrAPI.Application
             _projectManager.CreateProject(() =>
             {
                 _projectManager.CreateDiagram();
-                _projectManager.Diagrams.First().OpenIfViewerAvailable();
             });
         }
 

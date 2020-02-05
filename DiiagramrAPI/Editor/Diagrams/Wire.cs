@@ -156,7 +156,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void AnimateDataPropagation(int frameDelay)
         {
-            foreach (var dataPointAlongWire in _dataVisualAnimationFrames)
+            foreach (var dataPointAlongWire in _dataVisualAnimationFrames.ToArray())
             {
                 View?.Dispatcher.Invoke(() =>
                 {

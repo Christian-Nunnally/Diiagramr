@@ -24,6 +24,7 @@ namespace DiiagramrAPI.Application
             Func<ObservableCollection<TModel>> modelCollectionGetter,
             Func<TModel, TViewModel> viewModelFactory)
         {
+            ViewModels.CollectionChanged += ViewModelsCollectionChanged;
             collectionOwner.PropertyChanged += CollectionOwnerPropertyChanged;
             _modelCollectionGetter = modelCollectionGetter;
             _viewModelFactory = viewModelFactory;
@@ -78,6 +79,11 @@ namespace DiiagramrAPI.Application
         public void RemoveRange(IEnumerable<TViewModel> items) => ViewModels.RemoveRange(items);
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+        private void ViewModelsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            CollectionChanged?.Invoke(sender, e);
+        }
 
         private void UpdateModels()
         {

@@ -1,10 +1,8 @@
-using DiiagramrAPI.Editor.Interactors;
 using DiiagramrModel;
 using System;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
-    [HideFromNodeSelector]
     public class DiagramOutputNode : IoNode
     {
         public DiagramOutputNode()

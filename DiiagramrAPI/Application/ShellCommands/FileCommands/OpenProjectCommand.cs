@@ -39,7 +39,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
                 projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
                 var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
                 var project = _projectFileService.LoadProject(projectPath);
-                LoadProject(project);
+                if (project is object) LoadProject(project);
             }
             else
             {
@@ -50,7 +50,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         private void LoadProject(ProjectModel project)
         {
             _projectManager.LoadProject(project);
-            _projectManager.Diagrams?.FirstOrDefault()?.OpenIfViewerAvailable();
+            _projectScreen.OpenDiagram(_projectManager.Diagrams?.FirstOrDefault());
             _screenHost.ShowScreen(_projectScreen);
         }
     }

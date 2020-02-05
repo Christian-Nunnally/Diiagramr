@@ -44,7 +44,7 @@ namespace DiiagramrAPI2.Application.Dialogs
 
         public void OpenProjectsDirectory()
         {
-            System.Diagnostics.Process.Start("explorer.exe", "Plugins");
+            System.Diagnostics.Process.Start("explorer.exe", "Projects");
         }
 
         public void LoadProject()

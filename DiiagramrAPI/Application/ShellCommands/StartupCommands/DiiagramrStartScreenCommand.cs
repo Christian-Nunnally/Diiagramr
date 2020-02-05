@@ -25,7 +25,6 @@ namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
         protected override void ExecuteInternal(object parameter)
         {
             _screenHost.ShowScreen(_startScreenViewModel);
-            _startScreenViewModel.LoadCanceled += () => _screenHost.ShowScreen(_startScreenViewModel);
         }
     }
 }

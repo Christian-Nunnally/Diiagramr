@@ -9,15 +9,18 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
         private readonly ScreenHost _screenHost;
+        private readonly DiagramWell _diagramWell;
 
         public NewProjectCommand(
             Func<IProjectManager> projectManagerFactory,
             Func<ProjectScreen> projectScreenFactory,
-            Func<ScreenHost> screenHostFactory)
+            Func<ScreenHost> screenHostFactory,
+            Func<DiagramWell> diagramWellFactory)
         {
             _projectManager = projectManagerFactory();
             _projectScreen = projectScreenFactory();
             _screenHost = screenHostFactory();
+            _diagramWell = diagramWellFactory();
         }
 
         public override string Name => "New";
@@ -31,7 +34,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             _projectManager.CreateProject(() =>
             {
                 _projectManager.CreateDiagram();
-                _projectManager.Diagrams.First().OpenIfViewerAvailable();
+                _diagramWell.OpenDiagram(_projectManager.Diagrams.First());
                 _screenHost.ShowScreen(_projectScreen);
             });
         }

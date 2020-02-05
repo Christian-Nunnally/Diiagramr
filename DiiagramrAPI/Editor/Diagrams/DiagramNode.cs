@@ -3,6 +3,7 @@ using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 
@@ -10,13 +11,16 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public class DiagramNode : Node
     {
+        private readonly Dictionary<DiagramInputNode, TerminalModel> _inputNodeToTerminalMap = new Dictionary<DiagramInputNode, TerminalModel>();
+        private readonly Dictionary<DiagramOutputNode, TerminalModel> _outputNodeToTerminalMap = new Dictionary<DiagramOutputNode, TerminalModel>();
         private Action<Diagram> _whenResolvedAction;
         private Diagram _resolvedDiagram;
+        private Action<Diagram> _openDiagramAction;
 
         public DiagramNode()
         {
-            Width = 30;
-            Height = 30;
+            Width = 60;
+            Height = 60;
         }
 
         [NodeSetting]
@@ -62,7 +66,6 @@ namespace DiiagramrAPI.Editor.Diagrams
         protected override void UpdateServices(NodeServiceProvider nodeServiceProvider)
         {
             var projectManager = nodeServiceProvider.GetService<IProjectManager>();
-
             if (projectManager != null)
             {
                 if (DiagramName == null)
@@ -76,13 +79,19 @@ namespace DiiagramrAPI.Editor.Diagrams
                     ResolvedDiagram = projectManager.Diagrams.FirstOrDefault(d => d.Name == DiagramName);
                 }
             }
+
+            var projectScreen = nodeServiceProvider.GetService<ProjectScreen>();
+            if (projectScreen != null)
+            {
+                _openDiagramAction = d => projectScreen.OpenDiagram(d);
+            }
         }
 
         protected override void MouseEnteredNode()
         {
             if (IsResolved)
             {
-                ResolvedDiagram.OpenIfViewerAvailable();
+                _openDiagramAction?.Invoke(ResolvedDiagram);
             }
         }
 
@@ -91,6 +100,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             ResolvedDiagram.Nodes.CollectionChanged += ResolvedDiagramNodesCollectionChanged;
             ResolvedDiagram.Nodes.OfType<DiagramInputNode>().ForEach(AddInputTerminalForInputNode);
             ResolvedDiagram.Nodes.OfType<DiagramOutputNode>().ForEach(AddOutputTerminalForOutputNode);
+            Name = ResolvedDiagram.Name + "Node";
         }
 
         private void ResolvedDiagramNodesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -109,22 +119,49 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
             else if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                // throw new NotImplementedException("Need to support removing terminals from diagram nodes. Probably using an input node to terminal map.");
+                foreach (var newInputNode in e.OldItems.OfType<DiagramInputNode>())
+                {
+                    RemoveInputTerminalForInputNode(newInputNode);
+                }
+
+                foreach (var newOutputNode in e.OldItems.OfType<DiagramOutputNode>())
+                {
+                    RemoveOutputTerminalForOutputNode(newOutputNode);
+                }
             }
         }
 
         private void AddOutputTerminalForOutputNode(DiagramOutputNode newOutputNode)
         {
-            var outputTerminal = new InputTerminalModel("Diagram Output", typeof(object), Direction.South);
-            newOutputNode.DataChanged += data => outputTerminal.Data = data;
+            var outputTerminal = new OutputTerminalModel("Diagram Output", typeof(object), Direction.South);
+            newOutputNode.DataChanged += data => outputTerminal.UpdateData(data);
+            _outputNodeToTerminalMap.Add(newOutputNode, outputTerminal);
             AddTerminal(outputTerminal);
         }
 
         private void AddInputTerminalForInputNode(DiagramInputNode newInputNode)
         {
             var inputTerminal = new InputTerminalModel("Diagram Input", typeof(object), Direction.North);
-            inputTerminal.DataChanged += data => newInputNode.Terminals.First().Data = data;
+            var outputTerminal = (OutputTerminalModel)newInputNode.Terminals.First().TerminalModel;
+            inputTerminal.DataChanged += data => outputTerminal.UpdateData(data);
+            _inputNodeToTerminalMap.Add(newInputNode, inputTerminal);
             AddTerminal(inputTerminal);
+        }
+
+        private void RemoveOutputTerminalForOutputNode(DiagramOutputNode newOutputNode)
+        {
+            var outputTerminal = _outputNodeToTerminalMap[newOutputNode];
+            _outputNodeToTerminalMap.Remove(newOutputNode);
+            outputTerminal.ConnectedWires.ForEach(w => outputTerminal.DisconnectWire(w, w.SinkTerminal));
+            RemoveTerminal(outputTerminal);
+        }
+
+        private void RemoveInputTerminalForInputNode(DiagramInputNode newInputNode)
+        {
+            var inputTerminal = _inputNodeToTerminalMap[newInputNode];
+            _inputNodeToTerminalMap.Remove(newInputNode);
+            inputTerminal.ConnectedWires.ForEach(w => inputTerminal.DisconnectWire(w, w.SourceTerminal));
+            RemoveTerminal(inputTerminal);
         }
     }
 }

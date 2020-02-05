@@ -161,11 +161,7 @@ namespace DiiagramrAPI.Project
             try
             {
                 CurrentProjectChanged?.Invoke();
-                if (autoOpenDiagram && Diagrams.Any())
-                {
-                    Diagrams.First().OpenIfViewerAvailable();
-                }
-                else if (autoOpenDiagram)
+                if (autoOpenDiagram)
                 {
                     CreateDiagram();
                 }
@@ -178,10 +174,6 @@ namespace DiiagramrAPI.Project
                 // TODO: Make async
                 DownloadProjectDependencies().Wait();
                 CurrentProjectChanged?.Invoke();
-                if (autoOpenDiagram && Diagrams.Any())
-                {
-                    Diagrams.First().OpenIfViewerAvailable();
-                }
 
                 // TODO: Catch specific types of exceptions.
                 throw;

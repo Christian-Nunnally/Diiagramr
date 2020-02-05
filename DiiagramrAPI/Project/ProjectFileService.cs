@@ -6,6 +6,7 @@ using DiiagramrModel;
 using System;
 using System.Linq;
 using System.Threading;
+using System.Xml;
 
 namespace DiiagramrAPI.Project
 {
@@ -51,10 +52,22 @@ namespace DiiagramrAPI.Project
 
         public ProjectModel LoadProject(string path)
         {
-            var project = _loadSave.Open(path);
-            SetProjectNameFromPath(project, path);
-            ThrowIfDuplicateAssemblies();
-            return project;
+            try
+            {
+                var project = _loadSave.Open(path);
+                SetProjectNameFromPath(project, path);
+                ThrowIfDuplicateAssemblies();
+                return project;
+            }
+            catch (DuplicateAssemblyException e)
+            {
+                DisplayErrorMessageBox("Error Loading Project", "Duplicate assemblies loaded. Make sure the plugins directly only has one copy of each DLL.");
+            }
+            catch (XmlException e)
+            {
+                DisplayErrorMessageBox("Error Loading Project", "Error Parsing XML: " + e.Message);
+            }
+            return null;
         }
 
         public void SaveProject(ProjectModel project, bool saveAs, Action continuation)
@@ -68,6 +81,12 @@ namespace DiiagramrAPI.Project
             var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
             SaveProjectWithNotificationDialog(project, fileName);
             continuation();
+        }
+
+        private void DisplayErrorMessageBox(string title, string message)
+        {
+            var errorMessage = new MessageBox.Builder(title, message).WithChoice("Ok", () => { }).Build();
+            _dialogHost.OpenDialog(errorMessage);
         }
 
         private void SaveAsProject(ProjectModel project, Action continuation)

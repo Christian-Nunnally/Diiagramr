@@ -31,7 +31,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
             DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);
-
+            ExecuteWhenViewLoaded(() => Keyboard.Focus(View));
             DiagramModel = diagram;
             DiagramModel.PropertyChanged += DiagramOnPropertyChanged;
             if (diagram.Nodes != null)
@@ -77,13 +77,6 @@ namespace DiiagramrAPI.Editor.Diagrams
         public BindableCollection<Wire> Wires { get; } = new BindableCollection<Wire>();
 
         public double Zoom { get; set; } = 1;
-
-        public IDiagramViewer Viewer { get; set; }
-
-        public void OpenIfViewerAvailable()
-        {
-            Viewer?.OpenDiagram(this);
-        }
 
         public void AddNode(Node node)
         {
