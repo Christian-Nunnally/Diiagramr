@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.OutputTerminalView"
+    x:Class="DiiagramrApplication.Editor.OutputTerminalView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:editor="clr-namespace:DiiagramrAPI.Editor.Diagrams;assembly=DiiagramrAPI"
@@ -8,7 +8,12 @@
     Height="{x:Static editor:Terminal.TerminalHeight}"
     LostFocus="{s:Action LostFocus}">
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="Btv" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <Grid RenderTransformOrigin="0.5, 0.5">
         <Grid.RenderTransform>
@@ -32,7 +37,7 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Margin="0,-8,0,0"
-            Fill="#007ACC"
+            Fill="{StaticResource NodeSelectionStyleBrush}"
             Points="0,0 3,0 3,-3, 5,-3, 5,0 8,0 4,5"
             Visibility="{Binding HighlightVisible, Converter={StaticResource Btv}}" />
         <Polygon
@@ -40,10 +45,10 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Top"
             Margin="0,5,0,0"
-            Fill="#191919"
+            Fill="{StaticResource ContextMenuBackgroundBrush}"
             Points="0,5 8,5 4,0" />
         <Border
-            BorderBrush="#007ACC"
+            BorderBrush="{StaticResource NodeSelectionStyleBrush}"
             BorderThickness="1"
             CornerRadius="4"
             FocusVisualStyle="{x:Null}"

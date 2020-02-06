@@ -1,5 +1,0 @@
-﻿<!-- This control is returned by the view manager when it can not find a view for a view model -->
-<!-- Some view models dont need views, so this class is intentionally empty so that an empty element is added to the visual tree -->
-<UserControl x:Class="DiiagramrApplication.Application.MissingView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" />

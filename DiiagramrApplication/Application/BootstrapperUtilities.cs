@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Diiagramr.Application
+namespace DiiagramrApplication.Application
 {
     public static class BootstrapperUtilities
     {

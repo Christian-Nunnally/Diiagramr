@@ -1,5 +1,5 @@
 <Window
-    x:Class="Diiagramr.Application.ShellView"
+    x:Class="DiiagramrApplication.Application.ShellView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -21,9 +21,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
-                <ResourceDictionary>
-                    <BooleanToVisibilityConverter x:Key="Btv" />
-                </ResourceDictionary>
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>

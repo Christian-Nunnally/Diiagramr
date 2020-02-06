@@ -8,7 +8,7 @@ using Stylet;
 using StyletIoC;
 using System.Reflection;
 
-namespace Diiagramr.Application
+namespace DiiagramrApplication.Application
 {
     public class Bootstrapper : Bootstrapper<Shell>
     {

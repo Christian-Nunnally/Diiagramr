@@ -1,9 +1,10 @@
 using DiiagramrAPI.Editor.Diagrams;
 using Stylet;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Project
 {
-    public class DiagramWell : Conductor<Diagram>.StackNavigation, IDiagramViewer
+    public class DiagramWell : Conductor<Diagram>.Collection.OneActive
     {
         public void OpenDiagram(Diagram diagram)
         {
@@ -11,8 +12,14 @@ namespace DiiagramrAPI.Project
             {
                 return;
             }
-            diagram.ExecuteWhenViewLoaded(() => diagram.ResetPanAndZoom());
-            ActiveItem = diagram;
+            diagram.ExecuteWhenViewLoaded(() => ReadyDiagram(diagram));
+            ActivateItem(diagram);
+        }
+
+        public void ReadyDiagram(Diagram diagram)
+        {
+            diagram.View.Focus();
+            Keyboard.Focus(diagram.View);
         }
     }
 }

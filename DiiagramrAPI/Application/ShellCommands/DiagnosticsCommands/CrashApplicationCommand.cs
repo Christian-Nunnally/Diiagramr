@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
-    public class CrashApplicationCommand : ShellCommandBase
+    public class CrashApplicationCommand : ToolBarCommand
     {
         public override string Name => "Crash Application";
 
@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 
         protected override void ExecuteInternal(object parameter)
         {
-            throw new CrashApplicationCommandException("The application has crashed intentionally so that crash behavior can be tested.");
+            throw new CrashApplicationCommandException("The command has crashed intentionally so that crash behavior can be tested.");
         }
 
         [Serializable]

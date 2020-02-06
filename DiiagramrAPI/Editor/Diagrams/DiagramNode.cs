@@ -11,6 +11,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public class DiagramNode : Node
     {
+        private const int MarginBetweenTerminals = 10;
         private readonly Dictionary<DiagramInputNode, TerminalModel> _inputNodeToTerminalMap = new Dictionary<DiagramInputNode, TerminalModel>();
         private readonly Dictionary<DiagramOutputNode, TerminalModel> _outputNodeToTerminalMap = new Dictionary<DiagramOutputNode, TerminalModel>();
         private Action<Diagram> _whenResolvedAction;
@@ -137,6 +138,15 @@ namespace DiiagramrAPI.Editor.Diagrams
             newOutputNode.DataChanged += data => outputTerminal.UpdateData(data);
             _outputNodeToTerminalMap.Add(newOutputNode, outputTerminal);
             AddTerminal(outputTerminal);
+            UpdateDiagramNodeWidth();
+        }
+
+        private void UpdateDiagramNodeWidth()
+        {
+            var outputTerminalCount = NodeModel.Terminals.OfType<OutputTerminalModel>().Count();
+            var inputTerminalCount = NodeModel.Terminals.OfType<InputTerminalModel>().Count();
+            var mostTerminals = Math.Max(outputTerminalCount, inputTerminalCount);
+            Width = (mostTerminals + 1) * (Terminal.TerminalWidth + MarginBetweenTerminals);
         }
 
         private void AddInputTerminalForInputNode(DiagramInputNode newInputNode)
@@ -146,6 +156,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             inputTerminal.DataChanged += data => outputTerminal.UpdateData(data);
             _inputNodeToTerminalMap.Add(newInputNode, inputTerminal);
             AddTerminal(inputTerminal);
+            UpdateDiagramNodeWidth();
         }
 
         private void RemoveOutputTerminalForOutputNode(DiagramOutputNode newOutputNode)
@@ -154,6 +165,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             _outputNodeToTerminalMap.Remove(newOutputNode);
             outputTerminal.ConnectedWires.ForEach(w => outputTerminal.DisconnectWire(w, w.SinkTerminal));
             RemoveTerminal(outputTerminal);
+            UpdateDiagramNodeWidth();
         }
 
         private void RemoveInputTerminalForInputNode(DiagramInputNode newInputNode)
@@ -162,6 +174,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             _inputNodeToTerminalMap.Remove(newInputNode);
             inputTerminal.ConnectedWires.ForEach(w => inputTerminal.DisconnectWire(w, w.SourceTerminal));
             RemoveTerminal(inputTerminal);
+            UpdateDiagramNodeWidth();
         }
     }
 }

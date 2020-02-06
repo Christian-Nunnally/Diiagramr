@@ -13,20 +13,18 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
-                <ResourceDictionary>
-                    <BooleanToVisibilityConverter x:Key="Btv" />
-                </ResourceDictionary>
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <ItemsControl
         Height="20"
+        Margin="1,0,0,0"
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         HorizontalContentAlignment="Left"
         Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
         DockPanel.Dock="Top"
-        Foreground="White"
         ItemsSource="{Binding TopLevelMenuItems}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
@@ -35,14 +33,14 @@
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Content="{Binding Name}"
-                    Foreground="White"
+                    Foreground="{StaticResource ForegroundBrush}"
                     IsHitTestVisible="True"
                     MouseDown="{s:Action ExecuteCommandHandler}">
                     <Label.Style>
                         <Style TargetType="Label">
                             <Style.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#3E3E40" />
+                                    <Setter Property="Background" Value="{StaticResource TextboxBackgroundBrush}" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>

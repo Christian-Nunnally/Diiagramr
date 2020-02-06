@@ -2,6 +2,7 @@
 using DiiagramrModel;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -11,6 +12,8 @@ namespace DiiagramrFadeCandy
 {
     public class ColorNode : Node
     {
+        private bool _isMouseButtonDown;
+
         public ColorNode()
         {
             Name = "Color Picker";
@@ -18,6 +21,7 @@ namespace DiiagramrFadeCandy
             Height = 60;
 
             ColorWheelBitmapImage = new BitmapImage(new Uri("pack://application:,,,/DiiagramrFadeCandy;component/Resources/colorpicker.png"));
+            ColorWheelBitmap = ConvertBitmapImageToBitmap(ColorWheelBitmapImage);
 
             ColorOutput.R = SelectedColorBrush.Color.R / 255f;
             ColorOutput.G = SelectedColorBrush.Color.G / 255f;
@@ -35,7 +39,6 @@ namespace DiiagramrFadeCandy
         public SolidColorBrush SelectedColorBrush { get; set; } = new SolidColorBrush(new System.Windows.Media.Color() { R = 50, G = 100, B = 65, A = 255 });
 
         public float ColorPaletteImageMargin { get; } = 3;
-
         public bool IsColorPickerVisible { get; set; }
 
         [InputTerminal(Direction.East)]
@@ -85,43 +88,25 @@ namespace DiiagramrFadeCandy
 
         public void ColorWheelMouseDown(object sender, MouseButtonEventArgs e)
         {
-            var frameworkElement = (FrameworkElement)sender;
-            System.Windows.Point position;
-            if (frameworkElement != null && frameworkElement.IsMouseOver)
+            _isMouseButtonDown = true;
+            SetColorFromMouseInput(sender, e);
+        }
+
+        public void ColorWheelMouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isMouseButtonDown)
             {
-                position = e.GetPosition(frameworkElement);
+                SetColorFromMouseInput(sender, e);
             }
-            else
-            {
-                position = new System.Windows.Point(-3, -3);
-            }
+        }
 
-            if (Width == double.NaN || Width == 0)
-            {
-                return;
-            }
-
-            if (Height == double.NaN || Height == 0)
-            {
-                return;
-            }
-
-            var paletteImageWidth = Width - 2 * ColorPaletteImageMargin;
-            var paletteImageHeight = Height - 2 * ColorPaletteImageMargin;
-            var xRelativeToBitmap = ColorWheelBitmap.Width / paletteImageWidth * position.X;
-            var yRelativeToBitmap = ColorWheelBitmap.Height / paletteImageHeight * position.Y;
-
-            var color = ColorWheelBitmap.GetPixel((int)xRelativeToBitmap, (int)yRelativeToBitmap);
-
-            var floatR = 1.0f / 255.0f * color.R;
-            var floatG = 1.0f / 255.0f * color.G;
-            var floatB = 1.0f / 255.0f * color.B;
-            var floatA = 1.0f / 255.0f * color.A;
-            SetColorOnTerminal(floatR, floatG, floatB, floatA);
+        public void ColorWheelMouseUp()
+        {
+            _isMouseButtonDown = false;
         }
 
         [InputTerminal(Direction.North)]
-        public void RedInputTerminal_DataChanged(float data)
+        public void Red(float data)
         {
             if (ColorOutput != null)
             {
@@ -130,7 +115,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void GreenInputTerminal_DataChanged(float data)
+        public void Green(float data)
         {
             if (ColorOutput != null)
             {
@@ -139,7 +124,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void BlueInputTerminal_DataChanged(float data)
+        public void Blue(float data)
         {
             if (ColorOutput != null)
             {
@@ -148,7 +133,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.West)]
-        public void AlphaInputTerminal_DataChanged(float data)
+        public void Alpha(float data)
         {
             if (ColorOutput != null)
             {
@@ -163,7 +148,35 @@ namespace DiiagramrFadeCandy
 
         protected override void MouseLeftNode()
         {
+            _isMouseButtonDown = false;
             IsColorPickerVisible = false;
+        }
+
+        private void SetColorFromMouseInput(object sender, MouseEventArgs e)
+        {
+            var inputElement = sender as IInputElement;
+            System.Windows.Point position = inputElement?.IsMouseOver ?? false
+                ? e.GetPosition(inputElement)
+                : new System.Windows.Point(-3, -3);
+
+            if (Width != double.NaN && Width > 0 && Height != double.NaN & Height > 0)
+            {
+                SetColorOnTerminalFromPaletteClick(position);
+            }
+        }
+
+        private void SetColorOnTerminalFromPaletteClick(System.Windows.Point position)
+        {
+            var paletteImageWidth = Width - 2 * ColorPaletteImageMargin;
+            var paletteImageHeight = Height - 2 * ColorPaletteImageMargin;
+            var xRelativeToBitmap = ColorWheelBitmap.Width / paletteImageWidth * position.X;
+            var yRelativeToBitmap = ColorWheelBitmap.Height / paletteImageHeight * position.Y;
+            var color = ColorWheelBitmap.GetPixel((int)xRelativeToBitmap, (int)yRelativeToBitmap);
+            var floatR = 1.0f / 255.0f * color.R;
+            var floatG = 1.0f / 255.0f * color.G;
+            var floatB = 1.0f / 255.0f * color.B;
+            var floatA = 1.0f / 255.0f * color.A;
+            SetColorOnTerminal(floatR, floatG, floatB, floatA);
         }
 
         private void SetColorOnTerminal(float floatR, float floatG, float floatB, float floatA)
@@ -178,6 +191,16 @@ namespace DiiagramrFadeCandy
             {
                 SelectedColorBrush.Color = backgroundColor;
             });
+        }
+
+        private Bitmap ConvertBitmapImageToBitmap(BitmapImage bitmapImage)
+        {
+            using MemoryStream outStream = new MemoryStream();
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+            encoder.Save(outStream);
+            Bitmap bitmap = new Bitmap(outStream);
+            return new Bitmap(bitmap);
         }
     }
 }

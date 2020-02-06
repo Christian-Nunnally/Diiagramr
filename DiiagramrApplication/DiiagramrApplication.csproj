@@ -9,12 +9,7 @@
   <ItemGroup>
     <None Remove="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
     <None Remove="Resources\Fonts\Aldrich\OFL.txt" />
-    <None Remove="Resources\load.png" />
-    <None Remove="Resources\loadHover.png" />
     <None Remove="Resources\logo32x32_e3S_icon.ico" />
-    <None Remove="Resources\new.png" />
-    <None Remove="Resources\newHover.png" />
-    <None Remove="Resources\startscreenclear.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,12 +35,7 @@
   <ItemGroup>
     <Resource Include="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
     <Resource Include="Resources\Fonts\Aldrich\OFL.txt" />
-    <Resource Include="Resources\load.png" />
-    <Resource Include="Resources\loadHover.png" />
     <Resource Include="Resources\logo32x32_e3S_icon.ico" />
-    <Resource Include="Resources\new.png" />
-    <Resource Include="Resources\newHover.png" />
-    <Resource Include="Resources\startscreenclear.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,9 +55,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\ShellView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Application\StartScreenView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\Tools\ContextMenuView.xaml">

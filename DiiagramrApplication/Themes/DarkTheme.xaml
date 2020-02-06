@@ -20,6 +20,7 @@
             <SolidColorBrush x:Key="NodeDragAreaStyleBrush" Color="{StaticResource ResourceKey=SelectionBlueTransparent}" />
             <SolidColorBrush x:Key="DiagramAutoWireRectangleStroke" Color="{StaticResource ResourceKey=SelectionGreen}" />
             <SolidColorBrush x:Key="DiagramAutoWireRectangleFill" Color="{StaticResource ResourceKey=SelectionGreenTransparent}" />
+            <SolidColorBrush x:Key="TextboxBorderBrush" Color="{StaticResource ResourceKey=White50}" />
             <SolidColorBrush x:Key="DisabledForegroundBrush" Color="{StaticResource ResourceKey=White60}" />
             <SolidColorBrush x:Key="NodeBackgroundBrush" Color="{StaticResource ResourceKey=White70}" />
             <SolidColorBrush x:Key="SoftDiagramForeground" Color="{StaticResource ResourceKey=White70}" />
@@ -28,6 +29,7 @@
             <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=White92}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=White92}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=White92Transparent}" />
+            <SolidColorBrush x:Key="SuperLightBrush" Color="{StaticResource ResourceKey=White100}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

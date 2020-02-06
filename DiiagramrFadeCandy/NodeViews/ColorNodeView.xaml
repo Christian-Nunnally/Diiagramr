@@ -9,7 +9,6 @@
     d:DesignWidth="40"
     mc:Ignorable="d">
     <UserControl.Resources>
-        <BitmapImage x:Key="ColorPickerImage" UriSource="Resources/colorpicker.png" />
         <BooleanToVisibilityConverter x:Key="Btv" />
     </UserControl.Resources>
     <Grid>
@@ -17,7 +16,9 @@
             <Border Margin="{Binding ColorPaletteImageMargin}" Background="Transparent">
                 <Image
                     MouseDown="{s:Action ColorWheelMouseDown}"
-                    Source="{StaticResource ColorPickerImage}"
+                    MouseUp="{s:Action ColorWheelMouseUp}"
+                    MouseMove="{s:Action ColorWheelMouseMove}"
+                    Source="{Binding ColorWheelBitmapImage}"
                     Stretch="Fill"
                     Visibility="{Binding IsColorPickerVisible, Converter={StaticResource Btv}}" />
             </Border>

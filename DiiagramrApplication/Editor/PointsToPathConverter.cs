@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace Diiagramr.Editor
+namespace DiiagramrApplication.Editor
 {
     [ValueConversion(typeof(Point[]), typeof(Geometry))]
     public class PointsToPathConverter : IValueConverter

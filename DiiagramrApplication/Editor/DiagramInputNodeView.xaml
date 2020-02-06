@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.Nodes.DiagramInputNodeView"
+    x:Class="DiiagramrApplication.Editor.Nodes.DiagramInputNodeView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Label

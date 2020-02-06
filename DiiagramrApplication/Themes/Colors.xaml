@@ -9,11 +9,13 @@
     <Color x:Key="Black24Transparent33">#603D3D3D</Color>
     <Color x:Key="SelectionBlue">#007ACC</Color>
     <Color x:Key="SelectionBlueTransparent">#50007ACC</Color>
-    <Color x:Key="SelectionGreen">#E1FFE1</Color>
-    <Color x:Key="SelectionGreenTransparent">#11E3FFE3</Color>
+    <Color x:Key="SelectionGreen">#07CCCC</Color>
+    <Color x:Key="SelectionGreenTransparent">#1107CCCC</Color>
+    <Color x:Key="White50">#606060</Color>
     <Color x:Key="White60">#999999</Color>
     <Color x:Key="White70">#B2B2B2</Color>
     <Color x:Key="White80">#CCCCCC</Color>
     <Color x:Key="White92Transparent">#11E6E6E6</Color>
     <Color x:Key="White92">#EAEAEA</Color>
+    <Color x:Key="White100">#FFFFFF</Color>
 </ResourceDictionary>

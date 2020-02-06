@@ -1,16 +1,19 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.Interactors.DiagramRifterView"
+    x:Class="DiiagramrApplication.Editor.Interactors.DiagramRifterView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <UserControl.Resources>
         <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
             <Style x:Key="RiftLineStyle" TargetType="Line">
-                <Setter Property="Stroke" Value="#99b699" />
+                <Setter Property="Stroke" Value="{StaticResource DiagramAutoWireRectangleStroke}" />
                 <Setter Property="StrokeThickness" Value="2" />
                 <Setter Property="StrokeStartLineCap" Value="Square" />
                 <Setter Property="StrokeEndLineCap" Value="Square" />
             </Style>
-            <BooleanToVisibilityConverter x:Key="Btv" />
         </ResourceDictionary>
     </UserControl.Resources>
     <Canvas>
@@ -28,7 +31,6 @@
             X2="0"
             Y1="-4"
             Y2="4" />
-
         <Line
             Style="{StaticResource RiftLineStyle}"
             Visibility="{Binding IsModeVertical, Converter={StaticResource Btv}}"
@@ -43,7 +45,6 @@
             X2="{Binding RiftWidth}"
             Y1="{Binding RiftHeightMinus5}"
             Y2="{Binding RiftHeightPlus5}" />
-
         <Line
             Style="{StaticResource RiftLineStyle}"
             X1="0"

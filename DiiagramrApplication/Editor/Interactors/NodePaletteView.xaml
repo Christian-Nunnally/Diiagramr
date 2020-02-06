@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.Interactors.NodePaletteView"
+    x:Class="DiiagramrApplication.Editor.Interactors.NodePaletteView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:editor="clr-namespace:DiiagramrAPI.Editor.Diagrams;assembly=DiiagramrAPI"
@@ -92,7 +92,7 @@
                                             Margin="0,0,4,0"
                                             HorizontalAlignment="Right"
                                             VerticalAlignment="Center"
-                                            Fill="#FFAAAAAA"
+                                            Fill="{StaticResource DisabledForegroundBrush}"
                                             Points="0,0 8,5 0,10" />
                                     </Grid>
                                 </Border>

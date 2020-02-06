@@ -1,8 +1,8 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.WireView"
+    x:Class="DiiagramrApplication.Editor.WireView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:diagram="clr-namespace:Diiagramr.Editor">
+    xmlns:diagram="clr-namespace:DiiagramrApplication.Editor">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -15,7 +15,7 @@
     <Canvas>
         <Path
             Data="{Binding Points, Converter={StaticResource ResourceKey=PointsToPathConverter}}"
-            Stroke="#101010"
+            Stroke="{StaticResource DiagramBackgroundBrush}"
             StrokeLineJoin="Miter"
             StrokeMiterLimit="1"
             StrokeThickness="6" />

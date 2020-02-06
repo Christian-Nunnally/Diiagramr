@@ -1,11 +1,10 @@
-using DiiagramrApplication.Application;
 using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Diiagramr.Application
+namespace DiiagramrApplication.Application
 {
     public class DiiagramrViewManager : ViewManager
     {

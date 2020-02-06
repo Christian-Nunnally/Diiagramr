@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Diiagramr.Editor.DiagramView"
+    x:Class="DiiagramrApplication.Editor.DiagramView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:editor="clr-namespace:DiiagramrAPI.Editor.Diagrams;assembly=DiiagramrAPI"

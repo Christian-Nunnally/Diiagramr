@@ -70,6 +70,10 @@ namespace DiiagramrAPI.Application.ShellCommands
                     {
                         _commands[commandPath] = command;
                     }
+                    else
+                    {
+                        _commands[commandPath] = null;
+                    }
                 }
             }
         }

@@ -23,13 +23,13 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border Margin="-10" IsHitTestVisible="True" MouseLeave="{s:Action MouseLeft}" Background="Transparent">
-        <Border Margin="10" Background="{StaticResource ContextMenuBackgroundBrush}" BorderBrush="#333337" BorderThickness="1" Padding="2">
+    <Border Margin="0, -12, 0, 0" IsHitTestVisible="True" MouseLeave="{s:Action MouseLeft}" Background="Transparent">
+        <Border Margin="0, 12, 0, 0" Background="{StaticResource ContextMenuBackgroundBrush}" BorderBrush="{StaticResource MenuItemMouseOverBrush}" BorderThickness="1" Padding="2">
             <ItemsControl ItemsSource="{Binding Commands}" MinWidth="{Binding MinimumWidth}" ItemsPanel="{StaticResource StackItemsPanel}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Border Height="3" BorderBrush="{StaticResource ContextMenuBackgroundBrush}" Background="#333337" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
+                            <Border Height="3" BorderBrush="{StaticResource ContextMenuBackgroundBrush}" Background="{StaticResource MenuItemMouseOverBrush}" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
                             <Border MouseDown="{s:Action ExecuteCommand}" Visibility="{Binding Converter={StaticResource IsNotSeparatorConverter}}">
                                 <Label Content="{Binding Name}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" Margin="5,0,0,0">
                                     <Label.Style>
@@ -48,10 +48,10 @@
                                         <Setter Property="Height" Value="20" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#333334" />
+                                                <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
                                             </Trigger>
                                             <DataTrigger Binding="{Binding LastCanExecute}" Value="False">
-                                                <Setter Property="Background" Value="#131313" />
+                                                <Setter Property="Background" Value="{StaticResource DiagramBackgroundBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>

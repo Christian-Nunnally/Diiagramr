@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\colorpicker.png" />
+    <Resource Include="Resources\colorpicker.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

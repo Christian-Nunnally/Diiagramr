@@ -1,6 +1,6 @@
 using System.Windows;
 
-namespace Diiagramr.Application
+namespace DiiagramrApplication.Application
 {
     public partial class WindowStyle : ResourceDictionary
     {
