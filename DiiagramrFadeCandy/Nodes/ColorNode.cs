@@ -29,6 +29,7 @@ namespace DiiagramrFadeCandy
             ColorOutput.A = SelectedColorBrush.Color.A / 255f;
         }
 
+        [NodeSetting]
         [OutputTerminal(Direction.South)]
         public Color ColorOutput { get; set; } = new Color();
 

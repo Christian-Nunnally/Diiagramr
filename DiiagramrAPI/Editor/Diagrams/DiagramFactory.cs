@@ -9,11 +9,11 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public class DiagramFactory
     {
-        private readonly IProvideNodes _nodeProvidor;
+        private readonly INodeProvider _nodeProvidor;
         private readonly IEnumerable<DiagramInteractor> diagramInteractors;
 
         public DiagramFactory(
-            Func<IProvideNodes> nodeProvidorFactory,
+            Func<INodeProvider> nodeProvidorFactory,
             Func<IEnumerable<IDiagramInteractorService>> diagramInteractorsFactory)
         {
             _nodeProvidor = nodeProvidorFactory.Invoke();

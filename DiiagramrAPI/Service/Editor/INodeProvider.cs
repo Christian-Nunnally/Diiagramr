@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace DiiagramrAPI.Service.Editor
 {
-    public interface IProvideNodes : INotifyPropertyChanged, ISingletonService
+    public interface INodeProvider : INotifyPropertyChanged, ISingletonService
     {
         Node CreateNodeFromName(string typeFullName);
 

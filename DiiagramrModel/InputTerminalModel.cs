@@ -17,6 +17,7 @@
         public InputTerminalModel(string name, Type type, Direction defaultDirection)
             : base(name, type, defaultDirection)
         {
+            SerializeableTypes.Add(GetType());
         }
 
         /// <summary>

@@ -1,7 +1,5 @@
 ﻿using DiiagramrAPI.Application.Tools;
 using DiiagramrModel;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
@@ -18,8 +16,6 @@ namespace DiiagramrAPI.Service.Plugins
         ObservableCollection<string> Sources { get; }
 
         bool AddSource(string sourceUrl);
-
-        IEnumerable<Type> GetSerializeableTypes();
 
         Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem);
 

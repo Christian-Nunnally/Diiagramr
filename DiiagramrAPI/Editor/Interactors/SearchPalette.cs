@@ -12,10 +12,10 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class SearchPalette : DiagramInteractor
     {
-        private readonly IProvideNodes _nodeProvider;
+        private readonly INodeProvider _nodeProvider;
         private Diagram _diagram;
 
-        public SearchPalette(Func<IProvideNodes> nodeProvider)
+        public SearchPalette(Func<INodeProvider> nodeProvider)
         {
             _nodeProvider = nodeProvider();
             AvailableNodes = _nodeProvider.GetRegisteredNodes();

@@ -4,5 +4,8 @@ namespace DiiagramrApplication.Application
 {
     internal class MissingView : UserControl
     {
+        public MissingView()
+        {
+        }
     }
 }

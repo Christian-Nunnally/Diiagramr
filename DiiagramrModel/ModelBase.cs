@@ -1,12 +1,19 @@
 namespace DiiagramrModel
 {
+    using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
     using System.Runtime.CompilerServices;
     using System.Runtime.Serialization;
+    using System.Text;
+    using System.Xml;
 
     [DataContract(IsReference = true)]
     public class ModelBase : INotifyPropertyChanged
     {
+        public static IList<Type> SerializeableTypes = new List<Type>();
+
         private string _name;
 
         public ModelBase()
@@ -37,6 +44,20 @@ namespace DiiagramrModel
 
         protected bool WasDeserialized { get; set; }
         private static int StaticId { get; set; }
+
+        public ModelBase Copy()
+        {
+            var serializer = new DataContractSerializer(GetType(), SerializeableTypes);
+            using var memoryStream = new MemoryStream();
+            using (var xmlTextWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings { Encoding = Encoding.UTF8 }))
+            {
+                serializer.WriteObject(xmlTextWriter, this);
+            }
+
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            using var xmlTextReader = XmlReader.Create(memoryStream);
+            return (ModelBase)serializer.ReadObject(xmlTextReader);
+        }
 
         [OnDeserialized()]
         internal void OnDeserializedMethod(StreamingContext context)

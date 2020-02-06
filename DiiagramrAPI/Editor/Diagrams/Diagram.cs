@@ -27,7 +27,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public Diagram(
             DiagramModel diagram,
-            IProvideNodes nodeProvider,
+            INodeProvider nodeProvider,
             IEnumerable<DiagramInteractor> diagramInteractors)
         {
             DiagramInteractionManager = new DiagramInteractionManager(() => diagramInteractors);

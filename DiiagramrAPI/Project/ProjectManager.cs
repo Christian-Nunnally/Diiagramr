@@ -6,7 +6,6 @@ using DiiagramrAPI.Service.Plugins;
 using DiiagramrCore;
 using DiiagramrModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -122,11 +121,6 @@ namespace DiiagramrAPI.Project
             {
                 Diagrams.Remove(diagramViewModel);
             }
-        }
-
-        public IEnumerable<Type> GetSerializeableTypes()
-        {
-            return _libraryManager.GetSerializeableTypes();
         }
 
         public void LoadProject(ProjectModel project, bool autoOpenDiagram = false)

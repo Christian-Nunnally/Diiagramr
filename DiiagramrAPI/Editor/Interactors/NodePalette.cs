@@ -17,11 +17,11 @@ namespace DiiagramrAPI.Editor.Interactors
         public const bool AutoWireToContext = true;
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
-        private readonly IProvideNodes _nodeProvider;
+        private readonly INodeProvider _nodeProvider;
         private Diagram _diagram;
         private Func<Node, bool> filter = x => true;
 
-        public NodePalette(Func<IProvideNodes> nodeProvider)
+        public NodePalette(Func<INodeProvider> nodeProvider)
         {
             _nodeProvider = nodeProvider();
             _nodeProvider.PropertyChanged += NodesOnPropertyChanged;

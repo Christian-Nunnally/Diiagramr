@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Project;
+﻿using DiiagramrAPI.Editor.Interactors;
+using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
 using DiiagramrModel;
@@ -9,6 +10,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    [HideFromNodeSelector]
     public class DiagramNode : Node
     {
         private const int MarginBetweenTerminals = 10;
@@ -27,7 +29,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         [NodeSetting]
         public string DiagramName { get; set; }
 
-        private bool IsResolved => ResolvedDiagram != null;
+        public Diagram VisibleDiagram { get; set; }
 
         private Diagram ResolvedDiagram
         {
@@ -43,6 +45,10 @@ namespace DiiagramrAPI.Editor.Diagrams
                     _whenResolvedAction?.Invoke(ResolvedDiagram);
                     _whenResolvedAction = null;
                     InitializeDiagramNodeWithResolvedDiagram();
+
+                    // Uncomment for some fun with DiagramNodes.
+                    // VisibleDiagram = ResolvedDiagram;
+                    // VisibleDiagram.Zoom = 0.1;
                 }
                 else
                 {
@@ -50,6 +56,8 @@ namespace DiiagramrAPI.Editor.Diagrams
                 }
             }
         }
+
+        private bool IsResolved => ResolvedDiagram != null;
 
         public DiagramNode WhenResolved(Action<Diagram> action)
         {
@@ -62,6 +70,11 @@ namespace DiiagramrAPI.Editor.Diagrams
                 _whenResolvedAction = action;
             }
             return this;
+        }
+
+        public void OpenDiagram()
+        {
+            _openDiagramAction?.Invoke(ResolvedDiagram);
         }
 
         protected override void UpdateServices(NodeServiceProvider nodeServiceProvider)
@@ -85,14 +98,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             if (projectScreen != null)
             {
                 _openDiagramAction = d => projectScreen.OpenDiagram(d);
-            }
-        }
-
-        protected override void MouseEnteredNode()
-        {
-            if (IsResolved)
-            {
-                _openDiagramAction?.Invoke(ResolvedDiagram);
             }
         }
 

@@ -17,12 +17,12 @@ namespace DiiagramrAPI.Service.Plugins
     public class PluginLoader : IPluginLoader
     {
         private readonly IDirectoryService _directoryService;
-        private readonly IProvideNodes _nodeProvider;
+        private readonly INodeProvider _nodeProvider;
         private readonly string _pluginDirectory;
         private List<Type> _serializeableTypes = new List<Type>();
 
         public PluginLoader(
-            Func<IProvideNodes> nodeProviderFactory,
+            Func<INodeProvider> nodeProviderFactory,
             Func<IDirectoryService> directoryServiceFactory)
         {
             _nodeProvider = nodeProviderFactory.Invoke();
@@ -36,12 +36,6 @@ namespace DiiagramrAPI.Service.Plugins
 
             LoadNonPluginDll();
             GetInstalledPlugins();
-        }
-
-        public IEnumerable<Type> SerializeableTypes
-        {
-            get => _serializeableTypes;
-            set => _serializeableTypes = value.ToList();
         }
 
         public bool AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
@@ -125,7 +119,7 @@ namespace DiiagramrAPI.Service.Plugins
             {
                 if ((exportedType.Attributes & TypeAttributes.Serializable) != 0)
                 {
-                    _serializeableTypes.Add(exportedType);
+                    ModelBase.SerializeableTypes.Add(exportedType);
                 }
             }
         }

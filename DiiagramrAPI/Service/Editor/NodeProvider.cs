@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DiiagramrAPI.Service.Editor
 {
-    public class NodeProvider : IProvideNodes
+    public class NodeProvider : INodeProvider
     {
         private readonly IList<Node> _availableNodeViewModels;
         private readonly IDictionary<string, NodeLibrary> _dependencyMap;

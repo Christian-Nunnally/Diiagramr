@@ -21,6 +21,7 @@
         public OutputTerminalModel(string name, Type type, Direction defaultSide)
             : base(name, type, defaultSide)
         {
+            SerializeableTypes.Add(GetType());
         }
 
         public void UpdateDataFromSource()

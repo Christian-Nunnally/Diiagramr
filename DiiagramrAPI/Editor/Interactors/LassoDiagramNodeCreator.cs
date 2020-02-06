@@ -12,13 +12,13 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class LassoDiagramNodeCreator : DiagramInteractor
     {
-        private readonly IProvideNodes _nodeProvider;
+        private readonly INodeProvider _nodeProvider;
         private double _endX;
         private double _endY;
         private double _startX;
         private double _startY;
 
-        public LassoDiagramNodeCreator(Func<IProvideNodes> nodeProviderFactory)
+        public LassoDiagramNodeCreator(Func<INodeProvider> nodeProviderFactory)
         {
             _nodeProvider = nodeProviderFactory();
         }

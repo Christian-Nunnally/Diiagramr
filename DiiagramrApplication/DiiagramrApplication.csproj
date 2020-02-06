@@ -84,6 +84,9 @@
     <Page Update="Editor\DiagramInteractorManagerView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Editor\DiagramNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editor\DiagramOutputNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>

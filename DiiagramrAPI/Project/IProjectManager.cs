@@ -2,7 +2,6 @@
 using DiiagramrAPI.Service;
 using DiiagramrModel;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Project
@@ -28,8 +27,6 @@ namespace DiiagramrAPI.Project
         void CreateProject(Action contiuation);
 
         void DeleteDiagram(DiagramModel diagram);
-
-        IEnumerable<Type> GetSerializeableTypes();
 
         void LoadProject(ProjectModel project, bool autoOpenDiagram = false);
 

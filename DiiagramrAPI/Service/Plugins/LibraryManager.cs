@@ -51,11 +51,6 @@ namespace DiiagramrAPI.Service.Plugins
             return true;
         }
 
-        public IEnumerable<Type> GetSerializeableTypes()
-        {
-            return _pluginLoader.SerializeableTypes;
-        }
-
         public async Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem)
         {
             if (IsLibraryInstalled(libraryListItem.Library))
