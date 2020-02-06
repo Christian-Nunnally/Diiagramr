@@ -47,6 +47,7 @@ namespace DiiagramrFadeCandy
             base.Height = 60;
             Name = "Graphics Canvas";
             ResizeEnabled = true;
+            // TODO: new DeviceContext :)
 
             _backgroundRefreshTask = BackgroundTaskManager.Instance.CreateBackgroundTask(RenderFrameOnUIThread, FrameDelay);
             _backgroundRefreshTask.Start();
