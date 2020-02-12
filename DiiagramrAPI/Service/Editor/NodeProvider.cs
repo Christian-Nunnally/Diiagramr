@@ -27,6 +27,8 @@ namespace DiiagramrAPI.Service.Editor
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        public event Action<Node> NodeRegistered;
+
         public Node CreateNodeFromName(string typeFullName)
         {
             if (!_dependencyMap.ContainsKey(typeFullName))
@@ -81,7 +83,7 @@ namespace DiiagramrAPI.Service.Editor
             _availableNodeViewModels.Add(node);
             _dependencyMap.Add(fullName, dependency);
 
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("AddNodes"));
+            NodeRegistered?.Invoke(node);
         }
 
         private Node InstantiateNode(string fullName)

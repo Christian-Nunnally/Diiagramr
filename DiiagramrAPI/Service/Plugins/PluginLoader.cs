@@ -19,7 +19,6 @@ namespace DiiagramrAPI.Service.Plugins
         private readonly IDirectoryService _directoryService;
         private readonly INodeProvider _nodeProvider;
         private readonly string _pluginDirectory;
-        private List<Type> _serializeableTypes = new List<Type>();
 
         public PluginLoader(
             Func<INodeProvider> nodeProviderFactory,

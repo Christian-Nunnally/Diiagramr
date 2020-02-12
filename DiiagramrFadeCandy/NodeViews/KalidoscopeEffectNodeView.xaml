@@ -6,6 +6,5 @@
              xmlns:s="https://github.com/canton7/Stylet"
              d:DesignHeight="30"
              d:DesignWidth="30"
-             Background="#b9b9b9"
              mc:Ignorable="d">
 </UserControl>

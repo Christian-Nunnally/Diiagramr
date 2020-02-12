@@ -11,7 +11,7 @@ namespace DiiagramrFadeCandy
         private float _maxValue;
 
         [DataMember]
-        public int[] SpectrumData { get; set; }
+        public float[] SpectrumData { get; set; }
 
         [DataMember]
         public Color Color { get; set; }

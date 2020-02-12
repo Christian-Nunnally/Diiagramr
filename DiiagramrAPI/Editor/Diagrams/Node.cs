@@ -23,6 +23,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             Terminals = new ViewModelCollection<Terminal, TerminalModel>(this, () => NodeModel?.Terminals, Terminal.CreateTerminalViewModel);
             Terminals.CollectionChanged += TerminalsCollectionChanged;
             ExecuteWhenViewLoaded(ArrangeAllTerminals);
+            Name ??= string.Empty;
         }
 
         public virtual IObservableCollection<Terminal> Terminals { get; set; }

@@ -19,9 +19,9 @@ namespace DiiagramrAPI2.Application.Dialogs
         }
 
         public ObservableCollection<LoadProjectOption> LoadProjectOptions { get; set; } = new ObservableCollection<LoadProjectOption>();
-        public override int MaxHeight => 300;
+        public override int MaxHeight => 220;
 
-        public override int MaxWidth => 300;
+        public override int MaxWidth => 290;
 
         public override string Title { get; set; } = "Load Project";
 

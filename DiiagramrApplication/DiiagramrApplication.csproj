@@ -99,6 +99,9 @@
     <Page Update="Editor\Interactors\DiagramRifterView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Editor\Interactors\NodeHelpView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editor\Interactors\HotkeyHelpView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -142,9 +145,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Themes\DarkTheme.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Themes\LightTheme.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

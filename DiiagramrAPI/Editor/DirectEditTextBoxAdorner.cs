@@ -30,13 +30,15 @@ namespace DiiagramrAPI.Editor
                 Margin = new Thickness(0),
                 FontSize = 12,
                 FontWeight = FontWeights.Bold,
-                HorizontalAlignment = HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
+                Background = new SolidColorBrush(Color.FromRgb(16, 16, 16)),
+                Foreground = new SolidColorBrush(Color.FromRgb(178, 178, 178)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(96, 96, 96)),
                 HorizontalContentAlignment = HorizontalAlignment.Center,
                 VerticalContentAlignment = VerticalAlignment.Center,
                 Width = 50,
-                Height = 25,
+                Height = 30,
             };
+            textBox.Loaded += TextBoxLoaded;
             Binding binding = new Binding
             {
                 Source = this,
@@ -89,9 +91,13 @@ namespace DiiagramrAPI.Editor
             {
                 return parseResult;
             }
-            else
+            else if (IsStringType)
             {
                 return data;
+            }
+            else
+            {
+                return AdornedTerminal.Data;
             }
         }
 
@@ -109,6 +115,17 @@ namespace DiiagramrAPI.Editor
         protected override Visual GetVisualChild(int index)
         {
             return visualChildren[index];
+        }
+
+        private void FocusTextBox()
+        {
+            textBox.Focus();
+            Keyboard.Focus(textBox);
+        }
+
+        private void TextBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            FocusTextBox();
         }
 
         private double GetRelativeXBasedOnTerminalDirection(double width)

@@ -14,7 +14,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
-        <ItemsControl ItemsSource="{Binding LoadProjectOptions}">
+        <ItemsControl Margin="20" ItemsSource="{Binding LoadProjectOptions}">
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel />

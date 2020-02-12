@@ -168,16 +168,22 @@ namespace DiiagramrFadeCandy
 
         private void SetColorOnTerminalFromPaletteClick(System.Windows.Point position)
         {
-            var paletteImageWidth = Width - 2 * ColorPaletteImageMargin;
-            var paletteImageHeight = Height - 2 * ColorPaletteImageMargin;
-            var xRelativeToBitmap = ColorWheelBitmap.Width / paletteImageWidth * position.X;
-            var yRelativeToBitmap = ColorWheelBitmap.Height / paletteImageHeight * position.Y;
-            var color = ColorWheelBitmap.GetPixel((int)xRelativeToBitmap, (int)yRelativeToBitmap);
-            var floatR = 1.0f / 255.0f * color.R;
-            var floatG = 1.0f / 255.0f * color.G;
-            var floatB = 1.0f / 255.0f * color.B;
-            var floatA = 1.0f / 255.0f * color.A;
-            SetColorOnTerminal(floatR, floatG, floatB, floatA);
+            try
+            {
+                var paletteImageWidth = Width - 2 * ColorPaletteImageMargin;
+                var paletteImageHeight = Height - 2 * ColorPaletteImageMargin;
+                var xRelativeToBitmap = ColorWheelBitmap.Width / paletteImageWidth * position.X;
+                var yRelativeToBitmap = ColorWheelBitmap.Height / paletteImageHeight * position.Y;
+                var color = ColorWheelBitmap.GetPixel((int)xRelativeToBitmap, (int)yRelativeToBitmap);
+                var floatR = 1.0f / 255.0f * color.R;
+                var floatG = 1.0f / 255.0f * color.G;
+                var floatB = 1.0f / 255.0f * color.B;
+                var floatA = 1.0f / 255.0f * color.A;
+                SetColorOnTerminal(floatR, floatG, floatB, floatA);
+            }
+            catch (IndexOutOfRangeException)
+            {
+            }
         }
 
         private void SetColorOnTerminal(float floatR, float floatG, float floatB, float floatA)

@@ -18,6 +18,7 @@ namespace DiiagramrAPI.Editor
             RegisterColorForType(typeof(string), Color.FromArgb(255, 153, 51, 80));
             RegisterColorForType(typeof(bool), Color.FromArgb(255, 200, 51, 80));
             RegisterColorForType(typeof(object), Color.FromArgb(255, 155, 155, 155));
+            RegisterColorForType(typeof(float[]), ColorTranslator.FromHtml("#545893"));
         }
 
         public Color GetColorForType(Type type)

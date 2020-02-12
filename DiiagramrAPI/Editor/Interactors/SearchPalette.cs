@@ -1,11 +1,14 @@
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
+using PropertyChanged;
 using Stylet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Interactors
@@ -14,20 +17,28 @@ namespace DiiagramrAPI.Editor.Interactors
     {
         private readonly INodeProvider _nodeProvider;
         private Diagram _diagram;
+        private bool _shouldStopinteraction = false;
 
         public SearchPalette(Func<INodeProvider> nodeProvider)
         {
             _nodeProvider = nodeProvider();
-            AvailableNodes = _nodeProvider.GetRegisteredNodes();
+            AllSearchResults = _nodeProvider
+                .GetRegisteredNodes()
+                .Select(n => new SearchResult() { Node = n, DisplayName = n.Name })
+                .ToList();
+            if (_nodeProvider is NodeProvider provider)
+            {
+                provider.NodeRegistered += ProviderNodeRegistered;
+            }
             PropertyChanged += PropertyChangedHandler;
             UpdateFilterdList();
         }
 
         public string SearchPhrase { get; set; } = string.Empty;
 
-        public IEnumerable<Node> AvailableNodes { get; set; }
+        public IList<SearchResult> AllSearchResults { get; set; }
 
-        public BindableCollection<Node> FilteredNodesList { get; } = new BindableCollection<Node>();
+        public BindableCollection<SearchResult> FilteredNodesList { get; } = new BindableCollection<SearchResult>();
 
         public void BeginInsertingNode(Node node, bool insertCopy = false)
         {
@@ -52,11 +63,38 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type == InteractionType.RightMouseDown || interaction.Type == InteractionType.NodeInserted;
+            return interaction.Type == InteractionType.RightMouseDown
+                || interaction.Type == InteractionType.NodeInserted
+                || _shouldStopinteraction;
+        }
+
+        public void SearchTextBoxLostFocus()
+        {
+        }
+
+        public void SearchTextBoxLoaded(object sender, RoutedEventArgs e)
+        {
+            FocusTextBox(sender as TextBox);
+        }
+
+        public void SearchTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                var firstNode = FilteredNodesList.FirstOrDefault();
+                if (firstNode != null)
+                {
+                    firstNode.IsSelected = true;
+                }
+            }
+            else if (e.Key == Key.Escape)
+            {
+            }
         }
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
+            _shouldStopinteraction = false;
             _diagram = interaction.Diagram;
             X = interaction.MousePosition.X;
             Y = interaction.MousePosition.Y;
@@ -65,6 +103,20 @@ namespace DiiagramrAPI.Editor.Interactors
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             _diagram = null;
+        }
+
+        private void ProviderNodeRegistered(Node node)
+        {
+            AllSearchResults.Add(new SearchResult() { Node = node, DisplayName = node.Name });
+        }
+
+        private void FocusTextBox(TextBox textBox)
+        {
+            if (textBox != null)
+            {
+                textBox.Focus();
+                Keyboard.Focus(textBox);
+            }
         }
 
         private void PropertyChangedHandler(object sender, PropertyChangedEventArgs e)
@@ -78,7 +130,17 @@ namespace DiiagramrAPI.Editor.Interactors
         private void UpdateFilterdList()
         {
             FilteredNodesList.Clear();
-            AvailableNodes.Where(n => n.Name.Contains(SearchPhrase)).ForEach(FilteredNodesList.Add);
+            AllSearchResults.Where(n => n.DisplayName.Contains(SearchPhrase)).ForEach(FilteredNodesList.Add);
+        }
+
+        [AddINotifyPropertyChangedInterface]
+        public class SearchResult
+        {
+            public string DisplayName { get; set; }
+
+            public Node Node { get; set; }
+
+            public bool IsSelected { get; set; }
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using PropertyChanged;
 using System;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+using System.Windows;
 using System.Xml.Serialization;
 
 namespace VisualDrop
@@ -24,12 +23,14 @@ namespace VisualDrop
             }
         }
 
-        public string DisplayName { get; set; }
+        public string DisplayName { get; set; } = string.Empty;
 
         [XmlIgnore]
-        public ImageSource Icon { get; set; }
+        public FrameworkElement Icon { get; set; }
 
         public bool Running { get; set; }
+
+        public AudioDeviceInformation Copy() => new AudioDeviceInformation() { Name = Name };
 
         private void SetDisplayName()
         {
@@ -45,21 +46,30 @@ namespace VisualDrop
 
         private void SetIcon()
         {
-            if (Name.Contains("headphones") || Name.Contains("Headphones"))
+            var icons = new ResourceDictionary
             {
-                Icon = new BitmapImage(new Uri("pack://application:,,,/VisualDrop;component/Resources/headphoneicon.png"));
+                Source = new Uri("/VisualDrop;component/Themes/Icons.xaml", UriKind.RelativeOrAbsolute)
+            };
+
+            if (Name.ToLower().Contains("headphones"))
+            {
+                Icon = icons["HeadphoneIcon"] as FrameworkElement;
             }
-            else if (Name.Contains("speakers") || Name.Contains("Speakers"))
+            else if (Name.ToLower().Contains("speakers"))
             {
-                Icon = new BitmapImage(new Uri("pack://application:,,,/VisualDrop;component/Resources/speakericon.png"));
+                Icon = icons["LoudSpeakerIcon"] as FrameworkElement;
+            }
+            else if (Name.ToLower().Contains("headset"))
+            {
+                Icon = icons["HeadsetIcon"] as FrameworkElement;
             }
             else if (Name.Contains("none"))
             {
-                Icon = new BitmapImage(new Uri("pack://application:,,,/VisualDrop;component/Resources/noneicon.png"));
+                Icon = icons["MuteSpeakerIcon"] as FrameworkElement;
             }
             else
             {
-                Icon = new BitmapImage(new Uri("pack://application:,,,/VisualDrop;component/Resources/questionicon.png"));
+                Icon = icons["LoudSpeakerIcon"] as FrameworkElement;
             }
         }
     }

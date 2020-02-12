@@ -27,9 +27,15 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void Array(int[] data)
+        public void Array(float[] data)
         {
             SpectrumEffect.SpectrumData = data;
+        }
+
+        [InputTerminal(Direction.East)]
+        public void BarWidth(float barWidth)
+        {
+            SpectrumEffect.BarWidth = barWidth;
         }
     }
 }

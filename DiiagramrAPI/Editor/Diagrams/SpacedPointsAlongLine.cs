@@ -12,11 +12,12 @@ namespace DiiagramrAPI.Editor.Diagrams
         private IList<Point> _spacedPoints;
         private double _lengthOfLine;
 
-        public SpacedPointsAlongLine(IList<Point> linePoints, double constantOffset, int numberOfPoints)
+        public SpacedPointsAlongLine(IList<Point> linePoints, double constantOffset, int numberOfPoints, bool addOriginalPointsToSpacedPoints = false)
         {
             _linePoints = linePoints;
             _constantOffset = constantOffset;
             _numberOfPoints = numberOfPoints;
+            _addOriginalPointsToSpacedPoints = addOriginalPointsToSpacedPoints;
         }
 
         public IList<Point> SpacedPoints => _spacedPoints ?? (_spacedPoints = GetSpacedPointsAlongLine());
@@ -36,6 +37,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private IList<Point> GetSpacedPointsAlongLine()
         {
+            int temp = 0;
             var spacedPoints = new List<Point>();
             if (_linePoints == null || _linePoints.Count == 0)
             {
@@ -60,7 +62,11 @@ namespace DiiagramrAPI.Editor.Diagrams
                         spacedPoints.Add(OffsetPoint(interpolatedPoint));
                         break;
                     }
-
+                    if (pointIndex >= temp && _addOriginalPointsToSpacedPoints)
+                    {
+                        spacedPoints.Add(OffsetPoint(_linePoints[pointIndex + 1]));
+                        temp++;
+                    }
                     distanceSoFar += nextSegmentAvailableLength;
                 }
             }

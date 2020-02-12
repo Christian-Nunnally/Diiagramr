@@ -94,7 +94,11 @@ namespace DiiagramrAPI.Application
         {
             if (e.Action == NotifyCollectionChangedAction.Remove)
             {
-                ViewModels.RemoveRange(ViewModels.Where(x => e.OldItems.Contains(x.Model)).ToArray());
+                foreach (var oldItem in e.OldItems.Cast<TModel>())
+                {
+                    var firstItem = ViewModels.FirstOrDefault(d => d.Model == oldItem);
+                    ViewModels.Remove(firstItem);
+                }
             }
             else if (e.Action == NotifyCollectionChangedAction.Add)
             {

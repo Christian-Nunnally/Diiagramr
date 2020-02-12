@@ -25,9 +25,9 @@ namespace DiiagramrAPI.Service.Plugins
             Func<IDirectoryService> directoryServiceFactory,
             Func<IFetchWebResource> webResourceFetcher)
         {
-            _pluginLoader = pluginLoaderFactory.Invoke();
-            _directoryService = directoryServiceFactory.Invoke();
-            _webResourceFetcher = webResourceFetcher.Invoke();
+            _pluginLoader = pluginLoaderFactory();
+            _directoryService = directoryServiceFactory();
+            _webResourceFetcher = webResourceFetcher();
 
             UpdateInstalledLibraries();
         }
@@ -139,8 +139,8 @@ namespace DiiagramrAPI.Service.Plugins
         private static NodeLibrary CreateLibraryFromPath(string libraryPath)
         {
             var splitPath = libraryPath.Split('/');
-            var libraryName = splitPath[splitPath.Length - 2];
-            var libraryVersion = splitPath[splitPath.Length - 1];
+            var libraryName = splitPath[^2];
+            var libraryVersion = splitPath[^1];
             var splitVersion = libraryVersion.Split('.');
             var majorVersion = int.Parse(splitVersion[0]);
             var minorVersion = int.Parse(splitVersion[1]);

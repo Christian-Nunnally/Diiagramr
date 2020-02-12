@@ -33,8 +33,9 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void SignalChanged(int data)
+        public void Sides(int sides)
         {
+            KaleidoscopeEffect.NumberOfSides = sides;
         }
 
         [InputTerminal(Direction.East)]

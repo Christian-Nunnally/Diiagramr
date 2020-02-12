@@ -57,7 +57,6 @@
                         </VisualBrush.Visual>
                     </VisualBrush>
 
-                    <!--Canidate for x-->
                     <Style x:Key="HelpLabelStyle" TargetType="Label">
                         <Setter Property="Padding" Value="0" />
                         <Setter Property="HorizontalAlignment" Value="Center" />

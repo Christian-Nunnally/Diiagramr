@@ -33,18 +33,18 @@ namespace DiiagramrFadeCandy
         private static readonly RawColor4 Black = new RawColor4(0, 0, 0, 1);
         private readonly object _bitmapLock = new object();
 
+        private readonly BackgroundTask _backgroundRefreshTask;
         private int _bitmapWidth = 8;
         private int _bitmapHeight = 8;
         private Size _bitmapSize = new Size(8, 8);
         private WicBitmap _cachedBitmap;
         private WicRenderTarget _cachedRenderTarget;
         private int _lastRenderedFrame;
-        private BackgroundTask _backgroundRefreshTask;
 
         public LedMatrixNode()
         {
-            base.Width = 60;
-            base.Height = 60;
+            base.Width = 90;
+            base.Height = 90;
             Name = "Graphics Canvas";
             ResizeEnabled = true;
             // TODO: new DeviceContext :)

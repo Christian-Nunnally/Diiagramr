@@ -67,6 +67,7 @@
             CornerRadius="3"
             Margin="0,-5,0,0"
             Padding="0,5,0,0"
+            MouseDown="{s:Action MouseDownHandled}"
             Background="{StaticResource DialogBorderBackgroundBrush}">
             <DockPanel
                 MaxWidth="{Binding ActiveDialog.MaxWidth}"

@@ -42,7 +42,6 @@ namespace DiiagramrModel
             }
         }
 
-        protected bool WasDeserialized { get; set; }
         private static int StaticId { get; set; }
 
         public ModelBase Copy()
@@ -53,16 +52,9 @@ namespace DiiagramrModel
             {
                 serializer.WriteObject(xmlTextWriter, this);
             }
-
             memoryStream.Seek(0, SeekOrigin.Begin);
             using var xmlTextReader = XmlReader.Create(memoryStream);
             return (ModelBase)serializer.ReadObject(xmlTextReader);
-        }
-
-        [OnDeserialized()]
-        internal void OnDeserializedMethod(StreamingContext context)
-        {
-            WasDeserialized = true;
         }
 
         protected virtual void NotifyPropertyChanged([CallerMemberName] string propertyName = null)

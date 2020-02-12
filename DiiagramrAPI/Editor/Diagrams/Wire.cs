@@ -15,7 +15,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 {
     public class Wire : ViewModel, IMouseEnterLeaveReaction
     {
-        public static bool ShowDataPropagation = true;
+        public static bool ShowDataPropagation = false;
         private const double _dataVisualDiameter = 6;
         private const float DimWireColorAmount = -0.3f;
         private const float SuperDimWireColorAmount = -0.7f;
@@ -156,13 +156,14 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void AnimateDataPropagation(int frameDelay)
         {
-            foreach (var dataPointAlongWire in _dataVisualAnimationFrames.ToArray())
+            var frames = _dataVisualAnimationFrames.ToList();
+            foreach (var dataPointAlongWire in frames)
             {
                 View?.Dispatcher.Invoke(() =>
                 {
                     DataVisualX = dataPointAlongWire.X;
                     DataVisualY = dataPointAlongWire.Y;
-                    IsDataVisualVisible = dataPointAlongWire != _dataVisualAnimationFrames.Last();
+                    IsDataVisualVisible = dataPointAlongWire != frames.Last();
                 });
                 Thread.Sleep(frameDelay);
             }
@@ -171,8 +172,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void AnimateWirePointsOnUiThread()
         {
             var wirePoints = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
-            // If you want the wire to draw the other way reverse wirePoints array.
-            // Array.Reverse(wirePoints);
+            Array.Reverse(wirePoints);
             var frames = GenerateFramesOfWiringAnimation(wirePoints);
             frames.Add(wirePoints);
             foreach (var frame in frames)
@@ -201,12 +201,12 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             var _spacedPointsAlongLine = new SpacedPointsAlongLine(originalPoints, _dataVisualDiameter / 2.0, WireDataAnimationFrames);
             _dataVisualAnimationFrames.Clear();
-            _dataVisualAnimationFrames.AddRange(_spacedPointsAlongLine.SpacedPoints.Reverse());
+            _dataVisualAnimationFrames.AddRange(_spacedPointsAlongLine.SpacedPoints.Reverse().ToArray());
         }
 
         private IList<Point[]> GenerateFramesOfWiringAnimation(Point[] originalPoints)
         {
-            var _spacedPointsAlongLine = new SpacedPointsAlongLine(originalPoints, constantOffset: 0, WireAnimationFrames);
+            var _spacedPointsAlongLine = new SpacedPointsAlongLine(originalPoints, constantOffset: 0, WireAnimationFrames, addOriginalPointsToSpacedPoints: true);
             var frames = new List<Point[]>();
             var frame = new List<Point>();
             for (var frameNumber = 0; frameNumber < WireAnimationFrames; frameNumber++)

@@ -24,7 +24,10 @@ namespace DiiagramrAPI.Editor.Interactors
         public NodePalette(Func<INodeProvider> nodeProvider)
         {
             _nodeProvider = nodeProvider();
-            _nodeProvider.PropertyChanged += NodesOnPropertyChanged;
+            if (_nodeProvider is NodeProvider provider)
+            {
+                provider.NodeRegistered += NodeProviderNodeRegistered;
+            }
             AddNodes();
         }
 
@@ -173,6 +176,14 @@ namespace DiiagramrAPI.Editor.Interactors
             if (ContextTerminal != null)
             {
                 ContextTerminal.HighlightVisible = false;
+            }
+        }
+
+        private void NodeProviderNodeRegistered(Node node)
+        {
+            if (CanAddNodeToPalette(node))
+            {
+                TryAddingNode(node);
             }
         }
 

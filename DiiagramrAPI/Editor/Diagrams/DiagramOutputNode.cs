@@ -3,6 +3,7 @@ using System;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    [Help("Provides data to an output terminal on a diagram node that represents the diagram this node is on.")]
     public class DiagramOutputNode : IoNode
     {
         public DiagramOutputNode()

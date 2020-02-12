@@ -10,8 +10,8 @@ namespace DiiagramrAPI.Editor
     {
         private const int MinimimDistanceToCalculateWire = 50;
         private const double WireDistanceOutOfTerminal = 25.0;
+        private readonly Wire _wire;
         private bool _uTurned = false;
-        private Wire _wire;
 
         public WirePathingAlgorithum(Wire wire)
         {
@@ -20,26 +20,26 @@ namespace DiiagramrAPI.Editor
 
         public Terminal FallbackSinkTerminal { get; internal set; }
         public Terminal FallbackSourceTerminal { get; internal set; }
-        private TerminalModel SinkTerminal => _wireModel?.SinkTerminal;
-        private TerminalModel SourceTerminal => _wireModel?.SourceTerminal;
-        private WireModel _wireModel => _wire?.WireModel;
-        private double DownUTurnLengthSink => _areTerminalsNotNull ? SinkTerminal.TerminalDownWireMinimumLength : 0;
+        private TerminalModel SinkTerminal => WireModel?.SinkTerminal;
+        private TerminalModel SourceTerminal => WireModel?.SourceTerminal;
+        private WireModel WireModel => _wire?.WireModel;
+        private double DownUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalDownWireMinimumLength : 0;
 
-        private double DownUTurnLengthSource => _areTerminalsNotNull ? SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
+        private double DownUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
 
-        private double LeftUTurnLengthSink => _areTerminalsNotNull ? SinkTerminal.TerminalLeftWireMinimumLength : 0;
+        private double LeftUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalLeftWireMinimumLength : 0;
 
-        private double LeftUTurnLengthSource => _areTerminalsNotNull ? SourceTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
+        private double LeftUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
 
-        private double RightUTurnLengthSink => _areTerminalsNotNull ? SinkTerminal.TerminalRightWireMinimumLength : 0;
+        private double RightUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalRightWireMinimumLength : 0;
 
-        private double RightUTurnLengthSource => _areTerminalsNotNull ? SourceTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
+        private double RightUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
 
-        private double UpUTurnLengthSink => _areTerminalsNotNull ? SinkTerminal.TerminalUpWireMinimumLength : 0;
+        private double UpUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalUpWireMinimumLength : 0;
 
-        private double UpUTurnLengthSource => _areTerminalsNotNull ? SourceTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
+        private double UpUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
 
-        private bool _areTerminalsNotNull => _wireModel != null && SourceTerminal != null && SinkTerminal != null;
+        private bool AreTerminalsNotNull => WireModel != null && SourceTerminal != null && SinkTerminal != null;
 
         public Point[] GetWirePoints(double x1, double y1, double x2, double y2, Direction startTerminalDefaultDirection, Direction endTerminalDefaultDirection)
         {
@@ -103,6 +103,7 @@ namespace DiiagramrAPI.Editor
                 case Direction.West:
                     return new Point(p.X - amount, p.Y);
 
+                case Direction.None:
                 default:
                     return new Point(p.X, p.Y);
             }
@@ -171,6 +172,9 @@ namespace DiiagramrAPI.Editor
                 case Direction.South:
                     return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndAboveStart);
 
+                case Direction.East:
+                case Direction.West:
+                case Direction.None:
                 default:
                     return WireHorizontiallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards);
             }
@@ -186,6 +190,9 @@ namespace DiiagramrAPI.Editor
                 case Direction.West:
                     return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndLeftOfStart);
 
+                case Direction.North:
+                case Direction.South:
+                case Direction.None:
                 default:
                     return WireVerticallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards);
             }

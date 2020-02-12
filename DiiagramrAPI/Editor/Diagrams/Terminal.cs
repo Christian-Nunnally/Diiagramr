@@ -18,7 +18,8 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public Terminal(TerminalModel terminal)
         {
-            TerminalModel = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            Model = terminal ?? throw new ArgumentNullException(nameof(terminal));
+            TerminalModel = Model as TerminalModel;
             TerminalModel.PropertyChanged += TerminalOnPropertyChanged;
             Data = TerminalModel.Data;
             Name = TerminalModel.Name;
