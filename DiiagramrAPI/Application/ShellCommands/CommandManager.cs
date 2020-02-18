@@ -12,11 +12,13 @@ namespace DiiagramrAPI.Application.ShellCommands
         public CommandManager(Func<IEnumerable<IShellCommand>> commandsFactory)
         {
             CommandExecutor.CommandManager = this;
-            var commands = commandsFactory().OrderBy(c => c.Weight);
+            var commands = commandsFactory();
             SetupCommands(commands);
         }
 
         public IEnumerable<IShellCommand> Commands => _commands.Values;
+
+        public IEnumerable<IToolbarCommand> ToolbarCommands => _commands.Values.OfType<IToolbarCommand>();
 
         public void ExecuteCommand(string commandID, object parameter)
         {
@@ -47,12 +49,15 @@ namespace DiiagramrAPI.Application.ShellCommands
 
         private string GenerateCommandPath(IShellCommand command)
         {
-            if (command.Parent == null)
+            if (command is IToolbarCommand toolbarCommand)
             {
-                return command.Name;
+                if (toolbarCommand.ParentName == null)
+                {
+                    return command.Name;
+                }
+                return $"{toolbarCommand.ParentName}:{command.Name}";
             }
-
-            return $"{command.Parent}:{command.Name}";
+            return command.Name;
         }
 
         private void SetupCommands(IEnumerable<IShellCommand> commands)
@@ -66,13 +71,20 @@ namespace DiiagramrAPI.Application.ShellCommands
                 }
                 else
                 {
-                    if (_commands[commandPath].Weight < command.Weight)
+                    if (_commands[commandPath] is IToolbarCommand toolbarCommand && command is IToolbarCommand toolbarCommand2)
                     {
-                        _commands[commandPath] = command;
+                        if (toolbarCommand.Weight < toolbarCommand2.Weight)
+                        {
+                            _commands[commandPath] = command;
+                        }
+                        else
+                        {
+                            _commands[commandPath] = null;
+                        }
                     }
                     else
                     {
-                        _commands[commandPath] = null;
+                        _commands[commandPath] = command;
                     }
                 }
             }

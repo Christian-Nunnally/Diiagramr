@@ -3,7 +3,7 @@ using System;
 
 namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 {
-    public class ManageLibrariesCommand : ToolBarCommand
+    public class ManageLibrariesCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly LibraryManagerDialog _libraryManagerDialog;
         private readonly DialogHost _dialogHost;
@@ -18,9 +18,14 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         public override string Name => "Libraries";
 
-        public override string Parent => "Tools";
+        public string ParentName => "Tools";
 
-        public override float Weight => .5f;
+        public float Weight => .5f;
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
+        }
 
         protected override void ExecuteInternal(object parameter)
         {

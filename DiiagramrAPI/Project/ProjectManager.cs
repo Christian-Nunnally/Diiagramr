@@ -19,6 +19,7 @@ namespace DiiagramrAPI.Project
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
         private readonly NodeServiceProvider _nodeServiceProvider;
+        private ProjectModel project;
 
         public ProjectManager(
             Func<DialogHost> dialogHostFactory,
@@ -32,19 +33,21 @@ namespace DiiagramrAPI.Project
             _projectFileService = projectFileServiceFactory();
             _diagramFactory = diagramFactoryFactory();
             _nodeServiceProvider = nodeServiceProviderFactory();
-            CurrentProjectChanged += OnCurrentProjectChanged;
             _nodeServiceProvider.RegisterService<IProjectManager>(this);
         }
 
-        public event Action CurrentProjectChanged;
-
-        public ObservableCollection<DiagramModel> CurrentDiagrams => Project?.Diagrams;
-
-        public ProjectModel Project { get; set; }
+        public ProjectModel Project
+        {
+            get => project;
+            set
+            {
+                project = value;
+                Diagrams.Clear();
+                Project?.Diagrams?.ForEach(CreateDiagramViewModel);
+            }
+        }
 
         public ObservableCollection<Diagram> Diagrams { get; } = new ObservableCollection<Diagram>();
-
-        public bool IsProjectDirty => Project?.IsDirty ?? false;
 
         public void CloseProject(Action continuation)
         {
@@ -56,8 +59,8 @@ namespace DiiagramrAPI.Project
 
             void newContinuation() { Project = null; continuation(); }
             var saveBeforeCloseMessageBox = new Application.Dialogs.MessageBox.Builder("Close Project", "Save before closing?")
-                .WithChoice("Yes", () => { _projectFileService.SaveProject(Project, false, newContinuation); })
-                .WithChoice("No", () => { Project = null; newContinuation(); })
+                .WithChoice("Yes", () => _projectFileService.SaveProject(Project, false, newContinuation))
+                .WithChoice("No", () => newContinuation())
                 .WithChoice("Cancel", () => { })
                 .Build();
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
@@ -97,7 +100,6 @@ namespace DiiagramrAPI.Project
             if (Project == null)
             {
                 Project = new ProjectModel();
-                CurrentProjectChanged?.Invoke();
                 Project.IsDirty = false;
                 continuation();
             }
@@ -106,7 +108,6 @@ namespace DiiagramrAPI.Project
                 CloseProject(() =>
                 {
                     Project = new ProjectModel();
-                    CurrentProjectChanged?.Invoke();
                     Project.IsDirty = false;
                     continuation();
                 });
@@ -123,39 +124,22 @@ namespace DiiagramrAPI.Project
             }
         }
 
-        public void LoadProject(ProjectModel project, bool autoOpenDiagram = false)
+        public void SetProject(ProjectModel project, bool autoOpenDiagram = false)
         {
-            CloseProject(() => LoadProjectInternal(project, autoOpenDiagram));
+            CloseProject(() => SetProjectInternal(project, autoOpenDiagram));
         }
 
-        public void SaveAsProject()
+        private void SetProjectInternal(ProjectModel project, bool autoOpenDiagram)
         {
-            if (Project != null)
-            {
-                _projectFileService.SaveProject(Project, true, () => { Project.IsDirty = false; });
-            }
-        }
-
-        public void SaveProject()
-        {
-            if (Project != null)
-            {
-                _projectFileService.SaveProject(Project, false, () => { Project.IsDirty = false; });
-            }
-        }
-
-        private void LoadProjectInternal(ProjectModel project, bool autoOpenDiagram)
-        {
-            Project = project;
-            if (Project == null)
+            if (project == null)
             {
                 return;
             }
 
             try
             {
-                CurrentProjectChanged?.Invoke();
-                if (autoOpenDiagram)
+                Project = project;
+                if (autoOpenDiagram && !project.Diagrams.Any())
                 {
                     CreateDiagram();
                 }
@@ -167,7 +151,7 @@ namespace DiiagramrAPI.Project
                 // because nodes that fail to load are handled by printing a message to the output and just ignoring that node.
                 // TODO: Make async
                 DownloadProjectDependencies().Wait();
-                CurrentProjectChanged?.Invoke();
+                Project = project;
 
                 // TODO: Catch specific types of exceptions.
                 throw;
@@ -192,12 +176,6 @@ namespace DiiagramrAPI.Project
                     }
                 }
             }
-        }
-
-        private void OnCurrentProjectChanged()
-        {
-            Diagrams.Clear();
-            Project.Diagrams?.ForEach(CreateDiagramViewModel);
         }
     }
 }

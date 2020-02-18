@@ -5,6 +5,7 @@ using Stylet;
 using System;
 using System.ComponentModel;
 using System.Reflection;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Application
 {
@@ -25,7 +26,7 @@ namespace DiiagramrAPI.Application
             ScreenHost = screenHostFactory();
             DialogHost = dialogHostFactory();
             Toolbar = toolbarFactory();
-            CommandExecutor.Execute(StartCommandId);
+            CommandExecutor.Execute("start:" + StartCommandId);
         }
 
         public double Width { get; set; } = 1010;
@@ -69,6 +70,14 @@ namespace DiiagramrAPI.Application
                 System.Windows.Application.Current.Shutdown();
             });
             e.Cancel = true;
+        }
+
+        public void PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            var isShiftPressed = Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift);
+            var isCtrlPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
+            var isAltPressed = Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.LeftAlt);
+            e.Handled = Toolbar.HandleHotkeyPress(isCtrlPressed, isShiftPressed, isAltPressed, e.Key);
         }
     }
 }

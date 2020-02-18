@@ -1,4 +1,5 @@
-﻿using DiiagramrAPI.Editor;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Editor;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Service.IO;
@@ -27,7 +28,7 @@ namespace DiiagramrAPI.Service.Plugins
             _nodeProvider = nodeProviderFactory.Invoke();
             _directoryService = directoryServiceFactory.Invoke();
             _pluginDirectory = _directoryService.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Plugins";
-            RegisterPluginNodesFromAssembly(Assembly.Load(nameof(DiiagramrAPI)), new NodeLibrary());
+            LoadAssembly(Assembly.Load(nameof(DiiagramrAPI)), new NodeLibrary());
             if (!_directoryService.Exists(_pluginDirectory))
             {
                 _directoryService.CreateDirectory(_pluginDirectory);
@@ -120,6 +121,13 @@ namespace DiiagramrAPI.Service.Plugins
                 {
                     ModelBase.SerializeableTypes.Add(exportedType);
                 }
+                if (exportedType.IsClass && typeof(ISerializableTypeProvider).IsAssignableFrom(exportedType))
+                {
+                    if (Activator.CreateInstance(exportedType) is ISerializableTypeProvider provider)
+                    {
+                        provider.SerializableTypes.ForEach(t => ModelBase.SerializeableTypes.Add(t));
+                    }
+                }
             }
         }
 
@@ -151,7 +159,12 @@ namespace DiiagramrAPI.Service.Plugins
         {
             try
             {
-                _nodeProvider.RegisterNode((Node)Activator.CreateInstance(exportedType), libraryDependency);
+                var node = (Node)Activator.CreateInstance(exportedType);
+                foreach (var terminal in node.Terminals)
+                {
+                    ModelBase.SerializeableTypes.Add(terminal.TerminalModel.Type);
+                }
+                _nodeProvider.RegisterNode(node, libraryDependency);
             }
             catch (TypeLoadException)
             {

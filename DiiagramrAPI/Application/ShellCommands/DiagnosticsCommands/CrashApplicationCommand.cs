@@ -2,11 +2,13 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
-    public class CrashApplicationCommand : ToolBarCommand
+    public class CrashApplicationCommand : ShellCommandBase, IToolbarCommand
     {
         public override string Name => "Crash Application";
 
-        public override string Parent => "Diagnostics";
+        public string ParentName => "Diagnostics";
+
+        public float Weight => 0;
 
         protected override bool CanExecuteInternal()
         {

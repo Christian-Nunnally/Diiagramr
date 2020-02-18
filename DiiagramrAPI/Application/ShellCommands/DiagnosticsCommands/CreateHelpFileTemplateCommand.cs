@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
-    public class CreateHelpFileTemplateCommand : ToolBarCommand
+    public class CreateHelpFileTemplateCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly INodeProvider _nodeProvider;
 
@@ -18,9 +18,11 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 
         public override string Name => "Create Help File Template";
 
-        public override string Parent => "Diagnostics";
+        public string ParentName => "Diagnostics";
 
-        public void OpenFile(string path)
+        public float Weight => 0;
+
+        public void OpenDirectory()
         {
             Process.Start("explorer.exe", ".");
         }
@@ -61,7 +63,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
                 }
                 sr.Close();
             }
-            OpenFile(fileName);
+            OpenDirectory();
         }
     }
 }

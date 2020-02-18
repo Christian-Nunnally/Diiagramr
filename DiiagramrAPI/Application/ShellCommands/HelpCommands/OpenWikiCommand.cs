@@ -1,16 +1,21 @@
 ﻿namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
 {
-    public class OpenWikiCommand : ToolBarCommand
+    public class OpenWikiCommand : ShellCommandBase, IToolbarCommand
     {
         public override string Name => "Open Wiki";
 
-        public override string Parent => "Help";
+        public string ParentName => "Help";
 
-        public override float Weight => 1.0f;
+        public float Weight => 1.0f;
 
         public static void GoToSite(string url)
         {
             System.Diagnostics.Process.Start("cmd", $"/C start {url}");
+        }
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
         }
 
         protected override void ExecuteInternal(object parameter)

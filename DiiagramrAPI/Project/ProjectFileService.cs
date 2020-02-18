@@ -4,6 +4,7 @@ using DiiagramrAPI.Service.IO;
 using DiiagramrAPI2.Application.Dialogs;
 using DiiagramrModel;
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml;
@@ -72,15 +73,13 @@ namespace DiiagramrAPI.Project
 
         public void SaveProject(ProjectModel project, bool saveAs, Action continuation)
         {
-            if (saveAs || project.Name == "NewProject")
+            var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
+            if (saveAs)
             {
                 SaveAsProject(project, continuation);
                 return;
             }
-
-            var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
-            SaveProjectWithNotificationDialog(project, fileName);
-            continuation();
+            SaveProjectWithNotificationDialog(project, fileName, continuation);
         }
 
         private void DisplayErrorMessageBox(string title, string message)
@@ -93,11 +92,24 @@ namespace DiiagramrAPI.Project
         {
             _saveProjectDialog.InitialDirectory = ProjectDirectory;
             _saveProjectDialog.ProjectName = project.Name;
-            _saveProjectDialog.SaveAction = fileName => { SaveProjectWithNotificationDialog(project, fileName); continuation(); };
+            _saveProjectDialog.SaveAction = fileName => SaveProjectAndPromptIfOverwriting(project, fileName, saveAs: true, continuation);
             _dialogHost.OpenDialog(_saveProjectDialog);
         }
 
-        private void SaveProjectWithNotificationDialog(ProjectModel project, string fileName)
+        private void SaveProjectAndPromptIfOverwriting(ProjectModel project, string fileName, bool saveAs, Action continuation)
+        {
+            if (saveAs && File.Exists(fileName))
+            {
+                var overwriteConfirmationPrompt = new MessageBox.Builder("Overwrite Project?", $"A project already exists at {fileName}. Do you want to overwrite it?")
+                        .WithChoice("Yes", () => SaveProjectWithNotificationDialog(project, fileName, continuation))
+                        .WithChoice("No", () => SaveAsProject(project, continuation)).Build();
+                _dialogHost.OpenDialog(overwriteConfirmationPrompt);
+                return;
+            }
+            SaveProjectWithNotificationDialog(project, fileName, continuation);
+        }
+
+        private void SaveProjectWithNotificationDialog(ProjectModel project, string fileName, Action continuation)
         {
             var notificationDialog = new NotificationDialog("Saving...");
             _dialogHost.OpenDialog(notificationDialog);
@@ -105,8 +117,9 @@ namespace DiiagramrAPI.Project
             notificationDialog.Title = "Saved";
             new Thread(() =>
             {
-                Thread.Sleep(600);
+                Thread.Sleep(500);
                 _dialogHost.CloseDialog();
+                continuation();
             }).Start();
         }
 

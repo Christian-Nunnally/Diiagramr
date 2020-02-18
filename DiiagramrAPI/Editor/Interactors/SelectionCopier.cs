@@ -1,3 +1,7 @@
+using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Application.Commands.Transacting;
+using DiiagramrAPI.Commands;
+using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrModel;
 using System;
@@ -9,32 +13,41 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class SelectionCopier : DiagramInteractor
     {
+        private readonly INodeProvider _nodeProvider;
+        private readonly ITransactor _transactor;
         private IEnumerable<NodeModel> _copiedNodes;
-        private INodeProvider _nodeProvider;
 
-        public SelectionCopier(Func<INodeProvider> nodeProviderFactory)
+        public SelectionCopier(Func<ITransactor> transactorFactory, Func<INodeProvider> nodeProviderFactory)
         {
             _nodeProvider = nodeProviderFactory();
+            _transactor = transactorFactory();
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
+            var selectedNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected).ToList();
+            selectedNodes.ForEach(n => n.IsSelected = false);
             if (interaction.Key == Key.C)
             {
-                var selectedNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected);
                 _copiedNodes = selectedNodes.Select(s => s.Model.Copy()).OfType<NodeModel>().ToList();
             }
             else
             {
+                var firstCopiedNodeX = _copiedNodes.FirstOrDefault()?.X ?? 0;
+                var firstCopiedNodeY = _copiedNodes.FirstOrDefault()?.Y ?? 0;
+                var nodesToInsertToDiagram = new List<Node>();
                 foreach (var copiedNode in _copiedNodes)
                 {
                     var node = _nodeProvider.CreateNodeFromModel((NodeModel)copiedNode.Copy());
                     node.IsSelected = true;
                     var diagramMousePoint = interaction.Diagram.GetDiagramPointFromViewPoint(interaction.MousePosition);
-                    node.X = diagramMousePoint.X;
-                    node.Y = diagramMousePoint.Y;
+                    node.X -= firstCopiedNodeX - diagramMousePoint.X;
+                    node.Y -= firstCopiedNodeY - diagramMousePoint.Y;
+                    node.IsSelected = true;
+                    nodesToInsertToDiagram.Add(node);
                     interaction.Diagram.AddNode(node);
                 }
+                _transactor.Transact(new UndoCommand(new MapCommand(new UnwireAndDeleteNodeCommand(interaction.Diagram))), nodesToInsertToDiagram);
             }
         }
 

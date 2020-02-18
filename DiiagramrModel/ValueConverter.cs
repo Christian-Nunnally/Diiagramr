@@ -24,6 +24,11 @@ namespace DiiagramrModel
         public static bool TryCoerseValue(object value, Type toType, out object coersedValue)
         {
             var fromType = value?.GetType();
+            if (toType == null)
+            {
+                coersedValue = null;
+                return false;
+            }
             if (value == null || toType.IsAssignableFrom(fromType))
             {
                 coersedValue = value;
@@ -46,7 +51,13 @@ namespace DiiagramrModel
 
                     return true;
                 }
-                catch (Exception e) when (e is InvalidCastException || e is FormatException || e is OverflowException)
+                catch (OverflowException)
+                {
+                }
+                catch (FormatException)
+                {
+                }
+                catch (InvalidCastException)
                 {
                     if (value != null)
                     {

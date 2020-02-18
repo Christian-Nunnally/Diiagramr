@@ -33,7 +33,11 @@ namespace DiiagramrPrimitives
             {
                 Buffer[i] = Buffer[i - 1];
             }
-            Buffer[0] = data;
+
+            var b = Buffer;
+            b[0] = data;
+            Buffer = null;
+            Buffer = b;
 
             OnPropertyChanged(nameof(Buffer));
         }

@@ -1,9 +1,10 @@
 ﻿using DiiagramrAPI.Project;
 using System;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
-    public class VisualDropCloseProjectCommand : ToolBarCommand
+    public class VisualDropCloseProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
         private readonly IProjectManager _projectManager;
         private readonly VisualDropStartScreen _startScreen;
@@ -21,9 +22,17 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Name => "Close";
 
-        public override string Parent => "Project";
+        public string ParentName => "Project";
 
-        public override float Weight => 1.0f;
+        public float Weight => 1.0f;
+
+        public Key Hotkey => Key.W;
+
+        public bool RequiresCtrlModifierKey => true;
+
+        public bool RequiresShiftModifierKey => true;
+
+        public bool RequiresAltModifierKey => false;
 
         protected override void ExecuteInternal(object parameter)
         {

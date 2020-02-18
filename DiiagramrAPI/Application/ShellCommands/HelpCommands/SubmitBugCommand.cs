@@ -1,16 +1,21 @@
 ﻿namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
 {
-    public class SubmitBugCommand : ToolBarCommand
+    public class SubmitBugCommand : ShellCommandBase, IToolbarCommand
     {
         public override string Name => "Submit Bug";
 
-        public override string Parent => "Help";
+        public float Weight => .0f;
 
-        public override float Weight => .0f;
+        public string ParentName => "Help";
 
         public static void GoToSite(string url)
         {
             System.Diagnostics.Process.Start("cmd", $"/C start {url}");
+        }
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
         }
 
         protected override void ExecuteInternal(object parameter)

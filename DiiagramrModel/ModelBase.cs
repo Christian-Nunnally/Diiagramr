@@ -12,7 +12,7 @@ namespace DiiagramrModel
     [DataContract(IsReference = true)]
     public class ModelBase : INotifyPropertyChanged
     {
-        public static IList<Type> SerializeableTypes = new List<Type>();
+        public static ISet<Type> SerializeableTypes = new HashSet<Type>();
 
         private string _name;
 
@@ -44,7 +44,7 @@ namespace DiiagramrModel
 
         private static int StaticId { get; set; }
 
-        public ModelBase Copy()
+        public virtual ModelBase Copy()
         {
             var serializer = new DataContractSerializer(GetType(), SerializeableTypes);
             using var memoryStream = new MemoryStream();

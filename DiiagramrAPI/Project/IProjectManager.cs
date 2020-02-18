@@ -8,15 +8,9 @@ namespace DiiagramrAPI.Project
 {
     public interface IProjectManager : ISingletonService
     {
-        event Action CurrentProjectChanged;
-
-        ObservableCollection<DiagramModel> CurrentDiagrams { get; }
-
         ProjectModel Project { get; set; }
 
         ObservableCollection<Diagram> Diagrams { get; }
-
-        bool IsProjectDirty { get; }
 
         void CloseProject(Action contiuation);
 
@@ -28,10 +22,6 @@ namespace DiiagramrAPI.Project
 
         void DeleteDiagram(DiagramModel diagram);
 
-        void LoadProject(ProjectModel project, bool autoOpenDiagram = false);
-
-        void SaveAsProject();
-
-        void SaveProject();
+        void SetProject(ProjectModel project, bool autoOpenDiagram = false);
     }
 }

@@ -17,11 +17,11 @@ namespace DiiagramrFadeCandy
         public Color Color { get; set; }
 
         [DataMember]
-        public float BarWidth { get; set; }
+        public float BarWidth { get; set; } = 1f;
 
         public override void Draw(RenderTarget target)
         {
-            if (SpectrumData == null)
+            if (SpectrumData == null || SpectrumData.Length == 0)
             {
                 return;
             }
@@ -30,18 +30,16 @@ namespace DiiagramrFadeCandy
 
             var totalWidthPerBar = targetWidth / SpectrumData.Length;
             var barWidth = totalWidthPerBar * BarWidth;
-            var remainingWidth = totalWidthPerBar - barWidth;
-            var halfRemainingWidth = remainingWidth / 2;
             for (int i = 0; i < SpectrumData.Length; i++)
             {
-                if (SpectrumData[i] > _maxValue)
+                if (SpectrumData[i] > _maxValue && !float.IsInfinity(SpectrumData[i]))
                 {
                     _maxValue = SpectrumData[i];
                 }
                 var brush = new SolidColorBrush(target, new RawColor4(Color.R, Color.G, Color.B, Color.A));
                 var left = i * totalWidthPerBar;
                 var top = targetHeight;
-                var right = left + halfRemainingWidth;
+                var right = left + barWidth;
                 var bottom = targetHeight - (targetHeight / _maxValue * SpectrumData[i]);
                 var rectangle = new RawRectangleF(left, top, right, bottom);
                 target.FillRectangle(rectangle, brush);

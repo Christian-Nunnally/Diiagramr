@@ -18,6 +18,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private readonly INodeProvider _nodeProvider;
         private Diagram _diagram;
         private bool _shouldStopinteraction = false;
+        private int _selectedNodeIndex = -1;
 
         public SearchPalette(Func<INodeProvider> nodeProvider)
         {
@@ -39,6 +40,23 @@ namespace DiiagramrAPI.Editor.Interactors
         public IList<SearchResult> AllSearchResults { get; set; }
 
         public BindableCollection<SearchResult> FilteredNodesList { get; } = new BindableCollection<SearchResult>();
+
+        public int SelectedNodeIndex
+        {
+            get => _selectedNodeIndex;
+            set
+            {
+                if (_selectedNodeIndex >= 0 && _selectedNodeIndex < FilteredNodesList.Count)
+                {
+                    FilteredNodesList[_selectedNodeIndex].IsSelected = false;
+                }
+                _selectedNodeIndex = value;
+                if (_selectedNodeIndex >= 0 && _selectedNodeIndex < FilteredNodesList.Count)
+                {
+                    FilteredNodesList[_selectedNodeIndex].IsSelected = true;
+                }
+            }
+        }
 
         public void BeginInsertingNode(Node node, bool insertCopy = false)
         {
@@ -81,14 +99,24 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             if (e.Key == Key.Down)
             {
-                var firstNode = FilteredNodesList.FirstOrDefault();
-                if (firstNode != null)
+                SelectedNodeIndex = Math.Min(FilteredNodesList.Count - 1, SelectedNodeIndex + 1);
+            }
+            else if (e.Key == Key.Up)
+            {
+                SelectedNodeIndex = Math.Max(-1, SelectedNodeIndex - 1);
+            }
+            else if (e.Key == Key.Enter)
+            {
+                var node = FilteredNodesList.FirstOrDefault(n => n.IsSelected);
+                if (node != null)
                 {
-                    firstNode.IsSelected = true;
+                    _shouldStopinteraction = true;
+                    BeginInsertingNode(node.Node, true);
                 }
             }
             else if (e.Key == Key.Escape)
             {
+                _shouldStopinteraction = true;
             }
         }
 

@@ -2,7 +2,7 @@
 {
     public class FileSeparatorCommand1 : SeparatorCommand
     {
-        public override string Parent => "Project";
+        public override string ParentName => "Project";
 
         public override float Weight => 0.3f;
     }

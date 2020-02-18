@@ -89,5 +89,18 @@ namespace DiiagramrModel
         {
             PersistedVariables[name] = value;
         }
+
+        public override ModelBase Copy()
+        {
+            var copy = (NodeModel)base.Copy();
+            foreach (var terminal in copy.Terminals.ToArray())
+            {
+                foreach (var connectedWire in terminal.ConnectedWires.ToArray())
+                {
+                    terminal.DisconnectWire(connectedWire, connectedWire.SinkTerminal == terminal ? connectedWire.SourceTerminal : connectedWire.SinkTerminal);
+                }
+            }
+            return copy;
+        }
     }
 }

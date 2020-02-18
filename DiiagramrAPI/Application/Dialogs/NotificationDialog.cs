@@ -12,5 +12,10 @@
         public override int MaxWidth => 100;
 
         public override string Title { get; set; }
+
+        public void RequestClose()
+        {
+            RequestClose();
+        }
     }
 }

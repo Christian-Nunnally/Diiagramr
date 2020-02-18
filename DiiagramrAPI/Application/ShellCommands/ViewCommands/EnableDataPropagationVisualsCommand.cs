@@ -2,7 +2,7 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 {
-    public class EnableDataPropagationVisualsCommand : ToolBarCommand
+    public class EnableDataPropagationVisualsCommand : ShellCommandBase, IToolbarCommand
     {
         public EnableDataPropagationVisualsCommand()
         {
@@ -10,9 +10,14 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         public override string Name => "Propagation Visuals";
 
-        public override string Parent => "View";
+        public string ParentName => "View";
 
-        public override float Weight => .5f;
+        public float Weight => .5f;
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
+        }
 
         protected override void ExecuteInternal(object parameter)
         {

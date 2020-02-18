@@ -1,10 +1,11 @@
 ﻿using DiiagramrAPI.Project;
 using System;
 using System.Linq;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
-    public class NewProjectCommand : ToolBarCommand
+    public class NewProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
@@ -25,9 +26,22 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Name => "New";
 
-        public override string Parent => "Project";
+        public string ParentName => "Project";
 
-        public override float Weight => 0.0f;
+        public float Weight => 0.0f;
+
+        public Key Hotkey => Key.N;
+
+        public bool RequiresCtrlModifierKey => true;
+
+        public bool RequiresShiftModifierKey => false;
+
+        public bool RequiresAltModifierKey => false;
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
+        }
 
         protected override void ExecuteInternal(object parameter)
         {

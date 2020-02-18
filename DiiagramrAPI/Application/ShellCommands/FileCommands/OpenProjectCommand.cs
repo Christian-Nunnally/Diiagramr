@@ -3,11 +3,12 @@ using DiiagramrModel;
 using System;
 using System.IO;
 using System.Linq;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
     public class
-        OpenProjectCommand : ToolBarCommand
+        OpenProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
@@ -28,9 +29,22 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         public override string Name => "Open";
 
-        public override string Parent => "Project";
+        public string ParentName => "Project";
 
-        public override float Weight => .1f;
+        public float Weight => .1f;
+
+        public Key Hotkey => Key.O;
+
+        public bool RequiresCtrlModifierKey => true;
+
+        public bool RequiresAltModifierKey => false;
+
+        public bool RequiresShiftModifierKey => false;
+
+        protected override bool CanExecuteInternal()
+        {
+            return true;
+        }
 
         protected override void ExecuteInternal(object parameter)
         {
@@ -49,7 +63,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         private void LoadProject(ProjectModel project)
         {
-            _projectManager.LoadProject(project);
+            _projectManager.SetProject(project);
             _projectScreen.OpenDiagram(_projectManager.Diagrams?.FirstOrDefault());
             _screenHost.ShowScreen(_projectScreen);
         }

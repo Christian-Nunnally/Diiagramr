@@ -13,6 +13,7 @@ namespace DiiagramrAPI.Project
             {
                 return;
             }
+
             diagram.ExecuteWhenViewLoaded(() => ReadyDiagram(diagram));
 
             if (Items.Contains(diagram))

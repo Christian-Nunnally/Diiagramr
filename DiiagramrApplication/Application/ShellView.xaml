@@ -16,6 +16,7 @@
     MinWidth="400"
     MinHeight="200"
     SnapsToDevicePixels="True"
+    PreviewKeyDown="{s:Action PreviewKeyDown}"
     UseLayoutRounding="True">
     <Window.Resources>
         <ResourceDictionary>

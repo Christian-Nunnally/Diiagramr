@@ -7,18 +7,14 @@ namespace DiiagramrAPI.Application.ShellCommands
     {
         public abstract string Name { get; }
 
-        public virtual string Parent => null;
-
         public IList<IShellCommand> SubCommandItems { get; } = new List<IShellCommand>();
 
-        public virtual float Weight => 0f;
-
-        public bool LastCanExecute { get; set; }
+        public bool CachedCanExecute { get; set; }
 
         public bool CanExecute()
         {
-            LastCanExecute = CanExecuteInternal();
-            return LastCanExecute;
+            CachedCanExecute = CanExecuteInternal();
+            return CachedCanExecute;
         }
 
         public void Execute(object parameter)

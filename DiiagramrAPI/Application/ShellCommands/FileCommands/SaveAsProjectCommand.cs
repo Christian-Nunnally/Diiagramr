@@ -1,26 +1,42 @@
 ﻿using DiiagramrAPI.Project;
 using System;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
-    public class SaveAsProjectCommand : ToolBarCommand
+    public class SaveAsProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
         private readonly IProjectManager _projectManager;
+        private readonly IProjectFileService _projectFileService;
 
-        public SaveAsProjectCommand(Func<IProjectManager> projectManagerFactory)
+        public SaveAsProjectCommand(
+            Func<IProjectManager> projectManagerFactory,
+            Func<IProjectFileService> projectFileServiceFactory)
         {
             _projectManager = projectManagerFactory();
+            _projectFileService = projectFileServiceFactory();
         }
 
         public override string Name => "Save As...";
 
-        public override string Parent => "Project";
+        public string ParentName => "Project";
 
-        public override float Weight => .5f;
+        public float Weight => .5f;
+
+        public Key Hotkey => Key.S;
+
+        public bool RequiresCtrlModifierKey => true;
+
+        public bool RequiresShiftModifierKey => true;
+
+        public bool RequiresAltModifierKey => false;
 
         protected override void ExecuteInternal(object parameter)
         {
-            _projectManager.SaveAsProject();
+            if (_projectManager.Project != null)
+            {
+                _projectFileService.SaveProject(_projectManager.Project, saveAs: true, () => { });
+            }
         }
 
         protected override bool CanExecuteInternal()
