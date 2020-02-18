@@ -15,6 +15,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private readonly SolidColorBrush _ghostWireBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, 128, 128, 128));
         private readonly ITransactor _transactor;
         private int _leftMouseDownCount;
+        private TerminalModel _previewTerminal;
         private Wire _previewWire;
         private Terminal _wiringTerminal;
 
@@ -162,8 +163,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void SetPreviewWireEndPosition(Diagram diagram, Point mousePosition)
         {
-            _previewWire.WireModel.X2 = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
-            _previewWire.WireModel.Y2 = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
+            _previewTerminal.OffsetX = diagram.GetDiagramPointFromViewPointX(mousePosition.X);
+            _previewTerminal.OffsetY = diagram.GetDiagramPointFromViewPointY(mousePosition.Y);
         }
 
         private void ShowDirectEditTextboxOnTerminal(Diagram diagram, Terminal terminal)
@@ -185,10 +186,11 @@ namespace DiiagramrAPI.Editor.Interactors
             var x1 = terminal.TerminalModel.X;
             var y1 = terminal.TerminalModel.Y;
             terminal.SetAdorner(null);
-            _previewWire = new Wire(terminal, x1, y1)
-            {
-                LineColorBrush = _ghostWireBrush,
-            };
+
+            _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.TerminalModel.DefaultSide.Opposite());
+            _previewTerminal.OffsetX = x1;
+            _previewTerminal.OffsetY = y1;
+            _previewWire = new Wire(new WireModel() { SinkTerminal = _previewTerminal, SourceTerminal = terminal.TerminalModel });
             diagram.AddWire(_previewWire);
         }
 
@@ -199,6 +201,7 @@ namespace DiiagramrAPI.Editor.Interactors
             diagram.UnhighlightTerminals();
             diagram.UnselectTerminals();
             _previewWire = null;
+            _previewTerminal = null;
             _wiringTerminal = null;
         }
 

@@ -88,34 +88,6 @@ namespace DiiagramrModel
         public int TerminalIndex { get; set; }
 
         /// <summary>
-        /// Gets or sets the minimum distance the wire needs to extend down from this terminal to clear the parent node bounds in case the wire needs to route around the node.
-        /// </summary>
-        // todo: These do no belong on the model
-        [DataMember]
-        public double TerminalDownWireMinimumLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum distance the wire needs to extend left from this terminal to clear the parent node bounds in case the wire needs to route around the node.
-        /// </summary>
-        // todo: These do no belong on the model
-        [DataMember]
-        public double TerminalLeftWireMinimumLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum distance the wire needs to extend right from this terminal to clear the parent node bounds in case the wire needs to route around the node.
-        /// </summary>
-        // todo: These do no belong on the model
-        [DataMember]
-        public double TerminalRightWireMinimumLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum distance the wire needs to extend up from this terminal to clear the parent node bounds in case the wire needs to route around the node.
-        /// </summary>
-        // todo: These do no belong on the model
-        [DataMember]
-        public double TerminalUpWireMinimumLength { get; set; }
-
-        /// <summary>
         /// Gets or sets the data type of the terminal.
         /// </summary>
         [IgnoreDataMember]

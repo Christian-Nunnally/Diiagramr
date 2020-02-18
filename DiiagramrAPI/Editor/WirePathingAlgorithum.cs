@@ -18,31 +18,31 @@ namespace DiiagramrAPI.Editor
             _wire = wire;
         }
 
-        public Terminal FallbackSinkTerminal { get; internal set; }
-        public Terminal FallbackSourceTerminal { get; internal set; }
         private TerminalModel SinkTerminal => WireModel?.SinkTerminal;
+
         private TerminalModel SourceTerminal => WireModel?.SourceTerminal;
+
         private WireModel WireModel => _wire?.WireModel;
-        private double DownUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalDownWireMinimumLength : 0;
 
-        private double DownUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalDownWireMinimumLength : (FallbackSinkTerminal?.TerminalDownWireMinimumLength ?? (FallbackSourceTerminal?.TerminalDownWireMinimumLength ?? 0));
+        private double DownUTurnLengthSink { get; set; }
 
-        private double LeftUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalLeftWireMinimumLength : 0;
+        private double DownUTurnLengthSource { get; set; }
 
-        private double LeftUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalLeftWireMinimumLength : (FallbackSinkTerminal?.TerminalLeftWireMinimumLength ?? (FallbackSourceTerminal?.TerminalLeftWireMinimumLength ?? 0));
+        private double LeftUTurnLengthSink { get; set; }
 
-        private double RightUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalRightWireMinimumLength : 0;
+        private double LeftUTurnLengthSource { get; set; }
 
-        private double RightUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalRightWireMinimumLength : (FallbackSinkTerminal?.TerminalRightWireMinimumLength ?? (FallbackSourceTerminal?.TerminalRightWireMinimumLength ?? 0));
+        private double RightUTurnLengthSink { get; set; }
 
-        private double UpUTurnLengthSink => AreTerminalsNotNull ? SinkTerminal.TerminalUpWireMinimumLength : 0;
+        private double RightUTurnLengthSource { get; set; }
 
-        private double UpUTurnLengthSource => AreTerminalsNotNull ? SourceTerminal.TerminalUpWireMinimumLength : (FallbackSinkTerminal?.TerminalUpWireMinimumLength ?? (FallbackSourceTerminal?.TerminalUpWireMinimumLength ?? 0));
+        private double UpUTurnLengthSink { get; set; }
 
-        private bool AreTerminalsNotNull => WireModel != null && SourceTerminal != null && SinkTerminal != null;
+        private double UpUTurnLengthSource { get; set; }
 
         public Point[] GetWirePoints(double x1, double y1, double x2, double y2, Direction startTerminalDefaultDirection, Direction endTerminalDefaultDirection)
         {
+            InitializeUTurnLengths();
             var start = new Point(x1, y1);
             var end = new Point(x2, y2);
             var sinkTerminalSide = SinkTerminal?.DefaultSide ?? startTerminalDefaultDirection.Opposite();
@@ -106,6 +106,73 @@ namespace DiiagramrAPI.Editor
                 case Direction.None:
                 default:
                     return new Point(p.X, p.Y);
+            }
+        }
+
+        private (double DownWireMinimumLength, double LeftWireMinimumLength, double RightWireMinimumLength, double UpWireMinimumLength) CalculateUTurnLimitsForTerminal(TerminalModel terminal)
+        {
+            const double marginFromEdgeOfNode = Diagram.NodeBorderWidth + 10.0;
+            const double halfTerminalHeight = Terminal.TerminalHeight / 2.0;
+            var nodeHeight = terminal.ParentNode?.Height ?? 0;
+            var nodeWidth = terminal.ParentNode?.Width ?? 0;
+            var offsetX = terminal.OffsetX;
+            var offsetY = terminal.OffsetY;
+            var terminalDirection = terminal.DefaultSide;
+            double terminalUpWireMinimumLength = 0;
+            double terminalDownWireMinimumLength = 0;
+            double terminalLeftWireMinimumLength = 0;
+            double terminalRightWireMinimumLength = 0;
+            if (terminalDirection == Direction.North)
+            {
+                terminalUpWireMinimumLength = marginFromEdgeOfNode;
+                terminalDownWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeHeight;
+                terminalLeftWireMinimumLength = marginFromEdgeOfNode + offsetX - halfTerminalHeight;
+                terminalRightWireMinimumLength = marginFromEdgeOfNode + (nodeWidth - offsetX) + halfTerminalHeight;
+            }
+            else if (terminalDirection == Direction.South)
+            {
+                terminalUpWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeHeight;
+                terminalDownWireMinimumLength = marginFromEdgeOfNode;
+                terminalLeftWireMinimumLength = marginFromEdgeOfNode + offsetX - halfTerminalHeight;
+                terminalRightWireMinimumLength = marginFromEdgeOfNode + (nodeWidth - offsetX) + halfTerminalHeight;
+            }
+            else if (terminalDirection == Direction.East)
+            {
+                terminalUpWireMinimumLength = marginFromEdgeOfNode + offsetY - halfTerminalHeight;
+                terminalDownWireMinimumLength = marginFromEdgeOfNode + (nodeHeight - offsetY) + halfTerminalHeight;
+                terminalLeftWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeWidth;
+                terminalRightWireMinimumLength = marginFromEdgeOfNode;
+            }
+            else if (terminalDirection == Direction.West)
+            {
+                terminalUpWireMinimumLength = marginFromEdgeOfNode + offsetY - halfTerminalHeight;
+                terminalDownWireMinimumLength = marginFromEdgeOfNode + (nodeHeight - offsetY) + halfTerminalHeight;
+                terminalLeftWireMinimumLength = marginFromEdgeOfNode;
+                terminalRightWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeWidth;
+            }
+            return (terminalDownWireMinimumLength, terminalLeftWireMinimumLength, terminalRightWireMinimumLength, terminalUpWireMinimumLength);
+        }
+
+        private void InitializeUTurnLengths()
+        {
+            if (_wire.WireModel != null)
+            {
+                if (_wire.WireModel.SourceTerminal != null)
+                {
+                    var (DownWireMinimumLength, LeftWireMinimumLength, RightWireMinimumLength, UpWireMinimumLength) = CalculateUTurnLimitsForTerminal(_wire.WireModel.SourceTerminal);
+                    DownUTurnLengthSource = DownWireMinimumLength;
+                    LeftUTurnLengthSource = LeftWireMinimumLength;
+                    RightUTurnLengthSource = RightWireMinimumLength;
+                    UpUTurnLengthSource = UpWireMinimumLength;
+                }
+                if (_wire.WireModel.SinkTerminal != null)
+                {
+                    var (DownWireMinimumLength, LeftWireMinimumLength, RightWireMinimumLength, UpWireMinimumLength) = CalculateUTurnLimitsForTerminal(_wire.WireModel.SinkTerminal);
+                    DownUTurnLengthSink = DownWireMinimumLength;
+                    LeftUTurnLengthSink = LeftWireMinimumLength;
+                    RightUTurnLengthSink = RightWireMinimumLength;
+                    UpUTurnLengthSink = UpWireMinimumLength;
+                }
             }
         }
 

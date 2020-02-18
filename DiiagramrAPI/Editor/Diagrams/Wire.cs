@@ -38,26 +38,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             LineColorBrush = GetWireBrush();
         }
 
-        public Wire(Terminal startTerminal, double x1, double y1)
-        {
-            WireModel = new WireModel()
-            {
-                X1 = x1,
-                X2 = startTerminal?.TerminalModel.X ?? throw new ArgumentNullException(nameof(startTerminal)),
-                Y1 = y1,
-                Y2 = startTerminal.TerminalModel.Y,
-            };
-            BannedDirectionForEnd = startTerminal.TerminalModel.DefaultSide.Opposite();
-            BannedDirectionForStart = Direction.None;
-            _wirePathingAlgorithum = new WirePathingAlgorithum(this)
-            {
-                FallbackSourceTerminal = startTerminal.TerminalModel is InputTerminalModel ? startTerminal : null,
-                FallbackSinkTerminal = startTerminal.TerminalModel is OutputTerminalModel ? startTerminal : null
-            };
-            LineColorBrush = new SolidColorBrush(Colors.White);
-        }
-
         public string WirePropagationVisualNumberString { get; set; }
+
         public Direction BannedDirectionForEnd { get; set; }
 
         public Direction BannedDirectionForStart { get; set; }

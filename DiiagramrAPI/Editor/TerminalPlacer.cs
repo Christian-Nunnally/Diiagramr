@@ -1,5 +1,4 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
-using DiiagramrCore;
 using DiiagramrModel;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +22,6 @@ namespace DiiagramrAPI.Editor
             ArrangeAllTerminalsOnEdge(Direction.East, terminals);
             ArrangeAllTerminalsOnEdge(Direction.South, terminals);
             ArrangeAllTerminalsOnEdge(Direction.West, terminals);
-            terminals.ForEach(t => t.CalculateUTurnLimitsForTerminal(_nodeWidth, _nodeHeight));
         }
 
         private void PlaceTerminalOnEdge(Terminal terminal, Direction edge, double precentAlongEdge)

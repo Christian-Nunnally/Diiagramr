@@ -13,7 +13,7 @@ namespace DiiagramrFadeCandy
 
         public System.Drawing.Color GetTypeColor()
         {
-            return System.Drawing.Color.FromArgb(255, 85, 85, 150);
+            return System.Drawing.Color.FromArgb(255, 99, 77, 99);
         }
     }
 }

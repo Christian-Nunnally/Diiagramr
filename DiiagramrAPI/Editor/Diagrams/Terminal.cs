@@ -64,31 +64,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public SolidColorBrush TerminalBackgroundMouseOverBrush { get; set; }
 
-        public double TerminalDownWireMinimumLength
-        {
-            get => TerminalModel.TerminalDownWireMinimumLength;
-            set => TerminalModel.TerminalDownWireMinimumLength = value;
-        }
-
-        public double TerminalLeftWireMinimumLength
-        {
-            get => TerminalModel.TerminalLeftWireMinimumLength;
-            set => TerminalModel.TerminalLeftWireMinimumLength = value;
-        }
-
-        public double TerminalRightWireMinimumLength
-        {
-            get => TerminalModel.TerminalRightWireMinimumLength;
-            set => TerminalModel.TerminalRightWireMinimumLength = value;
-        }
-
         public float TerminalRotation { get; set; }
-
-        public double TerminalUpWireMinimumLength
-        {
-            get => TerminalModel.TerminalUpWireMinimumLength;
-            set => TerminalModel.TerminalUpWireMinimumLength = value;
-        }
 
         public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
 
@@ -111,44 +87,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             return terminal is InputTerminalModel inputTerminalModel
                 ? (Terminal)new InputTerminal(inputTerminalModel)
                 : new OutputTerminal((OutputTerminalModel)terminal);
-        }
-
-        public void CalculateUTurnLimitsForTerminal(double nodeWidth, double nodeHeight)
-        {
-            const double marginFromEdgeOfNode = Diagram.NodeBorderWidth + 10;
-            var offsetX = TerminalModel.OffsetX;
-            var offsetY = TerminalModel.OffsetY;
-            var halfTerminalHeight = (TerminalHeight / 2);
-            var terminalDirection = TerminalModel.DefaultSide;
-
-            if (terminalDirection == Direction.North)
-            {
-                TerminalUpWireMinimumLength = 0;
-                TerminalDownWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeHeight;
-                TerminalLeftWireMinimumLength = marginFromEdgeOfNode + offsetX - halfTerminalHeight;
-                TerminalRightWireMinimumLength = marginFromEdgeOfNode + (nodeWidth - offsetX) + halfTerminalHeight;
-            }
-            else if (terminalDirection == Direction.South)
-            {
-                TerminalUpWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeHeight;
-                TerminalDownWireMinimumLength = marginFromEdgeOfNode + 0;
-                TerminalLeftWireMinimumLength = marginFromEdgeOfNode + offsetX - halfTerminalHeight;
-                TerminalRightWireMinimumLength = marginFromEdgeOfNode + (nodeWidth - offsetX) + halfTerminalHeight;
-            }
-            else if (terminalDirection == Direction.East)
-            {
-                TerminalUpWireMinimumLength = marginFromEdgeOfNode + offsetY - halfTerminalHeight;
-                TerminalDownWireMinimumLength = marginFromEdgeOfNode + (nodeHeight - offsetY) + halfTerminalHeight;
-                TerminalLeftWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeWidth;
-                TerminalRightWireMinimumLength = marginFromEdgeOfNode + 0;
-            }
-            else if (terminalDirection == Direction.West)
-            {
-                TerminalUpWireMinimumLength = marginFromEdgeOfNode + offsetY - halfTerminalHeight;
-                TerminalDownWireMinimumLength = marginFromEdgeOfNode + (nodeHeight - offsetY) + halfTerminalHeight;
-                TerminalLeftWireMinimumLength = marginFromEdgeOfNode + 0;
-                TerminalRightWireMinimumLength = marginFromEdgeOfNode + marginFromEdgeOfNode + nodeWidth;
-            }
         }
 
         public void MouseEntered()

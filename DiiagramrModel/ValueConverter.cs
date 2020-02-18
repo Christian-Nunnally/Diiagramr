@@ -61,7 +61,10 @@ namespace DiiagramrModel
                 {
                     if (value != null)
                     {
-                        AddToKnownFailedConversionsMap(toType, fromType);
+                        if (fromType != typeof(object) && !(fromType.IsArray && fromType.GetElementType() == typeof(object)))
+                        {
+                            AddToKnownFailedConversionsMap(toType, fromType);
+                        }
                     }
                 }
             }

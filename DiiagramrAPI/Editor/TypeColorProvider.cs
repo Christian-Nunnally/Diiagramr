@@ -12,13 +12,19 @@ namespace DiiagramrAPI.Editor
 
         private TypeColorProvider()
         {
-            RegisterColorForType(typeof(int), Color.FromArgb(255, 39, 116, 85));
+            RegisterColorForType(typeof(int), Color.FromArgb(255, 45, 110, 100));
             RegisterColorForType(typeof(float), Color.FromArgb(255, 45, 110, 100));
-            RegisterColorForType(typeof(byte[]), Color.FromArgb(255, 170, 122, 57));
+            RegisterColorForType(typeof(double), Color.FromArgb(255, 45, 110, 100));
+            RegisterColorForType(typeof(byte), Color.FromArgb(255, 45, 110, 100));
+
+            RegisterColorForType(typeof(int[]), ColorTranslator.FromHtml("#545893"));
+            RegisterColorForType(typeof(float[]), ColorTranslator.FromHtml("#545893"));
+            RegisterColorForType(typeof(double[]), ColorTranslator.FromHtml("#545893"));
+            RegisterColorForType(typeof(byte[]), ColorTranslator.FromHtml("#545893"));
+
             RegisterColorForType(typeof(string), Color.FromArgb(255, 153, 51, 80));
             RegisterColorForType(typeof(bool), Color.FromArgb(255, 200, 51, 80));
             RegisterColorForType(typeof(object), Color.FromArgb(255, 155, 155, 155));
-            RegisterColorForType(typeof(float[]), ColorTranslator.FromHtml("#545893"));
         }
 
         public Color GetColorForType(Type type)
