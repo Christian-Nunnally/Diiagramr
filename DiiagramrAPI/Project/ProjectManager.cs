@@ -3,10 +3,9 @@ using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Service.Plugins;
-using DiiagramrCore;
 using DiiagramrModel;
+using Stylet;
 using System;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -36,18 +35,17 @@ namespace DiiagramrAPI.Project
             _nodeServiceProvider.RegisterService<IProjectManager>(this);
         }
 
+        public IObservableCollection<Diagram> Diagrams { get; set; }
+
         public ProjectModel Project
         {
             get => project;
             set
             {
                 project = value;
-                Diagrams.Clear();
-                Project?.Diagrams?.ForEach(CreateDiagramViewModel);
+                Diagrams = new ViewModelCollection<Diagram, DiagramModel>(Project, () => Project?.Diagrams, _diagramFactory.CreateDiagramViewModel);
             }
         }
-
-        public ObservableCollection<Diagram> Diagrams { get; } = new ObservableCollection<Diagram>();
 
         public void CloseProject(Action continuation)
         {
@@ -66,12 +64,7 @@ namespace DiiagramrAPI.Project
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
         }
 
-        public void CreateDiagram()
-        {
-            CreateDiagram(new DiagramModel());
-        }
-
-        public void CreateDiagram(DiagramModel diagram)
+        public void InsertDiagram(DiagramModel diagram)
         {
             if (Project == null)
             {
@@ -91,7 +84,6 @@ namespace DiiagramrAPI.Project
             }
 
             diagram.Name = diagramName + diagramNumber;
-            CreateDiagramViewModel(diagram);
             Project.AddDiagram(diagram);
         }
 
@@ -114,14 +106,9 @@ namespace DiiagramrAPI.Project
             }
         }
 
-        public void DeleteDiagram(DiagramModel diagram)
+        public void RemoveDiagram(DiagramModel diagram)
         {
             Project.RemoveDiagram(diagram);
-            var diagramViewModel = Diagrams.FirstOrDefault(m => m.DiagramModel == diagram);
-            if (diagramViewModel != null)
-            {
-                Diagrams.Remove(diagramViewModel);
-            }
         }
 
         public void SetProject(ProjectModel project, bool autoOpenDiagram = false)
@@ -141,7 +128,7 @@ namespace DiiagramrAPI.Project
                 Project = project;
                 if (autoOpenDiagram && !project.Diagrams.Any())
                 {
-                    CreateDiagram();
+                    InsertDiagram(new DiagramModel());
                 }
             }
             catch (Exception)
@@ -156,12 +143,6 @@ namespace DiiagramrAPI.Project
                 // TODO: Catch specific types of exceptions.
                 throw;
             }
-        }
-
-        private void CreateDiagramViewModel(DiagramModel diagram)
-        {
-            var diagramViewModel = _diagramFactory.CreateDiagramViewModel(diagram);
-            Diagrams.Add(diagramViewModel);
         }
 
         private async Task DownloadProjectDependencies()

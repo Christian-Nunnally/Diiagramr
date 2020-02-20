@@ -85,7 +85,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                 if (DiagramName == null)
                 {
                     var diagramModel = new DiagramModel() { Name = "DiagramNodeDiagram" };
-                    projectManager.CreateDiagram(diagramModel);
+                    projectManager.InsertDiagram(diagramModel);
                     DiagramName = diagramModel.Name;
                 }
                 if (!IsResolved)

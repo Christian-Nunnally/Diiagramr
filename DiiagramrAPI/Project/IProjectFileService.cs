@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Project
         string ProjectDirectory { get; set; }
 
         /// <summary>
-        /// Loads the project.
+        /// Loads the project using a continuation if user input is required.
         /// </summary>
         /// <returns>The loaded project.</returns>
         void LoadProject(Action<ProjectModel> continuation);
@@ -24,7 +24,7 @@ namespace DiiagramrAPI.Project
         ProjectModel LoadProject(string path);
 
         /// <summary>
-        /// Saves the project.
+        /// Saves the project using a continuation if user input is required.
         /// </summary>
         /// <param name="project">The project.</param>
         /// <param name="saveAs">Whether this should be saved with saveAs.</param>

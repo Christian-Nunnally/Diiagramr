@@ -27,15 +27,7 @@ namespace DiiagramrAPI.Service.IO
 
         public bool Exists(string path)
         {
-            try
-            {
-                return Directory.Exists(path);
-            }
-            catch (Exception)
-            {
-                // TODO: catch more specific exception.
-                throw;
-            }
+            return Directory.Exists(path);
         }
 
         public void ExtractToDirectory(string from, string to)
@@ -54,9 +46,15 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetDirectories(path).ToList();
             }
-            catch (Exception)
+            catch (Exception e) when (
+                e is ArgumentException
+                || e is ArgumentNullException
+                || e is ArgumentOutOfRangeException
+                || e is UnauthorizedAccessException
+                || e is PathTooLongException
+                || e is IOException
+                || e is DirectoryNotFoundException)
             {
-                // TODO: Handle specific exception
                 throw;
             }
         }
@@ -72,12 +70,16 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetFiles(path, searchPattern, searchOption).ToList();
             }
-            catch (Exception)
+            catch (Exception e) when (
+                e is ArgumentException
+                || e is ArgumentNullException
+                || e is IOException
+                || e is UnauthorizedAccessException
+                || e is PathTooLongException
+                || e is IOException
+                || e is DirectoryNotFoundException)
             {
                 return new List<string>();
-
-                // TODO: Handle specific exception
-                throw;
             }
         }
 
@@ -87,12 +89,16 @@ namespace DiiagramrAPI.Service.IO
             {
                 return Directory.GetFiles(path, searchPattern).ToList();
             }
-            catch (Exception)
+            catch (Exception e) when (
+                e is ArgumentException
+                || e is ArgumentNullException
+                || e is IOException
+                || e is UnauthorizedAccessException
+                || e is PathTooLongException
+                || e is IOException
+                || e is DirectoryNotFoundException)
             {
                 return new List<string>();
-
-                // TODO: Handle specific exception
-                throw;
             }
         }
 

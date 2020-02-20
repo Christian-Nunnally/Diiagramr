@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Project;
+using DiiagramrModel;
 using System;
 using System.Linq;
 using System.Windows.Input;
@@ -47,7 +48,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         {
             _projectManager.CreateProject(() =>
             {
-                _projectManager.CreateDiagram();
+                _projectManager.InsertDiagram(new DiagramModel());
                 _diagramWell.OpenDiagram(_projectManager.Diagrams.First());
                 _screenHost.ShowScreen(_projectScreen);
             });

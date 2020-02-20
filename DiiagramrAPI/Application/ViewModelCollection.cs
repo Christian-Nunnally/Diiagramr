@@ -24,6 +24,10 @@ namespace DiiagramrAPI.Application
             Func<ObservableCollection<TModel>> modelCollectionGetter,
             Func<TModel, TViewModel> viewModelFactory)
         {
+            if (collectionOwner == null)
+            {
+                return;
+            }
             ViewModels.CollectionChanged += ViewModelsCollectionChanged;
             collectionOwner.PropertyChanged += CollectionOwnerPropertyChanged;
             _modelCollectionGetter = modelCollectionGetter;

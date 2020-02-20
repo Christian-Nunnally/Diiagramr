@@ -26,10 +26,6 @@ namespace DiiagramrAPI.Application.ShellCommands
             {
                 ExecuteCommand(_commands[commandID], parameter);
             }
-            else
-            {
-                // TODO: Log that a command was executed that doesn't exist.
-            }
         }
 
         public void ExecuteCommand(string commandID)

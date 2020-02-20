@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Project
         {
         }
 
-        public ProjectModel Open(string fullPath)
+        public ProjectModel Load(string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), ModelBase.SerializeableTypes);
             using var stream = new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.Read);

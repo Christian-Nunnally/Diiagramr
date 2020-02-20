@@ -20,9 +20,11 @@ namespace DiiagramrAPI.Service.IO
             {
                 await Task.Run(() => _webClient.DownloadFile(new Uri(url), downloadToPath));
             }
-            catch (Exception)
+            catch (Exception e) when (
+                e is ArgumentNullException
+                || e is NotSupportedException
+                || e is WebException)
             {
-                // TODO: Handle specific exceptions.
                 throw;
             }
         }
@@ -41,9 +43,11 @@ namespace DiiagramrAPI.Service.IO
                 _currentlyFetching = true;
                 return await Task.Run(() => _webClient.DownloadString(url));
             }
-            catch (Exception)
+            catch (Exception e) when (
+                e is ArgumentNullException
+                || e is NotSupportedException
+                || e is WebException)
             {
-                // TODO: Handle specific exceptions.
                 throw;
             }
             finally

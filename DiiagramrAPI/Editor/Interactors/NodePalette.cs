@@ -1,3 +1,5 @@
+using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrCore;
@@ -18,12 +20,14 @@ namespace DiiagramrAPI.Editor.Interactors
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
         private readonly INodeProvider _nodeProvider;
+        private readonly DialogHost _dialogHost;
         private Diagram _diagram;
         private Func<Node, bool> filter = x => true;
 
-        public NodePalette(Func<INodeProvider> nodeProvider)
+        public NodePalette(Func<INodeProvider> nodeProviderFactory, Func<DialogHost> dialogHostFactory)
         {
-            _nodeProvider = nodeProvider();
+            _nodeProvider = nodeProviderFactory();
+            _dialogHost = dialogHostFactory();
             if (_nodeProvider is NodeProvider provider)
             {
                 provider.NodeRegistered += NodeProviderNodeRegistered;
@@ -298,11 +302,11 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 AddNode(node);
             }
-            // TODO: Catch more specific exception.
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)' --- Exception message: {e.Message}");
-                throw;
+                var exceptionMessage = $"Error in '{node.GetType().FullName}.InitializeWithNode(NodeModel node)'-- - Exception message: { e.Message }";
+                var messageBoxBuilder = new MessageBox.Builder("Error Adding Node", exceptionMessage).WithChoice("Ok", () => { });
+                _dialogHost.OpenDialog(messageBoxBuilder.Build());
             }
         }
     }

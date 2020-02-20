@@ -1,8 +1,8 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service;
 using DiiagramrModel;
+using Stylet;
 using System;
-using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Project
 {
@@ -10,17 +10,15 @@ namespace DiiagramrAPI.Project
     {
         ProjectModel Project { get; set; }
 
-        ObservableCollection<Diagram> Diagrams { get; }
+        IObservableCollection<Diagram> Diagrams { get; }
 
         void CloseProject(Action contiuation);
 
-        void CreateDiagram();
-
-        void CreateDiagram(DiagramModel diagram);
+        void InsertDiagram(DiagramModel diagram);
 
         void CreateProject(Action contiuation);
 
-        void DeleteDiagram(DiagramModel diagram);
+        void RemoveDiagram(DiagramModel diagram);
 
         void SetProject(ProjectModel project, bool autoOpenDiagram = false);
     }

@@ -28,19 +28,19 @@ namespace DiiagramrAPI.Project
             ActivateItem(diagram);
         }
 
-        public void ReadyDiagram(Diagram diagram)
-        {
-            diagram.ResetPanAndZoom();
-            diagram.View.Focus();
-            Keyboard.Focus(diagram.View);
-        }
-
         public void NavigateToDiagramClicked(object sender, MouseButtonEventArgs e)
         {
             var frameworkElement = sender as FrameworkElement;
             var dataContext = frameworkElement?.DataContext;
             var diagram = dataContext as Diagram;
             OpenDiagram(diagram);
+        }
+
+        private void ReadyDiagram(Diagram diagram)
+        {
+            diagram.ResetPanAndZoom();
+            diagram.View.Focus();
+            Keyboard.Focus(diagram.View);
         }
     }
 }

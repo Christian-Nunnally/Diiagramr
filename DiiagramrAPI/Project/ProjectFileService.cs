@@ -55,7 +55,7 @@ namespace DiiagramrAPI.Project
         {
             try
             {
-                var project = _loadSave.Open(path);
+                var project = _loadSave.Load(path);
                 SetProjectNameFromPath(project, path);
                 ThrowIfDuplicateAssemblies();
                 return project;

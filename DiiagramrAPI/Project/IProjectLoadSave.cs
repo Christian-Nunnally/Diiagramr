@@ -5,7 +5,7 @@ namespace DiiagramrAPI.Project
 {
     public interface IProjectLoadSave : ISingletonService
     {
-        ProjectModel Open(string fileName);
+        ProjectModel Load(string fileName);
 
         void Save(ProjectModel project, string fileName);
     }
