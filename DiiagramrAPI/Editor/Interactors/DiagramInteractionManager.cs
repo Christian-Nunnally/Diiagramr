@@ -121,9 +121,9 @@ namespace DiiagramrAPI.Editor.Interactors
             var didInteractionStop = activeInteractor.ShouldStopInteraction(interaction);
             if (didInteractionStop)
             {
-                activeInteractor.StopInteraction(interaction);
                 ActiveDiagramInteractors.Remove(activeInteractor);
                 ActiveDiagramInteractorNames.Remove(activeInteractor.GetType().Name);
+                activeInteractor.StopInteraction(interaction);
             }
 
             return didInteractionStop;

@@ -22,7 +22,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private readonly INodeProvider _nodeProvider;
         private readonly DialogHost _dialogHost;
         private Diagram _diagram;
-        private Func<Node, bool> filter = x => true;
+        private Func<Node, bool> _filter = x => true;
 
         public NodePalette(Func<INodeProvider> nodeProviderFactory, Func<DialogHost> dialogHostFactory)
         {
@@ -134,14 +134,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 Y = Math.Min(interaction.MousePosition.Y, availableHeight - NodeSelectorBottomMargin);
 
                 var viewModelUnderMouse = interaction.ViewModelUnderMouse;
-
-                if (viewModelUnderMouse is Terminal terminal)
-                {
-                    if (terminal.TerminalModel.DefaultSide != Direction.West)
-                    {
-                        X += Terminal.TerminalHeight;
-                    }
-                }
+                OffsetPaletteIfClickingOnTerminal(viewModelUnderMouse);
 
                 ShowWithContextFilter(viewModelUnderMouse);
             }
@@ -165,7 +158,7 @@ namespace DiiagramrAPI.Editor.Interactors
         public void ShowLibrary(NodePaletteLibrary library)
         {
             VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(library.Nodes.Where(filter).OrderBy(n => n.Weight));
+            VisibleNodesList.AddRange(library.Nodes.Where(_filter).OrderBy(n => n.Weight));
             VisibleLibrariesList.ForEach(l => l.UnselectLibraryItem());
             library.SelectLibraryItem();
             MousedOverNode = null;
@@ -180,6 +173,17 @@ namespace DiiagramrAPI.Editor.Interactors
             if (ContextTerminal != null)
             {
                 ContextTerminal.HighlightVisible = false;
+            }
+        }
+
+        private void OffsetPaletteIfClickingOnTerminal(Screen viewModelUnderMouse)
+        {
+            if (viewModelUnderMouse is Terminal terminal)
+            {
+                if (terminal.TerminalModel.DefaultSide != Direction.West)
+                {
+                    X += Terminal.TerminalHeight;
+                }
             }
         }
 
@@ -266,7 +270,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void Show(Func<Node, bool> filter)
         {
-            this.filter = filter;
+            _filter = filter;
             VisibleLibrariesList.Clear();
             VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
         }

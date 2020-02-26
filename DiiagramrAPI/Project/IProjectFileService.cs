@@ -27,7 +27,7 @@ namespace DiiagramrAPI.Project
         /// Saves the project using a continuation if user input is required.
         /// </summary>
         /// <param name="project">The project.</param>
-        /// <param name="saveAs">Whether this should be saved with saveAs.</param>
+        /// <param name="saveAs">Whether the user should be prompted for a project name.</param>
         void SaveProject(ProjectModel project, bool saveAs, Action continuation);
     }
 }

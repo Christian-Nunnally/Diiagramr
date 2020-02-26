@@ -8,9 +8,9 @@ namespace DiiagramrAPI.Editor
 {
     public class TerminalToolTipAdorner : Adorner
     {
-        private readonly double marginAroundLabel = 4.0;
+        private readonly double marginAroundLabel = 3.0;
         private readonly Border border;
-        private readonly TextBlock label;
+        private readonly TextBlock textBlock;
         private readonly VisualCollection visualChildren;
 
         public TerminalToolTipAdorner(UIElement adornedElement, Terminal adornedTerminal)
@@ -27,29 +27,32 @@ namespace DiiagramrAPI.Editor
                 ? AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString()
                 : AdornedTerminal.Name;
 
-            label = new TextBlock
+            textBlock = new TextBlock
             {
-                IsHitTestVisible = false,
                 Text = text,
+                FontSize = 10,
                 Margin = new Thickness(0),
-                FontSize = 12,
                 FontWeight = FontWeights.Bold,
-                LineStackingStrategy = LineStackingStrategy.MaxHeight,
-                HorizontalAlignment = HorizontalAlignment.Center,
+                FontFamily = new FontFamily("Verdana"),
                 VerticalAlignment = VerticalAlignment.Center,
+                HorizontalAlignment = HorizontalAlignment.Center,
+                LineStackingStrategy = LineStackingStrategy.MaxHeight,
+                Background = new SolidColorBrush(Color.FromRgb(35, 35, 35)),
+                Foreground = new SolidColorBrush(Color.FromRgb(178, 178, 178)),
             };
-            label.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            textBlock.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
             border = new Border
             {
+                Child = textBlock,
                 IsHitTestVisible = false,
-                Background = Brushes.AliceBlue,
-                BorderThickness = new Thickness(1),
-                BorderBrush = Brushes.Gray,
                 Padding = new Thickness(0),
+                BorderThickness = new Thickness(1),
+                CornerRadius = new CornerRadius(1),
+                Background = new SolidColorBrush(Color.FromRgb(35, 35, 35)),
+                BorderBrush = new SolidColorBrush(Color.FromRgb(35, 35, 35)),
+                Width = textBlock.DesiredSize.Width + marginAroundLabel * 2,
                 MaxWidth = 200,
-                Child = label,
-                Width = label.DesiredSize.Width + marginAroundLabel * 2,
-                Height = label.DesiredSize.Height + marginAroundLabel * 2,
+                Height = textBlock.DesiredSize.Height + marginAroundLabel * 2,
             };
             visualChildren.Add(border);
         }

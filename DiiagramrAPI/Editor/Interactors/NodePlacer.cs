@@ -14,6 +14,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public NodePlacer(Func<ITransactor> transactorFactory)
         {
+            Weight = 1.0f;
             _transactor = transactorFactory.Invoke();
         }
 
