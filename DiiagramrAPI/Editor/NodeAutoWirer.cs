@@ -11,21 +11,22 @@ namespace DiiagramrAPI.Editor
     {
         public void AutoWireNodes(Diagram diagram, IList<Node> nodesToWire)
         {
-            for (int i = 0; i < nodesToWire.Count - 1; i++)
+            var topToBottomNodes = nodesToWire.OrderBy(n => n.Y).ToList();
+            for (int i = 0; i < topToBottomNodes.Count - 1; i++)
             {
-                for (int j = i + 1; j < nodesToWire.Count; j++)
+                AutoWireNodes(diagram, topToBottomNodes[i], topToBottomNodes[i + 1]);
+            }
+        }
+
+        public void AutoWireNodes(Diagram diagram, Node firstNode, Node secondNode)
+        {
+            foreach (var terminal in firstNode.Terminals)
+            {
+                if (!terminal.IsConnected)
                 {
-                    var firstNode = nodesToWire[i];
-                    var secondNode = nodesToWire[j];
-                    foreach (var terminal in firstNode.Terminals)
+                    if (TryAutoWireTerminals(diagram, terminal, secondNode))
                     {
-                        if (!terminal.IsConnected)
-                        {
-                            if (TryAutoWireTerminals(diagram, terminal, secondNode))
-                            {
-                                break;
-                            }
-                        }
+                        break;
                     }
                 }
             }
