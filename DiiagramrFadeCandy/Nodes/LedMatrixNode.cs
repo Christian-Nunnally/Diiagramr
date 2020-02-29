@@ -6,7 +6,6 @@ using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
-using System;
 using System.Collections.ObjectModel;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -240,12 +239,8 @@ namespace DiiagramrFadeCandy
         {
             if (View != null)
             {
-                Bitmap bitmap = CopyWicBitmapToBitmap();
-                View.Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Normal, new Action(() =>
-                {
-                    BitmapImageSource = ConvertBitmapToSource(bitmap);
-                    bitmap.Dispose();
-                }));
+                using Bitmap bitmap = CopyWicBitmapToBitmap();
+                BitmapImageSource = ConvertBitmapToSource(bitmap);
             }
         }
 
