@@ -1,7 +1,9 @@
+using DiiagramrAPI.Application.ShellCommands;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
 using Stylet;
+using StyletIoC;
 using System;
 using System.ComponentModel;
 using System.Reflection;
@@ -11,22 +13,31 @@ namespace DiiagramrAPI.Application
 {
     public class Shell : Screen
     {
-        public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
-        public const string StartCommandId = "start";
+        private readonly IHotkeyCommander _hotkeyCommander;
 
+        /// <summary>
+        /// The core class of the UI. Hosts everything inside the application.
+        /// </summary>
+        /// <param name="startCommandFactory">Factory for a command that will perform the appropriate actions to initialize the application after the empty shell has loaded.</param>
+        /// <param name="hotkeyCommanderFactory">Factory for a hotkey commander capable of intercepting global hotkey presses made inside the shell.</param>
+        /// <param name="contextMenuFactory">Factory for the context menu the shell provides.</param>
+        /// <param name="screenHostFactory">Factory for the host for all screens shown in the shell.</param>
+        /// <param name="dialogHostFactory">Factory for the host for all dialogs shown in the shell.</param>
+        /// <param name="toolbarFactory">Factory for the command toolbar at the top of the shell.</param>
         public Shell(
-            Func<IProjectManager> projectManagerFactory,
+            [Inject(Key = "startCommand")] Func<ShellCommandBase> startCommandFactory,
+            Func<IHotkeyCommander> hotkeyCommanderFactory,
             Func<ContextMenu> contextMenuFactory,
             Func<ScreenHost> screenHostFactory,
             Func<DialogHost> dialogHostFactory,
             Func<Toolbar> toolbarFactory)
         {
-            ProjectManager = projectManagerFactory();
+            _hotkeyCommander = hotkeyCommanderFactory();
             ContextMenu = contextMenuFactory();
             ScreenHost = screenHostFactory();
             DialogHost = dialogHostFactory();
             Toolbar = toolbarFactory();
-            CommandExecutor.Execute("start:" + StartCommandId);
+            startCommandFactory().Execute();
         }
 
         public double Width { get; set; } = 1010;
@@ -51,33 +62,28 @@ namespace DiiagramrAPI.Application
             {
                 return;
             }
-            ProjectManager.CloseProject(() =>
-            {
-                if (Parent != null)
-                {
-                    base.RequestClose(dialogResult);
-                }
-            });
+            TryCloseShell();
         }
 
         public void WindowClosing(object sender, CancelEventArgs e)
         {
-            ProjectManager.CloseProject(() =>
-            {
-                RequestClose(true);
-                ScreenHost.CloseCurrentScreens();
-                BackgroundTaskManager.Instance.CancelAllTasks();
-                System.Windows.Application.Current.Shutdown();
-            });
-            e.Cancel = true;
+            e.Cancel = !TryCloseShell();
         }
 
         public void PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            var isShiftPressed = Keyboard.IsKeyDown(Key.RightShift) || Keyboard.IsKeyDown(Key.LeftShift);
-            var isCtrlPressed = Keyboard.IsKeyDown(Key.RightCtrl) || Keyboard.IsKeyDown(Key.LeftCtrl);
-            var isAltPressed = Keyboard.IsKeyDown(Key.RightAlt) || Keyboard.IsKeyDown(Key.LeftAlt);
-            e.Handled = Toolbar.HandleHotkeyPress(isCtrlPressed, isShiftPressed, isAltPressed, e.Key);
+            e.Handled = _hotkeyCommander.HandleHotkeyPress(e.Key);
+        }
+
+        private bool TryCloseShell()
+        {
+            ScreenHost.InteractivelyCloseAllScreens(() =>
+            {
+                RequestClose(true);
+                BackgroundTaskManager.Instance.CancelAllTasks();
+                View?.Dispatcher.Invoke(System.Windows.Application.Current.Shutdown);
+            });
+            return false;
         }
     }
 }

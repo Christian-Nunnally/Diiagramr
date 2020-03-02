@@ -8,6 +8,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
+    /// <summary>
+    /// A context menu that behaves like most context menus.
+    /// </summary>
     public class ContextMenu : Screen
     {
         public ContextMenu()
@@ -32,7 +35,7 @@ namespace DiiagramrAPI.Application.Tools
             if (control?.DataContext is ShellCommandBase command)
             {
                 Visible = false;
-                CommandExecutor.Execute(command);
+                command.Execute();
             }
         }
 

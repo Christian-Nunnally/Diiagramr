@@ -1,8 +1,9 @@
-﻿using DiiagramrAPI.Service.Application;
+﻿using DiiagramrAPI.Service;
+using DiiagramrAPI.Service.Application;
 
 namespace DiiagramrAPI.Application.ShellCommands
 {
-    public interface IToolbarCommand
+    public interface IToolbarCommand : ISingletonService
     {
         string ParentName { get; }
 
@@ -13,10 +14,7 @@ namespace DiiagramrAPI.Application.ShellCommands
 
     public static class ToolBarCommandExtensions
     {
-        public static bool CanExecute(this IToolbarCommand toolbarCommand)
-        {
-            return toolbarCommand is IShellCommand command && command.CanExecute();
-        }
+        public static void Execute(this IToolbarCommand toolbarCommand) => toolbarCommand.Execute(null);
 
         public static void Execute(this IToolbarCommand toolbarCommand, object parameter)
         {

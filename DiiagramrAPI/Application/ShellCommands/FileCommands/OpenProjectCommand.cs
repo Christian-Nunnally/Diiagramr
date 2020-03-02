@@ -7,6 +7,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
+    /// <summary>
+    /// Opens a project.
+    /// </summary>
     public class
         OpenProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {

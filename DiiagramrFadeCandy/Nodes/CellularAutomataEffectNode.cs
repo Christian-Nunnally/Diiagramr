@@ -30,7 +30,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.West)]
-        public void Randomize(bool trigger)
+        public void Randomize(bool _)
         {
             CellularAutomataEffect.Randomize();
         }

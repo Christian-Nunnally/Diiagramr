@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Service.Application;
 using Stylet;
+using System;
 
 namespace DiiagramrAPI.Application
 {
@@ -7,20 +8,31 @@ namespace DiiagramrAPI.Application
     {
         public void ShowScreen(IScreen screen)
         {
-            CloseCurrentScreens();
-            ActiveItem = screen;
-            if (screen is IShownInShellReaction reaction)
+            InteractivelyCloseAllScreens(() => ActivateScreen(screen));
+        }
+
+        public void InteractivelyCloseAllScreens(Action continuation)
+        {
+            if (ActiveItem is IUserInputBeforeClosedRequest userInputBeforeClosedRequest)
             {
-                reaction.ShownInShell();
+                userInputBeforeClosedRequest.ContinueIfCanClose(() => InteractivelyCloseNextScreen(continuation));
+            }
+            else if (ActiveItem is object)
+            {
+                InteractivelyCloseNextScreen(continuation);
             }
         }
 
-        public void CloseCurrentScreens()
+        private void InteractivelyCloseNextScreen(Action continuation)
         {
-            while (ActiveItem != null)
-            {
-                ActiveItem.RequestClose();
-            }
+            ActiveItem.RequestClose();
+            InteractivelyCloseAllScreens(continuation);
+        }
+
+        private void ActivateScreen(IScreen screen)
+        {
+            ActiveItem = screen;
+            (screen as IShownInShellReaction)?.ShownInShell();
         }
     }
 }

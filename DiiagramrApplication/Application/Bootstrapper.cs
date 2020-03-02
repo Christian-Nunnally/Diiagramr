@@ -1,6 +1,8 @@
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Application.Dialogs;
+using DiiagramrAPI.Application.ShellCommands;
+using DiiagramrAPI.Application.ShellCommands.StartupCommands;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Editor;
@@ -26,6 +28,7 @@ namespace DiiagramrApplication.Application
             builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
             builder.Bind<NodeServiceProvider>().To<NodeServiceProvider>().InSingletonScope();
             builder.Bind<DiagramWell>().To<DiagramWell>().InSingletonScope();
+            builder.Bind<ShellCommandBase>().To<VisualDropStartScreenCommand>().WithKey("startCommand");
         }
     }
 }

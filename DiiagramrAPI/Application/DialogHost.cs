@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
 using static DiiagramrAPI.Application.Dialog;
@@ -15,22 +16,14 @@ namespace DiiagramrAPI.Application
             get => _activeDialog;
             set
             {
-                if (_activeDialog != null)
-                {
-                    _activeDialog.OpenDialogAction = null;
-                    _activeDialog.CloseDialogAction = null;
-                }
+                SetActiveDialogOpenAndCloseHandlers(null, null);
                 _activeDialog = value;
-                if (_activeDialog != null)
-                {
-                    _activeDialog.OpenDialogAction = OpenDialog;
-                    _activeDialog.CloseDialogAction = CloseDialog;
-                }
-                IsWindowOpen = ActiveDialog != null;
+                SetActiveDialogOpenAndCloseHandlers(OpenDialog, CloseDialog);
+                IsDialogOpen = _activeDialog != null;
             }
         }
 
-        public bool IsWindowOpen { get; set; }
+        public bool IsDialogOpen { get; set; }
 
         public void OpenDialog(Dialog dialog)
         {
@@ -56,6 +49,15 @@ namespace DiiagramrAPI.Application
             var dataContext = (sender as FrameworkElement)?.DataContext;
             var choiceAction = (dataContext as DialogCommandBarCommand)?.Action;
             choiceAction?.Invoke();
+        }
+
+        private void SetActiveDialogOpenAndCloseHandlers(Action<Dialog> openDialogAction, Action closeDialogAction)
+        {
+            if (ActiveDialog != null)
+            {
+                ActiveDialog.OpenDialogAction = openDialogAction;
+                ActiveDialog.CloseDialogAction = closeDialogAction;
+            }
         }
     }
 }

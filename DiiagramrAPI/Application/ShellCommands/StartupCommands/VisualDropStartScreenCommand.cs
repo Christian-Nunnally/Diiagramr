@@ -2,6 +2,9 @@
 
 namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
 {
+    /// <summary>
+    /// Command that opens the visual drop themed start screen when executed.
+    /// </summary>
     public class VisualDropStartScreenCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly VisualDropStartScreen _visualDropStartScreenViewModel;
@@ -15,7 +18,7 @@ namespace DiiagramrAPI.Application.ShellCommands.StartupCommands
             _screenHost = screenHostFactory();
         }
 
-        public override string Name => Shell.StartCommandId;
+        public override string Name => "start";
 
         public float Weight => 0.2f;
 

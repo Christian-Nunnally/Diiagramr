@@ -1,3 +1,4 @@
+using DiiagramrAPI.Application.ShellCommands.FileCommands;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
 using DiiagramrAPI2.Application.Dialogs;
@@ -13,6 +14,9 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Application
 {
+    /// <summary>
+    /// Command that when executed will open the visual drop themed start screen.
+    /// </summary>
     public class VisualDropStartScreen : Screen, IShownInShellReaction
     {
         private const int _dripEffectDelay = 30;
@@ -22,12 +26,18 @@ namespace DiiagramrAPI.Application
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
         private readonly IProjectFileService _projectFileService;
+        private readonly OpenProjectCommand _openProjectCommand;
+        private readonly NewProjectCommand _newProjectCommand;
 
         public VisualDropStartScreen(
-            Func<IProjectFileService> projectFileServiceFactory)
+            Func<IProjectFileService> projectFileServiceFactory,
+            Func<OpenProjectCommand> openProjectCommandFactory,
+            Func<NewProjectCommand> newProjectCommandFactory)
         {
             _projectFileService = projectFileServiceFactory();
             _projectFileService.ProjectSaved += ProjectSavedHandler;
+            _openProjectCommand = openProjectCommandFactory();
+            _newProjectCommand = newProjectCommandFactory();
             PopulateTargetSpectrumValues();
 
             for (int i = 0; i < _targetSpectrumLogoValues.Count; i++)
@@ -75,12 +85,12 @@ namespace DiiagramrAPI.Application
 
         public void BrowseButtonPressed()
         {
-            CommandExecutor.Execute("Project:Open");
+            _openProjectCommand.Execute();
         }
 
         public void NewButtonPressed()
         {
-            CommandExecutor.Execute("Project:New");
+            _newProjectCommand.Execute();
         }
 
         public void OpenButtonsMouseLeave()
@@ -101,7 +111,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject1);
+                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject1);
             }
         }
 
@@ -113,7 +123,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject2);
+                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject2);
             }
         }
 
@@ -125,7 +135,7 @@ namespace DiiagramrAPI.Application
             }
             else
             {
-                LoadProject(_projectFileService.ProjectDirectory + "\\" + RecentProject3);
+                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject3);
             }
         }
 
@@ -212,11 +222,6 @@ namespace DiiagramrAPI.Application
 
                 _logoAnimationFrames.Add(currentFrame);
             }
-        }
-
-        private void LoadProject(string projectName)
-        {
-            CommandExecutor.Execute("Project:Open", projectName);
         }
 
         private void PopulateTargetSpectrumValues()

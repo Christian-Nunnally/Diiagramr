@@ -48,7 +48,7 @@
     </UserControl.Resources>
     <Grid
         MouseDown="{s:Action CloseDialog}"
-        Visibility="{Binding IsWindowOpen, Converter={StaticResource Btv}}">
+        Visibility="{Binding IsDialogOpen, Converter={StaticResource Btv}}">
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition Height="32" />

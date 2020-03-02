@@ -11,6 +11,9 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Project
 {
+    /// <summary>
+    /// Manages the lifecycle of an open project.
+    /// </summary>
     public class ProjectManager : IProjectManager
     {
         private readonly DiagramFactory _diagramFactory;
@@ -89,21 +92,7 @@ namespace DiiagramrAPI.Project
 
         public void CreateProject(Action continuation)
         {
-            if (Project == null)
-            {
-                Project = new ProjectModel();
-                Project.IsDirty = false;
-                continuation();
-            }
-            else
-            {
-                CloseProject(() =>
-                {
-                    Project = new ProjectModel();
-                    Project.IsDirty = false;
-                    continuation();
-                });
-            }
+            CloseProject(CreateProjectAndContinue(continuation));
         }
 
         public void RemoveDiagram(DiagramModel diagram)
@@ -115,6 +104,12 @@ namespace DiiagramrAPI.Project
         {
             CloseProject(() => SetProjectInternal(project, autoOpenDiagram));
         }
+
+        private Action CreateProjectAndContinue(Action continuation) => () =>
+        {
+            Project = new ProjectModel();
+            continuation();
+        };
 
         private void SetProjectInternal(ProjectModel project, bool autoOpenDiagram)
         {
@@ -139,8 +134,6 @@ namespace DiiagramrAPI.Project
                 // TODO: Make async
                 DownloadProjectDependencies().Wait();
                 Project = project;
-
-                // TODO: Catch specific types of exceptions.
                 throw;
             }
         }

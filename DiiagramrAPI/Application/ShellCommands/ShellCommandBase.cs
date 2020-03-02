@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application.ShellCommands
 {
+    /// <summary>
+    /// Base class for all commands in DiiagramrAPI.
+    /// </summary>
     public abstract class ShellCommandBase : IShellCommand
     {
         public abstract string Name { get; }
@@ -11,11 +14,7 @@ namespace DiiagramrAPI.Application.ShellCommands
 
         public bool CachedCanExecute { get; set; }
 
-        public bool CanExecute()
-        {
-            CachedCanExecute = CanExecuteInternal();
-            return CachedCanExecute;
-        }
+        public bool CanExecute() => CachedCanExecute = CanExecuteInternal();
 
         public void Execute(object parameter)
         {
@@ -24,6 +23,8 @@ namespace DiiagramrAPI.Application.ShellCommands
                 ExecuteInternal(parameter);
             }
         }
+
+        public void Execute() => Execute(null);
 
         protected abstract void ExecuteInternal(object parameter);
 

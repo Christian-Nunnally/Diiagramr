@@ -6,6 +6,9 @@ using System.Windows.Documents;
 
 namespace DiiagramrAPI.Application
 {
+    /// <summary>
+    /// Base class for all stylet based view models.
+    /// </summary>
     public abstract class ViewModel : Screen
     {
         private readonly List<Action> _viewLoadedActions = new List<Action>();
