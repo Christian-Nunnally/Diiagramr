@@ -8,12 +8,12 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     {
         private readonly IProjectManager _projectManager;
         private readonly VisualDropStartScreen _startScreen;
-        private readonly ScreenHost _screenHost;
+        private readonly ScreenHostBase _screenHost;
 
         public VisualDropCloseProjectCommand(
             Func<VisualDropStartScreen> startScreenFactory,
             Func<IProjectManager> projectManagerFactory,
-            Func<ScreenHost> screenHostFactory)
+            Func<ScreenHostBase> screenHostFactory)
         {
             _startScreen = startScreenFactory();
             _projectManager = projectManagerFactory();

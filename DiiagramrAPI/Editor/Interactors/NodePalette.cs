@@ -20,11 +20,11 @@ namespace DiiagramrAPI.Editor.Interactors
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
         private readonly INodeProvider _nodeProvider;
-        private readonly DialogHost _dialogHost;
+        private readonly DialogHostBase _dialogHost;
         private Diagram _diagram;
         private Func<Node, bool> _filter = x => true;
 
-        public NodePalette(Func<INodeProvider> nodeProviderFactory, Func<DialogHost> dialogHostFactory)
+        public NodePalette(Func<INodeProvider> nodeProviderFactory, Func<DialogHostBase> dialogHostFactory)
         {
             _nodeProvider = nodeProviderFactory();
             _dialogHost = dialogHostFactory();
@@ -42,8 +42,6 @@ namespace DiiagramrAPI.Editor.Interactors
         public List<NodePaletteLibrary> LibrariesList { get; } = new List<NodePaletteLibrary>();
 
         public Node MousedOverNode { get; set; }
-
-        public bool NodePreviewVisible => MousedOverNode != null;
 
         public double PreviewNodePositionX { get; set; }
 

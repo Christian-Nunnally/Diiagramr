@@ -110,7 +110,7 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             RenderTransformOrigin="0.5,0.5"
-            Visibility="{Binding NodePreviewVisible, Converter={StaticResource Btv}}">
+            Visibility="{Binding NodeToPreview, Converter={StaticResource Ntv}}">
             <ContentControl
                 Canvas.Left="{Binding PreviewNodePositionX}"
                 Canvas.Top="{Binding PreviewNodePositionY}"

@@ -17,41 +17,52 @@ namespace DiiagramrAPI.Application.Tools
     {
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
-        private readonly ContextMenu _contextMenu;
+        private readonly ContextMenuBase _contextMenu;
 
-        private readonly Dictionary<IToolbarCommand, IOrderedEnumerable<IToolbarCommand>> _topLevelCommandToSubCommandMap
-            = new Dictionary<IToolbarCommand, IOrderedEnumerable<IToolbarCommand>>();
+        private readonly Dictionary<string, IOrderedEnumerable<IToolbarCommand>> _topLevelMenuNameToCommandListMap
+            = new Dictionary<string, IOrderedEnumerable<IToolbarCommand>>();
 
-        public Toolbar(Func<IEnumerable<IToolbarCommand>> toolbarCommandsFactory, Func<ContextMenu> contextMenuFactory)
+        public Toolbar(
+            Func<IEnumerable<IToolbarCommand>> toolbarCommandsFactory,
+            Func<ContextMenuBase> contextMenuFactory)
         {
             _contextMenu = contextMenuFactory();
             var toolbarCommands = toolbarCommandsFactory().OrderBy(x => x.Weight);
             SetupToolbarCommands(toolbarCommands);
         }
 
-        public override ObservableCollection<IToolbarCommand> TopLevelMenuItems { get; } = new ObservableCollection<IToolbarCommand>();
+        public override ObservableCollection<string> TopLevelMenuNames { get; } = new ObservableCollection<string>();
 
-        public override void ExecuteCommandHandler(object sender, MouseEventArgs e)
+        public override void OpenContextMenuForTopLevelMenuHandler(object sender, MouseEventArgs e)
         {
             var control = sender as Control;
-            if (control?.DataContext is IToolbarCommand command)
+            if (control?.DataContext is string topLevelMenuName)
             {
                 var pointBelowMenuItem = GetPointBelowControl(control);
-                var toolbarSubCommands = _topLevelCommandToSubCommandMap[command].OfType<IShellCommand>().ToList();
-                _contextMenu.ShowContextMenu(toolbarSubCommands, pointBelowMenuItem);
+                OpenContextMenuForTopLevelMenu(pointBelowMenuItem, topLevelMenuName);
             }
         }
 
-        private static IEnumerable<IToolbarCommand> GetOrderedToolbarCommandsWithNoParent(IEnumerable<IToolbarCommand> commands)
+        public override void OpenContextMenuForTopLevelMenu(Point position, string topLevelMenuName)
         {
-            return commands
-                .Where(c => c.ParentName is null)
-                .OrderByDescending(w => w.Weight);
+            var toolbarSubCommands = _topLevelMenuNameToCommandListMap[topLevelMenuName].OfType<IShellCommand>().ToList();
+            _contextMenu.ShowContextMenu(toolbarSubCommands, position);
         }
 
-        private static IEnumerable<IToolbarCommand> GetToolbarCommandWithAParent(IEnumerable<IToolbarCommand> commands)
+        private static SortedDictionary<float, (string, IOrderedEnumerable<IToolbarCommand>)> SortTopLevelMenuItemsByFirstChildWeight(IEnumerable<(string, IOrderedEnumerable<IToolbarCommand>)> topLevelMenuNamesToChildMap)
         {
-            return commands.Where(x => x.ParentName is object);
+            var orderedTopLevelMenuNames = new SortedDictionary<float, (string, IOrderedEnumerable<IToolbarCommand>)>();
+            foreach (var (parentName, children) in topLevelMenuNamesToChildMap)
+            {
+                var weight = children.FirstOrDefault().Weight;
+                while (orderedTopLevelMenuNames.ContainsKey(weight))
+                {
+                    weight += 0.0001f;
+                }
+                orderedTopLevelMenuNames.Add(weight, (parentName, children));
+            }
+
+            return orderedTopLevelMenuNames;
         }
 
         private Point GetPointBelowControl(Control control)
@@ -75,19 +86,19 @@ namespace DiiagramrAPI.Application.Tools
 
         private void SetupToolbarCommands(IEnumerable<IToolbarCommand> commands)
         {
-            var nonTopLevelMenuItems = GetToolbarCommandWithAParent(commands);
-            var topLevelCommandToChildMap = GetOrderedToolbarCommandsWithNoParent(commands)
-                .Select(parent => FindChildCommandsForParent(parent, nonTopLevelMenuItems));
-            foreach (var (parent, children) in topLevelCommandToChildMap)
+            var topLevelMenuNames = commands.Select(c => c.ParentName).Distinct();
+            var topLevelMenuNamesToChildMap = topLevelMenuNames.Select(parent => FindChildCommandsForParent(parent, commands));
+            var orderedTopLevelMenuNames = SortTopLevelMenuItemsByFirstChildWeight(topLevelMenuNamesToChildMap);
+            foreach (var (parentName, children) in orderedTopLevelMenuNames.Values)
             {
-                _topLevelCommandToSubCommandMap.Add(parent, children);
-                TopLevelMenuItems.Add(parent);
+                _topLevelMenuNameToCommandListMap.Add(parentName, children);
+                TopLevelMenuNames.Add(parentName);
             }
         }
 
-        private (IToolbarCommand, IOrderedEnumerable<IToolbarCommand>) FindChildCommandsForParent(IToolbarCommand parent, IEnumerable<IToolbarCommand> commands)
+        private (string, IOrderedEnumerable<IToolbarCommand>) FindChildCommandsForParent(string parentName, IEnumerable<IToolbarCommand> commands)
         {
-            return (parent, commands.Where(x => x.ParentName == parent.Name).OrderBy(x => x.Weight));
+            return (parentName, commands.Where(x => x.ParentName == parentName).OrderBy(x => x.Weight));
         }
     }
 }

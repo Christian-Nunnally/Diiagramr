@@ -16,7 +16,7 @@
     MinWidth="400"
     MinHeight="200"
     SnapsToDevicePixels="True"
-    PreviewKeyDown="{s:Action PreviewKeyDown}"
+    PreviewKeyDown="{s:Action PreviewKeyDownHandler}"
     UseLayoutRounding="True">
     <Window.Resources>
         <ResourceDictionary>
@@ -43,7 +43,7 @@
                 Canvas.Left="{Binding ContextMenu.X}"
                 Canvas.Top="{Binding ContextMenu.Y}"
                 s:View.Model="{Binding ContextMenu}"
-                Visibility="{Binding ContextMenu.Visible, Converter={StaticResource Btv}}" />
+                Visibility="{Binding ContextMenu.Commands, Converter={StaticResource Ctv}}" />
         </Canvas>
     </Grid>
 </Window>

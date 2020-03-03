@@ -4,7 +4,7 @@
     {
         public override string Name => "Submit Bug";
 
-        public float Weight => .0f;
+        public float Weight => 0.39f;
 
         public string ParentName => "Help";
 

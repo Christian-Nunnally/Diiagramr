@@ -59,7 +59,7 @@ namespace DiiagramrAPI.Application.Dialogs
 
         public void ViewSources()
         {
-            OpenOtherDialog(_librarySourceManagerDialog);
+            OpenDialog(_librarySourceManagerDialog);
         }
 
         protected override void OnViewLoaded()

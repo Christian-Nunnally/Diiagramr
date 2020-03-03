@@ -1,4 +1,3 @@
-using DiiagramrAPI.Application.ShellCommands;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
@@ -25,19 +24,19 @@ namespace DiiagramrAPI.Application
         /// <param name="dialogHostFactory">Factory for the host for all dialogs shown in the shell.</param>
         /// <param name="toolbarFactory">Factory for the command toolbar at the top of the shell.</param>
         public Shell(
-            [Inject(Key = "startCommand")] Func<ShellCommandBase> startCommandFactory,
+            [Inject(Key = "startCommand")] Func<IShellCommand> startCommandFactory,
             Func<IHotkeyCommander> hotkeyCommanderFactory,
-            Func<ContextMenu> contextMenuFactory,
-            Func<ScreenHost> screenHostFactory,
-            Func<DialogHost> dialogHostFactory,
-            Func<Toolbar> toolbarFactory)
+            Func<ContextMenuBase> contextMenuFactory,
+            Func<ScreenHostBase> screenHostFactory,
+            Func<DialogHostBase> dialogHostFactory,
+            Func<ToolbarBase> toolbarFactory)
         {
             _hotkeyCommander = hotkeyCommanderFactory();
             ContextMenu = contextMenuFactory();
             ScreenHost = screenHostFactory();
             DialogHost = dialogHostFactory();
             Toolbar = toolbarFactory();
-            startCommandFactory().Execute();
+            startCommandFactory().Execute(null);
         }
 
         public double Width { get; set; } = 1010;
@@ -48,13 +47,13 @@ namespace DiiagramrAPI.Application
 
         public IProjectManager ProjectManager { get; }
 
-        public ContextMenu ContextMenu { get; set; }
+        public ContextMenuBase ContextMenu { get; set; }
 
-        public Toolbar Toolbar { get; set; }
+        public ToolbarBase Toolbar { get; set; }
 
-        public DialogHost DialogHost { get; set; }
+        public DialogHostBase DialogHost { get; set; }
 
-        public ScreenHost ScreenHost { get; set; }
+        public ScreenHostBase ScreenHost { get; set; }
 
         public override void RequestClose(bool? dialogResult = null)
         {
@@ -70,10 +69,12 @@ namespace DiiagramrAPI.Application
             e.Cancel = !TryCloseShell();
         }
 
-        public void PreviewKeyDown(object sender, KeyEventArgs e)
+        public void PreviewKeyDownHandler(object sender, KeyEventArgs e)
         {
-            e.Handled = _hotkeyCommander.HandleHotkeyPress(e.Key);
+            e.Handled = PreviewKeyDown(e.Key);
         }
+
+        public bool PreviewKeyDown(Key key) => _hotkeyCommander.HandleHotkeyPress(key);
 
         private bool TryCloseShell()
         {

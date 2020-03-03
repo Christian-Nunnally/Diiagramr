@@ -30,7 +30,7 @@
                     <DataTemplate>
                         <Grid>
                             <Border Height="3" BorderBrush="{StaticResource ContextMenuBackgroundBrush}" Background="{StaticResource MenuItemMouseOverBrush}" BorderThickness="1" HorizontalAlignment="Stretch" Visibility="{Binding Converter={StaticResource IsSeparatorConverter}}" />
-                            <Border MouseDown="{s:Action ExecuteCommand}" Visibility="{Binding Converter={StaticResource IsNotSeparatorConverter}}">
+                            <Border MouseDown="{s:Action ExecuteCommandHandler}" Visibility="{Binding Converter={StaticResource IsNotSeparatorConverter}}">
                                 <Label Content="{Binding Name}" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" Padding="0" Margin="5,0,0,0">
                                     <Label.Style>
                                         <Style TargetType="Label">

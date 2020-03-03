@@ -4,14 +4,14 @@ using System;
 
 namespace DiiagramrAPI.Application
 {
-    public class ScreenHost : Conductor<IScreen>.StackNavigation
+    public class ScreenHost : ScreenHostBase
     {
-        public void ShowScreen(IScreen screen)
+        public override void ShowScreen(IScreen screen)
         {
             InteractivelyCloseAllScreens(() => ActivateScreen(screen));
         }
 
-        public void InteractivelyCloseAllScreens(Action continuation)
+        public override void InteractivelyCloseAllScreens(Action continuation)
         {
             if (ActiveItem is IUserInputBeforeClosedRequest userInputBeforeClosedRequest)
             {
@@ -20,6 +20,10 @@ namespace DiiagramrAPI.Application
             else if (ActiveItem is object)
             {
                 InteractivelyCloseNextScreen(continuation);
+            }
+            else
+            {
+                continuation();
             }
         }
 

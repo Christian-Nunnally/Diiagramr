@@ -6,7 +6,7 @@
 
         public string ParentName => "Help";
 
-        public float Weight => 1.0f;
+        public float Weight => 0.3f;
 
         public static void GoToSite(string url)
         {

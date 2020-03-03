@@ -50,11 +50,9 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public static Thickness NodeSelectionBorderThickness { get; } = new Thickness(NodeBorderWidth - 16);
 
-        public bool AreInstructionsVisible => !Nodes.Any();
-
         public Rect BoundingBox { get; set; }
 
-        public bool BoundingBoxVisible { get; set; }
+        public bool ShowBoundingBox { get; set; }
 
         public DiagramInteractionManager DiagramInteractionManager { get; set; }
 
@@ -199,8 +197,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             DiagramModel.RemoveNode(viewModel.NodeModel);
             Nodes.Remove(viewModel);
             UpdateDiagramBoundingBox();
-            BoundingBoxVisible = Nodes.Any();
-            NotifyOfPropertyChange(nameof(AreInstructionsVisible));
+            ShowBoundingBox = Nodes.Any();
+            NotifyOfPropertyChange(nameof(ShowInstructions));
         }
 
         public void RemoveWire(WireModel wireModel)
@@ -266,7 +264,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             ViewWidth = e.NewSize.Width;
             ViewHeight = e.NewSize.Height;
-            if (!BoundingBoxVisible)
+            if (!ShowBoundingBox)
             {
                 ResetPanAndZoom();
             }
@@ -275,10 +273,10 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void AddNodeViewModel(Node viewModel)
         {
             Nodes.Add(viewModel);
-            BoundingBoxVisible = Nodes.Any();
+            ShowBoundingBox = Nodes.Any();
             AddWiresForNode(viewModel);
             UpdateDiagramBoundingBox();
-            NotifyOfPropertyChange(nameof(AreInstructionsVisible));
+            NotifyOfPropertyChange(nameof(ShowInstructions));
         }
 
         private void AddWiresForNode(Node viewModel)

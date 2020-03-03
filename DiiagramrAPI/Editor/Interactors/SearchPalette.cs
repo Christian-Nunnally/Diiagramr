@@ -35,7 +35,6 @@ namespace DiiagramrAPI.Editor.Interactors
             AddResultsToSearchTree();
         }
 
-        public bool NodePreviewVisible => NodeToPreview != null;
         public double PreviewNodePositionX { get; set; }
         public double PreviewNodePositionY { get; set; }
         public double PreviewNodeScaleX { get; set; }

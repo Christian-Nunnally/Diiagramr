@@ -10,13 +10,13 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     {
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
-        private readonly ScreenHost _screenHost;
+        private readonly ScreenHostBase _screenHost;
         private readonly DiagramWell _diagramWell;
 
         public NewProjectCommand(
             Func<IProjectManager> projectManagerFactory,
             Func<ProjectScreen> projectScreenFactory,
-            Func<ScreenHost> screenHostFactory,
+            Func<ScreenHostBase> screenHostFactory,
             Func<DiagramWell> diagramWellFactory)
         {
             _projectManager = projectManagerFactory();

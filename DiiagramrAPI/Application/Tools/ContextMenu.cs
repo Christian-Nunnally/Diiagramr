@@ -1,6 +1,4 @@
-using DiiagramrAPI.Application.ShellCommands;
 using DiiagramrAPI.Service.Application;
-using Stylet;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
@@ -8,50 +6,34 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
-    /// <summary>
-    /// A context menu that behaves like most context menus.
-    /// </summary>
-    public class ContextMenu : Screen
+    public class ContextMenu : ContextMenuBase
     {
-        public ContextMenu()
+        public override ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
+
+        public override void ExecuteCommandHandler(object sender, MouseEventArgs e)
         {
-        }
-
-        public ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
-
-        public float MinimumWidth { get; set; } = 150;
-
-        public bool Visible { get; set; }
-
-        public float X { get; set; } = 0;
-
-        public float Y { get; set; } = 22;
-
-        public bool CloseWhenMouseLeaves { get; set; } = true;
-
-        public void ExecuteCommand(object sender, MouseEventArgs e)
-        {
-            var control = sender as FrameworkElement;
-            if (control?.DataContext is ShellCommandBase command)
+            var frameworkElement = sender as FrameworkElement;
+            if (frameworkElement?.DataContext is IShellCommand command)
             {
-                Visible = false;
-                command.Execute();
+                ExecuteCommand(command);
             }
         }
 
-        public void MouseLeft()
+        public override void ExecuteCommand(IShellCommand command)
         {
-            if (CloseWhenMouseLeaves)
-            {
-                Visible = false;
-            }
+            command.Execute(null);
+            Commands.Clear();
         }
 
-        public void ShowContextMenu(IList<IShellCommand> commands, Point position)
+        public override void MouseLeft()
+        {
+            Commands.Clear();
+        }
+
+        public override void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             X = (float)position.X;
             Y = (float)position.Y;
-            Visible = true;
             Commands.Clear();
             foreach (var command in commands)
             {

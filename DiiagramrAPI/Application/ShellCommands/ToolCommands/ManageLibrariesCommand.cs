@@ -6,11 +6,11 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
     public class ManageLibrariesCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly LibraryManagerDialog _libraryManagerDialog;
-        private readonly DialogHost _dialogHost;
+        private readonly DialogHostBase _dialogHost;
 
         public ManageLibrariesCommand(
             Func<LibraryManagerDialog> startScreenViewModelFactory,
-            Func<DialogHost> dialogHostFactory)
+            Func<DialogHostBase> dialogHostFactory)
         {
             _libraryManagerDialog = startScreenViewModelFactory();
             _dialogHost = dialogHostFactory();
@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         public string ParentName => "Tools";
 
-        public float Weight => .5f;
+        public float Weight => .1f;
 
         protected override bool CanExecuteInternal()
         {

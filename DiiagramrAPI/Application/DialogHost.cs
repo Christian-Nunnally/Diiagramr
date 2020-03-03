@@ -1,31 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-using static DiiagramrAPI.Application.Dialog;
+﻿using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application
 {
-    public class DialogHost : ViewModel
+    public class DialogHost : DialogHostBase
     {
         private readonly Stack<Dialog> _dialogStack = new Stack<Dialog>();
         private Dialog _activeDialog;
 
-        public Dialog ActiveDialog
+        public override Dialog ActiveDialog
         {
             get => _activeDialog;
             set
             {
-                SetActiveDialogOpenAndCloseHandlers(null, null);
+                SetActiveDialogsHostToNull();
                 _activeDialog = value;
-                SetActiveDialogOpenAndCloseHandlers(OpenDialog, CloseDialog);
-                IsDialogOpen = _activeDialog != null;
+                SetActiveDialogsHostToThis();
             }
         }
 
-        public bool IsDialogOpen { get; set; }
-
-        public void OpenDialog(Dialog dialog)
+        public override void OpenDialog(Dialog dialog)
         {
             if (ActiveDialog != null)
             {
@@ -34,29 +27,24 @@ namespace DiiagramrAPI.Application
             ActiveDialog = dialog;
         }
 
-        public void CloseDialog()
+        public override void CloseDialog()
         {
             ActiveDialog = _dialogStack.Count > 0 ? _dialogStack.Pop() : null;
         }
 
-        public void MouseDownHandled(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-        }
-
-        public void CommandBarActionClicked(object sender, MouseButtonEventArgs e)
-        {
-            var dataContext = (sender as FrameworkElement)?.DataContext;
-            var choiceAction = (dataContext as DialogCommandBarCommand)?.Action;
-            choiceAction?.Invoke();
-        }
-
-        private void SetActiveDialogOpenAndCloseHandlers(Action<Dialog> openDialogAction, Action closeDialogAction)
+        private void SetActiveDialogsHostToThis()
         {
             if (ActiveDialog != null)
             {
-                ActiveDialog.OpenDialogAction = openDialogAction;
-                ActiveDialog.CloseDialogAction = closeDialogAction;
+                ActiveDialog.CurrentDialogHost = this;
+            }
+        }
+
+        private void SetActiveDialogsHostToNull()
+        {
+            if (ActiveDialog != null)
+            {
+                ActiveDialog.CurrentDialogHost = null;
             }
         }
     }

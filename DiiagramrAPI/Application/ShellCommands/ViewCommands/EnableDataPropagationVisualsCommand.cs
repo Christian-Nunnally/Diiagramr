@@ -12,7 +12,7 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 
         public string ParentName => "View";
 
-        public float Weight => .5f;
+        public float Weight => .2f;
 
         protected override bool CanExecuteInternal()
         {

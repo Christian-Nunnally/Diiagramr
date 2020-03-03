@@ -6,8 +6,7 @@ namespace DiiagramrAPI.Application
 {
     public abstract class Dialog : ViewModel
     {
-        public Action<Dialog> OpenDialogAction;
-        public Action CloseDialogAction;
+        public DialogHost CurrentDialogHost { get; set; }
 
         public abstract int MaxHeight { get; }
 
@@ -15,18 +14,16 @@ namespace DiiagramrAPI.Application
 
         public abstract string Title { get; set; }
 
-        public bool HasCommandBarCommands => CommandBarCommands.Any();
-
         public ObservableCollection<DialogCommandBarCommand> CommandBarCommands { get; set; } = new ObservableCollection<DialogCommandBarCommand>();
 
-        protected void OpenOtherDialog(Dialog dialogToOpen)
+        protected void OpenDialog(Dialog dialogToOpen)
         {
-            OpenDialogAction?.Invoke(dialogToOpen);
+            CurrentDialogHost.OpenDialog(dialogToOpen);
         }
 
         protected void CloseDialog()
         {
-            CloseDialogAction?.Invoke();
+            CurrentDialogHost.CloseDialog();
         }
 
         public class DialogCommandBarCommand
@@ -38,6 +35,7 @@ namespace DiiagramrAPI.Application
             }
 
             public string Label { get; set; }
+
             public Action Action { get; set; }
         }
     }

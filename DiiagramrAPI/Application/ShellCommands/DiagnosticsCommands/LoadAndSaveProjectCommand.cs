@@ -21,7 +21,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 
         public string ParentName => "Diagnostics";
 
-        public float Weight => .4f;
+        public float Weight => 1f;
 
         protected override void ExecuteInternal(object parameter)
         {

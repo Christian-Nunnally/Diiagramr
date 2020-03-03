@@ -17,14 +17,14 @@ namespace DiiagramrAPI.Project
         private readonly IProjectLoadSave _loadSave;
         private readonly SaveProjectDialog _saveProjectDialog;
         private readonly LoadProjectDialog _loadProjectDialog;
-        private readonly DialogHost _dialogHost;
+        private readonly DialogHostBase _dialogHost;
 
         public ProjectFileService(
             Func<IDirectoryService> directoryServiceFactory,
             Func<IProjectLoadSave> loadSaveFactory,
             Func<SaveProjectDialog> saveProjectDialogFactory,
             Func<LoadProjectDialog> loadProjectDialogFactory,
-            Func<DialogHost> dialogHostFactory)
+            Func<DialogHostBase> dialogHostFactory)
         {
             var directoryService = directoryServiceFactory();
             _loadSave = loadSaveFactory();

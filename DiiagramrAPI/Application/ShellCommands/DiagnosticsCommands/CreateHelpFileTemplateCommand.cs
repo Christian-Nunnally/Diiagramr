@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 
         public string ParentName => "Diagnostics";
 
-        public float Weight => 0;
+        public float Weight => 1f;
 
         public void OpenDirectory()
         {

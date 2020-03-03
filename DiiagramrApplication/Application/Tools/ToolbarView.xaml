@@ -25,17 +25,17 @@
         HorizontalContentAlignment="Left"
         Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
         DockPanel.Dock="Top"
-        ItemsSource="{Binding TopLevelMenuItems}">
+        ItemsSource="{Binding TopLevelMenuNames}">
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Label
                     Padding="5,0"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
-                    Content="{Binding Name}"
+                    Content="{Binding}"
                     Foreground="{StaticResource ForegroundBrush}"
                     IsHitTestVisible="True"
-                    MouseDown="{s:Action ExecuteCommandHandler}">
+                    MouseDown="{s:Action OpenContextMenuForTopLevelMenuHandler}">
                     <Label.Style>
                         <Style TargetType="Label">
                             <Style.Triggers>

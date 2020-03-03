@@ -16,13 +16,13 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
         private readonly ProjectScreen _projectScreen;
-        private readonly ScreenHost _screenHost;
+        private readonly ScreenHostBase _screenHost;
 
         public OpenProjectCommand(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<IProjectManager> projectManagerFactory,
             Func<ProjectScreen> projectScreenFactory,
-            Func<ScreenHost> screenHostFactory)
+            Func<ScreenHostBase> screenHostFactory)
         {
             _projectFileService = projectFileServiceFactory();
             _projectManager = projectManagerFactory();

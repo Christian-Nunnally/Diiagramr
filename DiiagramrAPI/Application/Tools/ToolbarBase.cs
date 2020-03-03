@@ -1,6 +1,6 @@
-using DiiagramrAPI.Application.ShellCommands;
 using Stylet;
 using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
@@ -10,8 +10,10 @@ namespace DiiagramrAPI.Application.Tools
     /// </summary>
     public abstract class ToolbarBase : Screen
     {
-        public abstract ObservableCollection<IToolbarCommand> TopLevelMenuItems { get; }
+        public abstract ObservableCollection<string> TopLevelMenuNames { get; }
 
-        public abstract void ExecuteCommandHandler(object sender, MouseEventArgs e);
+        public abstract void OpenContextMenuForTopLevelMenuHandler(object sender, MouseEventArgs e);
+
+        public abstract void OpenContextMenuForTopLevelMenu(Point position, string topLevelMenuName);
     }
 }

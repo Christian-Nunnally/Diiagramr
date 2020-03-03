@@ -17,14 +17,14 @@ namespace DiiagramrAPI.Project
     public class ProjectManager : IProjectManager
     {
         private readonly DiagramFactory _diagramFactory;
-        private readonly DialogHost _dialogHost;
+        private readonly DialogHostBase _dialogHost;
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
         private readonly NodeServiceProvider _nodeServiceProvider;
         private ProjectModel project;
 
         public ProjectManager(
-            Func<DialogHost> dialogHostFactory,
+            Func<DialogHostBase> dialogHostFactory,
             Func<DiagramFactory> diagramFactoryFactory,
             Func<ILibraryManager> libraryManagerFactory,
             Func<IProjectFileService> projectFileServiceFactory,
