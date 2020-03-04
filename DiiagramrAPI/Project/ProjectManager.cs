@@ -21,7 +21,7 @@ namespace DiiagramrAPI.Project
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
         private readonly NodeServiceProvider _nodeServiceProvider;
-        private ProjectModel project;
+        private ProjectModel _project;
 
         public ProjectManager(
             Func<DialogHostBase> dialogHostFactory,
@@ -42,11 +42,14 @@ namespace DiiagramrAPI.Project
 
         public ProjectModel Project
         {
-            get => project;
+            get => _project;
             set
             {
-                project = value;
-                Diagrams = new ViewModelCollection<Diagram, DiagramModel>(Project, () => Project?.Diagrams, _diagramFactory.CreateDiagramViewModel);
+                _project = value;
+                if (Project != null)
+                {
+                    Diagrams = new ViewModelCollection<Diagram, DiagramModel>(Project, () => Project?.Diagrams, _diagramFactory.CreateDiagramViewModel);
+                }
             }
         }
 

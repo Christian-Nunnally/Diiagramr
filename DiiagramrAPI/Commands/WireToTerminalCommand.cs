@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Application.Commands;
+using DiiagramrAPI.Editor;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrModel;
 using System;
@@ -24,7 +25,7 @@ namespace DiiagramrAPI.Commands
             {
                 var wire = new WireModel();
                 _fromTerminal.ConnectWire(wire, toTerminal);
-                var wireViewModel = new Wire(wire)
+                var wireViewModel = new Wire(wire, new WirePathingAlgorithum())
                 {
                     DoAnimationWhenViewIsLoaded = _animateWireWhenLoaded,
                 };

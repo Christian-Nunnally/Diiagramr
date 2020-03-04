@@ -1,6 +1,7 @@
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Service.Application;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using Xunit;
@@ -84,11 +85,42 @@ namespace DiiagramrAPIUnitTests
         {
             var fakeCommand = new FakeCommand();
             var contextMenu = new ContextMenu();
-            contextMenu.Visible = true;
-            Assert.True(contextMenu.Visible);
+            contextMenu.ShowContextMenu(new[] { fakeCommand }, new Point(0, 0));
+            Assert.NotEmpty(contextMenu.Commands);
             contextMenu.ExecuteCommand(fakeCommand);
 
             Assert.Empty(contextMenu.Commands);
+        }
+
+        [Fact]
+        public void ShowContextManu_CommandsPropertyChanged()
+        {
+            var fakeCommand = new FakeCommand();
+            var contextMenu = new ContextMenu();
+            var propertyChangedEvents = new List<PropertyChangedEventArgs>();
+            contextMenu.PropertyChanged += (s, e) => propertyChangedEvents.Add(e);
+
+            contextMenu.ShowContextMenu(new[] { fakeCommand }, new Point(0, 0));
+
+            Assert.Equal(1, propertyChangedEvents.Count(x => x.PropertyName == nameof(contextMenu.Commands)));
+        }
+
+        [Fact]
+        public void ExecuteCommand_CommandsPropertyChanged()
+        {
+            var fakeCommand = new FakeCommand();
+            var contextMenu = new ContextMenu();
+            var propertyChangedEvents = new List<PropertyChangedEventArgs>();
+            contextMenu.PropertyChanged += (s, e) => propertyChangedEvents.Add(e);
+
+            contextMenu.ExecuteCommand(fakeCommand);
+
+            Assert.Equal(1, propertyChangedEvents.Count(x => x.PropertyName == nameof(contextMenu.Commands)));
+        }
+
+        private void ContextMenu_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

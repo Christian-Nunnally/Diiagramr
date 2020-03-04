@@ -10,7 +10,7 @@ namespace DiiagramrAPI.Project
         private readonly IProjectManager _projectManager;
 
         public ProjectScreen(
-                    Func<DiagramWell> diagramWellFactory,
+            Func<DiagramWell> diagramWellFactory,
             Func<NodeServiceProvider> nodeServideProviderFactory,
             Func<IProjectManager> projectManagerFactory)
         {
@@ -23,7 +23,13 @@ namespace DiiagramrAPI.Project
 
         public void ContinueIfCanClose(Action continuation)
         {
-            _projectManager.CloseProject(continuation);
+            _projectManager.CloseProject(closeDiagramsAndContinue);
+
+            void closeDiagramsAndContinue()
+            {
+                DiagramWell.CloseAllDiagrams();
+                continuation();
+            }
         }
 
         public void OpenDiagram(Diagram diagram)

@@ -97,7 +97,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void AddWire(WireModel wireModel)
         {
-            AddWire(new Wire(wireModel));
+            AddWire(new Wire(wireModel, new WirePathingAlgorithum()));
         }
 
         public void AddWire(Wire wire)
@@ -198,7 +198,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             Nodes.Remove(viewModel);
             UpdateDiagramBoundingBox();
             ShowBoundingBox = Nodes.Any();
-            NotifyOfPropertyChange(nameof(ShowInstructions));
+            NotifyOfPropertyChange(nameof(Nodes));
         }
 
         public void RemoveWire(WireModel wireModel)
@@ -276,7 +276,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             ShowBoundingBox = Nodes.Any();
             AddWiresForNode(viewModel);
             UpdateDiagramBoundingBox();
-            NotifyOfPropertyChange(nameof(ShowInstructions));
+            NotifyOfPropertyChange(nameof(Nodes));
         }
 
         private void AddWiresForNode(Node viewModel)
@@ -284,7 +284,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             foreach (var inputTerminal in viewModel.NodeModel.Terminals.OfType<InputTerminalModel>())
             {
                 inputTerminal.ConnectedWires
-                    .Select(w => new Wire(w))
+                    .Select(w => new Wire(w, new WirePathingAlgorithum()))
                     .ForEach(AddWire);
             }
         }

@@ -28,6 +28,11 @@ namespace DiiagramrAPI.Project
             ActivateItem(diagram);
         }
 
+        public void CloseAllDiagrams()
+        {
+            Items.Clear();
+        }
+
         public void NavigateToDiagramClicked(object sender, MouseButtonEventArgs e)
         {
             var frameworkElement = sender as FrameworkElement;

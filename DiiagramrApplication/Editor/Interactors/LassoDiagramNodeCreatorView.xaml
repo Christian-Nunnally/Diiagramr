@@ -7,17 +7,50 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
                 <ResourceDictionary>
-                    <BooleanToVisibilityConverter x:Key="Btv" />
+                    <Style x:Key="FadeInLabel" TargetType="Label" BasedOn="{StaticResource RegularLabelStyle}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelectorBigEnoughToDisplayHelpLabel}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation To="#3307CCCC"
+                                                Storyboard.TargetProperty="(Label.Foreground).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.4" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation To="#0007CCCC"
+                                                Storyboard.TargetProperty="(Label.Foreground).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Rectangle
-        Width="{Binding Width}"
-        Height="{Binding Height}"
-        Fill="{StaticResource DiagramAutoWireRectangleFill}"
-        RadiusX="3"
-        RadiusY="3"
-        Stroke="Red"
-        StrokeThickness="2" />
+    <Grid>
+        <Rectangle
+            Width="{Binding Width}"
+            Height="{Binding Height}"
+            Fill="{StaticResource DiagramAutoWireRectangleFill}"
+            RadiusX="3"
+            RadiusY="3"
+            Stroke="#ff883333"
+            StrokeThickness="2" />
+        <Label
+            Foreground="#0007CCCC"
+            Style="{StaticResource FadeInLabel}"
+            Content="New diagram"
+            FontSize="12"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+        </Label>
+    </Grid>
 </UserControl>

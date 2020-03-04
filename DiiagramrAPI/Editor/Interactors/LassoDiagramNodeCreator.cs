@@ -23,6 +23,8 @@ namespace DiiagramrAPI.Editor.Interactors
             _nodeProvider = nodeProviderFactory();
         }
 
+        public bool IsSelectorBigEnoughToDisplayHelpLabel => Height > 20 && Width > 60;
+
         public double Height { get; set; }
 
         public double Width { get; set; }

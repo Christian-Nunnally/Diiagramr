@@ -30,7 +30,8 @@
             <SolidColorBrush x:Key="GrayedForegroundBrush" Color="{StaticResource ResourceKey=White80}" />
             <SolidColorBrush x:Key="ForegroundBrush" Color="{StaticResource ResourceKey=White92}" />
             <SolidColorBrush x:Key="DiagramSelectionRectangleStroke" Color="{StaticResource ResourceKey=White92}" />
-            <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=White92Transparent}" />
+            <SolidColorBrush x:Key="DiagramSelectionRectangleFill" Color="{StaticResource ResourceKey=White92Transparent33}" />
+            <SolidColorBrush x:Key="DiagramSelectionRectangleLabelForeground" Color="{StaticResource ResourceKey=White92Transparent66}" />
             <SolidColorBrush x:Key="SuperLightBrush" Color="{StaticResource ResourceKey=White100}" />
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>

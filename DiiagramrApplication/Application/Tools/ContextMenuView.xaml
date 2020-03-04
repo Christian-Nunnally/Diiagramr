@@ -36,7 +36,7 @@
                                         <Style TargetType="Label">
                                             <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding LastCanExecute}" Value="False">
+                                                <DataTrigger Binding="{Binding CachedCanExecute}" Value="False">
                                                     <Setter Property="Foreground" Value="{StaticResource DisabledForegroundBrush}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -50,7 +50,7 @@
                                             <Trigger Property="IsMouseOver" Value="True">
                                                 <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
                                             </Trigger>
-                                            <DataTrigger Binding="{Binding LastCanExecute}" Value="False">
+                                            <DataTrigger Binding="{Binding CachedCanExecute}" Value="False">
                                                 <Setter Property="Background" Value="{StaticResource DiagramBackgroundBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>

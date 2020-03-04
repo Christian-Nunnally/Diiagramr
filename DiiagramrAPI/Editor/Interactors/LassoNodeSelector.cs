@@ -9,6 +9,8 @@ namespace DiiagramrAPI.Editor.Interactors
         private double _startX;
         private double _startY;
 
+        public bool IsSelectorBigEnoughToDisplayHelpLabel => Height > 20 && Width > 40;
+
         public double Height { get; set; }
 
         public double Width { get; set; }
@@ -72,6 +74,9 @@ namespace DiiagramrAPI.Editor.Interactors
                     node.IsSelected = true;
                 }
             }
+
+            Width = 0;
+            Height = 0;
         }
 
         private void SetRectangleBounds()

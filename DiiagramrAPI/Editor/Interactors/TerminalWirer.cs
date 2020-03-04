@@ -18,6 +18,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private TerminalModel _previewTerminal;
         private Wire _previewWire;
         private Terminal _wiringTerminal;
+        private WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
 
         public TerminalWirer(Func<ITransactor> transactorFactory)
         {
@@ -125,14 +126,14 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void PreviewConnectingWireToTerminal(Terminal terminal)
         {
-            _previewWire.WireModel.X2 = terminal.TerminalModel.X;
-            _previewWire.WireModel.Y2 = terminal.TerminalModel.Y;
             var terminalColor = terminal.TerminalBackgroundBrush.Color;
             var r = terminalColor.R;
             var g = terminalColor.G;
             var b = terminalColor.B;
             _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, r, g, b));
-            _previewWire.BannedDirectionForStart = terminal.TerminalModel.DefaultSide.Opposite();
+            _wirePathingAlgorithum.EnableUTurnLimitsForSourceTerminal = true;
+            _wirePathingAlgorithum.WireDistanceOutOfSourceTerminal = 25.0f;
+            _previewWire.WireModel.SourceTerminal = terminal.TerminalModel;
         }
 
         private void ProcessLeftMouseDown(Diagram diagram, Stylet.Screen elementUnderMouse)
@@ -156,8 +157,10 @@ namespace DiiagramrAPI.Editor.Interactors
             }
             else
             {
+                _wirePathingAlgorithum.EnableUTurnLimitsForSourceTerminal = false;
+                _wirePathingAlgorithum.WireDistanceOutOfSourceTerminal = 0;
+                _previewWire.WireModel.SourceTerminal = _previewTerminal;
                 _previewWire.LineColorBrush = _ghostWireBrush;
-                _previewWire.BannedDirectionForStart = Direction.None;
             }
         }
 
@@ -187,10 +190,10 @@ namespace DiiagramrAPI.Editor.Interactors
             var y1 = terminal.TerminalModel.Y;
             terminal.SetAdorner(null);
 
-            _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.TerminalModel.DefaultSide.Opposite());
+            _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.TerminalModel.DefaultSide);
             _previewTerminal.OffsetX = x1;
             _previewTerminal.OffsetY = y1;
-            _previewWire = new Wire(new WireModel() { SinkTerminal = _previewTerminal, SourceTerminal = terminal.TerminalModel });
+            _previewWire = new Wire(new WireModel() { SinkTerminal = terminal.TerminalModel, SourceTerminal = _previewTerminal }, _wirePathingAlgorithum);
             diagram.AddWire(_previewWire);
         }
 

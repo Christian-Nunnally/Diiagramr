@@ -7,7 +7,7 @@ namespace DiiagramrApplication.Converters
 {
     public class InvertedCollectionToVisibilityConverter : IValueConverter
     {
-        private CollectionToVisibilityConverter converter = new CollectionToVisibilityConverter();
+        private readonly CollectionToVisibilityConverter converter = new CollectionToVisibilityConverter();
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

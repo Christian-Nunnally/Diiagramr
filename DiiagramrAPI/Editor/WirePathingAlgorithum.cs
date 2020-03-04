@@ -6,23 +6,18 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor
 {
-    internal class WirePathingAlgorithum
+    public class WirePathingAlgorithum
     {
         private const int MinimimDistanceToCalculateWire = 50;
-        private const double WireDistanceOutOfTerminal = 25.0;
-        private readonly Wire _wire;
         private bool _uTurned = false;
 
-        public WirePathingAlgorithum(Wire wire)
-        {
-            _wire = wire;
-        }
+        public bool EnableUTurnLimitsForSourceTerminal { get; set; } = true;
 
-        private TerminalModel SinkTerminal => WireModel?.SinkTerminal;
+        public bool EnableUTurnLimitsForSinkTerminal { get; set; } = true;
 
-        private TerminalModel SourceTerminal => WireModel?.SourceTerminal;
+        public float WireDistanceOutOfSourceTerminal { get; set; } = 25.0f;
 
-        private WireModel WireModel => _wire?.WireModel;
+        public float WireDistanceOutOfSinkTerminal { get; set; } = 25.0f;
 
         private double DownUTurnLengthSink { get; set; }
 
@@ -40,17 +35,17 @@ namespace DiiagramrAPI.Editor
 
         private double UpUTurnLengthSource { get; set; }
 
-        public Point[] GetWirePoints(double x1, double y1, double x2, double y2, Direction startTerminalDefaultDirection, Direction endTerminalDefaultDirection)
+        public Point[] GetWirePoints(Wire wire)
         {
-            InitializeUTurnLengths();
-            var start = new Point(x1, y1);
-            var end = new Point(x2, y2);
-            var sinkTerminalSide = SinkTerminal?.DefaultSide ?? startTerminalDefaultDirection.Opposite();
-            var sourceTerminalSide = SourceTerminal?.DefaultSide ?? endTerminalDefaultDirection.Opposite();
+            InitializeUTurnLengths(wire);
+            var start = new Point(wire.X2, wire.Y2);
+            var end = new Point(wire.X1, wire.Y1);
+            var sinkTerminalSide = wire.WireModel.SinkTerminal.DefaultSide;
+            var sourceTerminalSide = wire.WireModel.SourceTerminal.DefaultSide;
             var startTerminalBannedDirection = sinkTerminalSide.Opposite();
             var endTerminalBannedDirection = sourceTerminalSide.Opposite();
-            var stubStart = TranslatePointInDirection(start, sinkTerminalSide, WireDistanceOutOfTerminal);
-            var stubEnd = TranslatePointInDirection(end, sourceTerminalSide, WireDistanceOutOfTerminal);
+            var stubStart = TranslatePointInDirection(start, sinkTerminalSide, WireDistanceOutOfSinkTerminal);
+            var stubEnd = TranslatePointInDirection(end, sourceTerminalSide, WireDistanceOutOfSourceTerminal);
 
             if (ArePointsWithinDistance(stubStart, stubEnd, MinimimDistanceToCalculateWire))
             {
@@ -153,25 +148,39 @@ namespace DiiagramrAPI.Editor
             return (terminalDownWireMinimumLength, terminalLeftWireMinimumLength, terminalRightWireMinimumLength, terminalUpWireMinimumLength);
         }
 
-        private void InitializeUTurnLengths()
+        private void InitializeUTurnLengths(Wire wire)
         {
-            if (_wire.WireModel != null)
+            if (wire.WireModel != null)
             {
-                if (_wire.WireModel.SourceTerminal != null)
+                if (wire.WireModel.SourceTerminal != null && EnableUTurnLimitsForSourceTerminal)
                 {
-                    var (DownWireMinimumLength, LeftWireMinimumLength, RightWireMinimumLength, UpWireMinimumLength) = CalculateUTurnLimitsForTerminal(_wire.WireModel.SourceTerminal);
-                    DownUTurnLengthSource = DownWireMinimumLength;
-                    LeftUTurnLengthSource = LeftWireMinimumLength;
-                    RightUTurnLengthSource = RightWireMinimumLength;
-                    UpUTurnLengthSource = UpWireMinimumLength;
+                    var UTurnLimits = CalculateUTurnLimitsForTerminal(wire.WireModel.SourceTerminal);
+                    DownUTurnLengthSource = UTurnLimits.DownWireMinimumLength;
+                    LeftUTurnLengthSource = UTurnLimits.LeftWireMinimumLength;
+                    RightUTurnLengthSource = UTurnLimits.RightWireMinimumLength;
+                    UpUTurnLengthSource = UTurnLimits.UpWireMinimumLength;
                 }
-                if (_wire.WireModel.SinkTerminal != null)
+                else
                 {
-                    var (DownWireMinimumLength, LeftWireMinimumLength, RightWireMinimumLength, UpWireMinimumLength) = CalculateUTurnLimitsForTerminal(_wire.WireModel.SinkTerminal);
-                    DownUTurnLengthSink = DownWireMinimumLength;
-                    LeftUTurnLengthSink = LeftWireMinimumLength;
-                    RightUTurnLengthSink = RightWireMinimumLength;
-                    UpUTurnLengthSink = UpWireMinimumLength;
+                    DownUTurnLengthSource = 0;
+                    LeftUTurnLengthSource = 0;
+                    RightUTurnLengthSource = 0;
+                    UpUTurnLengthSource = 0;
+                }
+                if (wire.WireModel.SinkTerminal != null && EnableUTurnLimitsForSinkTerminal)
+                {
+                    var UTurnLimits = CalculateUTurnLimitsForTerminal(wire.WireModel.SinkTerminal);
+                    DownUTurnLengthSink = UTurnLimits.DownWireMinimumLength;
+                    LeftUTurnLengthSink = UTurnLimits.LeftWireMinimumLength;
+                    RightUTurnLengthSink = UTurnLimits.RightWireMinimumLength;
+                    UpUTurnLengthSink = UTurnLimits.UpWireMinimumLength;
+                }
+                else
+                {
+                    DownUTurnLengthSink = 0;
+                    LeftUTurnLengthSink = 0;
+                    RightUTurnLengthSink = 0;
+                    UpUTurnLengthSink = 0;
                 }
             }
         }

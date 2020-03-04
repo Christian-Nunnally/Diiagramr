@@ -16,7 +16,8 @@
     <Color x:Key="White60">#999999</Color>
     <Color x:Key="White70">#B2B2B2</Color>
     <Color x:Key="White80">#CCCCCC</Color>
-    <Color x:Key="White92Transparent">#11E6E6E6</Color>
+    <Color x:Key="White92Transparent33">#11E6E6E6</Color>
+    <Color x:Key="White92Transparent66">#33E6E6E6</Color>
     <Color x:Key="White92">#EAEAEA</Color>
     <Color x:Key="White100">#FFFFFF</Color>
 </ResourceDictionary>

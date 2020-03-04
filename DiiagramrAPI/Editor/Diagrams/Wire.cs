@@ -30,19 +30,13 @@ namespace DiiagramrAPI.Editor.Diagrams
         private BackgroundTask _wirePropagationAnimationTask;
         private BackgroundTask _wireCreationAnimationTask;
 
-        public Wire(WireModel wire)
+        public Wire(WireModel wire, WirePathingAlgorithum wirePathingAlgorithum)
         {
-            _wirePathingAlgorithum = new WirePathingAlgorithum(this);
+            _wirePathingAlgorithum = wirePathingAlgorithum;
             WireModel = wire ?? throw new ArgumentNullException(nameof(wire));
             wire.PropertyChanged += ModelPropertyChanged;
             LineColorBrush = GetWireBrush();
         }
-
-        public string WirePropagationVisualNumberString { get; set; }
-
-        public Direction BannedDirectionForEnd { get; set; }
-
-        public Direction BannedDirectionForStart { get; set; }
 
         public DoubleCollection StrokeDashArray { get; set; }
 
@@ -102,7 +96,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 if (View != null)
                 {
-                    Points = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
+                    Points = _wirePathingAlgorithum.GetWirePoints(this);
                     _doDataVisualAnimationFramesNeedToBeRefreshed = true;
                 }
             }
@@ -118,7 +112,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
             else
             {
-                Points = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
+                Points = _wirePathingAlgorithum.GetWirePoints(this);
                 _doDataVisualAnimationFramesNeedToBeRefreshed = true;
             }
         }
@@ -153,7 +147,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void AnimateWirePointsOnUiThread()
         {
-            var wirePoints = _wirePathingAlgorithum.GetWirePoints(X2, Y2, X1, Y1, BannedDirectionForStart, BannedDirectionForEnd);
+            var wirePoints = _wirePathingAlgorithum.GetWirePoints(this);
             Array.Reverse(wirePoints);
             var frames = GenerateFramesOfWiringAnimation(wirePoints);
             frames.Add(wirePoints);
@@ -205,11 +199,6 @@ namespace DiiagramrAPI.Editor.Diagrams
             {
                 case "Data":
                     TryStartPropagationAnimationTask();
-                    break;
-
-                case nameof(WireModel.SourceTerminal):
-                case nameof(WireModel.SinkTerminal):
-                    WireModel.PropertyChanged -= ModelPropertyChanged;
                     break;
 
                 case nameof(WireModel.IsBroken):

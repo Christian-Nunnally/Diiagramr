@@ -22,12 +22,12 @@ namespace DiiagramrAPI.Application.Tools
         public override void ExecuteCommand(IShellCommand command)
         {
             command.Execute(null);
-            Commands.Clear();
+            ClearCommands();
         }
 
         public override void MouseLeft()
         {
-            Commands.Clear();
+            ClearCommands();
         }
 
         public override void ShowContextMenu(IList<IShellCommand> commands, Point position)
@@ -40,6 +40,13 @@ namespace DiiagramrAPI.Application.Tools
                 command.CanExecute();
                 Commands.Add(command);
             }
+            NotifyOfPropertyChange(nameof(Commands));
+        }
+
+        private void ClearCommands()
+        {
+            Commands.Clear();
+            NotifyOfPropertyChange(nameof(Commands));
         }
     }
 }
