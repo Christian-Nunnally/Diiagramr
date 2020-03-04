@@ -38,38 +38,43 @@ namespace DiiagramrAPI.Editor
         public Point[] GetWirePoints(Wire wire)
         {
             InitializeUTurnLengths(wire);
-            var start = new Point(wire.X2, wire.Y2);
-            var end = new Point(wire.X1, wire.Y1);
+            var sink = new Point(wire.X2, wire.Y2);
+            var source = new Point(wire.X1, wire.Y1);
             var sinkTerminalSide = wire.WireModel.SinkTerminal.DefaultSide;
             var sourceTerminalSide = wire.WireModel.SourceTerminal.DefaultSide;
-            var startTerminalBannedDirection = sinkTerminalSide.Opposite();
-            var endTerminalBannedDirection = sourceTerminalSide.Opposite();
-            var stubStart = TranslatePointInDirection(start, sinkTerminalSide, WireDistanceOutOfSinkTerminal);
-            var stubEnd = TranslatePointInDirection(end, sourceTerminalSide, WireDistanceOutOfSourceTerminal);
+            var sinkTerminalBannedDirection = sinkTerminalSide.Opposite();
+            var sourceTerminalBannedDirection = sourceTerminalSide.Opposite();
+            var sinkStub = TranslatePointInDirection(sink, sinkTerminalSide, WireDistanceOutOfSinkTerminal);
+            var sourceStub = TranslatePointInDirection(source, sourceTerminalSide, WireDistanceOutOfSourceTerminal);
 
-            if (ArePointsWithinDistance(stubStart, stubEnd, MinimimDistanceToCalculateWire))
+            if (IsStubInsideNode(sourceStub, sinkStub))
             {
-                return new Point[] { start, stubStart, stubEnd, end };
+                return new Point[] { sink, sinkStub, sourceStub, source };
+            }
+
+            if (ArePointsWithinDistance(sinkStub, sourceStub, MinimimDistanceToCalculateWire))
+            {
+                return new Point[] { sink, sinkStub, sourceStub, source };
             }
 
             _uTurned = false;
-            var backwardPoints = new List<Point> { end };
-            WireTwoPoints(stubEnd, stubStart, endTerminalBannedDirection, startTerminalBannedDirection, backwardPoints, true);
+            var backwardPoints = new List<Point> { source };
+            WireTwoPoints(sourceStub, sinkStub, sourceTerminalBannedDirection, sinkTerminalBannedDirection, backwardPoints, true);
             if (_uTurned)
             {
-                endTerminalBannedDirection = GetBannedDirectionFromPoints(backwardPoints[1], backwardPoints[2]);
-                stubEnd = backwardPoints[2];
+                sourceTerminalBannedDirection = GetBannedDirectionFromPoints(backwardPoints[1], backwardPoints[2]);
+                sourceStub = backwardPoints[2];
             }
 
-            var points = new List<Point> { start };
-            WireTwoPoints(stubStart, stubEnd, startTerminalBannedDirection, endTerminalBannedDirection, points, false);
+            var points = new List<Point> { sink };
+            WireTwoPoints(sinkStub, sourceStub, sinkTerminalBannedDirection, sourceTerminalBannedDirection, points, false);
 
             if (_uTurned)
             {
                 points.Add(backwardPoints[1]);
             }
 
-            points.Add(end);
+            points.Add(source);
             return points.ToArray();
         }
 
@@ -102,6 +107,28 @@ namespace DiiagramrAPI.Editor
                 default:
                     return new Point(p.X, p.Y);
             }
+        }
+
+        private bool IsStubInsideNode(Point sourceStub, Point sinkStub)
+        {
+            return IsSourceInsideSinkNode(sourceStub, sinkStub)
+                || IsSinkInsideSourceNode(sourceStub, sinkStub);
+        }
+
+        private bool IsSourceInsideSinkNode(Point sourceStub, Point sinkStub)
+        {
+            var nodePosition = new Point(sinkStub.X - LeftUTurnLengthSink, sinkStub.Y - UpUTurnLengthSink);
+            var nodeSize = new Size(LeftUTurnLengthSink + RightUTurnLengthSink, UpUTurnLengthSink + DownUTurnLengthSink);
+            Rect nodeRectangle = new Rect(nodePosition, nodeSize);
+            return EnableUTurnLimitsForSinkTerminal && nodeRectangle.Contains(sourceStub);
+        }
+
+        private bool IsSinkInsideSourceNode(Point sourceStub, Point sinkStub)
+        {
+            var nodePosition = new Point(sourceStub.X - LeftUTurnLengthSource, sourceStub.Y - UpUTurnLengthSource);
+            var nodeSize = new Size(LeftUTurnLengthSource + RightUTurnLengthSource, UpUTurnLengthSource + DownUTurnLengthSource);
+            Rect nodeRectangle = new Rect(nodePosition, nodeSize);
+            return EnableUTurnLimitsForSourceTerminal && nodeRectangle.Contains(sinkStub);
         }
 
         private (double DownWireMinimumLength, double LeftWireMinimumLength, double RightWireMinimumLength, double UpWireMinimumLength) CalculateUTurnLimitsForTerminal(TerminalModel terminal)
