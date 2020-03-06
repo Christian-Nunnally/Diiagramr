@@ -58,13 +58,5 @@
             ConnectedWires.Add(wire);
             PropagateDataToAllWires();
         }
-
-        private void PropagateDataToAllWires()
-        {
-            for (int i = 0; i < ConnectedWires.Count; i++)
-            {
-                ConnectedWires[i].PropagateData();
-            }
-        }
     }
 }

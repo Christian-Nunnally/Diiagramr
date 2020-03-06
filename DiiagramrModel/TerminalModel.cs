@@ -145,6 +145,7 @@ namespace DiiagramrModel
             wire.SourceTerminal = otherTerminal;
             otherTerminal.ConnectedWires.Add(wire);
             ConnectedWires.Add(wire);
+            PropagateDataToAllWires();
         }
 
         /// <summary>
@@ -197,6 +198,14 @@ namespace DiiagramrModel
             else if (e.PropertyName == nameof(NodeModel.Y))
             {
                 NotifyPropertyChanged(nameof(Y));
+            }
+        }
+
+        protected void PropagateDataToAllWires()
+        {
+            for (int i = 0; i < ConnectedWires.Count; i++)
+            {
+                ConnectedWires[i].PropagateData();
             }
         }
     }

@@ -13,12 +13,11 @@ namespace DiiagramrPrimitives
             Height = 30;
             Name = "Number";
             ResizeEnabled = true;
-            Number = 60;
         }
 
         [NodeSetting]
         [OutputTerminal(Direction.South)]
-        public int Number { get; set; }
+        public int Number { get; set; } = 64;
 
         public string StringValue
         {

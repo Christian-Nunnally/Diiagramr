@@ -131,9 +131,9 @@ namespace DiiagramrAPI.Editor.Interactors
             var g = terminalColor.G;
             var b = terminalColor.B;
             _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, r, g, b));
-            _wirePathingAlgorithum.EnableUTurnLimitsForSourceTerminal = true;
-            _wirePathingAlgorithum.WireDistanceOutOfSourceTerminal = 25.0f;
-            _previewWire.WireModel.SourceTerminal = terminal.TerminalModel;
+            _wirePathingAlgorithum.EnableUTurnLimitsForSinkTerminal = true;
+            _wirePathingAlgorithum.WireDistanceOutOfSinkTerminal = 25.0f;
+            _previewWire.WireModel.SinkTerminal = terminal.TerminalModel;
         }
 
         private void ProcessLeftMouseDown(Diagram diagram, Stylet.Screen elementUnderMouse)
@@ -157,9 +157,9 @@ namespace DiiagramrAPI.Editor.Interactors
             }
             else
             {
-                _wirePathingAlgorithum.EnableUTurnLimitsForSourceTerminal = false;
-                _wirePathingAlgorithum.WireDistanceOutOfSourceTerminal = 0;
-                _previewWire.WireModel.SourceTerminal = _previewTerminal;
+                _wirePathingAlgorithum.EnableUTurnLimitsForSinkTerminal = false;
+                _wirePathingAlgorithum.WireDistanceOutOfSinkTerminal = 0;
+                _previewWire.WireModel.SinkTerminal = _previewTerminal;
                 _previewWire.LineColorBrush = _ghostWireBrush;
             }
         }
@@ -193,14 +193,21 @@ namespace DiiagramrAPI.Editor.Interactors
             _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.TerminalModel.DefaultSide);
             _previewTerminal.OffsetX = x1;
             _previewTerminal.OffsetY = y1;
-            _previewWire = new Wire(new WireModel() { SinkTerminal = terminal.TerminalModel, SourceTerminal = _previewTerminal }, _wirePathingAlgorithum);
+            // TODO: Make this a different wire type maybe?
+            var previewWireModel = new WireModel()
+            {
+                SourceTerminal = terminal.TerminalModel,
+                SinkTerminal = _previewTerminal,
+                DisableDataPropagation = true
+            };
+            _previewWire = new Wire(previewWireModel, _wirePathingAlgorithum);
             diagram.AddWire(_previewWire);
         }
 
         private void WireTerminalsToWiringTerminal(Diagram diagram, Terminal terminal)
         {
-            TryWireTwoTerminalsOnDiagram(diagram, _wiringTerminal, terminal, _transactor, true);
             diagram.RemoveWire(_previewWire);
+            TryWireTwoTerminalsOnDiagram(diagram, _wiringTerminal, terminal, _transactor, true);
             diagram.UnhighlightTerminals();
             diagram.UnselectTerminals();
             _previewWire = null;

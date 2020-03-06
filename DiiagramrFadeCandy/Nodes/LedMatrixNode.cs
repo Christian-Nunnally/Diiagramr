@@ -122,7 +122,7 @@ namespace DiiagramrFadeCandy
             {
                 Effects.Add(effect);
             }
-            _backgroundRefreshTask.Paused = !Effects.Any();
+            // _backgroundRefreshTask.Paused = !Effects.Any();
         }
 
         [InputTerminal(Direction.West)]

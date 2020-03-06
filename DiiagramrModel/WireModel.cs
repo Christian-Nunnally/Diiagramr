@@ -29,6 +29,8 @@ namespace DiiagramrModel
         [DataMember]
         public bool IsBroken { get; set; }
 
+        public bool DisableDataPropagation { get; set; }
+
         /// <summary>
         /// Gets or sets the terminal that gets data from the <see cref="SourceTerminal"/>.
         /// </summary>
@@ -75,7 +77,7 @@ namespace DiiagramrModel
 
         public void PropagateData()
         {
-            if (IsBroken || SinkTerminal == null)
+            if (IsBroken || SinkTerminal == null || DisableDataPropagation)
             {
                 return;
             }
