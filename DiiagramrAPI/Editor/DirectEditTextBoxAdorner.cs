@@ -61,19 +61,19 @@ namespace DiiagramrAPI.Editor
             set => AdornedTerminal.Data = CoerceStringToType(value);
         }
 
-        public bool IsBoolType => AdornedTerminal.TerminalModel.Type == typeof(bool);
+        public bool IsBoolType => AdornedTerminal.Model.Type == typeof(bool);
 
-        public bool IsCharType => AdornedTerminal.TerminalModel.Type == typeof(char);
+        public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
 
         public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
 
-        public bool IsEnumType => AdornedTerminal.TerminalModel.Type.IsEnum;
+        public bool IsEnumType => AdornedTerminal.Model.Type.IsEnum;
 
-        public bool IsFloatType => AdornedTerminal.TerminalModel.Type == typeof(float);
+        public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
 
-        public bool IsIntType => AdornedTerminal.TerminalModel.Type == typeof(int);
+        public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
 
-        public bool IsStringType => AdornedTerminal.TerminalModel.Type == typeof(string);
+        public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
 
         protected override int VisualChildrenCount => visualChildren.Count;
 

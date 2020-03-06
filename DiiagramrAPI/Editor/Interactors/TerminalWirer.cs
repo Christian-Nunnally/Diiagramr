@@ -14,11 +14,11 @@ namespace DiiagramrAPI.Editor.Interactors
         private const int GhostWireAlphaValue = 70;
         private readonly SolidColorBrush _ghostWireBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, 128, 128, 128));
         private readonly ITransactor _transactor;
+        private readonly WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
         private int _leftMouseDownCount;
         private TerminalModel _previewTerminal;
         private Wire _previewWire;
         private Terminal _wiringTerminal;
-        private WirePathingAlgorithum _wirePathingAlgorithum = new WirePathingAlgorithum();
 
         public TerminalWirer(Func<ITransactor> transactorFactory)
         {
@@ -28,23 +28,23 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public static bool CanWireTwoTerminalsOnDiagram(Terminal startTerminal, Terminal endTerminal)
         {
-            if (endTerminal?.TerminalModel == null)
+            if (endTerminal?.Model == null)
             {
                 return false;
             }
 
-            if (endTerminal.TerminalModel.GetType() == startTerminal.TerminalModel.GetType())
+            if (endTerminal.Model.GetType() == startTerminal.Model.GetType())
             {
                 return false;
             }
 
-            if (endTerminal.TerminalModel.ConnectedWires.Any(connectedWire => startTerminal.TerminalModel.ConnectedWires.Contains(connectedWire)))
+            if (endTerminal.Model.ConnectedWires.Any(connectedWire => startTerminal.Model.ConnectedWires.Contains(connectedWire)))
             {
                 return false;
             }
 
-            var sinkTerminal = startTerminal.TerminalModel is InputTerminalModel ? startTerminal.TerminalModel : endTerminal.TerminalModel;
-            var sourceTerminal = startTerminal.TerminalModel is OutputTerminalModel ? startTerminal.TerminalModel : endTerminal.TerminalModel;
+            var sinkTerminal = startTerminal.Model is InputTerminalModel ? startTerminal.Model : endTerminal.Model;
+            var sourceTerminal = startTerminal.Model is OutputTerminalModel ? startTerminal.Model : endTerminal.Model;
             return sourceTerminal.CanWireToType(sinkTerminal.Type);
         }
 
@@ -113,8 +113,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private static void WireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
-            var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.TerminalModel, animateWire);
-            transactor.Transact(wireToTerminalCommand, endTerminal.TerminalModel);
+            var wireToTerminalCommand = new WireToTerminalCommand(diagram, startTerminal.Model, animateWire);
+            transactor.Transact(wireToTerminalCommand, endTerminal.Model);
         }
 
         private void CancelWireInsertion(Diagram diagram)
@@ -133,7 +133,7 @@ namespace DiiagramrAPI.Editor.Interactors
             _previewWire.LineColorBrush = new SolidColorBrush(Color.FromArgb(GhostWireAlphaValue, r, g, b));
             _wirePathingAlgorithum.EnableUTurnLimitsForSinkTerminal = true;
             _wirePathingAlgorithum.WireDistanceOutOfSinkTerminal = 25.0f;
-            _previewWire.WireModel.SinkTerminal = terminal.TerminalModel;
+            _previewWire.WireModel.SinkTerminal = terminal.Model;
         }
 
         private void ProcessLeftMouseDown(Diagram diagram, Stylet.Screen elementUnderMouse)
@@ -184,19 +184,21 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             diagram.UnselectTerminals();
             diagram.UnselectNodes();
-            diagram.HighlightWirableTerminals(terminal.TerminalModel);
+            diagram.HighlightWirableTerminals(terminal.Model);
 
-            var x1 = terminal.TerminalModel.X;
-            var y1 = terminal.TerminalModel.Y;
+            var x1 = terminal.Model.X;
+            var y1 = terminal.Model.Y;
             terminal.SetAdorner(null);
 
-            _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.TerminalModel.DefaultSide);
-            _previewTerminal.OffsetX = x1;
-            _previewTerminal.OffsetY = y1;
+            _previewTerminal = new TerminalModel("invsiblePreviewTerminal", typeof(object), terminal.Model.DefaultSide)
+            {
+                OffsetX = x1,
+                OffsetY = y1
+            };
             // TODO: Make this a different wire type maybe?
             var previewWireModel = new WireModel()
             {
-                SourceTerminal = terminal.TerminalModel,
+                SourceTerminal = terminal.Model,
                 SinkTerminal = _previewTerminal,
                 DisableDataPropagation = true
             };

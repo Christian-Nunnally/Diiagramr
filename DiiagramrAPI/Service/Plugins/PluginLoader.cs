@@ -162,7 +162,7 @@ namespace DiiagramrAPI.Service.Plugins
                 var node = (Node)Activator.CreateInstance(exportedType);
                 foreach (var terminal in node.Terminals)
                 {
-                    ModelBase.SerializeableTypes.Add(terminal.TerminalModel.Type);
+                    ModelBase.SerializeableTypes.Add(terminal.Model.Type);
                 }
                 _nodeProvider.RegisterNode(node, libraryDependency);
             }

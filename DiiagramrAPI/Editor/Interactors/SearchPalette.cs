@@ -180,8 +180,8 @@ namespace DiiagramrAPI.Editor.Interactors
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
             nodeToInsert.Visible = false;
-            nodeToInsert.NodeModel.X = _diagram.GetDiagramPointFromViewPointX(X);
-            nodeToInsert.NodeModel.Y = _diagram.GetDiagramPointFromViewPointX(Y);
+            nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
             _diagram.AddNodeInteractively(nodeToInsert);
         }
 

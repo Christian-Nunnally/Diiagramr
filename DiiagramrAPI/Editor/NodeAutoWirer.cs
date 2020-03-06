@@ -48,17 +48,17 @@ namespace DiiagramrAPI.Editor
 
         private IEnumerable<Terminal> GetWireableTerminals(Terminal startTerminal, Node node)
         {
-            if (startTerminal.TerminalModel is InputTerminalModel inputTerminal)
+            if (startTerminal.Model is InputTerminalModel inputTerminal)
             {
                 return node.Terminals
                     .OfType<OutputTerminal>()
-                    .Where(t => t.TerminalModel.CanWireToType(inputTerminal.Type));
+                    .Where(t => t.Model.CanWireToType(inputTerminal.Type));
             }
-            else if (startTerminal.TerminalModel is OutputTerminalModel outputTerminal)
+            else if (startTerminal.Model is OutputTerminalModel outputTerminal)
             {
                 return node.Terminals
                     .OfType<InputTerminal>()
-                    .Where(t => t.TerminalModel.CanWireFromData(outputTerminal.Data));
+                    .Where(t => t.Model.CanWireFromData(outputTerminal.Data));
             }
 
             return Enumerable.Empty<Terminal>();

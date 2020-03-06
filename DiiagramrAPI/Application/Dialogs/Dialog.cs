@@ -1,9 +1,10 @@
+using Stylet;
 using System;
 using System.Collections.ObjectModel;
 
 namespace DiiagramrAPI.Application
 {
-    public abstract class Dialog : ViewModel
+    public abstract class Dialog : Screen
     {
         public DialogHost CurrentDialogHost { get; set; }
 

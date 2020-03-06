@@ -1,11 +1,12 @@
 using DiiagramrAPI.Application;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
+using Stylet;
 using System;
 
 namespace DiiagramrAPI.Project
 {
-    public class ProjectScreen : ViewModel, IUserInputBeforeClosedRequest
+    public class ProjectScreen : Screen, IUserInputBeforeClosedRequest
     {
         private readonly IProjectManager _projectManager;
 

@@ -115,10 +115,10 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void AddEffect(GraphicEffect data)
+        public void AddEffect(GraphicEffect _)
         {
             Effects.Clear();
-            foreach (var effect in NodeModel.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<GraphicEffect>())
+            foreach (var effect in Model.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<GraphicEffect>())
             {
                 Effects.Add(effect);
             }
@@ -155,7 +155,7 @@ namespace DiiagramrFadeCandy
                 driver.ImageDataProvider = null;
             }
             Drivers.Clear();
-            foreach (var driver in NodeModel.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<LedChannelDriver>())
+            foreach (var driver in Model.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<LedChannelDriver>())
             {
                 Drivers.Add(driver);
                 driver.ImageDataProvider = this;

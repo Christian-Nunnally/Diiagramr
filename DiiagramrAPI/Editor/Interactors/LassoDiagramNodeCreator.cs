@@ -109,7 +109,7 @@ namespace DiiagramrAPI.Editor.Interactors
                              node.X > interactionRectangle.Left && node.X + node.Width < interactionRectangle.Right
                              && node.Y > interactionRectangle.Top && node.Y + node.Height < interactionRectangle.Bottom).ToList();
             var nodesToMoveModels = nodesToMove.Select(n => n.Model);
-            var allWires = nodesToMove.SelectMany(n => n.Terminals).SelectMany(t => t.TerminalModel.ConnectedWires).Distinct();
+            var allWires = nodesToMove.SelectMany(n => n.Terminals).SelectMany(t => t.Model.ConnectedWires).Distinct();
             var internalWires = allWires.Where(w => nodesToMoveModels.Contains(w.SourceTerminal.ParentNode) && nodesToMoveModels.Contains(w.SinkTerminal.ParentNode));
             var outputWires = allWires.Where(w => nodesToMoveModels.Contains(w.SourceTerminal.ParentNode) && !nodesToMoveModels.Contains(w.SinkTerminal.ParentNode));
             var inputWires = allWires.Where(w => !nodesToMoveModels.Contains(w.SourceTerminal.ParentNode) && nodesToMoveModels.Contains(w.SinkTerminal.ParentNode));
@@ -156,10 +156,10 @@ namespace DiiagramrAPI.Editor.Interactors
                 outputNode.Y = outputWireState.SinkTerminal.ParentNode.Y;
                 diagram.AddNode(outputNode);
 
-                var wireCommand = new WireToTerminalCommand(diagram, outputNode.Terminals.First().TerminalModel);
+                var wireCommand = new WireToTerminalCommand(diagram, outputNode.Terminals.First().Model);
                 wireCommand.Execute(outputWireState.SourceTerminal);
 
-                var newDiagramNodeTerminal = diagramNode.Terminals.Last().TerminalModel;
+                var newDiagramNodeTerminal = diagramNode.Terminals.Last().Model;
                 wireCommand = new WireToTerminalCommand(outerDiagram, newDiagramNodeTerminal);
                 wireCommand.Execute(outputWireState.SinkTerminal);
             }
@@ -174,10 +174,10 @@ namespace DiiagramrAPI.Editor.Interactors
                 inputNode.Y = inputWireState.SourceTerminal.ParentNode.Y;
                 diagram.AddNode(inputNode);
 
-                var wireCommand = new WireToTerminalCommand(diagram, inputNode.Terminals.First().TerminalModel);
+                var wireCommand = new WireToTerminalCommand(diagram, inputNode.Terminals.First().Model);
                 wireCommand.Execute(inputWireState.SinkTerminal);
 
-                var newDiagramNodeTerminal = diagramNode.Terminals.Last().TerminalModel;
+                var newDiagramNodeTerminal = diagramNode.Terminals.Last().Model;
                 wireCommand = new WireToTerminalCommand(outerDiagram, newDiagramNodeTerminal);
                 wireCommand.Execute(inputWireState.SourceTerminal);
             }

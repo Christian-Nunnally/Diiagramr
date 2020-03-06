@@ -55,7 +55,7 @@ namespace DiiagramrAPI.Editor
 
         private void ArrangeAllTerminalsOnEdge(Direction edge, IEnumerable<Terminal> terminals)
         {
-            var terminalsOnEdge = terminals.Where(t => t.TerminalModel.DefaultSide == edge).ToArray();
+            var terminalsOnEdge = terminals.Where(t => t.Model.DefaultSide == edge).ToArray();
             var increment = 1 / (terminalsOnEdge.Length + 1.0f);
             for (var i = 0; i < terminalsOnEdge.Length; i++)
             {

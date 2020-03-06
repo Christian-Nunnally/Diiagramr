@@ -9,11 +9,12 @@ namespace DiiagramrAPI.Application
     /// <summary>
     /// Base class for all stylet based view models.
     /// </summary>
-    public abstract class ViewModel : Screen
+    public abstract class ViewModel<ModelType> : Screen
+        where ModelType : ModelBase
     {
         private readonly List<Action> _viewLoadedActions = new List<Action>();
 
-        public ModelBase Model { get; set; }
+        public ModelType Model { get; set; }
 
         public Adorner Adorner { get; private set; }
 

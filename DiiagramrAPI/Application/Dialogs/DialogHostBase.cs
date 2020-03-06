@@ -1,10 +1,11 @@
-﻿using System.Windows;
+﻿using Stylet;
+using System.Windows;
 using System.Windows.Input;
 using static DiiagramrAPI.Application.Dialog;
 
 namespace DiiagramrAPI.Application
 {
-    public abstract class DialogHostBase : ViewModel
+    public abstract class DialogHostBase : Screen
     {
         public abstract Dialog ActiveDialog { get; set; }
 

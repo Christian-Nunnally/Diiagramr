@@ -77,8 +77,8 @@ namespace DiiagramrAPI.Editor.Interactors
             var nodeTypeName = node.GetType().FullName;
             var nodeToInsert = insertCopy ? _nodeProvider.CreateNodeFromName(nodeTypeName) : node;
             nodeToInsert.Visible = false;
-            nodeToInsert.NodeModel.X = _diagram.GetDiagramPointFromViewPointX(X);
-            nodeToInsert.NodeModel.Y = _diagram.GetDiagramPointFromViewPointX(Y);
+            nodeToInsert.Model.X = _diagram.GetDiagramPointFromViewPointX(X);
+            nodeToInsert.Model.Y = _diagram.GetDiagramPointFromViewPointX(Y);
             _diagram.AddNodeInteractively(nodeToInsert);
             if (ContextTerminal != null)
             {
@@ -178,7 +178,7 @@ namespace DiiagramrAPI.Editor.Interactors
         {
             if (viewModelUnderMouse is Terminal terminal)
             {
-                if (terminal.TerminalModel.DefaultSide != Direction.West)
+                if (terminal.Model.DefaultSide != Direction.West)
                 {
                     X += Terminal.TerminalHeight;
                 }
@@ -278,13 +278,13 @@ namespace DiiagramrAPI.Editor.Interactors
             if (mousedOverViewModel is InputTerminal inputTerminalMouseIsOver)
             {
                 ContextTerminal = inputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is OutputTerminal && ValueConverter.NonExaustiveCanConvertToType(t.TerminalModel.Type, inputTerminalMouseIsOver.TerminalModel.Type)));
+                Show(n => n.Terminals.Any(t => t is OutputTerminal && ValueConverter.NonExaustiveCanConvertToType(t.Model.Type, inputTerminalMouseIsOver.Model.Type)));
                 inputTerminalMouseIsOver.HighlightVisible = true;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is InputTerminal && ValueConverter.NonExaustiveCanConvertToType(outputTerminalMouseIsOver.TerminalModel.Type, t.TerminalModel.Type)));
+                Show(n => n.Terminals.Any(t => t is InputTerminal && ValueConverter.NonExaustiveCanConvertToType(outputTerminalMouseIsOver.Model.Type, t.Model.Type)));
                 outputTerminalMouseIsOver.HighlightVisible = true;
             }
             else

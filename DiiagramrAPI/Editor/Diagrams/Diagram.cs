@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
-    public class Diagram : ViewModel, IMouseEnterLeaveReaction
+    public class Diagram : ViewModel<DiagramModel>, IMouseEnterLeaveReaction
     {
         public const double DiagramBorderThickness = 2.0;
         public const double GridSnapInterval = 30.0;
@@ -78,12 +78,12 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void AddNode(Node node)
         {
-            if (node.NodeModel == null)
+            if (node.Model == null)
             {
                 throw new InvalidOperationException("Can not add a node to the diagram before it has been initialized");
             }
 
-            DiagramModel.AddNode(node.NodeModel);
+            DiagramModel.AddNode(node.Model);
             AddNodeViewModel(node);
         }
 
@@ -194,7 +194,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void RemoveNode(Node viewModel)
         {
-            DiagramModel.RemoveNode(viewModel.NodeModel);
+            DiagramModel.RemoveNode(viewModel.Model);
             Nodes.Remove(viewModel);
             UpdateDiagramBoundingBox();
             ShowBoundingBox = Nodes.Any();
@@ -281,7 +281,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void AddWiresForNode(Node viewModel)
         {
-            foreach (var inputTerminal in viewModel.NodeModel.Terminals.OfType<InputTerminalModel>())
+            foreach (var inputTerminal in viewModel.Model.Terminals.OfType<InputTerminalModel>())
             {
                 inputTerminal.ConnectedWires
                     .Select(w => new Wire(w, new WirePathingAlgorithum()))

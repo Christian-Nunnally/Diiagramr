@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Commands
         {
             if (parameter is Node node)
             {
-                foreach (var wire in node.Terminals.SelectMany(t => t.TerminalModel.ConnectedWires).ToArray())
+                foreach (var wire in node.Terminals.SelectMany(t => t.Model.ConnectedWires).ToArray())
                 {
                     transactor.Transact(_removeWireCommand, wire);
                 }

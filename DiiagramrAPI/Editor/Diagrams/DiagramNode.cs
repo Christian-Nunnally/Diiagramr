@@ -148,8 +148,8 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private void UpdateDiagramNodeWidth()
         {
-            var outputTerminalCount = NodeModel.Terminals.OfType<OutputTerminalModel>().Count();
-            var inputTerminalCount = NodeModel.Terminals.OfType<InputTerminalModel>().Count();
+            var outputTerminalCount = Model.Terminals.OfType<OutputTerminalModel>().Count();
+            var inputTerminalCount = Model.Terminals.OfType<InputTerminalModel>().Count();
             var mostTerminals = Math.Max(outputTerminalCount, inputTerminalCount);
             Width = (mostTerminals + 1) * (Terminal.TerminalWidth + MarginBetweenTerminals);
         }
@@ -157,7 +157,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void AddInputTerminalForInputNode(DiagramInputNode newInputNode)
         {
             var inputTerminal = new InputTerminalModel("Diagram Input", typeof(object), Direction.North);
-            var outputTerminal = (OutputTerminalModel)newInputNode.Terminals.First().TerminalModel;
+            var outputTerminal = (OutputTerminalModel)newInputNode.Terminals.First().Model;
             inputTerminal.DataChanged += data => outputTerminal.UpdateData(data);
             _inputNodeToTerminalMap.Add(newInputNode, inputTerminal);
             AddTerminal(inputTerminal);

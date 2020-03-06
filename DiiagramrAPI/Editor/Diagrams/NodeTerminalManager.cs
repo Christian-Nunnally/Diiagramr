@@ -35,7 +35,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
             var terminalType = methodInfo.GetParameters().First().ParameterType;
             var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == methodInfo.Name);
-            var terminalModel = existingTerminalWithSameName?.TerminalModel
+            var terminalModel = existingTerminalWithSameName?.Model
                 ?? new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection);
             terminalModel.DataChanged += methodInfo.CreateMethodInvoker(_node);
             if (existingTerminalWithSameName == null)
@@ -49,7 +49,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
             var terminalType = property.PropertyType;
             var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
-            var outputTerminalModel = existingTerminalWithSameName?.TerminalModel as OutputTerminalModel
+            var outputTerminalModel = existingTerminalWithSameName?.Model as OutputTerminalModel
                 ?? new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection);
             outputTerminalModel.GetDataFromSource = () => property.GetValue(_node);
             outputTerminalModel.UpdateDataFromSource();
@@ -71,7 +71,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void NodePropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             var existingTerminal = _node.Terminals.FirstOrDefault(t => t.Name == e.PropertyName);
-            if (existingTerminal?.TerminalModel is OutputTerminalModel outputTerminal)
+            if (existingTerminal?.Model is OutputTerminalModel outputTerminal)
             {
                 outputTerminal.UpdateDataFromSource();
             }

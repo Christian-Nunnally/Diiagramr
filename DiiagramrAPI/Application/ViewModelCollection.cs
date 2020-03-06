@@ -20,7 +20,7 @@ namespace DiiagramrAPI.Application
     /// will create instances of <typeparamref name="TViewModel"/> for.
     /// </typeparam>
     public class ViewModelCollection<TViewModel, TModel> : ViewModelCollectionBase<TViewModel, TModel>
-        where TViewModel : ViewModel
+        where TViewModel : ViewModel<TModel>
         where TModel : ModelBase
     {
         private readonly Func<ObservableCollection<TModel>> _modelCollectionGetter;
@@ -86,7 +86,7 @@ namespace DiiagramrAPI.Application
 
         private void CollectionOwnerPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ViewModel.Model))
+            if (e.PropertyName == nameof(ViewModel<TModel>.Model))
             {
                 UpdateModels();
             }

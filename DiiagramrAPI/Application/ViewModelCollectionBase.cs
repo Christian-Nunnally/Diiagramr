@@ -18,7 +18,7 @@ namespace DiiagramrAPI.Application
     /// will create instances of <typeparamref name="TViewModel"/> for.
     /// </typeparam>
     public abstract class ViewModelCollectionBase<TViewModel, TModel> : IObservableCollection<TViewModel>
-        where TViewModel : ViewModel
+        where TViewModel : ViewModel<TModel>
         where TModel : ModelBase
     {
         public event PropertyChangedEventHandler PropertyChanged;

@@ -13,7 +13,7 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
-    public class Wire : ViewModel, IMouseEnterLeaveReaction
+    public class Wire : ViewModel<WireModel>, IMouseEnterLeaveReaction
     {
         public static bool ShowDataPropagation = false;
         private const double _dataVisualDiameter = 6;
