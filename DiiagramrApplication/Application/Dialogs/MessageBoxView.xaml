@@ -14,13 +14,11 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Border>
-        <TextBlock
-            Margin="10"
-            Text="{Binding Message}"
-            VerticalAlignment="Center"
-            HorizontalAlignment="Center"
-            Foreground="{StaticResource ForegroundBrush}"
-            FontSize="10" />
-    </Border>
+    <TextBlock
+        Margin="10"
+        Text="{Binding Message}"
+        Style="{StaticResource TextBlockStyle}"
+        VerticalAlignment="Center"
+        HorizontalAlignment="Center"
+        FontSize="10" />
 </UserControl>

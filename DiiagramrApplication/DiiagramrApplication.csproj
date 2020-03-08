@@ -45,6 +45,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Application\Dialogs\HelpDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Application\Dialogs\MessageBoxView.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -97,9 +100,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editor\Interactors\DiagramRifterView.xaml">
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Update="Editor\Interactors\NodeHelpView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Editor\Interactors\HotkeyHelpView.xaml">

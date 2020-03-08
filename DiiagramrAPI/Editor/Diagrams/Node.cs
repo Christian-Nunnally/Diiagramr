@@ -189,8 +189,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             switch (e.PropertyName)
             {
-                case nameof(DiiagramrModel.NodeModel.X):
-                case nameof(DiiagramrModel.NodeModel.Y):
+                case nameof(NodeModel.X):
+                case nameof(NodeModel.Y):
                     OnPropertyChanged(e.PropertyName);
                     break;
             }

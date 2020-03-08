@@ -49,6 +49,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
             var terminalType = property.PropertyType;
             var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
+            var helpAttribute = property.GetCustomAttributes(typeof(HelpAttribute), true).FirstOrDefault() as HelpAttribute;
+            var helpString = helpAttribute?.HelpText ?? "";
             var outputTerminalModel = existingTerminalWithSameName?.Model as OutputTerminalModel
                 ?? new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection);
             outputTerminalModel.GetDataFromSource = () => property.GetValue(_node);

@@ -1,21 +1,31 @@
-﻿using DiiagramrAPI.Editor.Diagrams;
-using System.Linq;
+﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Dialogs;
+using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrAPI.Service.Editor;
+using System;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
     public class NodeHelp : DiagramInteractor
     {
-        private bool _shouldStopInteraction = false;
+        private readonly INodeProvider _nodeProvider;
+        private readonly DialogHostBase _dialogHost;
+        private HelpDialog _helpDialog;
 
-        public string NodeName { get; set; }
-        public string NodeHelpText { get; set; }
+        public NodeHelp(
+            Func<INodeProvider> nodeProviderFactory,
+            Func<DialogHostBase> dialogHostFactory)
+        {
+            _nodeProvider = nodeProviderFactory();
+            _dialogHost = dialogHostFactory();
+        }
+
+        public Node Node { get; set; }
+
+        public string VisibleHelpText { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
-            if (interaction.Type == InteractionType.KeyUp)
-            {
-                _shouldStopInteraction = true;
-            }
         }
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
@@ -27,22 +37,18 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
-            return interaction.Type != InteractionType.MouseMoved
-                && interaction.Type != InteractionType.KeyUp
-                && _shouldStopInteraction;
+            return true;
         }
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             X = (interaction.Diagram.ViewWidth / 2) - 250;
             Y = (interaction.Diagram.ViewHeight / 2) - 200;
-            _shouldStopInteraction = false;
             var node = (Node)interaction.ViewModelUnderMouse;
-            NodeName = node.Name;
-            if (node.GetType().GetCustomAttributes(typeof(HelpAttribute), true).FirstOrDefault() is HelpAttribute help)
-            {
-                NodeHelpText = help.HelpText;
-            }
+            var nodeCopy = _nodeProvider.CreateNodeFromName(node.GetType().FullName);
+            node.SetAdorner(null);
+            _helpDialog = new HelpDialog(nodeCopy);
+            _dialogHost.OpenDialog(_helpDialog);
         }
 
         public override void StopInteraction(DiagramInteractionEventArguments interaction)

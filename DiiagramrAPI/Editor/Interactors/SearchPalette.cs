@@ -35,10 +35,6 @@ namespace DiiagramrAPI.Editor.Interactors
             AddResultsToSearchTree();
         }
 
-        public double PreviewNodePositionX { get; set; }
-        public double PreviewNodePositionY { get; set; }
-        public double PreviewNodeScaleX { get; set; }
-        public double PreviewNodeScaleY { get; set; }
         public string SearchPhrase { get; set; } = string.Empty;
         public BindableCollection<SearchResult> FilteredNodesList { get; } = new BindableCollection<SearchResult>();
 
@@ -55,7 +51,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 if (_selectedNodeIndex >= 0 && _selectedNodeIndex < FilteredNodesList.Count)
                 {
                     FilteredNodesList[_selectedNodeIndex].IsSelected = true;
-                    PreviewNode(FilteredNodesList[_selectedNodeIndex].Node);
+                    NodeToPreview = FilteredNodesList[_selectedNodeIndex].Node;
                 }
                 else
                 {
@@ -147,7 +143,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
             FilteredNodesList.ForEach(n => n.IsSelected = false);
             searchResult.IsSelected = true;
-            PreviewNode(searchResult.Node);
+            NodeToPreview = searchResult.Node;
         }
 
         public void SelectNode()
@@ -215,27 +211,6 @@ namespace DiiagramrAPI.Editor.Interactors
             FilteredNodesList.ForEach(n => n.IsSelected = false);
             SelectedNodeIndex = -1;
             SelectedNodeIndex = 0;
-        }
-
-        private void PreviewNode(Node node)
-        {
-            NodeToPreview = node;
-            const int workingWidth = 100;
-            const int workingHeight = 100;
-
-            var totalNodeWidth = NodeToPreview.Width + Diagram.NodeBorderWidth * 2.0;
-            var totalNodeHeight = NodeToPreview.Height + Diagram.NodeBorderWidth * 2.0;
-            PreviewNodeScaleX = workingWidth / totalNodeWidth;
-            PreviewNodeScaleY = workingHeight / totalNodeHeight;
-
-            PreviewNodeScaleX = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
-            PreviewNodeScaleY = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
-
-            var newWidth = totalNodeWidth * PreviewNodeScaleX + 1;
-            var newHeight = totalNodeHeight * PreviewNodeScaleY + 1;
-
-            PreviewNodePositionX = (workingWidth - newWidth) / 2.0;
-            PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
         }
     }
 

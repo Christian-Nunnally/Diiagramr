@@ -180,6 +180,14 @@ namespace DiiagramrModel
             return CanWireDataToType(data, Data?.GetType() ?? Type);
         }
 
+        protected void PropagateDataToAllWires()
+        {
+            for (int i = 0; i < ConnectedWires.Count; i++)
+            {
+                ConnectedWires[i].PropagateData();
+            }
+        }
+
         private bool CanWireDataToType(object data, Type to)
         {
             if (data == null)
@@ -198,14 +206,6 @@ namespace DiiagramrModel
             else if (e.PropertyName == nameof(NodeModel.Y))
             {
                 NotifyPropertyChanged(nameof(Y));
-            }
-        }
-
-        protected void PropagateDataToAllWires()
-        {
-            for (int i = 0; i < ConnectedWires.Count; i++)
-            {
-                ConnectedWires[i].PropagateData();
             }
         }
     }
