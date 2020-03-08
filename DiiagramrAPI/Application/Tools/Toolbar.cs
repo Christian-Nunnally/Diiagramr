@@ -35,11 +35,14 @@ namespace DiiagramrAPI.Application.Tools
 
         public override void OpenContextMenuForTopLevelMenuHandler(object sender, MouseEventArgs e)
         {
-            var control = sender as Control;
-            if (control?.DataContext is string topLevelMenuName)
+            OpenContextMenuFromSender(sender);
+        }
+
+        public void TopLevelMenuItemMouseEnterHandler(object sender, MouseEventArgs e)
+        {
+            if (_contextMenu.Commands.Any())
             {
-                var pointBelowMenuItem = GetPointBelowControl(control);
-                OpenContextMenuForTopLevelMenu(pointBelowMenuItem, topLevelMenuName);
+                OpenContextMenuFromSender(sender);
             }
         }
 
@@ -63,6 +66,16 @@ namespace DiiagramrAPI.Application.Tools
             }
 
             return orderedTopLevelMenuNames;
+        }
+
+        private void OpenContextMenuFromSender(object sender)
+        {
+            var control = sender as Control;
+            if (control?.DataContext is string topLevelMenuName)
+            {
+                var pointBelowMenuItem = GetPointBelowControl(control);
+                OpenContextMenuForTopLevelMenu(pointBelowMenuItem, topLevelMenuName);
+            }
         }
 
         private Point GetPointBelowControl(Control control)

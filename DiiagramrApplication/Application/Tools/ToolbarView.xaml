@@ -29,12 +29,13 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate>
                 <Label
-                    Padding="5,0"
+                    Padding="10,0"
                     HorizontalContentAlignment="Center"
                     VerticalContentAlignment="Center"
                     Content="{Binding}"
                     Foreground="{StaticResource ForegroundBrush}"
                     IsHitTestVisible="True"
+                    MouseEnter="{s:Action TopLevelMenuItemMouseEnterHandler}"
                     MouseDown="{s:Action OpenContextMenuForTopLevelMenuHandler}">
                     <Label.Style>
                         <Style TargetType="Label">
