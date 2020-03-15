@@ -1,0 +1,32 @@
+﻿<UserControl
+    x:Class="Diiagramr.Application.Dialogs.OptionDialogView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="https://github.com/canton7/Stylet"
+    Width="{Binding MaxWidth}"
+    Height="{Binding MaxHeight}">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <ItemsControl Margin="10" ItemsSource="{Binding OptionCategories}" ItemsPanel="{StaticResource StackItemsPanel}">
+        <ItemsControl.ItemTemplate>
+            <DataTemplate>
+                <StackPanel>
+                    <Label Content="{Binding Name}" HorizontalAlignment="Left" Style="{StaticResource LabelStyleBase}" FontWeight="Bold" />
+                    <ItemsControl Margin="2,6,10,15" ItemsSource="{Binding Options}" ItemsPanel="{StaticResource StackItemsPanel}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding Name}" Foreground="{StaticResource ForegroundBrush}" Checked="{s:Action OptionCheckboxCheckedHandler}" Unchecked="{s:Action OptionCheckboxUncheckedHandler}" FontSize="11" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>

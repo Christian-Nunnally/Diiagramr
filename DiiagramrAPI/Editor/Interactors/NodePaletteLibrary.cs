@@ -6,9 +6,9 @@ using System.Windows.Media;
 namespace DiiagramrAPI.Editor.Interactors
 {
     [AddINotifyPropertyChangedInterface]
-    public class NodePaletteLibrary
+    public class NodePaletteCategory
     {
-        public NodePaletteLibrary(string name)
+        public NodePaletteCategory(string name)
         {
             Name = name;
             Nodes = new List<Node>();
@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public Brush BackgroundBrush { get; private set; } = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
 
-        public bool IsLibraryMenuExpanded { get; set; }
+        public bool IsCategoryMenuExpanded { get; set; }
 
         public string Name { get; }
 
@@ -24,16 +24,16 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public bool NodesLoaded { get; set; }
 
-        public virtual void SelectLibraryItem()
+        public virtual void SelectCategoryItem()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 200, 200, 200));
-            IsLibraryMenuExpanded = true;
+            IsCategoryMenuExpanded = true;
         }
 
-        public virtual void UnselectLibraryItem()
+        public virtual void UnselectCategoryItem()
         {
             BackgroundBrush = new SolidColorBrush(Color.FromArgb(255, 255, 255, 255));
-            IsLibraryMenuExpanded = false;
+            IsCategoryMenuExpanded = false;
         }
     }
 }

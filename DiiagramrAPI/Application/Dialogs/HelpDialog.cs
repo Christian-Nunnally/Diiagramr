@@ -18,23 +18,27 @@ namespace DiiagramrAPI.Application.Dialogs
             {
                 _defaultVisibleHelpText = help.HelpText;
             }
-            Title = node.Name + " Node - Help";
+            VisibleHelpTitle = node.Name;
             VisibleHelpText = _defaultVisibleHelpText;
         }
 
         public override int MaxHeight => 400;
 
-        public override int MaxWidth => 400;
+        public override int MaxWidth => 340;
 
-        public override string Title { get; set; }
+        public override string Title { get; set; } = "Help";
 
         public Node Node { get; set; }
 
         public string VisibleHelpText { get; set; }
 
+        public string VisibleHelpTitle { get; set; }
+
         public void PreviewMouseMoveHandler()
         {
-            VisibleHelpText = TryGetHelpAttributeFromViewModel(GetViewModelMouseIsOver(), out var helpAttribute)
+            var terminal = GetViewModelMouseIsOver() as Terminal;
+            VisibleHelpTitle = terminal?.Name ?? Node.Name;
+            VisibleHelpText = TryGetHelpAttributeFromViewModel(terminal, out var helpAttribute)
                 ? helpAttribute.HelpText ?? string.Empty
                 : _defaultVisibleHelpText;
         }

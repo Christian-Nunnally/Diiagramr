@@ -3,12 +3,12 @@ using System;
 
 namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
 {
-    public class ManageLibrariesCommand : ShellCommandBase, IToolbarCommand
+    public class OpenLibraryManagerDialogCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly LibraryManagerDialog _libraryManagerDialog;
         private readonly DialogHostBase _dialogHost;
 
-        public ManageLibrariesCommand(
+        public OpenLibraryManagerDialogCommand(
             Func<LibraryManagerDialog> startScreenViewModelFactory,
             Func<DialogHostBase> dialogHostFactory)
         {
@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Application.ShellCommands.ToolCommands
             _dialogHost = dialogHostFactory();
         }
 
-        public override string Name => "Libraries";
+        public override string Name => "Manage Libraries";
 
         public string ParentName => "Tools";
 

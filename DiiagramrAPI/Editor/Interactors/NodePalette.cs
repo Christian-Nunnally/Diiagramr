@@ -17,6 +17,7 @@ namespace DiiagramrAPI.Editor.Interactors
     public class NodePalette : DiagramInteractor
     {
         public const bool AutoWireToContext = true;
+        public static bool ShouldSortNodesByLibraryInsteadOfByCategory;
         private const double NodeSelectorBottomMargin = 250;
         private const double NodeSelectorRightMargin = 400;
         private readonly INodeProvider _nodeProvider;
@@ -24,7 +25,8 @@ namespace DiiagramrAPI.Editor.Interactors
         private Diagram _diagram;
         private Func<Node, bool> _filter = x => true;
 
-        public NodePalette(Func<INodeProvider> nodeProviderFactory, Func<DialogHostBase> dialogHostFactory)
+        public NodePalette(
+            Func<INodeProvider> nodeProviderFactory, Func<DialogHostBase> dialogHostFactory)
         {
             _nodeProvider = nodeProviderFactory();
             _dialogHost = dialogHostFactory();
@@ -35,23 +37,15 @@ namespace DiiagramrAPI.Editor.Interactors
             AddNodes();
         }
 
-        public IEnumerable<Node> AvailableNodes => LibrariesList.SelectMany(l => l.Nodes);
+        public IEnumerable<Node> AvailableNodes => CategoriesList.SelectMany(l => l.Nodes);
 
         public Terminal ContextTerminal { get; set; }
 
-        public List<NodePaletteLibrary> LibrariesList { get; } = new List<NodePaletteLibrary>();
+        public List<NodePaletteCategory> CategoriesList { get; } = new List<NodePaletteCategory>();
 
         public Node MousedOverNode { get; set; }
 
-        public double PreviewNodePositionX { get; set; }
-
-        public double PreviewNodePositionY { get; set; }
-
-        public double PreviewNodeScaleX { get; set; }
-
-        public double PreviewNodeScaleY { get; set; }
-
-        public BindableCollection<NodePaletteLibrary> VisibleLibrariesList { get; } = new BindableCollection<NodePaletteLibrary>();
+        public BindableCollection<NodePaletteCategory> VisibleCategoriesList { get; } = new BindableCollection<NodePaletteCategory>();
 
         public BindableCollection<Node> VisibleNodesList { get; } = new BindableCollection<Node>();
 
@@ -88,24 +82,24 @@ namespace DiiagramrAPI.Editor.Interactors
             ContextTerminal = null;
         }
 
-        public void LibraryMouseEnterHandler(object sender, MouseEventArgs e)
+        public void CategoryMouseEnterHandler(object sender, MouseEventArgs e)
         {
-            if (!(((Border)sender).DataContext is NodePaletteLibrary library))
+            if (!(((Border)sender).DataContext is NodePaletteCategory category))
             {
                 return;
             }
 
-            if (!library.NodesLoaded)
+            if (!category.NodesLoaded)
             {
-                library.NodesLoaded = true;
+                category.NodesLoaded = true;
             }
 
-            ShowLibrary(library);
+            ShowCategory(category);
         }
 
         public void MouseLeftSelector()
         {
-            LibrariesList.ForEach(l => l.UnselectLibraryItem());
+            CategoriesList.ForEach(l => l.UnselectCategoryItem());
             VisibleNodesList.Clear();
             MousedOverNode = null;
         }
@@ -116,8 +110,7 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 return;
             }
-
-            PreviewNode(node);
+            MousedOverNode = VisibleNodesList.First(m => m.Name == node.Name);
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -153,12 +146,12 @@ namespace DiiagramrAPI.Editor.Interactors
             return interaction.Type == InteractionType.LeftMouseDown || interaction.Type == InteractionType.NodeInserted;
         }
 
-        public void ShowLibrary(NodePaletteLibrary library)
+        public void ShowCategory(NodePaletteCategory category)
         {
             VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(library.Nodes.Where(_filter).OrderBy(n => n.Weight));
-            VisibleLibrariesList.ForEach(l => l.UnselectLibraryItem());
-            library.SelectLibraryItem();
+            VisibleNodesList.AddRange(category.Nodes.Where(_filter).OrderBy(n => n.Weight));
+            VisibleCategoriesList.ForEach(l => l.UnselectCategoryItem());
+            category.SelectCategoryItem();
             MousedOverNode = null;
         }
 
@@ -199,8 +192,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
             // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
             node.AttachToModel(nodeModel);
-            var library = GetOrCreateLibrary(node);
-            library.Nodes.Add(node);
+            var category = GetOrCreateCategory(node);
+            category.Nodes.Add(node);
         }
 
         private bool CanAddNodeToPalette(Node node)
@@ -214,25 +207,25 @@ namespace DiiagramrAPI.Editor.Interactors
                 return false;
             }
 
-            var library = GetOrCreateLibrary(node);
-            return !library.Nodes.Any(n => n.Equals(node));
+            var category = GetOrCreateCategory(node);
+            return !category.Nodes.Any(n => n.Equals(node));
         }
 
-        private NodePaletteLibrary GetOrCreateLibrary(Node node)
+        private NodePaletteCategory GetOrCreateCategory(Node node)
         {
             var fullTypeName = node.GetType().FullName;
             var libraryName = fullTypeName?.Split('.').FirstOrDefault() ?? fullTypeName;
-            return GetOrCreateLibrary(libraryName);
+            return GetOrCreateCategory(libraryName);
         }
 
-        private NodePaletteLibrary GetOrCreateLibrary(string libraryName)
+        private NodePaletteCategory GetOrCreateCategory(string categoryName)
         {
-            if (LibrariesList.All(l => l.Name != libraryName))
+            if (CategoriesList.All(l => l.Name != categoryName))
             {
-                LibrariesList.Insert(0, new NodePaletteLibrary(libraryName));
+                CategoriesList.Insert(0, new NodePaletteCategory(categoryName));
             }
 
-            return LibrariesList.First(l => l.Name == libraryName);
+            return CategoriesList.First(l => l.Name == categoryName);
         }
 
         private bool IsHiddenFromSelector(Node node)
@@ -245,32 +238,11 @@ namespace DiiagramrAPI.Editor.Interactors
             AddNodes();
         }
 
-        private void PreviewNode(Node node)
-        {
-            const int workingWidth = 100;
-            const int workingHeight = 100;
-
-            MousedOverNode = VisibleNodesList.First(m => m.Name == node.Name);
-            var totalNodeWidth = MousedOverNode.Width + Diagram.NodeBorderWidth * 2.0;
-            var totalNodeHeight = MousedOverNode.Height + Diagram.NodeBorderWidth * 2.0;
-            PreviewNodeScaleX = workingWidth / totalNodeWidth;
-            PreviewNodeScaleY = workingHeight / totalNodeHeight;
-
-            PreviewNodeScaleX = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
-            PreviewNodeScaleY = Math.Min(PreviewNodeScaleX, PreviewNodeScaleY);
-
-            var newWidth = totalNodeWidth * PreviewNodeScaleX + 1;
-            var newHeight = totalNodeHeight * PreviewNodeScaleY + 1;
-
-            PreviewNodePositionX = (workingWidth - newWidth) / 2.0;
-            PreviewNodePositionY = (workingHeight - newHeight) / 2.0;
-        }
-
         private void Show(Func<Node, bool> filter)
         {
             _filter = filter;
-            VisibleLibrariesList.Clear();
-            VisibleLibrariesList.AddRange(LibrariesList.Where(l => l.Nodes.Where(filter).Any()));
+            VisibleCategoriesList.Clear();
+            VisibleCategoriesList.AddRange(CategoriesList.Where(l => l.Nodes.Where(filter).Any()));
         }
 
         private void ShowWithContextFilter(Screen mousedOverViewModel)
@@ -278,13 +250,13 @@ namespace DiiagramrAPI.Editor.Interactors
             if (mousedOverViewModel is InputTerminal inputTerminalMouseIsOver)
             {
                 ContextTerminal = inputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is OutputTerminal && ValueConverter.NonExaustiveCanConvertToType(t.Model.Type, inputTerminalMouseIsOver.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is OutputTerminal && ValueConverter.TryCoerseValue(t.Data, inputTerminalMouseIsOver.Model.Type, out var _)));
                 inputTerminalMouseIsOver.HighlightVisible = true;
             }
             else if (mousedOverViewModel is OutputTerminal outputTerminalMouseIsOver)
             {
                 ContextTerminal = outputTerminalMouseIsOver;
-                Show(n => n.Terminals.Any(t => t is InputTerminal && ValueConverter.NonExaustiveCanConvertToType(outputTerminalMouseIsOver.Model.Type, t.Model.Type)));
+                Show(n => n.Terminals.Any(t => t is InputTerminal && ValueConverter.TryCoerseValue(outputTerminalMouseIsOver.Data, t.Model.Type, out var _)));
                 outputTerminalMouseIsOver.HighlightVisible = true;
             }
             else

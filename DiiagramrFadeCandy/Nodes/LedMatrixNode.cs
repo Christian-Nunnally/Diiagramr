@@ -23,9 +23,9 @@ namespace DiiagramrFadeCandy
 {
     public class LedMatrixNode : Node, ILedDataProvider
     {
+        public static readonly SharpDX.Direct2D1.Factory d2dFactory = new SharpDX.Direct2D1.Factory();
         private const int FrameDelay = 33;
         private static readonly ImagingFactory wicFactory = new ImagingFactory();
-        private static readonly SharpDX.Direct2D1.Factory d2dFactory = new SharpDX.Direct2D1.Factory();
         private static readonly PixelFormat pixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm_SRgb, AlphaMode.Unknown);
         private static readonly RenderTargetProperties renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default, pixelFormat, 0, 0, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
         private static readonly bool ClearBeforeFrame = true;

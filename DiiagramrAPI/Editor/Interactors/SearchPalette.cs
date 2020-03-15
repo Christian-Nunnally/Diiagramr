@@ -16,6 +16,7 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class SearchPalette : DiagramInteractor
     {
+        private const int MaxSearchResults = 10;
         private readonly INodeProvider _nodeProvider;
         private readonly FastTextSearchNode<SearchResult> _rootNode = new FastTextSearchNode<SearchResult>();
         private Diagram _diagram;
@@ -207,7 +208,7 @@ namespace DiiagramrAPI.Editor.Interactors
         private void UpdateFilterdList()
         {
             FilteredNodesList.Clear();
-            _rootNode.GetMatches(SearchPhrase.Trim().ToLower()).ForEach(FilteredNodesList.Add);
+            _rootNode.GetMatches(SearchPhrase.Trim().ToLower()).Take(MaxSearchResults).ForEach(FilteredNodesList.Add);
             FilteredNodesList.ForEach(n => n.IsSelected = false);
             SelectedNodeIndex = -1;
             SelectedNodeIndex = 0;

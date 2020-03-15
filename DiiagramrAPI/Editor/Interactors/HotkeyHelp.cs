@@ -25,7 +25,7 @@
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             X = (interaction.Diagram.ViewWidth / 2) - 250;
-            Y = (interaction.Diagram.ViewHeight / 2) - 200;
+            Y = (interaction.Diagram.ViewHeight / 2) - 300;
             _shouldStopInteraction = false;
         }
 

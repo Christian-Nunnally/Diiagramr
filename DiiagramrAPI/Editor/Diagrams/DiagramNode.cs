@@ -11,6 +11,7 @@ using System.Linq;
 namespace DiiagramrAPI.Editor.Diagrams
 {
     [HideFromNodeSelector]
+    [Help("Contains another diagram. Passes data from its input terminal(s) to input nodes on the contained diagram, and from output nodes on the contained diagram to its output terminal(s).")]
     public class DiagramNode : Node
     {
         private const int MarginBetweenTerminals = 10;

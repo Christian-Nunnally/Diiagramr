@@ -10,6 +10,7 @@
     <None Remove="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
     <None Remove="Resources\Fonts\Aldrich\OFL.txt" />
     <None Remove="Resources\logo32x32_e3S_icon.ico" />
+    <None Remove="Resources\VisualDropLogo.bmp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,6 +37,7 @@
     <Resource Include="Resources\Fonts\Aldrich\Aldrich-Regular.ttf" />
     <Resource Include="Resources\Fonts\Aldrich\OFL.txt" />
     <Resource Include="Resources\logo32x32_e3S_icon.ico" />
+    <Resource Include="Resources\VisualDropLogo.bmp" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +57,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\Dialogs\LoadProjectDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Application\Dialogs\OptionDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="Application\ShellView.xaml">

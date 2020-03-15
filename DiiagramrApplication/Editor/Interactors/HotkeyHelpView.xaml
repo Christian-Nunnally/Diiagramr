@@ -38,7 +38,7 @@
         SnapsToDevicePixels="True">
         <Grid
             Width="500"
-            Height="400"
+            Height="600"
             Background="{StaticResource DiagramBackgroundBrush}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -58,14 +58,24 @@
                     Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Create new node" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Create new node terminal" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Delete selected nodes" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Lasso select nodes" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Lasso wire nodes" Style="{StaticResource RightHelpLabelStyle}" />
-                <Label Content="Lasso create sub diagram" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Shift nodes" Style="{StaticResource RightHelpLabelStyle}" />
-                <Label Content="Disconnect wire" Style="{StaticResource RightHelpLabelStyle}" />
-                <Label Content="Set terminal (only some support)" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Get node info" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
                 <Label Content="Wire to terminal" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Disconnect wire" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Set terminal (only some support)" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Lasso create sub diagram" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Copy" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Paste" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Undo" Style="{StaticResource RightHelpLabelStyle}" />
+                <Label Content="Redo" Style="{StaticResource RightHelpLabelStyle}" />
             </StackPanel>
             <StackPanel
                 Grid.Column="1"
@@ -85,6 +95,16 @@
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
                 <Label Content="-" Style="{StaticResource HelpLabelStyle}" />
             </StackPanel>
@@ -101,14 +121,24 @@
                     Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Right click diagram" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Right click Terminal" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Del'" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Ctrl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Atl' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
-                <Label Content="'Ctrl' + 'Shift' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="'Shift' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Hover over node + 'H'" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Click wire" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
                 <Label Content="Double click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
-                <Label Content="Right click terminal" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="'Ctrl' + 'Shift' + Drag" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Ctrl + 'C'" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Ctrl + 'V'" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Ctrl + 'Z'" Style="{StaticResource LeftHelpLabelStyle}" />
+                <Label Content="Ctrl + 'Y'" Style="{StaticResource LeftHelpLabelStyle}" />
             </StackPanel>
         </Grid>
     </Border>

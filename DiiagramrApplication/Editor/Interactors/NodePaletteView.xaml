@@ -21,10 +21,10 @@
                         </Style.Triggers>
                     </Style>
 
-                    <Style x:Key="LibrarySelectionBorderStyle" TargetType="Border">
+                    <Style x:Key="CategorySelectionBorderStyle" TargetType="Border">
                         <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsLibraryMenuExpanded}" Value="True">
+                            <DataTrigger Binding="{Binding IsCategoryMenuExpanded}" Value="True">
                                 <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -50,13 +50,13 @@
             <ColumnDefinition Width="120" />
         </Grid.ColumnDefinitions>
 
-        <ItemsControl Margin="20,20,0,20" ItemsSource="{Binding VisibleLibrariesList}">
+        <ItemsControl Margin="20,20,0,20" ItemsSource="{Binding VisibleCategoriesList}">
             <ItemsControl.ItemContainerStyle>
                 <Style TargetType="ContentPresenter">
                     <Setter Property="ContentTemplate">
                         <Setter.Value>
                             <DataTemplate>
-                                <Border MouseEnter="{s:Action LibraryMouseEnterHandler}" Style="{StaticResource LibrarySelectionBorderStyle}">
+                                <Border MouseEnter="{s:Action CategoryMouseEnterHandler}" Style="{StaticResource CategorySelectionBorderStyle}">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition />

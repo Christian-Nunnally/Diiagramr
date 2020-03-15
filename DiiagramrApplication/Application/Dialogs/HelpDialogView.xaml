@@ -20,6 +20,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
+            <RowDefinition Height="30" />
             <RowDefinition Height="1*" />
         </Grid.RowDefinitions>
         <Border
@@ -35,12 +36,20 @@
                 NodeToPreview="{Binding Node}" />
         </Border>
         <TextBlock
-            HorizontalAlignment="Center"
+            HorizontalAlignment="Left"
+            Style="{StaticResource TextBlockStyle}"
+            FontSize="14"
+            FontWeight="Bold"
+            Margin="20,0"
+            Grid.Row="1"
+            TextWrapping="Wrap"
+            Text="{Binding VisibleHelpTitle}" />
+        <TextBlock
+            HorizontalAlignment="Left"
             Style="{StaticResource TextBlockStyle}"
             FontSize="12"
-            Margin="20"
-            Grid.Column="0"
-            Grid.Row="1"
+            Margin="20,0"
+            Grid.Row="2"
             TextWrapping="Wrap"
             Text="{Binding VisibleHelpText}" />
     </Grid>
