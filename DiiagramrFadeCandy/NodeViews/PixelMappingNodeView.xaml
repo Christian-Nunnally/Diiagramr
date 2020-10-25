@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="DiiagramrFadeCandy.PixelMappingNodeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:s="https://github.com/canton7/Stylet"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
+                <ResourceDictionary Source="..\Themes\Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="Black">
+        <Image
+            RenderOptions.EdgeMode="Aliased"
+            Source="{Binding BitmapImageSource}"
+            RenderOptions.BitmapScalingMode="NearestNeighbor" />
+        <Canvas ClipToBounds="True">
+            <Border
+                Canvas.Top="{Binding VisualRectangleTopCanvasPosition}"
+                Canvas.Left="{Binding VisualRectangleLeftCanvasPosition}"
+                Width="{Binding VisualRectangleWidth}"
+                Height="{Binding VisualRectangleHeight}"
+                BorderBrush="#770077ac"
+                CornerRadius="1"
+                BorderThickness="2"
+                MouseEnter="{s:Action HandleMapRegionMouseEnter}"
+                MouseLeave="{s:Action HandleMapRegionMouseLeave}"
+                MouseDown="{s:Action PixelMapRegionMouseDown}"
+                MouseUp="{s:Action PixelMapRegionMouseUp}"
+                MouseMove="{s:Action PixelMapRegionMouseMove}"
+                Background="#22ffffff">
+                <Grid>
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                        <Label
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Padding="0"
+                            Foreground="#eeaaaaaa"
+                            Content="{Binding RegionPositionText}" />
+                        <Label
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Padding="0"
+                            Foreground="#eeaaaaaa"
+                            Content="{Binding RegionSizeText}" />
+                    </StackPanel>
+                    <Border
+                        Width="8"
+                        Height="8"
+                        BorderThickness="1"
+                        BorderBrush="DarkRed"
+                        HorizontalAlignment="{Binding ZeroPixelIndicatorHorizontalAlignment}"
+                        VerticalAlignment="{Binding ZeroPixelIndicatorVerticalAlignment}">
+                        <ContentPresenter x:Name="CompassIcon" Content="{StaticResource CompassArrowIcon}" RenderTransformOrigin="0.5,0.5">
+                            <ContentPresenter.RenderTransform>
+                                <RotateTransform Angle="{Binding CompassArrowIconRotation}" />
+                            </ContentPresenter.RenderTransform>
+                        </ContentPresenter>
+                    </Border>
+                </Grid>
+            </Border>
+        </Canvas>
+        <StackPanel
+            Visibility="{Binding IsMouseOverNode}"
+            Orientation="Horizontal"
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center">
+            <Border
+                Width="13"
+                Height="13"
+                IsHitTestVisible="True"
+                MouseDown="{s:Action ChangeZeroPixelButtonMouseDownHandler}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Border.Background" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource DarkButtonHoverBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <ContentPresenter RenderTransformOrigin="0.5,0.5" Margin="1" Content="{StaticResource Rotate90Icon}">
+                    <ContentPresenter.RenderTransform>
+                        <RotateTransform Angle="{Binding PixelMappingDirectionArrowRotation}" />
+                    </ContentPresenter.RenderTransform>
+                </ContentPresenter>
+            </Border>
+            <Border
+                Width="13"
+                Height="13"
+                IsHitTestVisible="True"
+                MouseDown="{s:Action AlternateStrideDirectionButtonHandler}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Border.Background" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource DarkButtonHoverBrush}" />
+                            </Trigger>
+                            <DataTrigger Binding="{Binding ShouldAlternateStrideDirection}" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource MediumButtonHoverBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <ContentPresenter Margin="1" Content="{StaticResource BackAndForthArrowsIcon}" />
+            </Border>
+            <Border
+                Width="13"
+                Height="13"
+                IsHitTestVisible="True"
+                MouseDown="{s:Action ToggleStrideOrientationButtonHandler}">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Border.Background" Value="Transparent" />
+                        <Setter Property="VerticalAlignment" Value="Stretch" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource DarkButtonHoverBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+                <Grid>
+                    <ContentPresenter Margin="1" Content="{StaticResource ToLandscapeIcon}" Visibility="{Binding IsStrideOrientationVertical, Converter={StaticResource Btv}}" />
+                    <ContentPresenter Margin="1" Content="{StaticResource ToPortraitIcon}" Visibility="{Binding IsStrideOrientationVertical, Converter={StaticResource Ibtv}}" />
+                </Grid>
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

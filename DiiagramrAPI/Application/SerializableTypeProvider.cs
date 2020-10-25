@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpDX.Mathematics.Interop;
+using System;
 using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application
@@ -22,6 +23,7 @@ namespace DiiagramrAPI.Application
             typeof(ushort[]),
             typeof(object[]),
             typeof(string[]),
+            typeof(RawBox),
         };
     }
 }

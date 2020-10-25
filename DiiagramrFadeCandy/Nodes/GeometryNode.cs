@@ -21,7 +21,7 @@ namespace DiiagramrFadeCandy.Nodes
 
         private PathGeometry GetGeometryPathFromXamlPathMarkup(string xamlPathMarkup)
         {
-            var pathGeometry = new PathGeometry(LedMatrixNode.d2dFactory);
+            var pathGeometry = new PathGeometry(RenderTargetNode.d2dFactory);
             var geometrySink = pathGeometry.Open();
             geometrySink.SetFillMode(xamlPathMarkup.StartsWith("F1") ? FillMode.Winding : FillMode.Alternate);
             var figureDescriptions = xamlPathMarkup.StartsWith("F") ? xamlPathMarkup.Substring(2) : xamlPathMarkup;

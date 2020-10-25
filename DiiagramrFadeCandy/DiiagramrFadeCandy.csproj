@@ -32,13 +32,16 @@
     <Page Update="NodeViews\ColorNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="NodeViews\FadeCandyNodeView.xaml">
+    <Page Update="NodeViews\FadeCandyClientNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="NodeViews\GraphicsDeviceContextNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="NodeViews\LedMatrixNodeView.xaml">
+    <Page Update="NodeViews\PixelMappingNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="NodeViews\RenderTargetNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="NodeViews\ShapeEffectNodeView.xaml">
@@ -51,6 +54,18 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Update="NodeViews\SpectrumEffectNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Colors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\CoreResources.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\DarkTheme.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Icons.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

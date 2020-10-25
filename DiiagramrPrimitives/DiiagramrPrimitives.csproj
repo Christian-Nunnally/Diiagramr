@@ -22,10 +22,25 @@
     <Page Update="BufferNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="ButtonNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="InputSwitcherNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="OutputSwitcherNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="NumberNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="IndexNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\Colors.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Themes\DarkTheme.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

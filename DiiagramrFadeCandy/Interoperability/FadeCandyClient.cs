@@ -9,9 +9,10 @@ namespace DiiagramrFadeCandy
         public bool _verbose;
         public bool _long_connection;
         public string _ip;
-        public string Status;
+        public string _status;
         public int _port;
         public Socket _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        public Action<string> StatusUpdated;
         private const int LedsPerDevice = 64;
         private const int NumberOfDevices = 8;
         private const int HeaderByteLength = 4;
@@ -35,18 +36,15 @@ namespace DiiagramrFadeCandy
             _messageByteBuffer[1] = Command;
             _messageByteBuffer[2] = LengthHighByte;
             _messageByteBuffer[3] = LengthLowByte;
-
-            Debug(string.Format("{0}:{1}", _ip, _port));
         }
 
         public void Dispose()
         {
-            Debug("Disconnecting");
             if (_socket.Connected)
             {
                 _socket.Dispose();
             }
-            Status = "Disconnected";
+            _status = "Disconnected";
         }
 
         public bool CanConnect()
@@ -59,27 +57,28 @@ namespace DiiagramrFadeCandy
             return success;
         }
 
-        public void PutPixels(LedChannelDriver[] drivers)
+        public void PutPixels(byte[][] ledPixelData)
         {
-            Debug("put pixels: connecting");
+            if (ledPixelData.Length != 8)
+            {
+                throw new NotImplementedException("Fade candy only has 8 pins");
+            }
+
             bool is_connected = EnsureConnected();
             if (!is_connected)
             {
-                Debug("Put pixels not connected. Ignoring these pixels.");
-                Status = "Disconnected";
                 return;
             }
-            Status = "Connected";
 
             int bufferPosition = HeaderByteLength;
-            foreach (var driver in drivers)
+            foreach (var ledData in ledPixelData)
             {
-                if (driver == null)
+                if (ledData.Length != LedsPerDevice * BytesPerLed)
                 {
+                    bufferPosition += LedsPerDevice * BytesPerLed;
                     continue;
                 }
 
-                var ledData = driver.GetLedData();
                 for (int i = 0; i < LedsPerDevice * BytesPerLed;)
                 {
                     _messageByteBuffer[bufferPosition++] = ledData[i++];
@@ -92,45 +91,44 @@ namespace DiiagramrFadeCandy
             {
                 _socket.Send(_messageByteBuffer);
             }
-            catch (Exception)
+            catch (SocketException)
             {
+                UpdateStatus("Socket closed");
             }
         }
 
-        private static void Debug(string message)
+        private void UpdateStatus(string newStatus)
         {
-            Console.WriteLine(message);
+            _status = newStatus;
+            StatusUpdated?.Invoke(newStatus);
         }
 
         private bool EnsureConnected()
         {
             if (_socket.Connected)
             {
-                Debug("Ensure Connected: already connected, doing nothing");
                 return true;
             }
             else
             {
                 try
                 {
-                    Debug("Ensure Connected: trying to connect...");
                     _socket.Ttl = 1;
                     IPAddress ip = IPAddress.Parse(_ip);
                     _socket.Connect(ip, _port);
-                    Debug("Ensure Connected: ....success");
+                    UpdateStatus("Connected to fcserver.exe");
                     return true;
                 }
                 catch (SocketException e)
                 {
-                    Console.WriteLine(e.Message);
-
-                    Status = "Socket Error";
+                    UpdateStatus("Disconnected from fcserver.exe");
+                    UpdateStatus("Error: " + e.Message);
                     return false;
                 }
                 catch (InvalidOperationException e)
                 {
-                    Console.WriteLine(e.Message);
-                    Status = "Invalid Operation";
+                    UpdateStatus("Disconnected from fcserver.exe");
+                    UpdateStatus("Error: " + e.Message);
                     return false;
                 }
             }

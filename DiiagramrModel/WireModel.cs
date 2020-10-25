@@ -81,12 +81,18 @@ namespace DiiagramrModel
             {
                 return;
             }
+            // TODO: needed? move down 1 line?
             NotifyPropertyChanged("Data");
             SinkTerminal.Data = GetCoersedSourceTerminalDataOrBreakWire();
         }
 
         private object GetCoersedSourceTerminalDataOrBreakWire()
         {
+            // The tpye might be null when the node first loads and the type hasn't been resolved yet.
+            if (SinkTerminal.Type == null)
+            {
+                return null;
+            }
             if (ValueConverter.TryCoerseValue(SourceTerminal?.Data, SinkTerminal.Type, out var coersedData))
             {
                 return coersedData;

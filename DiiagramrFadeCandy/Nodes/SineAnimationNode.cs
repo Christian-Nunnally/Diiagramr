@@ -35,6 +35,9 @@ namespace DiiagramrFadeCandy
         [OutputTerminal(Direction.East)]
         public float OutputFrame { get; set; }
 
+        [InputTerminal(Direction.North)]
+        public float StartOffset { get; set; }
+
         private double CircleQuadrents => _quadrents * HalfPI;
 
         [InputTerminal(Direction.North)]
@@ -59,12 +62,6 @@ namespace DiiagramrFadeCandy
         {
             _frames = frames;
             AnimationQuadrents(_quadrents);
-        }
-
-        [InputTerminal(Direction.North)]
-        public void StartOffset(float offset)
-        {
-            _startPosition = offset;
         }
 
         [InputTerminal(Direction.South)]

@@ -33,7 +33,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North)]
-        public void Trigger(bool trigger)
+        public void Trigger(bool _)
         {
             AnimatedShapeEffect.ResetPoints();
         }

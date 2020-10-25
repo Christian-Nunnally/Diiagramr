@@ -87,7 +87,7 @@ namespace DiiagramrAPI.Application.Dialogs
             public Action EnableOption { get; set; }
             public Action DisableOption { get; set; }
 
-            public void CheckBoxChangedHandler(object sender, DependencyPropertyChangedEventArgs e)
+            public void CheckBoxChangedHandler(object _, DependencyPropertyChangedEventArgs e)
             {
                 if (e.NewValue is bool newValue && newValue)
                 {

@@ -1,0 +1,70 @@
+﻿<UserControl
+    x:Class="DiiagramrFadeCandy.FadeCandyClientNodeView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:s="https://github.com/canton7/Stylet"
+    d:DesignHeight="180"
+    d:DesignWidth="180"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\Themes\CoreResources.xaml" />
+                <ResourceDictionary Source="..\Themes\Icons.xaml" />
+                <ResourceDictionary>
+                    <Style x:Key="ButtonBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource NodeBackgroundBrush}" />
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource NodeSelectionStyleBrush}" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid Background="Black">
+        <ItemsControl Margin="5" ItemsSource="{Binding NodeStatusOutput}" ItemsPanel="{StaticResource StackItemsPanel}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Label Foreground="{StaticResource SoftDiagramForeground}" Content="{Binding}" FontFamily="Consolas" Padding="2" FontSize="8" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Visibility="{Binding ConnectButtonVisible, Converter={StaticResource Btv}}" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Border
+            Width="120"
+            Height="22"
+            Margin="10"
+            Style="{StaticResource ButtonBorderStyle}"
+            MouseDown="{s:Action ConnectFadeCandy}">
+                <Label
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource DiagramBackgroundBrush}"
+                    FontSize="11"
+                    Content="Connect" />
+            </Border>
+            <Border
+            Width="120"
+            Height="22"
+            Margin="10"
+            Style="{StaticResource ButtonBorderStyle}"
+            MouseDown="{s:Action ConnectFadeCandyBackground}">
+                <Label
+                    Padding="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="{StaticResource DiagramBackgroundBrush}"
+                    FontSize="11"
+                    Content="Connect (background)" />
+            </Border>
+        </StackPanel>
+    </Grid>
+</UserControl>

@@ -27,6 +27,10 @@ namespace DiiagramrAPI.Editor.Diagrams
                 .GetProperties()
                 .Where(x => Attribute.IsDefined(x, typeof(OutputTerminalAttribute)))
                 .ForEach(CreateOutputTerminalForProperty);
+            _node.GetType()
+                .GetProperties()
+                .Where(x => Attribute.IsDefined(x, typeof(InputTerminalAttribute)))
+                .ForEach(CreateInputTerminalForProperty);
         }
 
         private void CreateInputTerminalForMethod(MethodInfo methodInfo)
@@ -38,6 +42,20 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalModel = existingTerminalWithSameName?.Model
                 ?? new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection);
             terminalModel.DataChanged += methodInfo.CreateMethodInvoker(_node);
+            if (existingTerminalWithSameName == null)
+            {
+                _node.AddTerminal(terminalModel);
+            }
+        }
+
+        private void CreateInputTerminalForProperty(PropertyInfo property)
+        {
+            var inputTerminalAttribute = property.GetAttribute<InputTerminalAttribute>();
+            var terminalType = property.PropertyType;
+            var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
+            var terminalModel = existingTerminalWithSameName?.Model
+                ?? new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
+            terminalModel.DataChanged += data => property.SetValue(_node, data);
             if (existingTerminalWithSameName == null)
             {
                 _node.AddTerminal(terminalModel);

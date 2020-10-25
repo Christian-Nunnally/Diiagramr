@@ -17,6 +17,7 @@ namespace DiiagramrModel
         private string _typeName;
         private NodeModel _parentNode;
         private object data;
+        private Type type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalModel"/> class.
@@ -91,7 +92,11 @@ namespace DiiagramrModel
         /// Gets or sets the data type of the terminal.
         /// </summary>
         [IgnoreDataMember]
-        public Type Type { get; set; }
+        public Type Type
+        {
+            get => type;
+            set => type = value;
+        }
 
         /// <summary>
         /// Gets the data type of the data currently on the terminal.

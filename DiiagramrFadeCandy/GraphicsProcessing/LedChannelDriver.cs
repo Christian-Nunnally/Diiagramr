@@ -11,24 +11,19 @@ namespace DiiagramrFadeCandy
     public class LedChannelDriver : IWireableType
     {
         // The FadeCandy limits the number of leds per channel to 64.
-        private const int MaxChannelSize = 64;
-
         private const int NumberOfLeds = 64;
 
         private readonly byte[] _messageByteBuffer = new byte[NumberOfLeds * 3];
-
         private int[] _intBuffer = new int[0];
-
         private byte[] _intermediateByteBuffer = new byte[0];
-
         private RawBox _box = new RawBox();
-
         private int _boxArea;
 
         [DataMember]
         public string Name { get; set; }
 
         public bool IsSelected { get; set; }
+
         public bool AlternateStrideDirection { get; set; } = false;
 
         [DataMember]
@@ -119,7 +114,7 @@ namespace DiiagramrFadeCandy
             {
                 _box = value;
                 _boxArea = _box.Width * _box.Height;
-                _intBuffer = new int[Math.Min(_boxArea, MaxChannelSize)];
+                _intBuffer = new int[Math.Min(_boxArea, NumberOfLeds)];
                 _intermediateByteBuffer = new byte[_intBuffer.Length * sizeof(int)];
             }
         }
@@ -158,7 +153,7 @@ namespace DiiagramrFadeCandy
                 Height = ImageDataProvider.ImageHeight - Box.Y;
             }
 
-            if (_intBuffer.Length <= 0 || _intBuffer.Length > MaxChannelSize)
+            if (_intBuffer.Length <= 0 || _intBuffer.Length > NumberOfLeds)
             {
                 return _messageByteBuffer;
             }
