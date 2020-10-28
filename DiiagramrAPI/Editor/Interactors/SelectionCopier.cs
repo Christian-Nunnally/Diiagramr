@@ -33,6 +33,10 @@ namespace DiiagramrAPI.Editor.Interactors
             }
             else
             {
+                if (_copiedNodes == null)
+                {
+                    return;
+                }
                 var firstCopiedNodeX = _copiedNodes.FirstOrDefault()?.X ?? 0;
                 var firstCopiedNodeY = _copiedNodes.FirstOrDefault()?.Y ?? 0;
                 var nodesToInsertToDiagram = new List<Node>();

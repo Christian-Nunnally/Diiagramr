@@ -35,7 +35,7 @@ namespace DiiagramrFadeCandy
         [InputTerminal(Direction.East)]
         public void BarWidth(float barWidth)
         {
-            SpectrumEffect.BarWidth = barWidth;
+            SpectrumEffect.BarWidthScale = barWidth;
         }
     }
 }

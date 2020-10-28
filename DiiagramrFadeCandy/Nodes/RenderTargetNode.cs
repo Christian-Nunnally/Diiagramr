@@ -24,11 +24,11 @@ namespace DiiagramrFadeCandy
         private static readonly ImagingFactory wicFactory = new ImagingFactory();
         private static readonly PixelFormat pixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm_SRgb, AlphaMode.Unknown);
         private static readonly RenderTargetProperties renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default, pixelFormat, 0, 0, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
-        private static readonly bool ClearBeforeFrame = true;
+        private static readonly bool ClearBeforeFrame = false;
         private static readonly RawColor4 Black = new RawColor4(0, 0, 0, 1);
         private readonly object _bitmapLock = new object();
-
         private readonly BackgroundTask _backgroundRefreshTask;
+        private bool _cleared;
         private int _bitmapWidth = 8;
         private int _bitmapHeight = 8;
         private System.Drawing.Size _bitmapSize = new System.Drawing.Size(8, 8);
@@ -171,7 +171,7 @@ namespace DiiagramrFadeCandy
                         wicFactory,
                         bitmapWidth,
                         bitmapHeight,
-                        SharpDX.WIC.PixelFormat.Format32bppBGR,
+                        SharpDX.WIC.PixelFormat.Format32bppPBGRA,
                         BitmapCreateCacheOption.CacheOnLoad);
                 }
                 RenderedImage = new RenderedImage(WicBitmap, bitmapWidth, bitmapHeight);
@@ -232,8 +232,9 @@ namespace DiiagramrFadeCandy
 
         private void ClearFrame()
         {
-            if (ClearBeforeFrame)
+            if (ClearBeforeFrame || !_cleared)
             {
+                _cleared = true;
                 RenderTarget.Clear(Black);
             }
         }

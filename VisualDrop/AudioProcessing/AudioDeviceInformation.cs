@@ -1,4 +1,5 @@
-﻿using PropertyChanged;
+﻿using CSCore.CoreAudioAPI;
+using PropertyChanged;
 using System;
 using System.Windows;
 using System.Xml.Serialization;
@@ -10,6 +11,12 @@ namespace VisualDrop
     public class AudioDeviceInformation
     {
         private string _name;
+
+        public AudioDeviceInformation(string name, MMDevice device = null)
+        {
+            Name = name;
+            Device = device;
+        }
 
         public string Name
         {
@@ -23,6 +30,8 @@ namespace VisualDrop
             }
         }
 
+        public MMDevice Device { get; }
+
         public string DisplayName { get; set; } = string.Empty;
 
         [XmlIgnore]
@@ -30,7 +39,7 @@ namespace VisualDrop
 
         public bool Running { get; set; }
 
-        public AudioDeviceInformation Copy() => new AudioDeviceInformation() { Name = Name };
+        public AudioDeviceInformation Copy() => new AudioDeviceInformation(Name, Device);
 
         private void SetDisplayName()
         {
