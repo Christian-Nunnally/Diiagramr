@@ -1,6 +1,6 @@
 ﻿namespace VisualDrop
 {
-    internal interface IFftResultObserver
+    public interface IFftResultObserver
     {
         void ObserveFftResult(float[] fftData);
     }

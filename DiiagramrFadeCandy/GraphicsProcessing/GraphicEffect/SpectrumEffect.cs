@@ -24,6 +24,9 @@ namespace DiiagramrFadeCandy
         [DataMember]
         public bool SpectrographMode { get; set; } = true;
 
+        [DataMember]
+        public float ScaleExponent { get; set; } = 2f;
+
         public override void Draw(RenderTarget target)
         {
             if (SpectrumData == null || SpectrumData.Length == 0)
@@ -55,7 +58,7 @@ namespace DiiagramrFadeCandy
                         _maxValue = SpectrumData[i];
                     }
                     var amplitude = SpectrumData[i] / _maxValue;
-                    var brush = new SolidColorBrush(target, new RawColor4(Color.R, Color.G, Color.B, amplitude * amplitude));
+                    var brush = new SolidColorBrush(target, new RawColor4(Color.R, Color.G, Color.B, (float)Math.Pow(amplitude, ScaleExponent)));
                     left = i * totalWidthPerBar;
                     top = (_iteration + 1) * rowHeight;
                     right = left + barWidth;

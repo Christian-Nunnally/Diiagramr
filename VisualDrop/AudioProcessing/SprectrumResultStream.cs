@@ -11,89 +11,42 @@ namespace VisualDrop
     /// </summary>
     internal partial class SprectrumResultStream : ISpectrumResultNotifier, IFftResultObserver
     {
-        private static SprectrumResultStream _instance;
-        private readonly List<ISpectrumResultObserver> _resultSubscribers = new List<ISpectrumResultObserver>();
-        private FftResultStream _fftResultStream;
-        private MMDevice _lastEnabledDevice;
-        private WindowFunction _windowFunction;
-        private FftSize _fftSize;
+        private readonly List<ISpectrumResultObserver> _observers = new List<ISpectrumResultObserver>();
         private int _fftBinCount;
 
-        private SprectrumResultStream()
+        public SprectrumResultStream()
         {
             FftBinCount = 64;
             FftSize = FftSize.Fft4096;
             Gamma = 2f;
-            WindowFunction = WindowFunctions.Hanning;
         }
-
-        public static SprectrumResultStream Instance => _instance ?? (_instance = new SprectrumResultStream());
 
         public int FftBinCount
         {
             get => _fftBinCount;
             set
             {
-                if (value < (int)_fftSize / 2 && value > 0)
+                if (value < (int)FftSize / 2 && value > 0)
                 {
                     _fftBinCount = value;
                 }
             }
         }
 
-        public FftSize FftSize
-        {
-            get => _fftSize;
-            set
-            {
-                _fftSize = value;
-                Restart();
-            }
-        }
-
-        public WindowFunction WindowFunction
-        {
-            get => _windowFunction;
-            set
-            {
-                _windowFunction = value;
-                Restart();
-            }
-        }
+        public FftSize FftSize { get; set; }
 
         public float Gamma { get; set; } = 2f;
 
         public MMDeviceCollection Devices => MMDeviceEnumerator.EnumerateDevices(DataFlow.Render, DeviceState.Active);
 
-        public void Subscribe(ISpectrumResultObserver subscriber)
+        public void Subscribe(ISpectrumResultObserver observer)
         {
-            _resultSubscribers.Add(subscriber);
+            _observers.Add(observer);
         }
 
-        public void Unsubscribe(ISpectrumResultObserver subscriber)
+        public void Unsubscribe(ISpectrumResultObserver observer)
         {
-            _resultSubscribers.Remove(subscriber);
-        }
-
-        public void Enable(MMDevice device)
-        {
-            if (device is object)
-            {
-                _fftResultStream = new FftResultStream(FftSize, WindowFunction, device, this);
-                _fftResultStream.Start();
-                _lastEnabledDevice = device;
-            }
-        }
-
-        public void Disable()
-        {
-            _fftResultStream?.Dispose();
-        }
-
-        public void Restart()
-        {
-            Disable();
-            Enable(_lastEnabledDevice);
+            _observers.Remove(observer);
         }
 
         public void ObserveFftResult(float[] fft)
@@ -105,12 +58,13 @@ namespace VisualDrop
         private List<float> ComputeFftBins(float[] fft)
         {
             var fftIndex = 0;
+            var binEndIndex = 0;
             var fftResult = new List<float>(FftBinCount);
             float peak;
             for (float binIndex = 1; binIndex <= FftBinCount; binIndex++)
             {
-                var nextBinEndIndex = GetNextBinEndIndex(binIndex);
-                for (peak = 0; fftIndex < nextBinEndIndex; fftIndex++)
+                binEndIndex = (int)Math.Max(binEndIndex + 1, GetNextBinEndIndex(binIndex));
+                for (peak = 0; fftIndex < binEndIndex && fftIndex < fft.Length; fftIndex++)
                 {
                     if (peak < fft[fftIndex])
                     {
@@ -122,8 +76,8 @@ namespace VisualDrop
             return fftResult;
         }
 
-        private double GetNextBinEndIndex(float binIndex) => (int)_fftSize / 2 * Math.Pow(binIndex / FftBinCount, Gamma);
+        private double GetNextBinEndIndex(float binIndex) => (int)FftSize / 2 * Math.Pow(binIndex / FftBinCount, Gamma);
 
-        private void NotifySubscribers(List<float> fftResult) => _resultSubscribers.ForEach(x => x.ObserveSpectrumResults(fftResult));
+        private void NotifySubscribers(List<float> fftResult) => _observers.ForEach(x => x.ObserveSpectrumResults(fftResult));
     }
 }

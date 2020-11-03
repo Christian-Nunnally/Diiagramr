@@ -72,7 +72,7 @@ namespace VisualDrop
             {
                 Icon = icons["HeadsetIcon"] as FrameworkElement;
             }
-            else if (Name.Contains("none"))
+            else if (Name.ToLower().Contains("none"))
             {
                 Icon = icons["MuteSpeakerIcon"] as FrameworkElement;
             }

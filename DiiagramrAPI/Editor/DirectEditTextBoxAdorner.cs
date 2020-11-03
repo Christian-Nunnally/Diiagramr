@@ -2,27 +2,22 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
-    public class DirectEditTextBoxAdorner : Adorner
+    public class DirectEditTextBoxAdorner : DirectEditAdorner
     {
         private readonly TextBox textBox;
-        private readonly VisualCollection visualChildren;
 
         public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal)
-            : base(adornedElement)
+            : base(adornedElement, adornedTerminal)
         {
             if (adornedTerminal == null)
             {
                 return;
             }
-
-            AdornedTerminal = adornedTerminal;
-            visualChildren = new VisualCollection(this);
 
             textBox = new TextBox
             {
@@ -50,10 +45,9 @@ namespace DiiagramrAPI.Editor
             textBox.LostFocus += LostFocusHandler;
             textBox.LostKeyboardFocus += LostFocusHandler;
             textBox.AutoWordSelection = true;
+            _mainUiElement = textBox;
             visualChildren.Add(textBox);
         }
-
-        public Terminal AdornedTerminal { get; set; }
 
         public string DirectEditTextBoxText
         {
@@ -61,21 +55,15 @@ namespace DiiagramrAPI.Editor
             set => AdornedTerminal.Data = CoerceStringToType(value);
         }
 
-        public bool IsBoolType => AdornedTerminal.Model.Type == typeof(bool);
-
         public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
 
-        public bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
-
-        public bool IsEnumType => AdornedTerminal.Model.Type.IsEnum;
+        public override bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
 
         public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
 
         public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
 
         public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
-
-        protected override int VisualChildrenCount => visualChildren.Count;
 
         public object CoerceStringToType(string data)
         {
@@ -101,22 +89,6 @@ namespace DiiagramrAPI.Editor
             }
         }
 
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            double width = textBox.Width;
-            double height = textBox.Height;
-
-            double x = GetRelativeXBasedOnTerminalDirection(width);
-            double y = GetRelativeYBasedOnTerminalDirection(height);
-            textBox.Arrange(new Rect(x, y, width, height));
-            return finalSize;
-        }
-
-        protected override Visual GetVisualChild(int index)
-        {
-            return visualChildren[index];
-        }
-
         private void FocusTextBox()
         {
             textBox.Focus();
@@ -126,18 +98,6 @@ namespace DiiagramrAPI.Editor
         private void TextBoxLoaded(object sender, RoutedEventArgs e)
         {
             FocusTextBox();
-        }
-
-        private double GetRelativeXBasedOnTerminalDirection(double width)
-        {
-            var direction = AdornedTerminal.TerminalRotation;
-            return TerminalAdornerHelpers.GetVisualXBasedOnTerminalDirection(width, direction);
-        }
-
-        private double GetRelativeYBasedOnTerminalDirection(double height)
-        {
-            var direction = AdornedTerminal.TerminalRotation;
-            return TerminalAdornerHelpers.GetVisualYBasedOnTerminalDirection(height, direction);
         }
 
         private void KeyDownHandler(object sender, KeyEventArgs e)

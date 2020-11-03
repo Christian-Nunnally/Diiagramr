@@ -37,5 +37,17 @@ namespace DiiagramrFadeCandy
         {
             SpectrumEffect.BarWidthScale = barWidth;
         }
+
+        [InputTerminal(Direction.East)]
+        public void ScaleExponent(float scaleExponent)
+        {
+            SpectrumEffect.ScaleExponent = scaleExponent;
+        }
+
+        [InputTerminal(Direction.East)]
+        public void SpetrographMode(bool spectrographMode)
+        {
+            SpectrumEffect.SpectrographMode = spectrographMode;
+        }
     }
 }

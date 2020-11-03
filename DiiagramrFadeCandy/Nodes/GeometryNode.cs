@@ -84,12 +84,14 @@ namespace DiiagramrFadeCandy.Nodes
             var isLargeArcFlag = GetSingleFloatAndAdvanceString(drawCommands3, out var drawCommands4);
             var sweepDirectionFlag = GetSingleFloatAndAdvanceString(drawCommands4, out var drawCommands5);
             var endPoint = GetPointAndAdvanceString(drawCommands5, out var figureDescriptions);
-            var arcSegment = new ArcSegment();
-            arcSegment.Size = new SharpDX.Size2F(size.X, size.Y);
-            arcSegment.RotationAngle = rotationAngle;
-            arcSegment.ArcSize = isLargeArcFlag > 0.5 ? ArcSize.Large : ArcSize.Small;
-            arcSegment.SweepDirection = sweepDirectionFlag > 0.5 ? SweepDirection.Clockwise : SweepDirection.CounterClockwise;
-            arcSegment.Point = endPoint;
+            var arcSegment = new ArcSegment
+            {
+                Size = new SharpDX.Size2F(size.X, size.Y),
+                RotationAngle = rotationAngle,
+                ArcSize = isLargeArcFlag > 0.5 ? ArcSize.Large : ArcSize.Small,
+                SweepDirection = sweepDirectionFlag > 0.5 ? SweepDirection.Clockwise : SweepDirection.CounterClockwise,
+                Point = endPoint
+            };
             geometrySink.AddArc(arcSegment);
             _previousPoint = endPoint;
             return figureDescriptions;
@@ -100,9 +102,11 @@ namespace DiiagramrFadeCandy.Nodes
             // TODO: Make this actually follow documentation https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/path-markup-syntax?view=netframework-4.8#drawcommands
             var controlPoint = GetPointAndAdvanceString(drawCommands, out var drawCommands2);
             var endPoint = GetPointAndAdvanceString(drawCommands2, out var figureDescriptions);
-            var bezierSegment = new QuadraticBezierSegment();
-            bezierSegment.Point1 = controlPoint;
-            bezierSegment.Point2 = endPoint;
+            var bezierSegment = new QuadraticBezierSegment
+            {
+                Point1 = controlPoint,
+                Point2 = endPoint
+            };
             geometrySink.AddQuadraticBezier(bezierSegment);
             _previousPoint = endPoint;
             return figureDescriptions;
@@ -113,10 +117,12 @@ namespace DiiagramrFadeCandy.Nodes
             var controlPoint1 = _previousPoint; // TODO: Make this actually follow documentation https://docs.microsoft.com/en-us/dotnet/framework/wpf/graphics-multimedia/path-markup-syntax?view=netframework-4.8#drawcommands
             var controlPoint2 = GetPointAndAdvanceString(drawCommands, out var drawCommands2);
             var endPoint = GetPointAndAdvanceString(drawCommands2, out var figureDescriptions);
-            var bezierSegment = new BezierSegment();
-            bezierSegment.Point1 = controlPoint1;
-            bezierSegment.Point2 = controlPoint2;
-            bezierSegment.Point3 = endPoint;
+            var bezierSegment = new BezierSegment
+            {
+                Point1 = controlPoint1,
+                Point2 = controlPoint2,
+                Point3 = endPoint
+            };
             geometrySink.AddBezier(bezierSegment);
             _previousPoint = endPoint;
             return figureDescriptions;
@@ -126,9 +132,11 @@ namespace DiiagramrFadeCandy.Nodes
         {
             var controlPoint = GetPointAndAdvanceString(drawCommands, out var drawCommands2);
             var endPoint = GetPointAndAdvanceString(drawCommands2, out var figureDescriptions);
-            var bezierSegment = new QuadraticBezierSegment();
-            bezierSegment.Point1 = controlPoint;
-            bezierSegment.Point2 = endPoint;
+            var bezierSegment = new QuadraticBezierSegment
+            {
+                Point1 = controlPoint,
+                Point2 = endPoint
+            };
             geometrySink.AddQuadraticBezier(bezierSegment);
             _previousPoint = endPoint;
             return figureDescriptions;
@@ -139,10 +147,12 @@ namespace DiiagramrFadeCandy.Nodes
             var controlPoint1 = GetPointAndAdvanceString(drawCommands, out var drawCommands2);
             var controlPoint2 = GetPointAndAdvanceString(drawCommands2, out var drawCommands3);
             var endPoint = GetPointAndAdvanceString(drawCommands3, out var figureDescriptions);
-            var bezierSegment = new BezierSegment();
-            bezierSegment.Point1 = controlPoint1;
-            bezierSegment.Point2 = controlPoint2;
-            bezierSegment.Point3 = endPoint;
+            var bezierSegment = new BezierSegment
+            {
+                Point1 = controlPoint1,
+                Point2 = controlPoint2,
+                Point3 = endPoint
+            };
             geometrySink.AddBezier(bezierSegment);
             _previousPoint = endPoint;
             return figureDescriptions;

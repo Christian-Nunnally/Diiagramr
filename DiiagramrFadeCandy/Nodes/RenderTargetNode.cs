@@ -24,7 +24,6 @@ namespace DiiagramrFadeCandy
         private static readonly ImagingFactory wicFactory = new ImagingFactory();
         private static readonly PixelFormat pixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm_SRgb, AlphaMode.Unknown);
         private static readonly RenderTargetProperties renderTargetProperties = new RenderTargetProperties(RenderTargetType.Default, pixelFormat, 0, 0, RenderTargetUsage.None, FeatureLevel.Level_DEFAULT);
-        private static readonly bool ClearBeforeFrame = false;
         private static readonly RawColor4 Black = new RawColor4(0, 0, 0, 1);
         private readonly object _bitmapLock = new object();
         private readonly BackgroundTask _backgroundRefreshTask;
@@ -94,6 +93,9 @@ namespace DiiagramrFadeCandy
 
         [OutputTerminal(Direction.South)]
         public RenderedImage RenderedImage { get; set; }
+
+        [InputTerminal(Direction.West)]
+        public bool ClearBeforeFrame { get; set; }
 
         private WicBitmap WicBitmap
         {

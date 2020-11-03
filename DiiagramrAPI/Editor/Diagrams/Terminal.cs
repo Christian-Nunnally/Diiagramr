@@ -55,8 +55,6 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual bool IsSelected { get; set; }
 
-        public virtual TerminalModel Model { get; }
-
         public string Name { get; set; }
 
         public SolidColorBrush TerminalBackgroundBrush { get; set; }
@@ -95,7 +93,7 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public void MouseLeft()
         {
-            if (!(Adorner is DirectEditTextBoxAdorner))
+            if (!(Adorner is DirectEditAdorner))
             {
                 SetTerminalAdorner(null);
             }

@@ -12,6 +12,7 @@ namespace DiiagramrAPI2.Application.Dialogs
     public partial class LoadProjectDialog : Dialog
     {
         private string projectDirectory;
+        private FileSystemWatcher _watcher;
 
         public LoadProjectDialog()
         {
@@ -30,11 +31,22 @@ namespace DiiagramrAPI2.Application.Dialogs
             get => projectDirectory;
             internal set
             {
-                Directory
-                    .GetFiles(value)
-                    .Select(LoadProjectOption.Create)
-                    .ForEach(LoadProjectOptions.Add);
                 projectDirectory = value;
+
+                LoadProjectOptions.Clear();
+                UpdateProjectsList();
+
+                _watcher?.Dispose();
+                _watcher = new FileSystemWatcher
+                {
+                    Path = projectDirectory,
+                    NotifyFilter = NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                    Filter = "*.txt"
+                };
+                _watcher.Created += OnChanged;
+                _watcher.Deleted += OnChanged;
+                _watcher.Renamed += OnChanged;
+                _watcher.EnableRaisingEvents = true;
             }
         }
 
@@ -59,6 +71,20 @@ namespace DiiagramrAPI2.Application.Dialogs
                 CloseDialog();
                 LoadAction(dataContext.Path);
             }
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            UpdateProjectsList();
+        }
+
+        private void UpdateProjectsList()
+        {
+            LoadProjectOptions.Clear();
+            Directory
+                .GetFiles(ProjectDirectory)
+                .Select(LoadProjectOption.Create)
+                .ForEach(LoadProjectOptions.Add);
         }
     }
 }

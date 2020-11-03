@@ -178,6 +178,11 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 terminal.SetAdorner(directEditTextbox);
             }
+            var directEditEnumAdorner = new DirectEditEnumAdorner(terminal.View, terminal);
+            if (directEditEnumAdorner.IsDirectlyEditableType)
+            {
+                terminal.SetAdorner(directEditEnumAdorner);
+            }
         }
 
         private void StartWiringFromTerminal(Diagram diagram, Terminal terminal)
