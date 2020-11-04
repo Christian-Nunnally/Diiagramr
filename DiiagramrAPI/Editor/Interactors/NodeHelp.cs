@@ -31,7 +31,7 @@ namespace DiiagramrAPI.Editor.Interactors
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.KeyDown
-                && interaction.ViewModelUnderMouse is Node
+                && (interaction.ViewModelUnderMouse is Node || interaction.ViewModelUnderMouse is Terminal)
                 && interaction.Key == System.Windows.Input.Key.H;
         }
 
@@ -42,8 +42,6 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            X = (interaction.Diagram.ViewWidth / 2) - 250;
-            Y = (interaction.Diagram.ViewHeight / 2) - 200;
             var node = (Node)interaction.ViewModelUnderMouse;
             var nodeCopy = _nodeProvider.CreateNodeFromName(node.GetType().FullName);
             node.SetAdorner(null);

@@ -1,6 +1,7 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
 using Stylet;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -79,10 +80,13 @@ namespace DiiagramrAPI.Application.Dialogs
 
         private bool TryGetHelpFromInputTerminal(InputTerminal inputTerminal, out HelpAttribute help)
         {
-            help = Node?.GetType()
-                .GetMethod(inputTerminal.Name)
-                ?.GetCustomAttributes(typeof(HelpAttribute), true)
-                .FirstOrDefault() as HelpAttribute;
+            var nodeType = Node?.GetType();
+            MemberInfo terminalMemberInfo = nodeType?.GetMethod(inputTerminal.Name);
+            if (terminalMemberInfo == null)
+            {
+                terminalMemberInfo = nodeType?.GetProperty(inputTerminal.Name);
+            }
+            help = terminalMemberInfo?.GetCustomAttributes(typeof(HelpAttribute), true)?.FirstOrDefault() as HelpAttribute;
             return help is object;
         }
 

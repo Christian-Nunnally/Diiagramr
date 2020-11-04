@@ -41,6 +41,9 @@
     <Page Update="NodeViews\PixelMappingNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="NodeViews\ExternalRenderTargetNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="NodeViews\RenderTargetNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>

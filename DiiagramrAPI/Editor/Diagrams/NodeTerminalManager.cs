@@ -56,6 +56,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             var terminalModel = existingTerminalWithSameName?.Model
                 ?? new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
             terminalModel.DataChanged += data => property.SetValue(_node, data);
+            terminalModel.Data = property.GetValue(_node);
             if (existingTerminalWithSameName == null)
             {
                 _node.AddTerminal(terminalModel);

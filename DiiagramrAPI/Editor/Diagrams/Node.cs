@@ -36,6 +36,8 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         public virtual bool IsSelected { get; set; }
 
+        public bool IsMouseWithin { get; set; }
+
         public virtual string Name { get; set; }
 
         public virtual float Weight { get; set; }
@@ -121,12 +123,14 @@ namespace DiiagramrAPI.Editor.Diagrams
         public void MouseEntered()
         {
             SetAdorner(new NodeNameAdorner(View, this));
+            IsMouseWithin = true;
             MouseEnteredNode();
         }
 
         public void MouseLeft()
         {
             SetAdorner(null);
+            IsMouseWithin = false;
             MouseLeftNode();
         }
 

@@ -2,7 +2,6 @@
 using PropertyChanged;
 using System;
 using System.Windows;
-using System.Xml.Serialization;
 
 namespace VisualDrop
 {
@@ -10,7 +9,9 @@ namespace VisualDrop
     [Serializable]
     public class AudioDeviceInformation
     {
-        private string _name;
+        public AudioDeviceInformation() : this("None")
+        {
+        }
 
         public AudioDeviceInformation(string name, MMDevice device = null)
         {
@@ -18,68 +19,57 @@ namespace VisualDrop
             Device = device;
         }
 
-        public string Name
-        {
-            get => _name;
+        public string Name { get; set; }
 
-            set
-            {
-                _name = value;
-                SetDisplayName();
-                SetIcon();
-            }
-        }
-
+        // TODO: get rid of as this is not serializable.
         public MMDevice Device { get; }
 
-        public string DisplayName { get; set; } = string.Empty;
-
-        [XmlIgnore]
-        public FrameworkElement Icon { get; set; }
-
-        public bool Running { get; set; }
-
-        public AudioDeviceInformation Copy() => new AudioDeviceInformation(Name, Device);
-
-        private void SetDisplayName()
+        public string DisplayName
         {
-            if (_name.Contains("("))
+            get
             {
-                DisplayName = _name.Substring(0, _name.LastIndexOf('('));
-            }
-            if (DisplayName.Contains(" - "))
-            {
-                DisplayName = DisplayName.Substring(DisplayName.IndexOf(" - ") + 3);
+                if (Name.Contains("("))
+                {
+                    return Name.Substring(0, Name.LastIndexOf('('));
+                }
+                if (Name.Contains(" - "))
+                {
+                    return Name.Substring(Name.IndexOf(" - ") + 3);
+                }
+                return Name;
             }
         }
 
-        private void SetIcon()
+        public FrameworkElement Icon
         {
-            var icons = new ResourceDictionary
+            get
             {
-                Source = new Uri("/VisualDrop;component/Themes/Icons.xaml", UriKind.RelativeOrAbsolute)
-            };
+                var icons = new ResourceDictionary
+                {
+                    Source = new Uri("/VisualDrop;component/Themes/Icons.xaml", UriKind.RelativeOrAbsolute)
+                };
+                var lowerName = Name.ToLower();
 
-            if (Name.ToLower().Contains("headphones"))
-            {
-                Icon = icons["HeadphoneIcon"] as FrameworkElement;
-            }
-            else if (Name.ToLower().Contains("speakers"))
-            {
-                Icon = icons["LoudSpeakerIcon"] as FrameworkElement;
-            }
-            else if (Name.ToLower().Contains("headset"))
-            {
-                Icon = icons["HeadsetIcon"] as FrameworkElement;
-            }
-            else if (Name.ToLower().Contains("none"))
-            {
-                Icon = icons["MuteSpeakerIcon"] as FrameworkElement;
-            }
-            else
-            {
-                Icon = icons["LoudSpeakerIcon"] as FrameworkElement;
+                if (lowerName.Contains("headphones"))
+                {
+                    return icons["HeadphoneIcon"] as FrameworkElement;
+                }
+                else if (lowerName.Contains("speakers"))
+                {
+                    return icons["LoudSpeakerIcon"] as FrameworkElement;
+                }
+                else if (lowerName.Contains("headset"))
+                {
+                    return icons["HeadsetIcon"] as FrameworkElement;
+                }
+                else if (lowerName.Contains("none"))
+                {
+                    return icons["MuteSpeakerIcon"] as FrameworkElement;
+                }
+                return icons["LoudSpeakerIcon"] as FrameworkElement;
             }
         }
+
+        public bool IsStreaming { get; set; }
     }
 }

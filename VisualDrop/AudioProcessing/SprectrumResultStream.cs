@@ -12,7 +12,7 @@ namespace VisualDrop
     internal partial class SprectrumResultStream : ISpectrumResultNotifier, IFftResultObserver
     {
         private readonly List<ISpectrumResultObserver> _observers = new List<ISpectrumResultObserver>();
-        private int _fftBinCount;
+        private int _fftBinCount = 64;
 
         public SprectrumResultStream()
         {
@@ -36,6 +36,8 @@ namespace VisualDrop
         public FftSize FftSize { get; set; }
 
         public float Gamma { get; set; } = 2f;
+
+        public float Rotation { get; set; } = 0f;
 
         public MMDeviceCollection Devices => MMDeviceEnumerator.EnumerateDevices(DataFlow.Render, DeviceState.Active);
 
@@ -66,9 +68,10 @@ namespace VisualDrop
                 binEndIndex = (int)Math.Max(binEndIndex + 1, GetNextBinEndIndex(binIndex));
                 for (peak = 0; fftIndex < binEndIndex && fftIndex < fft.Length; fftIndex++)
                 {
-                    if (peak < fft[fftIndex])
+                    var value = fft[fftIndex] * (1 + (Rotation * binIndex));
+                    if (peak < value)
                     {
-                        peak = fft[fftIndex];
+                        peak = value;
                     }
                 }
                 fftResult.Add(peak);

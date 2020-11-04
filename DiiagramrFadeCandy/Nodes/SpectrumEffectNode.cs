@@ -49,5 +49,11 @@ namespace DiiagramrFadeCandy
         {
             SpectrumEffect.SpectrographMode = spectrographMode;
         }
+
+        [InputTerminal(Direction.West)]
+        public void MaxValueDecayRate(float maxValueDecayRate)
+        {
+            SpectrumEffect.MaxValueDecayRate = maxValueDecayRate;
+        }
     }
 }
