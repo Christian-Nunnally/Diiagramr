@@ -69,7 +69,7 @@ namespace DiiagramrModel
                 }
                 catch (ArrayTypeMismatchException)
                 {
-                    // Todo: handle this by adding it to know failed conversions maps.
+                    AddToKnownFailedConversionsMap(toType, fromType);
                 }
             }
 

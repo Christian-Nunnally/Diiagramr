@@ -23,7 +23,7 @@
         HorizontalAlignment="Left"
         VerticalAlignment="Top"
         HorizontalContentAlignment="Left"
-        Background="{StaticResource ResourceKey=ToolbarBackgroundBrush}"
+        Background="{StaticResource ToolbarBackgroundBrush}"
         DockPanel.Dock="Top"
         ItemsSource="{Binding TopLevelMenuNames}">
         <ItemsControl.ItemTemplate>

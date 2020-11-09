@@ -1,3 +1,5 @@
+using DiiagramrAPI.Application.Dialogs;
+using DiiagramrAPI.Application.ShellCommands;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
@@ -37,6 +39,8 @@ namespace DiiagramrAPI.Application
             DialogHost = dialogHostFactory();
             Toolbar = toolbarFactory();
             startCommandFactory().Execute(null);
+
+            ShellCommandBase.OnShellCommandException += OnShellCommandException;
         }
 
         public double Width { get; set; } = 1010;
@@ -75,6 +79,12 @@ namespace DiiagramrAPI.Application
         }
 
         public bool PreviewKeyDown(Key key) => _hotkeyCommander.HandleHotkeyPress(key);
+
+        private void OnShellCommandException(Exception exception)
+        {
+            var exceptionDialog = new ExceptionDialog(exception);
+            DialogHost.ActiveDialog = exceptionDialog;
+        }
 
         private bool TryCloseShell()
         {

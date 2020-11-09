@@ -8,27 +8,19 @@ namespace Diiagramr.Application.Tools
 {
     public class NotSeparatorCommandVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is SeparatorCommand ? Visibility.Collapsed : Visibility.Visible;
-        }
+        public object Convert(object value, Type _, object __, CultureInfo ___)
+            => value is SeparatorCommand ? Visibility.Collapsed : Visibility.Visible;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object _, Type __, object ___, CultureInfo ____)
+            => throw new NotImplementedException();
     }
 
     public class SeparatorCommandVisibilityConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            return value is SeparatorCommand ? Visibility.Visible : Visibility.Collapsed;
-        }
+        public object Convert(object value, Type _, object __, CultureInfo ___)
+            => value is SeparatorCommand ? Visibility.Visible : Visibility.Collapsed;
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object _, Type __, object ___, CultureInfo ____)
+            => throw new NotImplementedException();
     }
 }

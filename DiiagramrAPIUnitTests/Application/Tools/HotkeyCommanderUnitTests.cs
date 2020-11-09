@@ -8,7 +8,6 @@ namespace DiiagramrAPIUnitTests
 {
     public class HotkeyCommanderUnitTests : UnitTest
     {
-        // TODO: Fix tests by extracting Keyboard calls into a helper.
         [Fact]
         public void HandleHotkeyPress_CommandWithHotkeyExecuted()
         {
@@ -26,7 +25,7 @@ namespace DiiagramrAPIUnitTests
             var fakeCommand = new FakeCommand();
             var hotkeyCommander = CreateHotkeyCommander(new[] { fakeCommand });
 
-            Assert.False(hotkeyCommander.HandleHotkeyPress(fakeCommand.Hotkey));
+            Assert.False(hotkeyCommander.HandleHotkeyPress(Key.B));
         }
 
         [Fact]
@@ -47,12 +46,17 @@ namespace DiiagramrAPIUnitTests
             var fakeCommand = new FakeCommand();
             var hotkeyCommander = CreateHotkeyCommander(new[] { fakeCommand });
 
-            Assert.False(hotkeyCommander.HandleHotkeyPress(fakeCommand.Hotkey));
+            Assert.True(hotkeyCommander.HandleHotkeyPress(fakeCommand.Hotkey));
         }
 
         private HotkeyCommander CreateHotkeyCommander(IEnumerable<IHotkeyCommand> commands)
         {
-            return new HotkeyCommander(CreateFactoryFor(commands));
+            return new HotkeyCommander(CreateFactoryFor(commands), () => new TestKeyboard());
+        }
+
+        private class TestKeyboard : IKeyboard
+        {
+            public bool IsKeyDown(Key key) => false;
         }
     }
 }

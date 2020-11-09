@@ -28,11 +28,11 @@ namespace DiiagramrAPIUnitTests
 
         public Key Hotkey => Key.A;
 
-        public bool RequiresCtrlModifierKey => true;
+        public bool RequiresCtrlModifierKey => false;
 
-        public bool RequiresAltModifierKey => true;
+        public bool RequiresAltModifierKey => false;
 
-        public bool RequiresShiftModifierKey => true;
+        public bool RequiresShiftModifierKey => false;
 
         protected override bool CanExecuteInternal()
         {

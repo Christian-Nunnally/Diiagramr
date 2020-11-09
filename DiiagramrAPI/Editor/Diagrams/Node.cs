@@ -54,6 +54,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             set => Model.RunIfNotNull(() => Model.Y = value);
         }
 
+        [NodeSetting]
         public virtual double Width
         {
             get => Model?.Width ?? MinimumWidth;
@@ -64,6 +65,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
+        [NodeSetting]
         public virtual double Height
         {
             get => Model?.Height ?? MinimumHeight;

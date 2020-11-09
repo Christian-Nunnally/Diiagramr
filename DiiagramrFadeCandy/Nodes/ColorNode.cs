@@ -184,6 +184,9 @@ namespace DiiagramrFadeCandy
             catch (IndexOutOfRangeException)
             {
             }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
         }
 
         private void SetColorOnTerminal(float floatR, float floatG, float floatB, float floatA)

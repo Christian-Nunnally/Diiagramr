@@ -88,10 +88,12 @@ namespace DiiagramrFadeCandy
 
                 if (totalBrightness > 2)
                 {
-                    var brush2 = new SolidColorBrush(target, new RawColor4(1, 0, 1, 1));
-                    left = _indexOfBassTraceRange * totalWidthPerBar;
+                    var brightness = Math.Min(totalBrightness, 1);
+                    var bassBarWidth = totalBrightness / 2;
+                    var brush2 = new SolidColorBrush(target, new RawColor4(1, 0, .8f, brightness));
+                    left = (_indexOfBassTraceRange * totalWidthPerBar) - (bassBarWidth / 2);
                     top = (_iteration + 1) * rowHeight;
-                    right = left + barWidth;
+                    right = left + bassBarWidth;
                     bottom = _iteration * rowHeight;
                     var rectangle2 = new RawRectangleF(left, top, right, bottom);
                     target.FillRectangle(rectangle2, brush2);

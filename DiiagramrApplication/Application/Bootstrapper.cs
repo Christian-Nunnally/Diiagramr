@@ -27,6 +27,7 @@ namespace DiiagramrApplication.Application
             builder.Bind<ContextMenuBase>().To<ContextMenu>().InSingletonScope();
             builder.Bind<ToolbarBase>().To<Toolbar>().InSingletonScope();
             builder.Bind<ITransactor>().To<GlobalTransactor>().InSingletonScope();
+            builder.Bind<IKeyboard>().To<DiiagramrKeyboard>().InSingletonScope();
             builder.Bind<NodeServiceProvider>().To<NodeServiceProvider>().InSingletonScope();
             builder.Bind<DiagramWell>().To<DiagramWell>().InSingletonScope();
             builder.Bind<IShellCommand>().To<VisualDropStartScreenCommand>().WithKey("startCommand");

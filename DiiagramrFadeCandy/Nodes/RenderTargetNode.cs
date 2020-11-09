@@ -91,6 +91,19 @@ namespace DiiagramrFadeCandy
 
         public int ImageHeight => WicBitmap.Size.Height;
 
+        [NodeSetting]
+        public GraphicEffect[] SerializedEffects
+        {
+            get => Effects.ToArray();
+            set
+            {
+                foreach (var effect in value)
+                {
+                    Effects.Add(effect);
+                }
+            }
+        }
+
         [OutputTerminal(Direction.South)]
         public RenderedImage RenderedImage { get; set; }
 
@@ -117,6 +130,7 @@ namespace DiiagramrFadeCandy
                 Effects.Add(effect);
             }
             _backgroundRefreshTask.Paused = !Effects.Any();
+            OnPropertyChanged(nameof(SerializedEffects));
         }
 
         [InputTerminal(Direction.West)]

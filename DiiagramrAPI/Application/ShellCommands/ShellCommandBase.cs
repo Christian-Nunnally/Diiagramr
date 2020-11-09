@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Service.Application;
+using System;
 using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application.ShellCommands
@@ -8,6 +9,11 @@ namespace DiiagramrAPI.Application.ShellCommands
     /// </summary>
     public abstract class ShellCommandBase : IShellCommand
     {
+        /// <summary>
+        /// Invoked when an unhandled exception occurs while executing a command.
+        /// </summary>
+        public static event Action<Exception> OnShellCommandException;
+
         public abstract string Name { get; }
 
         public IList<IShellCommand> SubCommandItems { get; } = new List<IShellCommand>();
@@ -18,9 +24,16 @@ namespace DiiagramrAPI.Application.ShellCommands
 
         public void Execute(object parameter)
         {
-            if (CanExecute())
+            try
             {
-                ExecuteInternal(parameter);
+                if (CanExecute())
+                {
+                    ExecuteInternal(parameter);
+                }
+            }
+            catch (Exception e)
+            {
+                OnShellCommandException?.Invoke(e);
             }
         }
 

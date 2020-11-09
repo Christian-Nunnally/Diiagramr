@@ -47,6 +47,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="Application\Dialogs\ExceptionDialogView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Application\Dialogs\HelpDialogView.xaml">
       <SubType>Designer</SubType>
     </Page>

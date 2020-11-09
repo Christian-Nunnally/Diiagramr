@@ -83,7 +83,8 @@ namespace DiiagramrAPI.Editor.Interactors
             return interaction.Type == InteractionType.RightMouseDown
                || (interaction.Type == InteractionType.LeftMouseDown
                    && interaction.ViewModelUnderMouse is Terminal terminal
-                   && (terminal != _wiringTerminal || _leftMouseDownCount == 2));
+                   && (terminal != _wiringTerminal || _leftMouseDownCount == 2))
+               || (interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelUnderMouse is Wire);
         }
 
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
@@ -101,7 +102,7 @@ namespace DiiagramrAPI.Editor.Interactors
             var type = interaction.Type;
             var diagram = interaction.Diagram;
             var elementUnderMouse = interaction.ViewModelUnderMouse;
-            if (type == InteractionType.RightMouseDown)
+            if (type == InteractionType.RightMouseDown || elementUnderMouse is Wire)
             {
                 CancelWireInsertion(interaction.Diagram);
             }
