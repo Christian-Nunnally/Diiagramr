@@ -34,10 +34,38 @@ namespace DiiagramrPrimitives
                     if (result >= 0)
                     {
                         IndexValue = result;
-                        Array(_array);
+                        Array = _array;
                     }
                 }
             }
+        }
+
+        [InputTerminal(Direction.North)]
+        public int Index
+        {
+            get => IndexValue;
+            set
+            {
+                IndexValue = value;
+                OnPropertyChanged(nameof(StringValue));
+            }
+        }
+
+        [InputTerminal(Direction.East)]
+        public object[] Array
+        {
+            set
+            {
+                _array = value;
+                if (_array != null)
+                {
+                    if (IndexValue < _array.Length)
+                    {
+                        Value = _array[IndexValue];
+                    }
+                }
+            }
+            get => _array;
         }
 
         public void PreviewKeyDown(object sender, KeyEventArgs e)
@@ -45,26 +73,6 @@ namespace DiiagramrPrimitives
             if (e.Key == Key.Enter && View != null)
             {
                 (sender as FrameworkElement)?.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void Index(int index)
-        {
-            IndexValue = index;
-            OnPropertyChanged(nameof(StringValue));
-        }
-
-        [InputTerminal(Direction.East)]
-        public void Array(object[] array)
-        {
-            _array = array;
-            if (array != null)
-            {
-                if (IndexValue < array.Length)
-                {
-                    Value = array[IndexValue];
-                }
             }
         }
     }

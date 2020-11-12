@@ -15,6 +15,7 @@ namespace DiiagramrFadeCandy
     }
 
     [Serializable]
+    [DataContract(IsReference = true)]
     public class ShapeEffect : GraphicEffect
     {
         [DataMember]

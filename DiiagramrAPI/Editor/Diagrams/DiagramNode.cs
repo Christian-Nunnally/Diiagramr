@@ -141,7 +141,7 @@ namespace DiiagramrAPI.Editor.Diagrams
         private void AddOutputTerminalForOutputNode(DiagramOutputNode newOutputNode)
         {
             var outputTerminal = new OutputTerminalModel("Diagram Output", typeof(object), Direction.South);
-            newOutputNode.DataChanged += data => outputTerminal.UpdateData(data);
+            newOutputNode.DataChanged += data => outputTerminal.OnDataSet(data);
             _outputNodeToTerminalMap.Add(newOutputNode, outputTerminal);
             AddTerminal(outputTerminal);
             UpdateDiagramNodeWidth();
@@ -159,7 +159,8 @@ namespace DiiagramrAPI.Editor.Diagrams
         {
             var inputTerminal = new InputTerminalModel("Diagram Input", typeof(object), Direction.North);
             var outputTerminal = (OutputTerminalModel)newInputNode.Terminals.First().Model;
-            inputTerminal.DataChanged += data => outputTerminal.UpdateData(data);
+            inputTerminal.OnDataSet = data => outputTerminal.OnDataSet(data);
+            inputTerminal.OnDataGet = () => outputTerminal.OnDataGet();
             _inputNodeToTerminalMap.Add(newInputNode, inputTerminal);
             AddTerminal(inputTerminal);
             UpdateDiagramNodeWidth();

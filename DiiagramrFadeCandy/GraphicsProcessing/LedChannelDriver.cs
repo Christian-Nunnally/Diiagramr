@@ -143,14 +143,14 @@ namespace DiiagramrFadeCandy
                 Y = 0;
             }
 
-            if (ImageDataProvider.ImageWidth < Box.X + Box.Width)
+            if (ImageDataProvider.WicImageWidth < Box.X + Box.Width)
             {
-                Width = ImageDataProvider.ImageWidth - Box.X;
+                Width = ImageDataProvider.WicImageWidth - Box.X;
             }
 
-            if (ImageDataProvider.ImageHeight < Box.Y + Box.Height)
+            if (ImageDataProvider.WicImageHeight < Box.Y + Box.Height)
             {
-                Height = ImageDataProvider.ImageHeight - Box.Y;
+                Height = ImageDataProvider.WicImageHeight - Box.Y;
             }
 
             if (_intBuffer.Length <= 0 || _intBuffer.Length > NumberOfLeds)
@@ -189,7 +189,7 @@ namespace DiiagramrFadeCandy
 
         private bool IsLedBoxOutsideOfFrame()
         {
-            return ImageDataProvider.ImageWidth < Box.X || ImageDataProvider.ImageHeight < Box.Y || Box.X + Box.Width < 0 || Box.Y + Box.Height < 0;
+            return ImageDataProvider.WicImageWidth < Box.X || ImageDataProvider.WicImageHeight < Box.Y || Box.X + Box.Width < 0 || Box.Y + Box.Height < 0;
         }
 
         private void CopyIntermediateBufferToMessageBuffer(int toPixelIndex, int fromPixelIndex)

@@ -14,6 +14,10 @@
         /// <param name="parameter">The parameter to pass to the command.</param>
         void Transact(IReversableCommand command, object parameter);
 
+        bool CanUndo();
+
+        bool CanRedo();
+
         /// <summary>
         /// Undoes the last command that has been executed. Should only be called if the last command was recently executed.
         /// </summary>

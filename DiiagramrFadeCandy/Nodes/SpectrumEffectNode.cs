@@ -18,42 +18,45 @@ namespace DiiagramrFadeCandy
         public GraphicEffect Effect { get; set; } = new SpectrumEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
         [InputTerminal(Direction.West)]
-        public void Color(Color data)
+        public float MaxValueDecayRate
         {
-            if (data != null)
-            {
-                SpectrumEffect.Color = data;
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void Array(float[] data)
-        {
-            SpectrumEffect.SpectrumData = data;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void BarWidth(float barWidth)
-        {
-            SpectrumEffect.BarWidthScale = barWidth;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void ScaleExponent(float scaleExponent)
-        {
-            SpectrumEffect.ScaleExponent = scaleExponent;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void SpetrographMode(bool spectrographMode)
-        {
-            SpectrumEffect.SpectrographMode = spectrographMode;
+            get => SpectrumEffect.MaxValueDecayRate;
+            set => SpectrumEffect.MaxValueDecayRate = value;
         }
 
         [InputTerminal(Direction.West)]
-        public void MaxValueDecayRate(float maxValueDecayRate)
+        public Color Color
         {
-            SpectrumEffect.MaxValueDecayRate = maxValueDecayRate;
+            get => SpectrumEffect.Color ?? new Color(255f, 255f, 255f, 255f);
+            set => SpectrumEffect.Color = value;
+        }
+
+        [InputTerminal(Direction.North)]
+        public float[] Data
+        {
+            get => SpectrumEffect.SpectrumData;
+            set => SpectrumEffect.SpectrumData = value;
+        }
+
+        [InputTerminal(Direction.East)]
+        public float BarWidthScale
+        {
+            get => SpectrumEffect.BarWidthScale;
+            set => SpectrumEffect.BarWidthScale = value;
+        }
+
+        [InputTerminal(Direction.East)]
+        public float ScaleExponent
+        {
+            get => SpectrumEffect.ScaleExponent;
+            set => SpectrumEffect.ScaleExponent = value;
+        }
+
+        [InputTerminal(Direction.North)]
+        public bool SpectrographMode
+        {
+            get => SpectrumEffect.SpectrographMode;
+            set => SpectrumEffect.SpectrographMode = value;
         }
     }
 }

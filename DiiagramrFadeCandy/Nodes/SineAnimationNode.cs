@@ -15,7 +15,7 @@ namespace DiiagramrFadeCandy
     public class SineAnimationNode : Node
     {
         private const double HalfPI = Math.PI / 2.0;
-        private readonly int _timeBetweenFrames = 33;
+        private readonly int _timeBetweenFrames = 15;
         private int _frames = 30;
         private float _startPosition = 0;
         private float _quadrents = 4;
@@ -38,14 +38,56 @@ namespace DiiagramrFadeCandy
         [InputTerminal(Direction.North)]
         public float StartOffset { get; set; }
 
-        private double CircleQuadrents => _quadrents * HalfPI;
+        [InputTerminal(Direction.North)]
+        public bool Repeat { get; set; }
 
         [InputTerminal(Direction.North)]
-        public void Trigger(bool data)
+        public bool Trigger
         {
-            if (data)
+            get => true;
+            set => RunAnimation();
+        }
+
+        [InputTerminal(Direction.North)]
+        public int AnimationFrames
+        {
+            get => _frames;
+            set
             {
-                new Thread(() =>
+                _frames = value;
+                RenderFunctionOnView();
+            }
+        }
+
+        [InputTerminal(Direction.South)]
+        public float AnimationQuadrents
+        {
+            get => _quadrents;
+            set
+            {
+                _quadrents = value;
+                RenderFunctionOnView();
+            }
+        }
+
+        [InputTerminal(Direction.West)]
+        public float Amplitude
+        {
+            get => _amplitude;
+            set
+            {
+                _amplitude = value;
+                RenderFunctionOnView();
+            }
+        }
+
+        private double CircleQuadrents => _quadrents * HalfPI;
+
+        private void RunAnimation()
+        {
+            new Thread(() =>
+            {
+                while (Repeat)
                 {
                     for (double d = 0.0; d <= CircleQuadrents; d += CircleQuadrents / (_frames - 1))
                     {
@@ -53,29 +95,9 @@ namespace DiiagramrFadeCandy
                         Thread.Sleep(_timeBetweenFrames);
                     }
                     OutputFrame = _startPosition;
-                }).Start();
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void AnimationFrames(int frames)
-        {
-            _frames = frames;
-            AnimationQuadrents(_quadrents);
-        }
-
-        [InputTerminal(Direction.South)]
-        public void AnimationQuadrents(float quadrents)
-        {
-            _quadrents = quadrents;
-            RenderFunctionOnView();
-        }
-
-        [InputTerminal(Direction.West)]
-        public void Amplitude(float amplitude)
-        {
-            _amplitude = amplitude;
-            RenderFunctionOnView();
+                    Thread.Sleep(_timeBetweenFrames);
+                }
+            }).Start();
         }
 
         private void RenderFunctionOnView()

@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 namespace DiiagramrFadeCandy
 {
     [Serializable]
+    [DataContract(IsReference = true)]
     public class SpectrumEffect : GraphicEffect
     {
         private float _maxValue;
@@ -27,10 +28,10 @@ namespace DiiagramrFadeCandy
         public bool SpectrographMode { get; set; } = true;
 
         [DataMember]
-        public float ScaleExponent { get; set; } = 2f;
+        public float ScaleExponent { get; set; } = 5f;
 
         [DataMember]
-        public float MaxValueDecayRate { get; set; } = .99f;
+        public float MaxValueDecayRate { get; set; } = .99999f;
 
         public override void Draw(RenderTarget target)
         {
@@ -74,30 +75,30 @@ namespace DiiagramrFadeCandy
                     target.FillRectangle(rectangle, brush);
                 }
 
-                var bassTraceRange = Math.Min(SpectrumData.Length, 10);
-                var newIndexOfBassTraceRange = 0.0f;
-                var totalBrightness = 0.0f;
-                for (int i = 0; i < bassTraceRange; i++)
-                {
-                    newIndexOfBassTraceRange += amplitudes[i] * i;
-                    totalBrightness += amplitudes[i];
-                }
-                totalBrightness = totalBrightness == 0 ? 1 : totalBrightness;
-                newIndexOfBassTraceRange /= totalBrightness;
-                _indexOfBassTraceRange += _bassTraceVelocity * (newIndexOfBassTraceRange - _indexOfBassTraceRange);
+                //var bassTraceRange = Math.Min(SpectrumData.Length, 10);
+                //var newIndexOfBassTraceRange = 0.0f;
+                //var totalBrightness = 0.0f;
+                //for (int i = 0; i < bassTraceRange; i++)
+                //{
+                //    newIndexOfBassTraceRange += amplitudes[i] * i;
+                //    totalBrightness += amplitudes[i];
+                //}
+                //totalBrightness = totalBrightness == 0 ? 1 : totalBrightness;
+                //newIndexOfBassTraceRange /= totalBrightness;
+                //_indexOfBassTraceRange += _bassTraceVelocity * (newIndexOfBassTraceRange - _indexOfBassTraceRange);
 
-                if (totalBrightness > 2)
-                {
-                    var brightness = Math.Min(totalBrightness, 1);
-                    var bassBarWidth = totalBrightness / 2;
-                    var brush2 = new SolidColorBrush(target, new RawColor4(1, 0, .8f, brightness));
-                    left = (_indexOfBassTraceRange * totalWidthPerBar) - (bassBarWidth / 2);
-                    top = (_iteration + 1) * rowHeight;
-                    right = left + bassBarWidth;
-                    bottom = _iteration * rowHeight;
-                    var rectangle2 = new RawRectangleF(left, top, right, bottom);
-                    target.FillRectangle(rectangle2, brush2);
-                }
+                //if (totalBrightness > 2)
+                //{
+                //    var brightness = Math.Min(totalBrightness, 1);
+                //    var bassBarWidth = totalBrightness / 2;
+                //    var brush2 = new SolidColorBrush(target, new RawColor4(1, 0, .8f, brightness));
+                //    left = (_indexOfBassTraceRange * totalWidthPerBar) - (bassBarWidth / 2);
+                //    top = (_iteration + 1) * rowHeight;
+                //    right = left + bassBarWidth;
+                //    bottom = _iteration * rowHeight;
+                //    var rectangle2 = new RawRectangleF(left, top, right, bottom);
+                //    target.FillRectangle(rectangle2, brush2);
+                //}
 
                 _iteration = (_iteration + 1) % maxRows;
             }

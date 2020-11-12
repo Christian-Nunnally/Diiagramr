@@ -7,6 +7,7 @@ using System.Runtime.Serialization;
 namespace DiiagramrFadeCandy
 {
     [Serializable]
+    [DataContract(IsReference = true)]
     public class KaleidoscopeEffect : GraphicEffect
     {
         [DataMember]

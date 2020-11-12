@@ -5,15 +5,15 @@ using System.Runtime.Serialization;
 namespace DiiagramrFadeCandy
 {
     [Serializable]
+    [DataContract(IsReference = true)]
     public class CellularAutomataEffect : GraphicEffect
     {
-        private readonly Random _random = new Random();
-        private readonly uint[] intPixelData;
+        private Random _random;
+        private uint[] _intPixelData;
         private int _colorChangeMode = 3;
 
         public CellularAutomataEffect()
         {
-            intPixelData = new uint[Width * Height];
             Randomize();
         }
 
@@ -32,11 +32,14 @@ namespace DiiagramrFadeCandy
         [DataMember]
         public float BarWidth { get; set; } = 1f;
 
+        private Random Random => _random ?? (_random = new Random());
+        private uint[] IntPixelData => _intPixelData ?? (_intPixelData = new uint[Width * Height]);
+
         public override void Draw(RenderTarget target)
         {
             Step();
             Bitmap backBufferBitmap = new Bitmap(target, new SharpDX.Size2(Width, Height), new BitmapProperties(target.PixelFormat));
-            backBufferBitmap.CopyFromMemory(intPixelData, Width * 4);
+            backBufferBitmap.CopyFromMemory(IntPixelData, Width * 4);
             target.DrawBitmap(backBufferBitmap, 1.0f, BitmapInterpolationMode.Linear);
         }
 
@@ -46,16 +49,21 @@ namespace DiiagramrFadeCandy
             {
                 for (int col = 0; col < Width; col++)
                 {
-                    intPixelData[row * Width + col] = GetRandomColor();
+                    IntPixelData[row * Width + col] = GetRandomColor();
                 }
             }
-            _colorChangeMode = _random.Next(10);
+            _colorChangeMode = Random.Next(10);
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
         }
 
         private uint GetRandomColor()
         {
             byte[] bytes = new byte[4];
-            _random.NextBytes(bytes);
+            Random.NextBytes(bytes);
             return BitConverter.ToUInt32(bytes, 0);
         }
 
@@ -65,14 +73,14 @@ namespace DiiagramrFadeCandy
             {
                 for (int col = 0; col < Width; col++)
                 {
-                    if (_random.NextDouble() > 0.5)
+                    if (Random.NextDouble() > 0.5)
                     {
                         var currentIndex = row * Width + col;
-                        var currentColor = intPixelData[currentIndex];
+                        var currentColor = IntPixelData[currentIndex];
                         var newIndex = PickRandomCardinalIndex(currentIndex);
-                        if (ShouldChangeColor(intPixelData[newIndex], currentColor))
+                        if (ShouldChangeColor(IntPixelData[newIndex], currentColor))
                         {
-                            intPixelData[newIndex] = currentColor;
+                            IntPixelData[newIndex] = currentColor;
                         }
                     }
                 }
@@ -99,12 +107,12 @@ namespace DiiagramrFadeCandy
 
         private int PickRandomCardinalIndex(int startingIndex)
         {
-            return (_random.Next(0, 4)) switch
+            return (Random.Next(0, 4)) switch
             {
-                0 => (startingIndex + Width) % intPixelData.Length,
-                1 => (startingIndex + intPixelData.Length - Width) % intPixelData.Length,
-                2 => (startingIndex + 1) % intPixelData.Length,
-                3 => (startingIndex + intPixelData.Length - 1) % intPixelData.Length,
+                0 => (startingIndex + Width) % IntPixelData.Length,
+                1 => (startingIndex + IntPixelData.Length - Width) % IntPixelData.Length,
+                2 => (startingIndex + 1) % IntPixelData.Length,
+                3 => (startingIndex + IntPixelData.Length - 1) % IntPixelData.Length,
                 _ => throw new InvalidOperationException(),
             };
         }

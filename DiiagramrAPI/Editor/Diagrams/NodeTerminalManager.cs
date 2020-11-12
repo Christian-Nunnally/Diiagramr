@@ -1,6 +1,7 @@
 ﻿using DiiagramrCore;
 using DiiagramrModel;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -17,75 +18,46 @@ namespace DiiagramrAPI.Editor.Diagrams
             _node.PropertyChanged += NodePropertyChanged;
         }
 
-        public void CreateTerminals()
+        public static bool IsGenericList(Type type)
         {
-            _node.GetType()
-                .GetMethods()
-                .Where(x => Attribute.IsDefined(x, typeof(InputTerminalAttribute)))
-                .ForEach(CreateInputTerminalForMethod);
-            _node.GetType()
-                .GetProperties()
-                .Where(x => Attribute.IsDefined(x, typeof(OutputTerminalAttribute)))
-                .ForEach(CreateOutputTerminalForProperty);
-            _node.GetType()
-                .GetProperties()
-                .Where(x => Attribute.IsDefined(x, typeof(InputTerminalAttribute)))
-                .ForEach(CreateInputTerminalForProperty);
+            return type.IsGenericType
+                && typeof(List<>) == type.GetGenericTypeDefinition();
         }
 
-        private void CreateInputTerminalForMethod(MethodInfo methodInfo)
+        public void CreateTerminals() => _node.GetType().GetProperties().Where(x => Attribute.IsDefined(x, typeof(TerminalAttribute))).ForEach(CreateTerminalForProperty);
+
+        private static TerminalModel CreateTerminalModel(PropertyInfo property, TerminalAttribute terminalAttribute, Type terminalType)
         {
-            ValidateInputTerminalMethod(methodInfo);
-            var inputTerminalAttribute = methodInfo.GetAttribute<InputTerminalAttribute>();
-            var terminalType = methodInfo.GetParameters().First().ParameterType;
-            var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == methodInfo.Name);
-            var terminalModel = existingTerminalWithSameName?.Model
-                ?? new InputTerminalModel(methodInfo.Name, terminalType, inputTerminalAttribute.DefaultDirection);
-            terminalModel.DataChanged += methodInfo.CreateMethodInvoker(_node);
+            return terminalAttribute is InputTerminalAttribute inputTerminalAttribute
+                ? CreateInputTerminalModel(property, inputTerminalAttribute, terminalType)
+                : (TerminalModel)new OutputTerminalModel(property.Name, terminalType, terminalAttribute.DefaultDirection);
+        }
+
+        private static InputTerminalModel CreateInputTerminalModel(PropertyInfo property, InputTerminalAttribute inputTerminalAttribute, Type terminalType)
+        {
+            if (inputTerminalAttribute.IsCoalescing)
+            {
+                if (!IsGenericList(terminalType))
+                {
+                    throw new InvalidOperationException("Coalescing terminals must be properties of type List<T>");
+                }
+                var genericType = terminalType.GetGenericArguments().First();
+                return new CoalescingInputTerminalModel(property.Name, genericType, inputTerminalAttribute.DefaultDirection);
+            }
+            return new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
+        }
+
+        private void CreateTerminalForProperty(PropertyInfo property)
+        {
+            var terminalAttribute = property.GetAttribute<TerminalAttribute>();
+            var terminalType = property.PropertyType;
+            var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
+            var terminalModel = existingTerminalWithSameName?.Model ?? CreateTerminalModel(property, terminalAttribute, terminalType);
+            terminalModel.OnDataSet = data => property.SetValue(_node, data);
+            terminalModel.OnDataGet = () => property.GetValue(_node);
             if (existingTerminalWithSameName == null)
             {
                 _node.AddTerminal(terminalModel);
-            }
-        }
-
-        private void CreateInputTerminalForProperty(PropertyInfo property)
-        {
-            var inputTerminalAttribute = property.GetAttribute<InputTerminalAttribute>();
-            var terminalType = property.PropertyType;
-            var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
-            var terminalModel = existingTerminalWithSameName?.Model
-                ?? new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
-            terminalModel.DataChanged += data => property.SetValue(_node, data);
-            terminalModel.Data = property.GetValue(_node);
-            if (existingTerminalWithSameName == null)
-            {
-                _node.AddTerminal(terminalModel);
-            }
-        }
-
-        private void CreateOutputTerminalForProperty(PropertyInfo property)
-        {
-            var outputTerminalAttribute = property.GetAttribute<OutputTerminalAttribute>();
-            var terminalType = property.PropertyType;
-            var existingTerminalWithSameName = _node.Terminals.FirstOrDefault(t => t.Name == property.Name);
-            var helpAttribute = property.GetCustomAttributes(typeof(HelpAttribute), true).FirstOrDefault() as HelpAttribute;
-            var helpString = helpAttribute?.HelpText ?? "";
-            var outputTerminalModel = existingTerminalWithSameName?.Model as OutputTerminalModel
-                ?? new OutputTerminalModel(property.Name, terminalType, outputTerminalAttribute.DefaultDirection);
-            outputTerminalModel.GetDataFromSource = () => property.GetValue(_node);
-            outputTerminalModel.UpdateDataFromSource();
-            if (existingTerminalWithSameName == null)
-            {
-                _node.AddTerminal(outputTerminalModel);
-            }
-        }
-
-        private void ValidateInputTerminalMethod(MethodInfo methodInfo)
-        {
-            if (methodInfo.GetParameters().Length != 1)
-            {
-                var errorMessage = $"Input terminal method `{GetType().AssemblyQualifiedName}.{methodInfo.Name}` must have exactly one parameter.";
-                throw new InvalidOperationException(errorMessage);
             }
         }
 
@@ -94,7 +66,8 @@ namespace DiiagramrAPI.Editor.Diagrams
             var existingTerminal = _node.Terminals.FirstOrDefault(t => t.Name == e.PropertyName);
             if (existingTerminal?.Model is OutputTerminalModel outputTerminal)
             {
-                outputTerminal.UpdateDataFromSource();
+                var data = outputTerminal.OnDataGet();
+                outputTerminal.Data = data;
             }
         }
     }

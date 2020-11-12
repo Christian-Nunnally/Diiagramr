@@ -6,8 +6,8 @@ namespace DiiagramrFadeCandy
     {
         void CopyPixels(RawBox box, int[] intBuffer);
 
-        int ImageWidth { get; }
-        int ImageHeight { get; }
+        int WicImageWidth { get; }
+        int WicImageHeight { get; }
 
         bool HasData();
     }

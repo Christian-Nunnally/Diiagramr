@@ -82,14 +82,20 @@ namespace DiiagramrModel
                 return;
             }
             // TODO: needed? move down 1 line?
-            NotifyPropertyChanged("Data");
-            SinkTerminal.Data = GetCoersedSourceTerminalDataOrBreakWire();
+            // NotifyPropertyChanged("Data");
+            SinkTerminal.SetDataFromWire(GetCoersedSourceTerminalDataOrBreakWire(), this);
+        }
+
+        [OnDeserialized]
+        public void OnDeserialized(StreamingContext context)
+        {
         }
 
         private object GetCoersedSourceTerminalDataOrBreakWire()
         {
             // The tpye might be null when the node first loads and the type hasn't been resolved yet.
-            if (SinkTerminal.Type == null)
+            var guesedType = SinkTerminal.Type ?? SinkTerminal?.Data?.GetType();
+            if (guesedType == null)
             {
                 return null;
             }
@@ -126,7 +132,7 @@ namespace DiiagramrModel
         {
             if (SinkTerminal is object)
             {
-                PropagateData();
+                // PropagateData();
                 X2 = SinkTerminal.X;
                 Y2 = SinkTerminal.Y;
             }

@@ -8,8 +8,7 @@ using SharpDX.Direct2D1;
 using SharpDX.DXGI;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Collections.Generic;
 using AlphaMode = SharpDX.Direct2D1.AlphaMode;
 using BitmapSource = System.Windows.Media.Imaging.BitmapSource;
 using PixelFormat = SharpDX.Direct2D1.PixelFormat;
@@ -46,13 +45,10 @@ namespace DiiagramrFadeCandy
             _backgroundRefreshTask.Start();
         }
 
-        public ObservableCollection<GraphicEffect> Effects { get; set; } = new ObservableCollection<GraphicEffect>();
-
         [NodeSetting]
         public int BitmapWidth
         {
             get => _bitmapWidth;
-
             set
             {
                 _bitmapWidth = value;
@@ -64,7 +60,6 @@ namespace DiiagramrFadeCandy
         public int BitmapHeight
         {
             get => _bitmapHeight;
-
             set
             {
                 _bitmapHeight = value;
@@ -87,28 +82,45 @@ namespace DiiagramrFadeCandy
 
         public BitmapSource BitmapImageSource { get; set; }
 
-        public int ImageWidth => WicBitmap.Size.Width;
+        public int WicImageWidth => WicBitmap.Size.Width;
 
-        public int ImageHeight => WicBitmap.Size.Height;
-
-        [NodeSetting]
-        public GraphicEffect[] SerializedEffects
-        {
-            get => Effects.ToArray();
-            set
-            {
-                foreach (var effect in value)
-                {
-                    Effects.Add(effect);
-                }
-            }
-        }
+        public int WicImageHeight => WicBitmap.Size.Height;
 
         [OutputTerminal(Direction.South)]
         public RenderedImage RenderedImage { get; set; }
 
         [InputTerminal(Direction.West)]
         public bool ClearBeforeFrame { get; set; }
+
+        [InputTerminal(Direction.North, isCoalescing: true)]
+        [NodeSetting]
+        public List<GraphicEffect> Effects { get; set; } = new List<GraphicEffect>();
+
+        [InputTerminal(Direction.West)]
+        public int ImageWidth
+        {
+            get => BitmapWidth;
+            set
+            {
+                if (value > 0)
+                {
+                    BitmapWidth = value;
+                }
+            }
+        }
+
+        [InputTerminal(Direction.West)]
+        public int ImageHeight
+        {
+            get => BitmapHeight;
+            set
+            {
+                if (value > 0)
+                {
+                    BitmapHeight = value;
+                }
+            }
+        }
 
         private WicBitmap WicBitmap
         {
@@ -118,36 +130,6 @@ namespace DiiagramrFadeCandy
             {
                 _cachedBitmap = value;
                 _cachedRenderTarget = null;
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void AddEffect(GraphicEffect _)
-        {
-            Effects.Clear();
-            foreach (var effect in Model.Terminals.SelectMany(t => t.ConnectedWires).Select(w => w.SourceTerminal.Data).OfType<GraphicEffect>())
-            {
-                Effects.Add(effect);
-            }
-            _backgroundRefreshTask.Paused = !Effects.Any();
-            OnPropertyChanged(nameof(SerializedEffects));
-        }
-
-        [InputTerminal(Direction.West)]
-        public void Width(int width)
-        {
-            if (width != 0)
-            {
-                BitmapWidth = width;
-            }
-        }
-
-        [InputTerminal(Direction.West)]
-        public void Height(int height)
-        {
-            if (height != 0)
-            {
-                BitmapHeight = height;
             }
         }
 

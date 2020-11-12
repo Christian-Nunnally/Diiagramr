@@ -13,7 +13,6 @@
         /// <param name="name">The user visible name of the terminal.</param>
         /// <param name="type">The data type of the terminal.</param>
         /// <param name="defaultDirection">The default side of a node the terminal belongs on.</param>
-        /// <param name="index">The unique index of the terminal.</param>
         public InputTerminalModel(string name, Type type, Direction defaultDirection)
             : base(name, type, defaultDirection)
         {

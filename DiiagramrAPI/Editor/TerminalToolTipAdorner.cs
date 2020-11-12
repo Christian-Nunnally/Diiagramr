@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -23,9 +24,7 @@ namespace DiiagramrAPI.Editor
 
             AdornedTerminal = adornedTerminal;
             visualChildren = new VisualCollection(this);
-            var text = AdornedTerminal.Data != null && AdornedTerminal.Data.ToString().Length < 8
-                ? AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString()
-                : AdornedTerminal.Name;
+            string text = GetTerminalText();
 
             textBlock = new TextBlock
             {
@@ -51,7 +50,7 @@ namespace DiiagramrAPI.Editor
                 Background = new SolidColorBrush(Color.FromRgb(35, 35, 35)),
                 BorderBrush = new SolidColorBrush(Color.FromRgb(35, 35, 35)),
                 Width = textBlock.DesiredSize.Width + marginAroundLabel * 2,
-                MaxWidth = 200,
+                MaxWidth = 400,
                 Height = textBlock.DesiredSize.Height + marginAroundLabel * 2,
             };
             visualChildren.Add(border);
@@ -75,6 +74,26 @@ namespace DiiagramrAPI.Editor
         protected override Visual GetVisualChild(int index)
         {
             return visualChildren[index];
+        }
+
+        private string GetTerminalText()
+        {
+            if (AdornedTerminal.Data == null)
+            {
+                return AdornedTerminal.Name;
+            }
+            if (AdornedTerminal.Data.GetType().IsArray)
+            {
+                var dataArray = AdornedTerminal.Data as Array;
+                var arrayText = "";
+                for (int i = 0; i < Math.Min(3, dataArray.Length); i++)
+                {
+                    arrayText += $"{dataArray.GetValue(i)}{((dataArray.Length - 1 != i) ? ", " : "")}";
+                }
+                return $"{AdornedTerminal.Name} = [{arrayText}{((dataArray.Length > 3) ? " ... " : "")}] Length = {dataArray.Length}";
+            }
+
+            return AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString();
         }
 
         private double GetRelativeXBasedOnTerminalDirection(double width)

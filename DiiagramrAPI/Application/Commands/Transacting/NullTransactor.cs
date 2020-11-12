@@ -10,6 +10,10 @@ namespace DiiagramrAPI.Application.Commands.Transacting
 
         public static NullTransactor Instance { get; } = new NullTransactor();
 
+        public bool CanRedo() => false;
+
+        public bool CanUndo() => false;
+
         public void Redo() => throw new InvalidOperationException();
 
         public void Transact(IReversableCommand command, object parameter)

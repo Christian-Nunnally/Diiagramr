@@ -4,13 +4,10 @@ using System;
 namespace DiiagramrAPI.Editor.Diagrams
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class OutputTerminalAttribute : Attribute
+    public class OutputTerminalAttribute : TerminalAttribute
     {
-        public OutputTerminalAttribute(Direction defaultDirection)
+        public OutputTerminalAttribute(Direction defaultDirection) : base(defaultDirection)
         {
-            DefaultDirection = defaultDirection;
         }
-
-        public Direction DefaultDirection { get; }
     }
 }

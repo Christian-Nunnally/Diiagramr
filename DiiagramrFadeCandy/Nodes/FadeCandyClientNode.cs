@@ -31,75 +31,59 @@ namespace DiiagramrFadeCandy
         public bool ConnectButtonVisible { get; set; } = true;
 
         [InputTerminal(Direction.North)]
-        public void SetPin0LedData(byte[] pin0Data)
+        public byte[] SetPin0LedData
         {
-            if (pin0Data != null)
-            {
-                _ledData[0] = pin0Data;
-            }
+            get => _ledData[0];
+            set => _ledData[0] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin1LedData(byte[] pin1Data)
+        public byte[] SetPin1LedData
         {
-            if (pin1Data != null)
-            {
-                _ledData[1] = pin1Data;
-            }
+            get => _ledData[1];
+            set => _ledData[1] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin2LedData(byte[] pin2Data)
+        public byte[] SetPin2LedData
         {
-            if (pin2Data != null)
-            {
-                _ledData[2] = pin2Data;
-            }
+            get => _ledData[2];
+            set => _ledData[2] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin3LedData(byte[] pin3Data)
+        public byte[] SetPin3LedData
         {
-            if (pin3Data != null)
-            {
-                _ledData[3] = pin3Data;
-            }
+            get => _ledData[3];
+            set => _ledData[3] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin4LedData(byte[] pin4Data)
+        public byte[] SetPin4LedData
         {
-            if (pin4Data != null)
-            {
-                _ledData[4] = pin4Data;
-            }
+            get => _ledData[4];
+            set => _ledData[4] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin5LedData(byte[] pin5Data)
+        public byte[] SetPin5LedData
         {
-            if (pin5Data != null)
-            {
-                _ledData[5] = pin5Data;
-            }
+            get => _ledData[5];
+            set => _ledData[5] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin6LedData(byte[] pin6Data)
+        public byte[] SetPin6LedData
         {
-            if (pin6Data != null)
-            {
-                _ledData[6] = pin6Data;
-            }
+            get => _ledData[6];
+            set => _ledData[6] = value ?? new byte[0];
         }
 
         [InputTerminal(Direction.North)]
-        public void SetPin7LedData(byte[] pin7Data)
+        public byte[] SetPin7LedData
         {
-            if (pin7Data != null)
-            {
-                _ledData[7] = pin7Data;
-            }
+            get => _ledData[7];
+            set => _ledData[7] = value ?? new byte[0];
         }
 
         public void ConnectFadeCandy()

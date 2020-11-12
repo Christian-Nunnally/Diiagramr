@@ -1,5 +1,6 @@
 ﻿namespace DiiagramrModel
 {
+    using PropertyChanged;
     using System;
     using System.Runtime.Serialization;
 
@@ -10,8 +11,6 @@
     [KnownType(typeof(OutputTerminalModel))]
     public class OutputTerminalModel : TerminalModel
     {
-        public Func<object> GetDataFromSource;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputTerminalModel"/> class.
         /// </summary>
@@ -24,15 +23,15 @@
             SerializeableTypes.Add(GetType());
         }
 
-        public void UpdateDataFromSource()
+        [DoNotCheckEquality]
+        public override object Data
         {
-            UpdateData(GetDataFromSource?.Invoke());
-        }
-
-        public void UpdateData(object data)
-        {
-            Data = data;
-            PropagateDataToAllWires();
+            get => base.Data;
+            set
+            {
+                base.Data = value;
+                PropagateDataToAllWires();
+            }
         }
 
         /// <summary>

@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Editor.Interactors
 {
     public class NodeResizer : DiagramInteractor
     {
-        private const double ResizeBorderMargin = 4;
+        private const double ResizeBorderMargin = 6;
         private readonly ITransactor _transactor;
         private IEnumerable<Node> _resizingNodes;
         private MoveNodesToCurrentPositionCommand _undoPositionAdjustmentCommand;
@@ -29,6 +29,10 @@ namespace DiiagramrAPI.Editor.Interactors
             Top,
             Left,
             Bottom,
+            TopRight,
+            TopLeft,
+            BottomRight,
+            BottomLeft,
         }
 
         public Point PreviousMouseLocation { get; set; }
@@ -42,6 +46,11 @@ namespace DiiagramrAPI.Editor.Interactors
             var nominator = Math.Abs(lineHeight * (lineStart.Y - point.Y) - (lineStart.X - point.X) * lineWidth);
             var denominator = Math.Sqrt(Math.Pow(lineHeight, 2) + Math.Pow(lineWidth, 2));
             return nominator / denominator;
+        }
+
+        public static double DistanceFromPoint(Point point, Point otherPoint)
+        {
+            return Math.Sqrt(Math.Pow(otherPoint.X - point.X, 2) + Math.Pow(otherPoint.Y - point.Y, 2));
         }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
@@ -81,7 +90,27 @@ namespace DiiagramrAPI.Editor.Interactors
                 {
                     if (mousePosition.Y > absoluteTop && mousePosition.Y < absoluteBottom)
                     {
-                        if (scaledMargin > DistanceFromPointToLine(mousePosition, topLeftCorner, topRightCorner))
+                        if (scaledMargin > DistanceFromPoint(mousePosition, topLeftCorner))
+                        {
+                            Mode = ResizeMode.TopLeft;
+                            Mouse.SetCursor(Cursors.SizeNWSE);
+                        }
+                        else if (scaledMargin > DistanceFromPoint(mousePosition, topRightCorner))
+                        {
+                            Mode = ResizeMode.TopRight;
+                            Mouse.SetCursor(Cursors.SizeNESW);
+                        }
+                        else if (scaledMargin > DistanceFromPoint(mousePosition, bottomLeftCorner))
+                        {
+                            Mode = ResizeMode.BottomLeft;
+                            Mouse.SetCursor(Cursors.SizeNESW);
+                        }
+                        else if (scaledMargin > DistanceFromPoint(mousePosition, bottomRightCorner))
+                        {
+                            Mode = ResizeMode.BottomRight;
+                            Mouse.SetCursor(Cursors.SizeNWSE);
+                        }
+                        else if (scaledMargin > DistanceFromPointToLine(mousePosition, topLeftCorner, topRightCorner))
                         {
                             Mode = ResizeMode.Top;
                             Mouse.SetCursor(Cursors.SizeNS);
@@ -149,33 +178,75 @@ namespace DiiagramrAPI.Editor.Interactors
             _transactor.Transact(positionAdjustmentCommand, _undoPositionAdjustmentCommand);
         }
 
+        private static void MoveTop(Diagram diagram, double deltaY, Node node)
+        {
+            var heightChange = deltaY / diagram.Zoom;
+            node.Height -= heightChange;
+            node.Y += heightChange;
+        }
+
+        private static void MoveLeft(Diagram diagram, double deltaX, Node node)
+        {
+            var widthChange = deltaX / diagram.Zoom;
+            node.Width -= widthChange;
+            node.X += widthChange;
+        }
+
+        private static void MoveRight(Diagram diagram, double deltaX, Node node)
+        {
+            var widthChange = deltaX / diagram.Zoom;
+            node.Width += widthChange;
+        }
+
+        private static void MoveBottom(Diagram diagram, double deltaY, Node node)
+        {
+            var heightChange = deltaY / diagram.Zoom;
+            node.Height += heightChange;
+        }
+
         private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
         {
             var deltaX = mousePosition.X - PreviousMouseLocation.X;
             var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
             foreach (var node in diagram.Nodes.Where(n => n.IsSelected))
             {
-                if (Mode == ResizeMode.Right)
+                switch (Mode)
                 {
-                    var widthChange = deltaX / diagram.Zoom;
-                    node.Width += widthChange;
-                }
-                else if (Mode == ResizeMode.Top)
-                {
-                    var heightChange = deltaY / diagram.Zoom;
-                    node.Height -= heightChange;
-                    node.Y += heightChange;
-                }
-                else if (Mode == ResizeMode.Left)
-                {
-                    var widthChange = deltaX / diagram.Zoom;
-                    node.Width -= widthChange;
-                    node.X += widthChange;
-                }
-                else if (Mode == ResizeMode.Bottom)
-                {
-                    var heightChange = deltaY / diagram.Zoom;
-                    node.Height += heightChange;
+                    case ResizeMode.Right:
+                        MoveRight(diagram, deltaX, node);
+                        break;
+
+                    case ResizeMode.Top:
+                        MoveTop(diagram, deltaY, node);
+                        break;
+
+                    case ResizeMode.Left:
+                        MoveLeft(diagram, deltaX, node);
+                        break;
+
+                    case ResizeMode.Bottom:
+                        MoveBottom(diagram, deltaY, node);
+                        break;
+
+                    case ResizeMode.TopLeft:
+                        MoveTop(diagram, deltaY, node);
+                        MoveLeft(diagram, deltaX, node);
+                        break;
+
+                    case ResizeMode.TopRight:
+                        MoveTop(diagram, deltaY, node);
+                        MoveRight(diagram, deltaX, node);
+                        break;
+
+                    case ResizeMode.BottomLeft:
+                        MoveBottom(diagram, deltaY, node);
+                        MoveLeft(diagram, deltaX, node);
+                        break;
+
+                    case ResizeMode.BottomRight:
+                        MoveBottom(diagram, deltaY, node);
+                        MoveRight(diagram, deltaX, node);
+                        break;
                 }
             }
 

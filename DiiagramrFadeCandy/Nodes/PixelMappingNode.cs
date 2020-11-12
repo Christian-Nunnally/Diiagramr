@@ -64,7 +64,7 @@ namespace DiiagramrFadeCandy.Nodes
             {
                 var pixelHeight = Height / RenderedImage?.Height ?? 1;
                 var temp = value - (value % (int)pixelHeight);
-                SetViewPortY((int)(temp / pixelHeight));
+                SetViewPortY = (int)(temp / pixelHeight);
             }
         }
 
@@ -75,7 +75,7 @@ namespace DiiagramrFadeCandy.Nodes
             {
                 var pixelWidth = Width / RenderedImage?.Width ?? 1;
                 var temp = value - (value % (int)pixelWidth);
-                SetViewPortX((int)(temp / pixelWidth));
+                SetViewPortX = (int)(temp / pixelWidth);
             }
         }
 
@@ -88,7 +88,7 @@ namespace DiiagramrFadeCandy.Nodes
                 CachedPixelWidth = pixelWidth > 0 ? pixelWidth : CachedPixelWidth;
                 var nonZeroPixelWidth = pixelWidth == 0 ? 1 : pixelWidth;
                 var temp = value + nonZeroPixelWidth - (value % (int)nonZeroPixelWidth);
-                SetViewPortWidth((int)(temp / nonZeroPixelWidth));
+                SetViewPortWidth = (int)(temp / nonZeroPixelWidth);
             }
         }
 
@@ -101,7 +101,7 @@ namespace DiiagramrFadeCandy.Nodes
                 CachedPixelHeight = pixelHeight > 0 ? pixelHeight : CachedPixelHeight;
                 var nonZeroPixelHeight = pixelHeight == 0 ? 1 : pixelHeight;
                 var temp = value + nonZeroPixelHeight - (value % (int)nonZeroPixelHeight);
-                SetViewPortHeight((int)(temp / nonZeroPixelHeight));
+                SetViewPortHeight = (int)(temp / nonZeroPixelHeight);
             }
         }
 
@@ -168,53 +168,73 @@ namespace DiiagramrFadeCandy.Nodes
         [NodeSetting]
         public int CompassArrowIconRotation { get; set; }
 
-        private bool IsMouseOverNode { get; set; }
-
         [InputTerminal(Direction.East)]
-        public void SetViewPortX(int x)
+        public int SetViewPortX
         {
-            if (x >= 0 && x < (RenderedImage?.Width ?? 0))
+            get => Box.X;
+            set
             {
-                Box = new RawBox(x, Box.Y, Box.Width, Box.Height);
+                if (value >= 0 && value < (RenderedImage?.Width ?? 0))
+                {
+                    Box = new RawBox(value, Box.Y, Box.Width, Box.Height);
+                }
             }
         }
 
         [InputTerminal(Direction.East)]
-        public void SetViewPortY(int y)
+        public int SetViewPortY
         {
-            if (y >= 0 && y < (RenderedImage?.Height ?? 0))
+            get => Box.Y;
+            set
             {
-                Box = new RawBox(Box.X, y, Box.Width, Box.Height);
+                if (value >= 0 && value < (RenderedImage?.Height ?? 0))
+                {
+                    Box = new RawBox(Box.X, value, Box.Width, Box.Height);
+                }
             }
         }
 
         [InputTerminal(Direction.West)]
-        public void SetViewPortWidth(int width)
+        public int SetViewPortWidth
         {
-            if (width >= 0)
+            get => Box.Width;
+            set
             {
-                Box = new RawBox(Box.X, Box.Y, width, Box.Height);
+                if (value >= 0)
+                {
+                    Box = new RawBox(Box.X, Box.Y, value, Box.Height);
+                }
             }
         }
 
         [InputTerminal(Direction.West)]
-        public void SetViewPortHeight(int height)
+        public int SetViewPortHeight
         {
-            if (height >= 0)
+            get => Box.Height;
+            set
             {
-                Box = new RawBox(Box.X, Box.Y, Box.Width, height);
+                if (value >= 0)
+                {
+                    Box = new RawBox(Box.X, Box.Y, Box.Width, value);
+                }
             }
         }
 
         [InputTerminal(Direction.North)]
-        public void SetImageSource(RenderedImage renderedImage)
+        public RenderedImage SetImageSource
         {
-            if (renderedImage == null)
+            get => RenderedImage;
+            set
             {
-                return;
+                if (value == null)
+                {
+                    return;
+                }
+                RenderedImage = value;
             }
-            RenderedImage = renderedImage;
         }
+
+        private bool IsMouseOverNode { get; set; }
 
         public void PixelMapRegionMouseDown(object sender, MouseButtonEventArgs e)
         {

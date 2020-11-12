@@ -9,6 +9,10 @@ namespace DiiagramrAPI.Application.Commands.Transacting
 
         protected virtual Stack<UndoRedo> UndoStack { get; } = new Stack<UndoRedo>();
 
+        public bool CanRedo() => RedoStack.Count > 0;
+
+        public bool CanUndo() => UndoStack.Count > 0;
+
         public void MoveRedoStackBackToUndo()
         {
             while (RedoStack.Count > 0)

@@ -28,17 +28,25 @@ namespace DiiagramrFadeCandy.Nodes
         public D3DImage D3DImage { get; set; }
 
         [InputTerminal(DiiagramrModel.Direction.West)]
-        public void SetWidth(int width)
+        public int SetWidth
         {
-            _width = width;
-            _deviceContext.Initialize(_width, _height);
+            get => _width;
+            set
+            {
+                _width = value;
+                _deviceContext.Initialize(_width, _height);
+            }
         }
 
         [InputTerminal(DiiagramrModel.Direction.West)]
-        public void SetHeight(int height)
+        public int SetHeight
         {
-            _height = height;
-            _deviceContext.Initialize(_width, _height);
+            get => _height;
+            set
+            {
+                _height = value;
+                _deviceContext.Initialize(_width, _height);
+            }
         }
 
         private void BeginRenderingScene()

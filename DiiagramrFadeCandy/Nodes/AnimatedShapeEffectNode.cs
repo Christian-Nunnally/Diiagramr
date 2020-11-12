@@ -18,24 +18,30 @@ namespace DiiagramrFadeCandy
         public GraphicEffect Effect { get; set; } = new AnimatedShapeEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
         [InputTerminal(Direction.East)]
-        public void Speed(int frameDelay)
+        public int Speed
         {
-            AnimatedShapeEffect.FrameDelay = frameDelay;
+            set => AnimatedShapeEffect.FrameDelay = value;
+            get => AnimatedShapeEffect.FrameDelay;
         }
 
         [InputTerminal(Direction.West)]
-        public void Color(Color data)
+        public Color Color
         {
-            if (data != null)
+            get => AnimatedShapeEffect.Color;
+            set
             {
-                AnimatedShapeEffect.Color = data;
+                if (value != null)
+                {
+                    AnimatedShapeEffect.Color = value;
+                }
             }
         }
 
         [InputTerminal(Direction.North)]
-        public void Trigger(bool _)
+        public bool Trigger
         {
-            AnimatedShapeEffect.ResetPoints();
+            set => AnimatedShapeEffect.ResetPoints();
+            get => true;
         }
     }
 }

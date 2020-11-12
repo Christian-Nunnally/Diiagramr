@@ -1,6 +1,7 @@
 namespace DiiagramrModel
 {
     using DiiagramrCore;
+    using PropertyChanged;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
@@ -14,9 +15,10 @@ namespace DiiagramrModel
     [DataContract(IsReference = true)]
     public class TerminalModel : ModelBase
     {
+        public Action<object> OnDataSet = x => { };
+        public Func<object> OnDataGet = () => null;
         private string _typeName;
         private NodeModel _parentNode;
-        private object data;
         private Type type;
 
         /// <summary>
@@ -31,8 +33,6 @@ namespace DiiagramrModel
             Type = type;
             Name = name;
         }
-
-        public event Action<object> DataChanged;
 
         /// <summary>
         /// Gets or sets the node that this terminal belongs to.
@@ -54,14 +54,11 @@ namespace DiiagramrModel
         /// Gets or sets the current value held by the terminal.
         /// </summary>
         [DataMember]
+        [DoNotCheckEquality]
         public virtual object Data
         {
-            get => data;
-            set
-            {
-                data = value;
-                DataChanged?.Invoke(data);
-            }
+            get => OnDataGet?.Invoke();
+            set => OnDataSet?.Invoke(value);
         }
 
         /// <summary>
@@ -160,16 +157,15 @@ namespace DiiagramrModel
         /// <param name="otherTerminal">The terminal to disconnect from.</param>
         public virtual void DisconnectWire(WireModel wire, TerminalModel otherTerminal)
         {
-            if (!ConnectedWires.Contains(wire) || !otherTerminal.ConnectedWires.Contains(wire))
+            if (!ConnectedWires.Contains(wire))
             {
                 throw new ModelValidationException(this, "Wire must be connected in order to disconnect it");
             }
 
-            otherTerminal.ConnectedWires.Remove(wire);
             ConnectedWires.Remove(wire);
-            if (wire.SinkTerminal.ConnectedWires.Count == 0)
+            if (otherTerminal.ConnectedWires.Contains(wire))
             {
-                wire.SinkTerminal.Data = null;
+                otherTerminal.DisconnectWire(wire, this);
             }
             wire.SinkTerminal = null;
             wire.SourceTerminal = null;
@@ -183,6 +179,21 @@ namespace DiiagramrModel
         public virtual bool CanWireFromData(object data)
         {
             return CanWireDataToType(data, Data?.GetType() ?? Type);
+        }
+
+        public virtual void SetDataFromWire(object data, WireModel wire)
+        {
+            Data = data;
+        }
+
+        public void UpdateData()
+        {
+            OnDataSet(OnDataGet());
+        }
+
+        protected void InvokeDataChanged(object data)
+        {
+            OnDataSet?.Invoke(data);
         }
 
         protected void PropagateDataToAllWires()

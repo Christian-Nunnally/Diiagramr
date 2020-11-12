@@ -18,21 +18,24 @@ namespace DiiagramrFadeCandy
         public GraphicEffect Effect { get; set; } = new CellularAutomataEffect();
 
         [InputTerminal(Direction.East)]
-        public void SetWidth(int width)
+        public int Width
         {
-            CellularAutomataEffect.Width = width;
+            get => CellularAutomataEffect.Width;
+            set => CellularAutomataEffect.Width = value;
         }
 
         [InputTerminal(Direction.East)]
-        public void SetHeight(int height)
+        public int Height
         {
-            CellularAutomataEffect.Height = height;
+            get => CellularAutomataEffect.Height;
+            set => CellularAutomataEffect.Height = value;
         }
 
         [InputTerminal(Direction.West)]
-        public void Randomize(bool _)
+        public bool Randomize
         {
-            CellularAutomataEffect.Randomize();
+            set => CellularAutomataEffect.Randomize();
+            get => true;
         }
     }
 }

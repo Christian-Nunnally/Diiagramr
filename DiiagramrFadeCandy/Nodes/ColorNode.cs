@@ -43,47 +43,61 @@ namespace DiiagramrFadeCandy
         public bool IsColorPickerVisible { get; set; }
 
         [InputTerminal(Direction.East)]
-        public void PickRandomColor(bool data)
+        public bool PickRandomColor
         {
-            if (data)
+            set => RandomizeTerminalColor();
+            get => true;
+        }
+
+        [InputTerminal(Direction.North)]
+        public float Red
+        {
+            get => ColorOutput?.R ?? 0f;
+            set
             {
-                var random = new Random();
-                var randomBytes = new byte[3];
-                random.NextBytes(randomBytes);
-                float floatR;
-                float floatG;
-                float floatB;
-                if (random.Next(2) > 0)
+                if (ColorOutput != null)
                 {
-                    if (random.Next(2) > 0)
-                    {
-                        floatR = 1.0f / 255.0f * randomBytes[0];
-                        floatG = 0.3f / 255.0f * randomBytes[1];
-                        floatB = 0.3f / 255.0f * randomBytes[2];
-                    }
-                    else
-                    {
-                        floatR = 0.3f / 255.0f * randomBytes[0];
-                        floatG = 0.3f / 255.0f * randomBytes[1];
-                        floatB = 1.0f / 255.0f * randomBytes[2];
-                    }
+                    SetColorOnTerminal(value, ColorOutput.G, ColorOutput.B, ColorOutput.A);
                 }
-                else
+            }
+        }
+
+        [InputTerminal(Direction.North)]
+        public float Green
+        {
+            get => ColorOutput?.G ?? 0f;
+            set
+            {
+                if (ColorOutput != null)
                 {
-                    if (random.Next(2) > 0)
-                    {
-                        floatR = 0.3f / 255.0f * randomBytes[0];
-                        floatG = 1.0f / 255.0f * randomBytes[1];
-                        floatB = 0.3f / 255.0f * randomBytes[2];
-                    }
-                    else
-                    {
-                        floatR = 0.3f / 255.0f * randomBytes[0];
-                        floatG = 0.3f / 255.0f * randomBytes[1];
-                        floatB = 0.3f / 255.0f * randomBytes[2];
-                    }
+                    SetColorOnTerminal(ColorOutput.R, value, ColorOutput.B, ColorOutput.A);
                 }
-                SetColorOnTerminal(floatR, floatG, floatB, 1.0f);
+            }
+        }
+
+        [InputTerminal(Direction.North)]
+        public float Blue
+        {
+            get => ColorOutput?.B ?? 0f;
+            set
+            {
+                if (ColorOutput != null)
+                {
+                    SetColorOnTerminal(ColorOutput.R, ColorOutput.G, value, ColorOutput.A);
+                }
+            }
+        }
+
+        [InputTerminal(Direction.West)]
+        public float Alpha
+        {
+            get => ColorOutput?.A ?? 0f;
+            set
+            {
+                if (ColorOutput != null)
+                {
+                    SetColorOnTerminal(ColorOutput.R, ColorOutput.G, ColorOutput.B, value);
+                }
             }
         }
 
@@ -106,42 +120,6 @@ namespace DiiagramrFadeCandy
             _isMouseButtonDown = false;
         }
 
-        [InputTerminal(Direction.North)]
-        public void Red(float data)
-        {
-            if (ColorOutput != null)
-            {
-                SetColorOnTerminal(data, ColorOutput.G, ColorOutput.B, ColorOutput.A);
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void Green(float data)
-        {
-            if (ColorOutput != null)
-            {
-                SetColorOnTerminal(ColorOutput.R, data, ColorOutput.B, ColorOutput.A);
-            }
-        }
-
-        [InputTerminal(Direction.North)]
-        public void Blue(float data)
-        {
-            if (ColorOutput != null)
-            {
-                SetColorOnTerminal(ColorOutput.R, ColorOutput.G, data, ColorOutput.A);
-            }
-        }
-
-        [InputTerminal(Direction.West)]
-        public void Alpha(float data)
-        {
-            if (ColorOutput != null)
-            {
-                SetColorOnTerminal(ColorOutput.R, ColorOutput.G, ColorOutput.B, data);
-            }
-        }
-
         protected override void MouseEnteredNode()
         {
             IsColorPickerVisible = true;
@@ -151,6 +129,47 @@ namespace DiiagramrFadeCandy
         {
             _isMouseButtonDown = false;
             IsColorPickerVisible = false;
+        }
+
+        private void RandomizeTerminalColor()
+        {
+            var random = new Random();
+            var randomBytes = new byte[3];
+            random.NextBytes(randomBytes);
+            float floatR;
+            float floatG;
+            float floatB;
+            if (random.Next(2) > 0)
+            {
+                if (random.Next(2) > 0)
+                {
+                    floatR = 1.0f / 255.0f * randomBytes[0];
+                    floatG = 0.3f / 255.0f * randomBytes[1];
+                    floatB = 0.3f / 255.0f * randomBytes[2];
+                }
+                else
+                {
+                    floatR = 0.3f / 255.0f * randomBytes[0];
+                    floatG = 0.3f / 255.0f * randomBytes[1];
+                    floatB = 1.0f / 255.0f * randomBytes[2];
+                }
+            }
+            else
+            {
+                if (random.Next(2) > 0)
+                {
+                    floatR = 0.3f / 255.0f * randomBytes[0];
+                    floatG = 1.0f / 255.0f * randomBytes[1];
+                    floatB = 0.3f / 255.0f * randomBytes[2];
+                }
+                else
+                {
+                    floatR = 0.3f / 255.0f * randomBytes[0];
+                    floatG = 0.3f / 255.0f * randomBytes[1];
+                    floatB = 0.3f / 255.0f * randomBytes[2];
+                }
+            }
+            SetColorOnTerminal(floatR, floatG, floatB, 1.0f);
         }
 
         private void SetColorFromMouseInput(object sender, MouseEventArgs e)

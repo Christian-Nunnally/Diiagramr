@@ -24,6 +24,80 @@ namespace DiiagramrFadeCandy
         [OutputTerminal(Direction.South)]
         public GraphicEffect Effect { get; set; } = new ShapeEffect();
 
+        [InputTerminal(Direction.North)]
+        public bool SetVisible
+        {
+            get => ShapeGraphic.Visible;
+            set => ShapeGraphic.Visible = value;
+        }
+
+        [InputTerminal(Direction.West)]
+        public float SetY
+        {
+            get => ShapeGraphic.Y;
+            set => ShapeGraphic.Y = value;
+        }
+
+        [InputTerminal(Direction.West)]
+        public float SetX
+        {
+            get => ShapeGraphic.X;
+            set => ShapeGraphic.X = value;
+        }
+
+        [InputTerminal(Direction.West)]
+        public bool SetFill
+        {
+            get => ShapeGraphic.Fill;
+            set => ShapeGraphic.Fill = value;
+        }
+
+        [InputTerminal(Direction.West)]
+        public float SetRotation
+        {
+            get => ShapeGraphic.Rotation;
+            set => ShapeGraphic.Thickness = value;
+        }
+
+        [InputTerminal(Direction.East)]
+        public float SetWidth
+        {
+            get => ShapeGraphic.Width;
+            set => ShapeGraphic.Width = value;
+        }
+
+        [InputTerminal(Direction.East)]
+        public float SetHeight
+        {
+            get => ShapeGraphic.Height;
+            set => ShapeGraphic.Height = value;
+        }
+
+        [InputTerminal(Direction.East)]
+        public float SetThickness
+        {
+            get => ShapeGraphic.Thickness;
+            set => ShapeGraphic.Thickness = value;
+        }
+
+        [InputTerminal(Direction.North)]
+        public Color SetColor
+        {
+            get => new Color(ShapeGraphic.R, ShapeGraphic.G, ShapeGraphic.B, ShapeGraphic.A);
+            set
+            {
+                if (value == null)
+                {
+                    return;
+                }
+
+                ShapeGraphic.R = value.R;
+                ShapeGraphic.G = value.G;
+                ShapeGraphic.B = value.B;
+                ShapeGraphic.A = value.A;
+            }
+        }
+
         public void PickRectangle()
         {
             ShapeGraphic.Mode = Shape.Rectangle;
@@ -37,68 +111,6 @@ namespace DiiagramrFadeCandy
         public void PickEllipse()
         {
             ShapeGraphic.Mode = Shape.Ellipse;
-        }
-
-        [InputTerminal(Direction.North)]
-        public void SetVisible(bool visible)
-        {
-            ShapeGraphic.Visible = visible;
-        }
-
-        [InputTerminal(Direction.West)]
-        public void SetY(float y)
-        {
-            ShapeGraphic.Y = y;
-        }
-
-        [InputTerminal(Direction.West)]
-        public void SetX(float x)
-        {
-            ShapeGraphic.X = x;
-        }
-
-        [InputTerminal(Direction.West)]
-        public void SetFill(bool fill)
-        {
-            ShapeGraphic.Fill = fill;
-        }
-
-        [InputTerminal(Direction.West)]
-        public void SetRotation(float rotation)
-        {
-            ShapeGraphic.Rotation = rotation;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void SetWidth(float width)
-        {
-            ShapeGraphic.Width = width;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void SetHeight(float height)
-        {
-            ShapeGraphic.Height = height;
-        }
-
-        [InputTerminal(Direction.East)]
-        public void SetThickness(float thickness)
-        {
-            ShapeGraphic.Thickness = thickness;
-        }
-
-        [InputTerminal(Direction.North)]
-        public void SetColor(Color color)
-        {
-            if (color == null)
-            {
-                return;
-            }
-
-            ShapeGraphic.R = color.R;
-            ShapeGraphic.G = color.G;
-            ShapeGraphic.B = color.B;
-            ShapeGraphic.A = color.A;
         }
     }
 }

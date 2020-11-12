@@ -10,7 +10,7 @@ namespace DiiagramrFadeCandy
         public IEnumerable<Type> SerializableTypes => new[]
         {
             typeof(Corner),
-            typeof(GraphicEffect[]),
+            typeof(List<GraphicEffect>),
         };
     }
 }

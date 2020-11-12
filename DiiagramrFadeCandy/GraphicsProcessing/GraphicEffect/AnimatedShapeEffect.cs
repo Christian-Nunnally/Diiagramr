@@ -9,10 +9,16 @@ using System.Runtime.Serialization;
 namespace DiiagramrFadeCandy
 {
     [Serializable]
+    [DataContract(IsReference = true)]
     public class AnimatedShapeEffect : GraphicEffect
     {
+        [OptionalField]
         private readonly List<RawVector2> _points = new List<RawVector2>();
+
+        [OptionalField]
         private int _framePoint = 0;
+
+        [OptionalField]
         private int _frameDelayCounter = 0;
 
         public AnimatedShapeEffect()
@@ -35,7 +41,8 @@ namespace DiiagramrFadeCandy
         [DataMember]
         public float BarWidth { get; set; } = 1f;
 
-        public int FrameDelay { get; internal set; } = 32;
+        [DataMember]
+        public int FrameDelay { get; set; } = 32;
 
         public override void Draw(RenderTarget target)
         {
