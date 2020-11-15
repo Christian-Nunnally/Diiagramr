@@ -30,7 +30,7 @@ namespace VisualDrop
             {
                 if (Name.Contains("("))
                 {
-                    return Name.Substring(0, Name.LastIndexOf('('));
+                    return Name.Substring(0, Name.IndexOf('('));
                 }
                 if (Name.Contains(" - "))
                 {

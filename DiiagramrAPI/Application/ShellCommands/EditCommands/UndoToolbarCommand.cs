@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Application.ShellCommands.EditCommands
 {
     internal class UndoToolbarCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
-        private ITransactor _transactor;
+        private readonly ITransactor _transactor;
 
         public UndoToolbarCommand(Func<ITransactor> transactor)
         {

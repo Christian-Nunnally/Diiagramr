@@ -6,7 +6,7 @@ namespace DiiagramrAPI.Application.ShellCommands.EditCommands
 {
     internal class RedoToolbarCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
-        private ITransactor _transactor;
+        private readonly ITransactor _transactor;
 
         public RedoToolbarCommand(Func<ITransactor> transactor)
         {

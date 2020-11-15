@@ -55,7 +55,7 @@ namespace VisualDrop
 
         private WasapiCapture CreateWaspiCapture()
         {
-            var wasapiCapture = new WasapiLoopbackCapture { Device = Device };
+            var wasapiCapture = new WasapiLoopbackCapture() { Device = Device };
             wasapiCapture.Initialize();
             return wasapiCapture;
         }

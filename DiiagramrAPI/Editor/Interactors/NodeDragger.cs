@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
@@ -34,14 +35,21 @@ namespace DiiagramrAPI.Editor.Interactors
 
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
-            if ((interaction.Type == InteractionType.LeftMouseDown)
-                && interaction.ViewModelUnderMouse is Node node
+            if (interaction.ViewModelUnderMouse is Node node
                 && !interaction.IsCtrlKeyPressed)
             {
                 var mouseX = interaction.MousePosition.X;
                 var mouseY = interaction.MousePosition.Y;
                 var diagram = interaction.Diagram;
-                return IsMouseOverNodeBorder(node, mouseX, mouseY, diagram);
+                if (IsMouseOverNodeBorder(node, mouseX, mouseY, diagram))
+                {
+                    Mouse.SetCursor(Cursors.SizeAll);
+                    return interaction.Type == InteractionType.LeftMouseDown;
+                }
+            }
+            else
+            {
+                Mouse.SetCursor(Cursors.Arrow);
             }
 
             return false;

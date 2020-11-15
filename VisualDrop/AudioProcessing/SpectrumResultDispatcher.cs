@@ -8,7 +8,7 @@ namespace VisualDrop.AudioProcessing
     public class SpectrumResultDispatcher : ISpectrumResultObserver, ISpectrumResultNotifier
     {
         private readonly DispatcherTimer _dispatcherTimer;
-        private readonly ConcurrentQueue<List<float>> _spectrumResultQueue = new ConcurrentQueue<List<float>>();
+        private readonly ConcurrentQueue<float[]> _spectrumResultQueue = new ConcurrentQueue<float[]>();
         private readonly List<ISpectrumResultObserver> _subscribers = new List<ISpectrumResultObserver>();
 
         public SpectrumResultDispatcher(DispatcherPriority priority)
@@ -25,7 +25,7 @@ namespace VisualDrop.AudioProcessing
             set => _dispatcherTimer.Interval = TimeSpan.FromMilliseconds(value);
         }
 
-        public void ObserveSpectrumResults(List<float> spectrum)
+        public void ObserveSpectrumResults(float[] spectrum)
         {
             _spectrumResultQueue.Enqueue(spectrum);
         }

@@ -57,11 +57,11 @@ namespace VisualDrop
             NotifySubscribers(bins);
         }
 
-        private List<float> ComputeFftBins(float[] fft)
+        private float[] ComputeFftBins(float[] fft)
         {
             var fftIndex = 0;
             var binEndIndex = 0;
-            var fftResult = new List<float>(FftBinCount);
+            var fftResult = new float[FftBinCount];
             float peak;
             for (float binIndex = 1; binIndex <= FftBinCount; binIndex++)
             {
@@ -74,13 +74,13 @@ namespace VisualDrop
                         peak = value;
                     }
                 }
-                fftResult.Add(peak);
+                fftResult[(int)binIndex - 1] = peak;
             }
             return fftResult;
         }
 
         private double GetNextBinEndIndex(float binIndex) => (int)FftSize / 2 * Math.Pow(binIndex / FftBinCount, Gamma);
 
-        private void NotifySubscribers(List<float> fftResult) => _observers.ForEach(x => x.ObserveSpectrumResults(fftResult));
+        private void NotifySubscribers(float[] fftResult) => _observers.ForEach(x => x.ObserveSpectrumResults(fftResult));
     }
 }

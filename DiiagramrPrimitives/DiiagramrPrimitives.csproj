@@ -25,6 +25,9 @@
     <Page Update="AccumulatorNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="SubArrayNodeView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="ScaleNodeView.xaml">
       <SubType>Designer</SubType>
     </Page>

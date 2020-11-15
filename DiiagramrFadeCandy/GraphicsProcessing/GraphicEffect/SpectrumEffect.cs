@@ -12,8 +12,6 @@ namespace DiiagramrFadeCandy
         private float _maxValue;
 
         private int _iteration = 0;
-        private float _indexOfBassTraceRange;
-        private float _bassTraceVelocity = .5f;
 
         [DataMember]
         public float[] SpectrumData { get; set; }
@@ -44,6 +42,7 @@ namespace DiiagramrFadeCandy
 
             var totalWidthPerBar = targetWidth / SpectrumData.Length;
             var barWidth = totalWidthPerBar * BarWidthScale;
+            _maxValue *= MaxValueDecayRate;
 
             if (SpectrographMode)
             {
@@ -106,15 +105,16 @@ namespace DiiagramrFadeCandy
             {
                 for (int i = 0; i < SpectrumData.Length; i++)
                 {
-                    if (SpectrumData[i] > _maxValue && !float.IsInfinity(SpectrumData[i]))
+                    var data = (float)Math.Log(SpectrumData[i] + 1);
+                    if (data > _maxValue && !float.IsInfinity(data))
                     {
-                        _maxValue = SpectrumData[i];
+                        _maxValue = data;
                     }
                     var brush = new SolidColorBrush(target, new RawColor4(Color.R, Color.G, Color.B, Color.A));
                     var left = i * totalWidthPerBar;
                     var top = targetHeight;
                     var right = left + barWidth;
-                    var bottom = targetHeight - (targetHeight / _maxValue * SpectrumData[i]);
+                    var bottom = targetHeight - (targetHeight * (data / _maxValue));
                     var rectangle = new RawRectangleF(left, top, right, bottom);
                     target.FillRectangle(rectangle, brush);
                 }

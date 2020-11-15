@@ -11,7 +11,6 @@
     <Style x:Key="NodeContentControlStyle" TargetType="ContentControl">
         <Setter Property="HorizontalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
-        <Setter Property="Cursor" Value="Arrow" />
         <Setter Property="IsTabStop" Value="False" />
     </Style>
 
@@ -42,8 +41,6 @@
         <Setter Property="Width" Value="{Binding Width, Mode=TwoWay}" />
         <Setter Property="Height" Value="{Binding Height, Mode=TwoWay}" />
         <Setter Property="Margin" Value="{x:Static editor:Diagram.NodeBorderThickness}" />
-        <Setter Property="Cursor" Value="SizeAll" />
-        <Setter Property="ForceCursor" Value="False" />
     </Style>
 
     <Style x:Key="SelectionStyle" TargetType="Border">
