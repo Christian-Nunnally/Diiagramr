@@ -7,6 +7,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
     /// </summary>
     public abstract class TransactingCommand : IReversableCommand
     {
+        /// <inheritdoc/>
         public virtual Action Execute(object parameter)
         {
             Transactor transactor = new Transactor();
@@ -14,11 +15,17 @@ namespace DiiagramrAPI.Application.Commands.Transacting
             return () => UndoRedo(transactor);
         }
 
+        /// <summary>
+        /// Do the action.
+        /// </summary>
+        /// <param name="transactor">Transactor to provide extensibility to the command infastructure.</param>
+        /// <param name="parameter">General purpose command parameter.</param>
+        /// <returns>An action that will undo what execute did.</returns>
         protected abstract void Execute(ITransactor transactor, object parameter);
 
         private void UndoRedo(Transactor transactor)
         {
-            transactor.UndoAll();
+            while (transactor.CanUndo()) transactor.Undo();
             transactor.MoveRedoStackBackToUndo();
         }
     }

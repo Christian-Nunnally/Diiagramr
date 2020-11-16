@@ -11,11 +11,16 @@ namespace DiiagramrAPI.Application.Commands
 
         private bool _hasBeenUndone;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="UndoCommand"/>.
+        /// </summary>
+        /// <param name="command">The command to add to the undo stack.</param>
         public UndoCommand(IReversableCommand command)
         {
             _command = command;
         }
 
+        /// <inheritdoc/>
         public Action Execute(object parameter) => Undo(parameter);
 
         private Action Undo(object parameter) => () =>

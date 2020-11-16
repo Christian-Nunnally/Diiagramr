@@ -8,10 +8,17 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Dialogs
 {
+    /// <summary>
+    /// A dialog capable of showing help information.
+    /// </summary>
     public class HelpDialog : Dialog
     {
         private readonly string _defaultVisibleHelpText = "No help available";
 
+        /// <summary>
+        /// Creates a new instance of <see cref="HelpDialog"/>.
+        /// </summary>
+        /// <param name="node">The node to get help for.</param>
         public HelpDialog(Node node)
         {
             Node = node;
@@ -23,16 +30,28 @@ namespace DiiagramrAPI.Application.Dialogs
             VisibleHelpText = _defaultVisibleHelpText;
         }
 
+        /// <inheritdoc/>
         public override int MaxHeight => 400;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 340;
 
+        /// <inheritdoc/>
         public override string Title { get; set; } = "Help";
 
+        /// <summary>
+        /// The node to display in the help visiual section.
+        /// </summary>
         public Node Node { get; set; }
 
+        /// <summary>
+        /// The help text of the help description section.
+        /// </summary>
         public string VisibleHelpText { get; set; }
 
+        /// <summary>
+        /// The title text of the help description section.
+        /// </summary>
         public string VisibleHelpTitle { get; set; }
 
         public void PreviewMouseMoveHandler()
@@ -42,6 +61,8 @@ namespace DiiagramrAPI.Application.Dialogs
             VisibleHelpText = TryGetHelpAttributeFromViewModel(terminal, out var helpAttribute)
                 ? helpAttribute.HelpText ?? string.Empty
                 : _defaultVisibleHelpText;
+
+            // TODO: Add command bar action that links to the wiki.
         }
 
         private static Screen GetViewModelMouseIsOver()

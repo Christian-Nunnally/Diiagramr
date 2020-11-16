@@ -7,10 +7,18 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Dialogs
 {
+    /// <summary>
+    /// The dialog for managing libraries.
+    /// </summary>
     public class LibraryManagerDialog : Dialog
     {
         private readonly LibrarySourceManagerDialog _librarySourceManagerDialog;
 
+        /// <summary>
+        /// Creates a new insteace of <see cref="LibraryManagerDialog"/>.
+        /// </summary>
+        /// <param name="libraryManagerFactory">A factory that creates an <see cref="ILibraryManager"/> instance.</param>
+        /// <param name="librarySourceManagerDialogFactory">A factory that creates an <see cref="LibrarySourceManagerDialog"/> instance.</param>
         public LibraryManagerDialog(Func<ILibraryManager> libraryManagerFactory, Func<LibrarySourceManagerDialog> librarySourceManagerDialogFactory)
         {
             LibraryManager = libraryManagerFactory();
@@ -20,16 +28,30 @@ namespace DiiagramrAPI.Application.Dialogs
             CommandBarCommands.Add(new DialogCommandBarCommand("Manage Plugin Sources", ViewSources));
         }
 
+        /// <summary>
+        /// Gets or sets whether to show the user a label telling them that restarting the application is required.
+        /// </summary>
         public bool IsRestartRequired { get; set; }
 
+        /// <summary>
+        /// The library manager instance that actually manages the libraries.
+        /// </summary>
         public ILibraryManager LibraryManager { get; set; }
 
+        /// <inheritdoc/>
         public override int MaxHeight => 350;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 530;
 
+        /// <inheritdoc/>
         public override string Title { get; set; } = "Library Manager";
 
+        /// <summary>
+        /// Occurs when the user presses the install button for a library.
+        /// </summary>
+        /// <param name="sender">The library list item containing the install button.</param>
+        /// <param name="e">The event arguments.</param>
         public async void InstallPressed(object sender, MouseEventArgs e)
         {
             var libraryListItem = GetLibraryListItemFromSender(sender);
@@ -41,11 +63,11 @@ namespace DiiagramrAPI.Application.Dialogs
             await InstallLibraryFromListItemAsync(libraryListItem);
         }
 
-        public void OpenPluginsDirectory()
-        {
-            System.Diagnostics.Process.Start("explorer.exe", "Plugins");
-        }
-
+        /// <summary>
+        /// Occurs when the user presses the uninstall button for a library.
+        /// </summary>
+        /// <param name="sender">The library list item containing the uninstall button.</param>
+        /// <param name="e">The event arguments.</param>
         public void UninstallPressed(object sender, MouseEventArgs e)
         {
             var libraryListItem = GetLibraryListItemFromSender(sender);
@@ -57,15 +79,20 @@ namespace DiiagramrAPI.Application.Dialogs
             UninstallLibraryFromListItem(libraryListItem);
         }
 
-        public void ViewSources()
-        {
-            OpenDialog(_librarySourceManagerDialog);
-        }
-
         protected override void OnViewLoaded()
         {
             base.OnViewLoaded();
             LibraryManager.LoadSourcesAsync();
+        }
+
+        private void OpenPluginsDirectory()
+        {
+            System.Diagnostics.Process.Start("explorer.exe", "Plugins");
+        }
+
+        private void ViewSources()
+        {
+            OpenDialog(_librarySourceManagerDialog);
         }
 
         private LibraryListItem GetLibraryListItemFromSender(object sender)

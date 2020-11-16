@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application.Dialogs
 {
+    /// <summary>
+    /// A message box that can be shown to the user.
+    /// </summary>
     public class MessageBox : Dialog
     {
         private MessageBox(string title, string message, IList<DialogCommandBarCommand> choices)
@@ -15,14 +18,23 @@ namespace DiiagramrAPI.Application.Dialogs
             }
         }
 
+        /// <inheritdoc/>
         public override int MaxHeight => 45;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 220;
 
+        /// <inheritdoc/>
         public override string Title { get; set; }
 
+        /// <summary>
+        /// The message to display in the message box body.
+        /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// A <see cref="MessageBox"/> builder for creating instances using the builder pattern.
+        /// </summary>
         public class Builder
         {
             private readonly List<DialogCommandBarCommand> _choices = new List<DialogCommandBarCommand>();

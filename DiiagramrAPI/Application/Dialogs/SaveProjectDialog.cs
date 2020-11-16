@@ -11,19 +11,31 @@ namespace DiiagramrAPI2.Application.Dialogs
             CommandBarCommands.Add(new DialogCommandBarCommand("Save", Save));
         }
 
+        /// <inheritdoc/>
         public override int MaxHeight => 110;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 290;
 
+        /// <inheritdoc/>
         public override string Title { get; set; } = "Save Project";
 
+        /// <summary>
+        /// The initial directory to take users to when prompting them for a save location.
+        /// </summary>
         public string InitialDirectory { get; set; }
 
+        /// <summary>
+        /// The string the user has entered as the project save name.
+        /// </summary>
         public string ProjectName { get; set; }
 
+        /// <summary>
+        /// An action that will save the current project at the given path.
+        /// </summary>
         public Action<string> SaveAction { get; set; }
 
-        public void Save()
+        private void Save()
         {
             string path = !ProjectName.EndsWith(ProjectFileService.ProjectFileExtension)
                 ? InitialDirectory + "\\" + ProjectName + ProjectFileService.ProjectFileExtension

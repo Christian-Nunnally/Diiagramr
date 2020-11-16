@@ -9,23 +9,39 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI2.Application.Dialogs
 {
-    public partial class LoadProjectDialog : Dialog
+    /// <summary>
+    /// A dialog that allows the user to load a project.
+    /// </summary>
+    public class LoadProjectDialog : Dialog
     {
         private string projectDirectory;
         private FileSystemWatcher _watcher;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="LoadProjectDialog"/>
+        /// </summary>
         public LoadProjectDialog()
         {
             CommandBarCommands.Add(new DialogCommandBarCommand("Open Projects Directory", OpenProjectsDirectory));
         }
 
+        /// <summary>
+        /// The list of recent project options present to the user in the dialog.
+        /// </summary>
         public ObservableCollection<LoadProjectOption> LoadProjectOptions { get; set; } = new ObservableCollection<LoadProjectOption>();
+
+        /// <inheritdoc/>
         public override int MaxHeight => 220;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 290;
 
+        /// <inheritdoc/>
         public override string Title { get; set; } = "Load Project";
 
+        /// <summary>
+        /// Gets or sets the directory to look for recent projects in.
+        /// </summary>
         public string ProjectDirectory
         {
             get => projectDirectory;
@@ -50,20 +66,29 @@ namespace DiiagramrAPI2.Application.Dialogs
             }
         }
 
+        /// <summary>
+        /// The name of the currently selected recent project.
+        /// </summary>
         public string FileName { get; internal set; }
 
+        /// <summary>
+        /// An action that will load a project.
+        /// </summary>
         public Action<string> LoadAction { get; internal set; }
 
-        public void OpenProjectsDirectory()
-        {
-            System.Diagnostics.Process.Start("explorer.exe", "Projects");
-        }
-
+        /// <summary>
+        /// Occurs when the user clicks on the load project from disk button.
+        /// </summary>
         public void LoadProject()
         {
             LoadAction(FileName);
         }
 
+        /// <summary>
+        /// Occurs when the user clicks on a specifc project button to load a recent project.
+        /// </summary>
+        /// <param name="sender">The recent project list item that was clicked on.</param>
+        /// <param name="e">The event arguments.</param>
         public void ProjectLoadOptionClicked(object sender, MouseButtonEventArgs e)
         {
             if ((sender as FrameworkElement)?.DataContext is LoadProjectOption dataContext)
@@ -71,6 +96,11 @@ namespace DiiagramrAPI2.Application.Dialogs
                 CloseDialog();
                 LoadAction(dataContext.Path);
             }
+        }
+
+        private void OpenProjectsDirectory()
+        {
+            System.Diagnostics.Process.Start("explorer.exe", "Projects");
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)

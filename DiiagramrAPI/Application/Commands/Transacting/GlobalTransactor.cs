@@ -2,14 +2,19 @@
 
 namespace DiiagramrAPI.Application.Commands.Transacting
 {
+    /// <summary>
+    /// A static <see cref="Transactor"/> allowing process wide undo/redo.
+    /// </summary>
     public class GlobalTransactor : Transactor
     {
-        protected override Stack<UndoRedo> RedoStack => GlobalRedoStack;
-
+        /// <inheritdoc/>
         protected override Stack<UndoRedo> UndoStack => GlobalUndoStack;
 
-        private static Stack<UndoRedo> GlobalRedoStack { get; } = new Stack<UndoRedo>();
+        /// <inheritdoc/>
+        protected override Stack<UndoRedo> RedoStack => GlobalRedoStack;
 
         private static Stack<UndoRedo> GlobalUndoStack { get; } = new Stack<UndoRedo>();
+
+        private static Stack<UndoRedo> GlobalRedoStack { get; } = new Stack<UndoRedo>();
     }
 }

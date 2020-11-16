@@ -10,7 +10,6 @@ namespace DiiagramrAPI.Application.Commands
         /// <summary>
         /// Do the action.
         /// </summary>
-        /// <param name="transactor">Transactor to provide extensibility to the command infastructure.</param>
         /// <param name="parameter">General purpose command parameter.</param>
         /// <returns>An action that will undo what execute did.</returns>
         Action Execute(object parameter);

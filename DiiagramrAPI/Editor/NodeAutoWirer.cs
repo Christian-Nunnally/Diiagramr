@@ -39,7 +39,7 @@ namespace DiiagramrAPI.Editor
                 var terminalsThatCouldBeWired = GetWireableTerminals(terminal, nodeToInsert);
                 if (terminalsThatCouldBeWired.Count() == 1)
                 {
-                    TerminalWirer.TryWireTwoTerminalsOnDiagram(diagram, terminal, terminalsThatCouldBeWired.First(), NullTransactor.Instance, false);
+                    TerminalWirer.TryWireTwoTerminalsOnDiagram(diagram, terminal, terminalsThatCouldBeWired.First(), ForgetfulTransactor.Instance, false);
                 }
                 return terminalsThatCouldBeWired.Any();
             }

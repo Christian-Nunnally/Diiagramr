@@ -3,10 +3,17 @@ using System.Windows;
 
 namespace DiiagramrAPI.Application.Dialogs
 {
+    /// <summary>
+    /// A dialog that displays an <see cref="Exception"/>
+    /// </summary>
     public class ExceptionDialog : Dialog
     {
         private Exception _exception;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ExceptionDialog"/>.
+        /// </summary>
+        /// <param name="exception">The exception to display the information of in the dialog.</param>
         public ExceptionDialog(Exception exception)
         {
             _exception = exception;
@@ -20,15 +27,21 @@ namespace DiiagramrAPI.Application.Dialogs
             CommandBarCommands.Add(new DialogCommandBarCommand("Copy Exception", CopyExceptionButtonPressed));
         }
 
+        /// <inheritdoc/>
         public override int MaxHeight => 150;
 
+        /// <inheritdoc/>
         public override int MaxWidth => 300;
 
+        /// <inheritdoc/>
         public override string Title { get; set; }
 
+        /// <summary>
+        /// A message to display in the dialog.
+        /// </summary>
         public string Message { get; set; }
 
-        public void CopyExceptionButtonPressed()
+        private void CopyExceptionButtonPressed()
         {
             Clipboard.SetText($"{Title}: {Message}");
         }
