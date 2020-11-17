@@ -6,6 +6,9 @@
     /// </summary>
     public interface IKeyedService
     {
+        /// <summary>
+        /// The key for this service instance.
+        /// </summary>
         string ServiceBindingKey { get; }
     }
 }
