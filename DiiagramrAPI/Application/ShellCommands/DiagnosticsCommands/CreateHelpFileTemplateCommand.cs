@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
+    /// <summary>
+    /// Development only command to help autogenerate wiki pages.
+    /// </summary>
     public class CreateHelpFileTemplateCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly INodeProvider _nodeProvider;
@@ -16,22 +19,22 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
             _nodeProvider = nodeProviderFactory();
         }
 
+        /// <inheritdoc/>
         public override string Name => "Create Help File Template";
 
+        /// <inheritdoc/>
         public string ParentName => "Diagnostics";
 
+        /// <inheritdoc/>
         public float Weight => 1f;
 
-        public void OpenDirectory()
-        {
-            Process.Start("explorer.exe", ".");
-        }
-
+        /// <inheritdoc/>
         protected override bool CanExecuteInternal()
         {
             return true;
         }
 
+        /// <inheritdoc/>
         protected override void ExecuteInternal(object parameter)
         {
             var fileName = "HelpTemplate.md";
@@ -64,6 +67,11 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
                 sr.Close();
             }
             OpenDirectory();
+        }
+
+        private void OpenDirectory()
+        {
+            Process.Start("explorer.exe", ".");
         }
     }
 }

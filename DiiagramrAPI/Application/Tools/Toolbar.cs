@@ -15,13 +15,20 @@ namespace DiiagramrAPI.Application.Tools
     /// </summary>
     public class Toolbar : ToolbarBase
     {
+        /// <summary>
+        /// An offset to correct for the top left pixel being shifted when WPF windows are maximized.
+        /// </summary>
         public const double MaximizedWindowChromeRelativePositionAdjustment = -4;
 
         private readonly ContextMenuBase _contextMenu;
 
-        private readonly Dictionary<string, IOrderedEnumerable<IToolbarCommand>> _topLevelMenuNameToCommandListMap
-            = new Dictionary<string, IOrderedEnumerable<IToolbarCommand>>();
+        private readonly Dictionary<string, IOrderedEnumerable<IToolbarCommand>> _topLevelMenuNameToCommandListMap = new Dictionary<string, IOrderedEnumerable<IToolbarCommand>>();
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Toolbar"/>.
+        /// </summary>
+        /// <param name="toolbarCommandsFactory">A factory that creates a list of commands to add to the toolbar.</param>
+        /// <param name="contextMenuFactory">A factory that creates a context menu that is opened when a top level toolbar item is clicked.</param>
         public Toolbar(
             Func<IEnumerable<IToolbarCommand>> toolbarCommandsFactory,
             Func<ContextMenuBase> contextMenuFactory)
@@ -31,25 +38,33 @@ namespace DiiagramrAPI.Application.Tools
             SetupToolbarCommands(toolbarCommands);
         }
 
+        /// <inheritdoc/>
         public override ObservableCollection<string> TopLevelMenuNames { get; } = new ObservableCollection<string>();
 
+        /// <inheritdoc/>
         public override void OpenContextMenuForTopLevelMenuHandler(object sender, MouseEventArgs e)
         {
             OpenContextMenuFromSender(sender);
         }
 
+        /// <inheritdoc/>
+        public override void OpenContextMenuForTopLevelMenu(Point position, string topLevelMenuName)
+        {
+            var toolbarSubCommands = _topLevelMenuNameToCommandListMap[topLevelMenuName].OfType<IShellCommand>().ToList();
+            _contextMenu.ShowContextMenu(toolbarSubCommands, position);
+        }
+
+        /// <summary>
+        /// Occurs when the mouse enters one of the top level toolbar items.
+        /// </summary>
+        /// <param name="sender">The top level toolbar item that the mouse entered.</param>
+        /// <param name="e">The event arguments.</param>
         public void TopLevelMenuItemMouseEnterHandler(object sender, MouseEventArgs e)
         {
             if (_contextMenu.Commands.Any())
             {
                 OpenContextMenuFromSender(sender);
             }
-        }
-
-        public override void OpenContextMenuForTopLevelMenu(Point position, string topLevelMenuName)
-        {
-            var toolbarSubCommands = _topLevelMenuNameToCommandListMap[topLevelMenuName].OfType<IShellCommand>().ToList();
-            _contextMenu.ShowContextMenu(toolbarSubCommands, position);
         }
 
         private static SortedDictionary<float, (string, IOrderedEnumerable<IToolbarCommand>)> SortTopLevelMenuItemsByFirstChildWeight(IEnumerable<(string, IOrderedEnumerable<IToolbarCommand>)> topLevelMenuNamesToChildMap)

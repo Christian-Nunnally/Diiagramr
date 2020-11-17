@@ -10,7 +10,7 @@ namespace DiiagramrAPI.Application
         /// <summary>
         /// Calls the <paramref name="continuation"/> if this object is willing to close.
         /// </summary>
-        /// <param name="continuation"></param>
+        /// <param name="continuation">An action to call is the application is allowed to close.</param>
         void ContinueIfCanClose(Action continuation);
     }
 }

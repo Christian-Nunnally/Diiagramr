@@ -49,9 +49,9 @@ namespace DiiagramrAPIUnitTests
             Assert.True(hotkeyCommander.HandleHotkeyPress(fakeCommand.Hotkey));
         }
 
-        private HotkeyCommander CreateHotkeyCommander(IEnumerable<IHotkeyCommand> commands)
+        private HotkeyHandler CreateHotkeyCommander(IEnumerable<IHotkeyCommand> commands)
         {
-            return new HotkeyCommander(CreateFactoryFor(commands), () => new TestKeyboard());
+            return new HotkeyHandler(CreateFactoryFor(commands), () => new TestKeyboard());
         }
 
         private class TestKeyboard : IKeyboard

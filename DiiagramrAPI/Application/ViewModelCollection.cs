@@ -27,6 +27,12 @@ namespace DiiagramrAPI.Application
         private readonly Func<TModel, TViewModel> _viewModelFactory;
         private ObservableCollection<TModel> _models;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ViewModelCollection{TViewModel, TModel}"/>
+        /// </summary>
+        /// <param name="collectionOwner">The object the owns the collection of view models.</param>
+        /// <param name="modelCollectionGetter">A function that returns the collection of models.</param>
+        /// <param name="viewModelFactory">A factory that can create new view models when models are added.</param>
         public ViewModelCollection(
             INotifyPropertyChanged collectionOwner,
             Func<ObservableCollection<TModel>> modelCollectionGetter,
@@ -39,8 +45,12 @@ namespace DiiagramrAPI.Application
             UpdateModels();
         }
 
+        /// <inheritdoc/>
         public override event NotifyCollectionChangedEventHandler CollectionChanged;
 
+        /// <summary>
+        /// The collection of models.
+        /// </summary>
         public ObservableCollection<TModel> Models
         {
             get => _models;

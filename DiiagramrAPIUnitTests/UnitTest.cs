@@ -14,7 +14,7 @@ namespace DiiagramrAPIUnitTests
             builder.Bind<Shell>().ToSelf();
             builder.Bind<ToolbarBase>().To<FakeToolbar>();
             builder.Bind<ShellCommandBase>().To<FakeCommand>().WithKey("startCommand");
-            builder.Bind<IHotkeyCommander>().To<FakeHotkeyCommander>();
+            builder.Bind<IHotkeyHandler>().To<FakeHotkeyCommander>();
             builder.Bind<ContextMenuBase>().To<FakeContextMenu>();
             builder.Bind<ScreenHostBase>().To<FakeScreenHost>();
             builder.Bind<DialogHostBase>().To<FakeDialogHost>();

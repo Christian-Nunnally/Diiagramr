@@ -6,10 +6,15 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Application.Tools
 {
+    /// <summary>
+    /// A basic implementation of <see cref="ContextMenuBase"/>.
+    /// </summary>
     public class ContextMenu : ContextMenuBase
     {
+        /// <inheritdoc/>
         public override ObservableCollection<IShellCommand> Commands { get; } = new ObservableCollection<IShellCommand>();
 
+        /// <inheritdoc/>
         public override void ExecuteCommandHandler(object sender, MouseEventArgs e)
         {
             var frameworkElement = sender as FrameworkElement;
@@ -19,17 +24,20 @@ namespace DiiagramrAPI.Application.Tools
             }
         }
 
+        /// <inheritdoc/>
         public override void ExecuteCommand(IShellCommand command)
         {
             command.Execute(null);
             ClearCommands();
         }
 
+        /// <inheritdoc/>
         public override void MouseLeft()
         {
             ClearCommands();
         }
 
+        /// <inheritdoc/>
         public override void ShowContextMenu(IList<IShellCommand> commands, Point position)
         {
             X = (float)position.X;

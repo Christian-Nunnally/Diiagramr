@@ -14,12 +14,25 @@ namespace DiiagramrAPI.Application
     {
         private readonly List<Action> _viewLoadedActions = new List<Action>();
 
+        /// <summary>
+        /// The model this view model represents.
+        /// </summary>
         public ModelType Model { get; set; }
 
+        /// <summary>
+        /// Gets the current adorner on this view model.
+        /// </summary>
         public Adorner Adorner { get; private set; }
 
+        /// <summary>
+        /// Gets or sets whether the view for this view model should be visible.
+        /// </summary>
         public virtual bool Visible { get; set; } = true;
 
+        /// <summary>
+        /// Sets the current adorner on the view.
+        /// </summary>
+        /// <param name="adorner">The adorner to show.</param>
         public void SetAdorner(Adorner adorner)
         {
             RemoveExistingAdorners();
@@ -30,6 +43,10 @@ namespace DiiagramrAPI.Application
             }
         }
 
+        /// <summary>
+        /// Executes an action immediately if the view is loaded. Otherwise executes the action when the view is loaded.
+        /// </summary>
+        /// <param name="action">The action to execute.</param>
         public void ExecuteWhenViewLoaded(Action action)
         {
             if (View is object)
@@ -42,6 +59,7 @@ namespace DiiagramrAPI.Application
             }
         }
 
+        /// <inheritdoc/>
         protected override void OnViewLoaded()
         {
             base.OnViewLoaded();

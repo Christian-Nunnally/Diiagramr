@@ -29,6 +29,12 @@ namespace DiiagramrAPI.Application
         private readonly OpenProjectCommand _openProjectCommand;
         private readonly NewProjectCommand _newProjectCommand;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="VisualDropStartScreen"/>.
+        /// </summary>
+        /// <param name="projectFileServiceFactory">A factory that provides an instance of <see cref="IProjectFileService"/> for opening projects.</param>
+        /// <param name="openProjectCommandFactory">A factory that provides an instance of <see cref="OpenProjectCommand"/>.</param>
+        /// <param name="newProjectCommandFactory">A factory that provides an instance of <see cref="NewProjectCommand"/>.</param>
         public VisualDropStartScreen(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<OpenProjectCommand> openProjectCommandFactory,
@@ -59,50 +65,92 @@ namespace DiiagramrAPI.Application
             NotifyOfPropertyChange(nameof(RecentProject3DisplayString));
         }
 
+        /// <summary>
+        /// Whether or not the open project button is visible.
+        /// </summary>
         public bool OpenProjectButtonsVisible { get; set; }
 
+        /// <summary>
+        /// Gets wheter the open project label is visible.
+        /// </summary>
         public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
 
+        /// <summary>
+        /// Gets the name of the most recent project.
+        /// </summary>
         public string RecentProject1 { get; set; }
 
+        /// <summary>
+        /// Gets the name of the most recent project.
+        /// </summary>
         public string RecentProject1DisplayString => RecentProject1.Length > _recentProjectMaxCharacterLength
             ? RecentProject1.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
             : RecentProject1;
 
+        /// <summary>
+        /// Gets the name of the second most recent project.
+        /// </summary>
         public string RecentProject2 { get; set; }
 
+        /// <summary>
+        /// Gets the name of the second most recent project.
+        /// </summary>
         public string RecentProject2DisplayString => RecentProject2.Length > _recentProjectMaxCharacterLength
             ? RecentProject2.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
             : RecentProject2;
 
+        /// <summary>
+        /// Gets the name of the third most recent project.
+        /// </summary>
         public string RecentProject3 { get; set; }
 
+        /// <summary>
+        /// Gets the name of the third most recent project.
+        /// </summary>
         public string RecentProject3DisplayString => RecentProject3.Length > _recentProjectMaxCharacterLength
             ? RecentProject3.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
             : RecentProject3;
 
+        /// <summary>
+        /// A list of values and colors for the drippy rainbow in the 'O' of the "Visual Drop' logo on the start screen.
+        /// </summary>
         public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
 
+        /// <summary>
+        /// Occurs when the browse projects button is pressed.
+        /// </summary>
         public void BrowseButtonPressed()
         {
             _openProjectCommand.Execute();
         }
 
+        /// <summary>
+        /// Occurs when the new project button is pressed.
+        /// </summary>
         public void NewButtonPressed()
         {
             _newProjectCommand.Execute();
         }
 
+        /// <summary>
+        /// Occurs when the mouse leaves the open projects area.
+        /// </summary>
         public void OpenButtonsMouseLeave()
         {
             OpenProjectButtonsVisible = false;
         }
 
+        /// <summary>
+        /// Occurs when the mouse enters the open projects area.
+        /// </summary>
         public void OpenLabelMouseEntered()
         {
             OpenProjectButtonsVisible = true;
         }
 
+        /// <summary>
+        /// Occurs when the most open recent project button is pressed.
+        /// </summary>
         public void RecentProject1Pressed()
         {
             if (RecentProject1 == "Recent #1")
@@ -115,6 +163,9 @@ namespace DiiagramrAPI.Application
             }
         }
 
+        /// <summary>
+        /// Occurs when the most open second recent project button is pressed.
+        /// </summary>
         public void RecentProject2Pressed()
         {
             if (RecentProject2 == "Recent #2")
@@ -127,6 +178,9 @@ namespace DiiagramrAPI.Application
             }
         }
 
+        /// <summary>
+        /// Occurs when the most open third recent project button is pressed.
+        /// </summary>
         public void RecentProject3Pressed()
         {
             if (RecentProject3 == "Recent #3")
@@ -139,21 +193,23 @@ namespace DiiagramrAPI.Application
             }
         }
 
+        /// <inheritdoc/>
         public void ShownInShell()
         {
             AnimateLogo();
         }
 
-        public void UpdateRecentProjects(string name)
+        /// <inheritdoc/>
+        protected override void OnViewLoaded()
+        {
+            AnimateLogo();
+        }
+
+        private void UpdateRecentProjects(string name)
         {
             RecentProject1 = RecentProject2;
             RecentProject2 = RecentProject3;
             RecentProject3 = name;
-        }
-
-        protected override void OnViewLoaded()
-        {
-            AnimateLogo();
         }
 
         private void AnimateLogo()

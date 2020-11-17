@@ -4,7 +4,7 @@ using System.Windows.Input;
 
 namespace DiiagramrAPIUnitTests
 {
-    internal class FakeHotkeyCommander : IHotkeyCommander
+    internal class FakeHotkeyCommander : IHotkeyHandler
     {
         public List<Key> HandledHotkeyPressed = new List<Key>();
         public bool HandleHotkeyPressReturn;

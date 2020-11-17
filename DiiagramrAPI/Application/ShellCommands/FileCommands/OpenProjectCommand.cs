@@ -8,7 +8,7 @@ using System.Windows.Input;
 namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 {
     /// <summary>
-    /// Opens a project.
+    /// Opens an existing project.
     /// </summary>
     public class
         OpenProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
@@ -18,6 +18,13 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         private readonly ProjectScreen _projectScreen;
         private readonly ScreenHostBase _screenHost;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="OpenProjectCommand"/>
+        /// </summary>
+        /// <param name="projectFileServiceFactory">Factory to get an instance of an <see cref="IProjectFileService"/>.</param>
+        /// <param name="projectManagerFactory">Factory to get an instance of an <see cref="IProjectManager"/>.</param>
+        /// <param name="projectScreenFactory">Factory to get an instance of an <see cref="ProjectScreen"/>.</param>
+        /// <param name="screenHostFactory">Factory to get an instance of an <see cref="ScreenHostBase"/>.</param>
         public OpenProjectCommand(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<IProjectManager> projectManagerFactory,
@@ -30,25 +37,34 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             _screenHost = screenHostFactory();
         }
 
+        /// <inheritdoc/>
         public override string Name => "Open";
 
+        /// <inheritdoc/>
         public string ParentName => "Project";
 
+        /// <inheritdoc/>
         public float Weight => .1f;
 
+        /// <inheritdoc/>
         public Key Hotkey => Key.O;
 
+        /// <inheritdoc/>
         public bool RequiresCtrlModifierKey => true;
 
+        /// <inheritdoc/>
         public bool RequiresAltModifierKey => false;
 
+        /// <inheritdoc/>
         public bool RequiresShiftModifierKey => false;
 
+        /// <inheritdoc/>
         protected override bool CanExecuteInternal()
         {
             return true;
         }
 
+        /// <inheritdoc/>
         protected override void ExecuteInternal(object parameter)
         {
             if (parameter is string projectName)

@@ -4,8 +4,12 @@ using System.Collections.Generic;
 
 namespace DiiagramrAPI.Application
 {
+    /// <summary>
+    /// Provides the basic types to the serializization engine.
+    /// </summary>
     public class SerializableTypeProvider : ISerializableTypeProvider
     {
+        /// <inheritdoc/>
         public IEnumerable<Type> SerializableTypes => new[]
         {
             typeof(bool[]),

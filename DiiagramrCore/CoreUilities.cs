@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -50,6 +51,15 @@ namespace DiiagramrCore
                 new[] { typeof(IEnumerable) });
             var generic = method.MakeGenericMethod(targetType);
             return (IList)generic.Invoke(null, new[] { items });
+        }
+
+        /// <summary>
+        /// Opens the given URL in the default browser.
+        /// </summary>
+        /// <param name="url"></param>
+        public static void GoToSite(string url)
+        {
+            Process.Start("cmd", $"/C start {url}");
         }
     }
 }

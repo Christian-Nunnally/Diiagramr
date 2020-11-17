@@ -1,26 +1,31 @@
-﻿namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
+﻿using DiiagramrCore;
+
+namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
 {
+    /// <summary>
+    /// Opens the wiki in the default web browser.
+    /// </summary>
     public class OpenWikiCommand : ShellCommandBase, IToolbarCommand
     {
+        /// <inheritdoc/>
         public override string Name => "Open Wiki";
 
+        /// <inheritdoc/>
         public string ParentName => "Help";
 
+        /// <inheritdoc/>
         public float Weight => 0.3f;
 
-        public static void GoToSite(string url)
-        {
-            System.Diagnostics.Process.Start("cmd", $"/C start {url}");
-        }
-
+        /// <inheritdoc/>
         protected override bool CanExecuteInternal()
         {
             return true;
         }
 
+        /// <inheritdoc/>
         protected override void ExecuteInternal(object parameter)
         {
-            GoToSite("https://github.com/Christian-Nunnally/visual-drop/wiki");
+            CoreUilities.GoToSite("https://github.com/Christian-Nunnally/visual-drop/wiki");
         }
     }
 }

@@ -1,26 +1,31 @@
-﻿namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
+﻿using DiiagramrCore;
+
+namespace DiiagramrAPI.Application.ShellCommands.HelpCommands
 {
+    /// <summary>
+    /// Opens the web form for submitting bugs.
+    /// </summary>
     public class SubmitBugCommand : ShellCommandBase, IToolbarCommand
     {
+        /// <inheritdoc/>
         public override string Name => "Submit Bug";
 
+        /// <inheritdoc/>
         public float Weight => 0.39f;
 
+        /// <inheritdoc/>
         public string ParentName => "Help";
 
-        public static void GoToSite(string url)
-        {
-            System.Diagnostics.Process.Start("cmd", $"/C start {url}");
-        }
-
+        /// <inheritdoc/>
         protected override bool CanExecuteInternal()
         {
             return true;
         }
 
+        /// <inheritdoc/>
         protected override void ExecuteInternal(object parameter)
         {
-            GoToSite("https://github.com/Christian-Nunnally/visual-drop/issues");
+            CoreUilities.GoToSite("https://github.com/Christian-Nunnally/visual-drop/issues");
         }
     }
 }

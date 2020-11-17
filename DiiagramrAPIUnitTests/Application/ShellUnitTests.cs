@@ -78,7 +78,7 @@ namespace DiiagramrAPIUnitTests
 
         private Shell CreateShell(
             ShellCommandBase shellCommand,
-            IHotkeyCommander hotkeyCommander,
+            IHotkeyHandler hotkeyCommander,
             ContextMenuBase contextMenuBase,
             ScreenHostBase screenHostBase,
             DialogHostBase dialogHostBase,

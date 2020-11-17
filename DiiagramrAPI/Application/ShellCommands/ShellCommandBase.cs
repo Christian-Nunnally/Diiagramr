@@ -14,14 +14,18 @@ namespace DiiagramrAPI.Application.ShellCommands
         /// </summary>
         public static event Action<Exception> OnShellCommandException;
 
+        /// <inheritdoc/>
         public abstract string Name { get; }
 
         public IList<IShellCommand> SubCommandItems { get; } = new List<IShellCommand>();
 
+        /// <inheritdoc/>
         public bool CachedCanExecute { get; set; }
 
+        /// <inheritdoc/>
         public bool CanExecute() => CachedCanExecute = CanExecuteInternal();
 
+        /// <inheritdoc/>
         public void Execute(object parameter)
         {
             try
@@ -37,10 +41,13 @@ namespace DiiagramrAPI.Application.ShellCommands
             }
         }
 
+        /// <inheritdoc/>
         public void Execute() => Execute(null);
 
+        /// <inheritdoc/>
         protected abstract void ExecuteInternal(object parameter);
 
+        /// <inheritdoc/>
         protected abstract bool CanExecuteInternal();
     }
 }

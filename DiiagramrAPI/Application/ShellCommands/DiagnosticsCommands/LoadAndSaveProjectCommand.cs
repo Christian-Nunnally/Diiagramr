@@ -4,6 +4,9 @@ using System.IO;
 
 namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
 {
+    /// <summary>
+    /// Debugging only command to trst loading and saving a project.
+    /// </summary>
     public class LoadAndSaveProjectCommand : ShellCommandBase, IToolbarCommand
     {
         private readonly IProjectManager _projectManager;
@@ -17,12 +20,16 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
             _projectFileService = projectFileServiceFactory();
         }
 
+        /// <inheritdoc/>
         public override string Name => "Load and Save Project";
 
+        /// <inheritdoc/>
         public string ParentName => "Diagnostics";
 
+        /// <inheritdoc/>
         public float Weight => 1f;
 
+        /// <inheritdoc/>
         protected override void ExecuteInternal(object parameter)
         {
             var projectName = _projectManager.Project.Name;
@@ -39,6 +46,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
             });
         }
 
+        /// <inheritdoc/>
         protected override bool CanExecuteInternal()
         {
             return _projectManager.Project is object;

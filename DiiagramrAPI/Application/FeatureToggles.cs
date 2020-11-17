@@ -5,6 +5,9 @@
     /// </summary>
     public static class FeatureToggles
     {
+        /// <summary>
+        /// Turns on dots that visually move across wires when the data changes. Will degrade performance.
+        /// </summary>
         public static bool WirePropagationAnimationFeatureOn { get; } = true;
     }
 }

@@ -8,17 +8,23 @@ namespace DiiagramrAPI.Application.Tools
     /// <summary>
     /// Quickly interprets hotkeys and invokes the appropriate commands.
     /// </summary>
-    public class HotkeyCommander : IHotkeyCommander
+    public class HotkeyHandler : IHotkeyHandler
     {
         private readonly Dictionary<(Key, bool, bool, bool), IHotkeyCommand> _hotkeyToCommandMap = new Dictionary<(Key, bool, bool, bool), IHotkeyCommand>();
         private readonly IKeyboard _keyboard;
 
-        public HotkeyCommander(Func<IEnumerable<IHotkeyCommand>> hotkeyCommandsFactory, Func<IKeyboard> keyboard)
+        /// <summary>
+        /// Creates a new instance of <see cref="HotkeyHandler"/>.
+        /// </summary>
+        /// <param name="hotkeyCommandsFactory">A factory that returns a list of of <see cref="IHotkeyCommand"/>s.</param>
+        /// <param name="keyboard">A factory that returns an instance of <see cref="IKeyboard"/>.</param>
+        public HotkeyHandler(Func<IEnumerable<IHotkeyCommand>> hotkeyCommandsFactory, Func<IKeyboard> keyboard)
         {
             InitializeHotkeyToCommandMap(hotkeyCommandsFactory());
             _keyboard = keyboard();
         }
 
+        /// <inheritdoc/>
         public bool HandleHotkeyPress(Key key)
         {
             var isShiftPressed = _keyboard.IsKeyDown(Key.RightShift) || _keyboard.IsKeyDown(Key.LeftShift);
