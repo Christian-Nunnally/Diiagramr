@@ -5,11 +5,18 @@ using System.Windows;
 
 namespace DiiagramrAPI.Commands
 {
+    /// <summary>
+    /// An undoable command that sets a list of node to whatever thier current size is.
+    /// </summary>
     public class ResizeNodesToCurrentSizeCommand : TransactingCommand
     {
         private readonly IEnumerable<Node> _nodes;
         private readonly Dictionary<Node, Size> _nodeToSizeMap = new Dictionary<Node, Size>();
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ResizeNodesToCurrentSizeCommand"/>.
+        /// </summary>
+        /// <param name="nodes">The list of nodes to resize.</param>
         public ResizeNodesToCurrentSizeCommand(IEnumerable<Node> nodes)
         {
             foreach (var node in nodes)
@@ -20,6 +27,7 @@ namespace DiiagramrAPI.Commands
             _nodes = nodes;
         }
 
+        /// <inheritdoc/>
         protected override void Execute(ITransactor transactor, object parameter)
         {
             foreach (var node in _nodes)

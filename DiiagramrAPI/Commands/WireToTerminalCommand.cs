@@ -6,12 +6,21 @@ using System;
 
 namespace DiiagramrAPI.Commands
 {
+    /// <summary>
+    /// An undoable command that creates a wire between two terminals.
+    /// </summary>
     public class WireToTerminalCommand : IReversableCommand
     {
         private readonly Diagram _diagram;
         private readonly TerminalModel _fromTerminal;
         private readonly bool _animateWireWhenLoaded;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="WireToTerminalCommand"/>
+        /// </summary>
+        /// <param name="diagram">The diagram to perform the wiring on.</param>
+        /// <param name="fromTerminal">The terminal to wire from.</param>
+        /// <param name="animateWireWhenLoaded">Whether to animate the newly added wire.</param>
         public WireToTerminalCommand(Diagram diagram, TerminalModel fromTerminal, bool animateWireWhenLoaded = false)
         {
             _diagram = diagram;
@@ -19,6 +28,7 @@ namespace DiiagramrAPI.Commands
             _animateWireWhenLoaded = animateWireWhenLoaded;
         }
 
+        /// <inheritdoc/>
         public Action Execute(object parameter)
         {
             if (parameter is TerminalModel toTerminal)
