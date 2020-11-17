@@ -10,6 +10,10 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to create a subdiagram by dragging a selection box around a group of nodes.
+    /// </summary>
+    // TODO: combine this with other lasso selectors?
     public class LassoDiagramNodeCreator : DiagramInteractor
     {
         private readonly INodeProvider _nodeProvider;
@@ -18,17 +22,31 @@ namespace DiiagramrAPI.Editor.Interactors
         private double _startX;
         private double _startY;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="LassoDiagramNodeCreator"/>.
+        /// </summary>
+        /// <param name="nodeProviderFactory"></param>
         public LassoDiagramNodeCreator(Func<INodeProvider> nodeProviderFactory)
         {
             _nodeProvider = nodeProviderFactory();
         }
 
+        /// <summary>
+        /// Gets whether the selection box label should be visible.
+        /// </summary>
         public bool IsSelectorBigEnoughToDisplayHelpLabel => Height > 20 && Width > 60;
 
+        /// <summary>
+        /// The height of the selection box.
+        /// </summary>
         public double Height { get; set; }
 
+        /// <summary>
+        /// The width of the selection box.
+        /// </summary>
         public double Width { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.MouseMoved)
@@ -37,36 +55,26 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        public void SetEnd(double x, double y)
-        {
-            _endX = x;
-            _endY = y;
-            SetRectangleBounds();
-        }
-
-        public void SetStart(double x, double y)
-        {
-            _startX = x;
-            _startY = y;
-            SetRectangleBounds();
-        }
-
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown && interaction.IsShiftKeyPressed && interaction.IsCtrlKeyPressed;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             SetStart(interaction.MousePosition.X, interaction.MousePosition.Y);
             SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
@@ -101,6 +109,20 @@ namespace DiiagramrAPI.Editor.Interactors
             {
                 unWireAndDeleteCommand.Execute(node);
             }
+        }
+
+        private void SetEnd(double x, double y)
+        {
+            _endX = x;
+            _endY = y;
+            SetRectangleBounds();
+        }
+
+        private void SetStart(double x, double y)
+        {
+            _startX = x;
+            _startY = y;
+            SetRectangleBounds();
         }
 
         private DiagramState SaveDiagramState(Diagram diagram, Rect interactionRectangle)

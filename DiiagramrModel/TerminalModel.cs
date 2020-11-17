@@ -122,11 +122,6 @@ namespace DiiagramrModel
         public virtual double Y => (ParentNode?.Y ?? 0) + OffsetY;
 
         /// <summary>
-        /// Gets or sets the edge of ther terminal along the edge of the node its on.
-        /// </summary>
-        public int EdgeIndex { get; set; }
-
-        /// <summary>
         /// Connects to another terminal via a wire.
         /// </summary>
         /// <param name="wire">The wire to connect the terminals with.</param>

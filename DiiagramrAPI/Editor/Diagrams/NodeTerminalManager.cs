@@ -8,23 +8,29 @@ using System.Reflection;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    /// <summary>
+    /// Responsible for creating and managing the terminals on a node.
+    /// </summary>
     public class NodeTerminalManager
     {
         private readonly Node _node;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodeTerminalManager"/>.
+        /// </summary>
+        /// <param name="node">The node to manage the terminals of.</param>
         public NodeTerminalManager(Node node)
         {
             _node = node;
             _node.PropertyChanged += NodePropertyChanged;
+            CreateTerminals();
         }
 
-        public static bool IsGenericList(Type type)
+        private static bool IsGenericList(Type type)
         {
             return type.IsGenericType
                 && typeof(List<>) == type.GetGenericTypeDefinition();
         }
-
-        public void CreateTerminals() => _node.GetType().GetProperties().Where(x => Attribute.IsDefined(x, typeof(TerminalAttribute))).ForEach(CreateTerminalForProperty);
 
         private static TerminalModel CreateTerminalModel(PropertyInfo property, TerminalAttribute terminalAttribute, Type terminalType)
         {
@@ -46,6 +52,13 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
             return new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
         }
+
+        private void CreateTerminals() =>
+                                    _node
+            .GetType()
+            .GetProperties()
+            .Where(x => Attribute.IsDefined(x, typeof(TerminalAttribute)))
+            .ForEach(CreateTerminalForProperty);
 
         private void CreateTerminalForProperty(PropertyInfo property)
         {

@@ -8,18 +8,29 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to place a node by moving the mouse to pick a position and then clicking.
+    /// </summary>
     public class NodePlacer : DiagramInteractor
     {
         private readonly ITransactor _transactor;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodePlacer"/>.
+        /// </summary>
+        /// <param name="transactorFactory">A factory that returns an instance of <see cref="ITransactor"/> to transact with.</param>
         public NodePlacer(Func<ITransactor> transactorFactory)
         {
             Weight = 1.0f;
             _transactor = transactorFactory.Invoke();
         }
 
+        /// <summary>
+        /// The node that is being inserted.
+        /// </summary>
         public Node InsertingNodeViewModel { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.MouseMoved)
@@ -30,22 +41,26 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.NodeInserted;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown || interaction.Type == InteractionType.RightMouseDown;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             InsertingNodeViewModel = interaction.Diagram.Nodes.LastOrDefault();
             interaction.Diagram.ShowSnapGrid = true;
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.RightMouseDown)

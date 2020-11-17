@@ -21,6 +21,10 @@ namespace DiiagramrAPI.Editor.Interactors
     /// </summary>
     public class DiagramInteractionManager : Screen
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="DiagramInteractionManager"/>.
+        /// </summary>
+        /// <param name="interactorFactory">A factory that returns the list of <see cref="DiagramInteractor"/> this should manage.</param>
         public DiagramInteractionManager(Func<IEnumerable<DiagramInteractor>> interactorFactory)
         {
             var interactors = interactorFactory.Invoke();
@@ -28,18 +32,37 @@ namespace DiiagramrAPI.Editor.Interactors
             WeightedDiagramInteractors = new BindableCollection<DiagramInteractor>(weighedInteractors);
         }
 
+        /// <summary>
+        /// Gets the list interactors that are currently active.
+        /// </summary>
         public List<string> ActiveDiagramInteractorNames { get; } = new List<string>();
 
+        /// <summary>
+        /// Gets a visible list of interactors that are visible.
+        /// </summary>
         public BindableCollection<DiagramInteractor> ActiveDiagramInteractors { get; } = new BindableCollection<DiagramInteractor>();
 
+        /// <summary>
+        /// Gets the list of all <see cref="DiagramInteractor"/>s managed by this, ordered by weight.
+        /// </summary>
         public IList<DiagramInteractor> WeightedDiagramInteractors { get; } = new List<DiagramInteractor>();
 
+        /// <summary>
+        /// Handles input from the diagram.
+        /// </summary>
+        /// <param name="type">The type of interation that occured.</param>
+        /// <param name="diagram">The diagram that the interaction occured on.</param>
         public void HandleDiagramInput(InteractionType type, Diagram diagram)
         {
             var interaction = new DiagramInteractionEventArguments(type);
             HandleDiagramInput(interaction, diagram);
         }
 
+        /// <summary>
+        /// Handles input from the diagram.
+        /// </summary>
+        /// <param name="type">The information about the interation that occured.</param>
+        /// <param name="diagram">The diagram that the interaction occured on.</param>
         public void HandleDiagramInput(DiagramInteractionEventArguments interaction, Diagram diagram)
         {
             interaction.Diagram = diagram;

@@ -9,6 +9,9 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to create space on the diagram by scooting all nodes on one side of an axis tangent to that axis.
+    /// </summary>
     public class DiagramRifter : DiagramInteractor
     {
         private const int MinimimDistanceToStartRift = 5;
@@ -19,6 +22,10 @@ namespace DiiagramrAPI.Editor.Interactors
         private IEnumerable<Node> _nodesBeingRifted;
         private MoveNodesToCurrentPositionCommand _undoRiftCommand;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DiagramRifter"/>.
+        /// </summary>
+        /// <param name="transactorFactory">A factory that returns a <see cref="ITransactor"/> to tractact the node moves through.</param>
         public DiagramRifter(Func<ITransactor> transactorFactory)
         {
             _transactor = transactorFactory.Invoke();
@@ -34,26 +41,57 @@ namespace DiiagramrAPI.Editor.Interactors
             None,
         }
 
+        /// <summary>
+        /// Gets whether the user is rifting horizontially.
+        /// </summary>
         public bool IsModeHorizontial => Mode == RiftMode.Right || Mode == RiftMode.Left;
 
+        /// <summary>
+        /// Gets whether the user is rifting vertically.
+        /// </summary>
         public bool IsModeVertical => Mode == RiftMode.Down || Mode == RiftMode.Up;
 
+        /// <summary>
+        /// Gets or sets the amount of vertical rift.
+        /// </summary>
         public double RiftHeight { get; set; }
 
+        /// <summary>
+        /// Gets the amount of vertical rift plus the size of the visual end cap.
+        /// </summary>
         public double RiftHeightMinus5 => RiftHeight - RiftVisualEndCapSize;
 
+        /// <summary>
+        /// Gets the amount of vertical rift minus the size of the visual end cap.
+        /// </summary>
         public double RiftHeightPlus5 => RiftHeight + RiftVisualEndCapSize;
 
+        /// <summary>
+        /// Gets or sets the point on the diagram to start the rift.
+        /// </summary>
         public Point RiftStartDiagramPoint { get; set; }
 
+        /// <summary>
+        /// Gets or sets the amount of horizontial rift.
+        /// </summary>
         public double RiftWidth { get; set; }
 
+        /// <summary>
+        /// Gets the amount of horizontial rift plus the size of the visual end cap.
+        /// </summary>
         public double RiftWidthMinus5 => RiftWidth - RiftVisualEndCapSize;
 
+        /// <summary>
+        /// Gets the amount of horizontial rift minus the size of the visual end cap.
+        /// </summary>
         public double RiftWidthPlus5 => RiftWidth + RiftVisualEndCapSize;
 
+        /// <summary>
+        /// Gets the mode of the rift.
+        /// </summary>
         private RiftMode Mode { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
@@ -67,6 +105,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
@@ -76,11 +115,13 @@ namespace DiiagramrAPI.Editor.Interactors
                 && interaction.ViewModelUnderMouse is Diagram;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
@@ -94,6 +135,7 @@ namespace DiiagramrAPI.Editor.Interactors
             _undoRiftCommand = new MoveNodesToCurrentPositionCommand(_nodesBeingRifted);
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             Mode = RiftMode.None;

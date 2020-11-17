@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    /// <summary>
+    /// Class that is capable of generating specifically spaced points along a poly line.
+    /// </summary>
     public class SpacedPointsAlongLine
     {
         private readonly IList<Point> _linePoints;
@@ -12,17 +15,26 @@ namespace DiiagramrAPI.Editor.Diagrams
         private IList<Point> _spacedPoints;
         private double _lengthOfLine;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="SpacedPointsAlongLine"/>.
+        /// </summary>
+        /// <param name="linePoints">A list of points describing the line to generate points along.</param>
+        /// <param name="constantOffset">A constant distance to offset the generated points by from the ends of the line.</param>
+        /// <param name="numberOfPoints">The number of points to generate.</param>
+        /// <param name="addOriginalPointsToSpacedPoints">If true, <see cref="SpacedPoints"/> will contain <paramref name="linePoints"/>.</param>
         public SpacedPointsAlongLine(IList<Point> linePoints, double constantOffset, int numberOfPoints, bool addOriginalPointsToSpacedPoints = false)
         {
             _linePoints = linePoints;
             _constantOffset = constantOffset;
             _numberOfPoints = numberOfPoints;
             _addOriginalPointsToSpacedPoints = addOriginalPointsToSpacedPoints;
+            _lengthOfLine = GetLengthOfLine();
         }
 
+        /// <summary>
+        /// The calculated points.
+        /// </summary>
         public IList<Point> SpacedPoints => _spacedPoints ?? (_spacedPoints = GetSpacedPointsAlongLine());
-
-        public double LengthOfLine => _lengthOfLine > 0.01 ? _lengthOfLine : _lengthOfLine = GetLengthOfLine();
 
         private static Point GetInterpolatedPoint(Point point1, Point point2, double desiredPrecentOfSegment)
         {
@@ -53,7 +65,7 @@ namespace DiiagramrAPI.Editor.Diagrams
                     var segmentStartPoint = _linePoints[pointIndex];
                     var segmentEndPoint = _linePoints[pointIndex + 1];
                     var nextSegmentAvailableLength = Point.Subtract(segmentStartPoint, segmentEndPoint).Length;
-                    var targetLength = LengthOfLine * precentAlongLine;
+                    var targetLength = _lengthOfLine * precentAlongLine;
                     var nextSegmentDesiredLength = targetLength - distanceSoFar;
                     if (nextSegmentAvailableLength > nextSegmentDesiredLength)
                     {

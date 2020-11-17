@@ -2,6 +2,9 @@ using System;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to select a group of node by dragging a selection box around them.
+    /// </summary>
     public class LassoNodeSelector : DiagramInteractor
     {
         private double _endX;
@@ -9,12 +12,22 @@ namespace DiiagramrAPI.Editor.Interactors
         private double _startX;
         private double _startY;
 
+        /// <summary>
+        /// Gets whether the selection box label should be visible.
+        /// </summary>
         public bool IsSelectorBigEnoughToDisplayHelpLabel => Height > 20 && Width > 40;
 
+        /// <summary>
+        /// The height of the selection box.
+        /// </summary>
         public double Height { get; set; }
 
+        /// <summary>
+        /// The width of the selection box.
+        /// </summary>
         public double Width { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.MouseMoved)
@@ -23,20 +36,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
-        public void SetEnd(double x, double y)
-        {
-            _endX = x;
-            _endY = y;
-            SetRectangleBounds();
-        }
-
-        public void SetStart(double x, double y)
-        {
-            _startX = x;
-            _startY = y;
-            SetRectangleBounds();
-        }
-
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
@@ -45,17 +45,20 @@ namespace DiiagramrAPI.Editor.Interactors
                 && !interaction.IsAltKeyPressed;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             SetStart(interaction.MousePosition.X, interaction.MousePosition.Y);
             SetEnd(interaction.MousePosition.X, interaction.MousePosition.Y);
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
@@ -77,6 +80,20 @@ namespace DiiagramrAPI.Editor.Interactors
 
             Width = 0;
             Height = 0;
+        }
+
+        private void SetEnd(double x, double y)
+        {
+            _endX = x;
+            _endY = y;
+            SetRectangleBounds();
+        }
+
+        private void SetStart(double x, double y)
+        {
+            _startX = x;
+            _startY = y;
+            SetRectangleBounds();
         }
 
         private void SetRectangleBounds()

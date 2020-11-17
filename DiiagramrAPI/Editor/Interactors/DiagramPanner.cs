@@ -4,17 +4,30 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to pan the diagram by clicking and dragging on the diagram background.
+    /// </summary>
     public class DiagramPanner : DiagramInteractor
     {
         private const double MinimumMouseDeltaToStartPanning = 5;
         private bool _reachedMinimunMouseDeltaToStartPanning;
 
+        /// <summary>
+        /// The location that the mouse was clicked down for the pan interaction.
+        /// </summary>
         public Point StartMouseLocation { get; set; }
 
+        /// <summary>
+        /// Gets the amount the diagram was panned in the x diraction prior to this pan interaction
+        /// </summary>
         public double StartPanX { get; private set; }
 
+        /// <summary>
+        /// Gets the amount the diagram was panned in the y diraction prior to this pan interaction
+        /// </summary>
         public double StartPanY { get; private set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction.Diagram;
@@ -29,6 +42,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
@@ -36,11 +50,13 @@ namespace DiiagramrAPI.Editor.Interactors
                 && !interaction.IsModifierKeyPressed;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             _reachedMinimunMouseDeltaToStartPanning = false;
@@ -49,6 +65,7 @@ namespace DiiagramrAPI.Editor.Interactors
             StartPanY = interaction.Diagram.PanY;
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
         }

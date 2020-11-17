@@ -13,11 +13,17 @@ using System.Reflection;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    /// <summary>
+    /// A node on the diagram.
+    /// </summary>
     public abstract class Node : ViewModel<NodeModel>, IMouseEnterLeaveReaction
     {
-        public NodeServiceProvider _nodeServiceProvider;
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
+        private NodeServiceProvider _nodeServiceProvider;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="Node"/>.
+        /// </summary>
         public Node()
         {
             Terminals = new ViewModelCollection<Terminal, TerminalModel>(this, () => Model?.Terminals, Terminal.CreateTerminalViewModel);
@@ -26,34 +32,67 @@ namespace DiiagramrAPI.Editor.Diagrams
             Name ??= string.Empty;
         }
 
+        /// <summary>
+        /// The list visible list visible terminal on this node.
+        /// </summary>
         public virtual IObservableCollection<Terminal> Terminals { get; set; }
 
+        /// <summary>
+        /// Get or sets the nodes minimum height.
+        /// </summary>
         public virtual double MinimumHeight { get; set; } = Diagram.GridSnapInterval;
 
+        /// <summary>
+        /// Get or sets the nodes minimum width.
+        /// </summary>
         public virtual double MinimumWidth { get; set; } = Diagram.GridSnapInterval;
 
+        /// <summary>
+        /// Get or sets whether this node can be resized by dragging near the border.
+        /// </summary>
         public virtual bool ResizeEnabled { get; set; }
 
+        /// <summary>
+        /// Get or sets whether the node is selected and should show a selection border.
+        /// </summary>
         public virtual bool IsSelected { get; set; }
 
+        /// <summary>
+        /// Get or sets whether the mouse is over the node visual.
+        /// </summary>
         public bool IsMouseWithin { get; set; }
 
+        /// <summary>
+        /// Get or sets the name of the node.
+        /// </summary>
         public virtual string Name { get; set; }
 
+        /// <summary>
+        /// Get or sets the weight of the node as it appears in the node palette.
+        /// </summary>
         public virtual float Weight { get; set; }
 
+        /// <summary>
+        /// Get or sets the nodes X position on the diagram.
+        /// </summary>
         public virtual double X
         {
             get => Model?.X ?? 0;
             set => Model.RunIfNotNull(() => Model.X = value);
         }
 
+        /// <summary>
+        /// Get or sets the nodes Y position on the diagram.
+        /// </summary>
         public virtual double Y
         {
             get => Model?.Y ?? 0;
             set => Model.RunIfNotNull(() => Model.Y = value);
         }
 
+        /// <summary>
+        /// Get or sets the nodes wdith.
+        /// </summary>
         [NodeSetting]
         public virtual double Width
         {
@@ -65,6 +104,9 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
+        /// <summary>
+        /// Get or sets the nodes height.
+        /// </summary>
         [NodeSetting]
         public virtual double Height
         {
@@ -78,50 +120,64 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private IEnumerable<PropertyInfo> PluginNodeSettings => GetType().GetProperties().Where(i => Attribute.IsDefined(i, typeof(NodeSettingAttribute)));
 
+        /// <summary>
+        /// Sets the service provider implementations of this node can use to share services.
+        /// </summary>
+        /// <param name="nodeServiceProvider">The service provider.</param>
         public void SetServiceProvider(NodeServiceProvider nodeServiceProvider)
         {
             _nodeServiceProvider = nodeServiceProvider;
             _nodeServiceProvider.ServiceRegistered += NodeServiceProviderServiceRegistered;
-            UpdateServices(nodeServiceProvider);
+            ServicesUpdated(nodeServiceProvider);
         }
 
+        /// <summary>
+        /// Adds a terminal to this node.
+        /// </summary>
+        /// <param name="terminalModel">The terminal to add.</param>
         public virtual void AddTerminal(TerminalModel terminalModel)
         {
             Model.AddTerminal(terminalModel);
         }
 
+        /// <summary>
+        /// Removes a terminal from this node.
+        /// </summary>
+        /// <param name="terminalModel">The terminal to remove.</param>
         public virtual void RemoveTerminal(TerminalModel terminalModel)
         {
             Model.RemoveTerminal(terminalModel);
         }
 
+        /// <summary>
+        /// Highlights all terminals that are compatable with the given type.
+        /// </summary>
+        /// <typeparam name="T">Input or output terminls</typeparam>
+        /// <param name="type">The type to highlight terminals that are compatable with.</param>
         public void HighlightWirableTerminals<T>(Type type)
         {
             Terminals.OfType<T>().OfType<Terminal>().ForEach(terminal => terminal.ShowHighlightIfCompatibleType(type));
         }
 
+        /// <summary>
+        /// Attach this node view model to a model object, loading in  saved properties from the model if it was deserialized.
+        /// </summary>
+        /// <param name="nodeModel">The model to attach to.</param>
         public virtual void AttachToModel(NodeModel nodeModel)
         {
             if (Model == null)
             {
-                base.Model = nodeModel;
+                Model = nodeModel;
                 Model.Name = GetType().FullName;
                 InitializePluginNodeSettings();
-                var terminalCreator = new NodeTerminalManager(this);
-                terminalCreator.CreateTerminals();
+                new NodeTerminalManager(this);
                 Model.Width = MinimumWidth;
                 Model.Height = MinimumHeight;
                 Model.PropertyChanged += ModelPropertyChanged;
             }
         }
 
-        public virtual void InitializePluginNodeSettings()
-        {
-            PluginNodeSettings.ForEach(info => _pluginNodeSettingCache.Add(info.Name, info));
-            PluginNodeSettings.ForEach(PersistProperty);
-            PluginNodeSettings.ForEach(info => info.SetValue(this, Model?.GetVariable(info.Name)));
-        }
-
+        /// <inheritdoc/>
         public void MouseEntered()
         {
             SetAdorner(new NodeNameAdorner(View, this));
@@ -129,6 +185,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             MouseEnteredNode();
         }
 
+        /// <inheritdoc/>
         public void MouseLeft()
         {
             SetAdorner(null);
@@ -136,29 +193,46 @@ namespace DiiagramrAPI.Editor.Diagrams
             MouseLeftNode();
         }
 
+        /// <summary>
+        /// Unhighlights all terminals in this node.
+        /// </summary>
         public void UnhighlightTerminals()
         {
             Terminals.ForEach(t => t.HighlightVisible = false);
         }
 
+        /// <summary>
+        /// Unselects all terminals in this node.
+        /// </summary>
         public void UnselectTerminals()
         {
             Terminals.ForEach(t => t.IsSelected = false);
             UnhighlightTerminals();
         }
 
-        protected virtual void UpdateServices(NodeServiceProvider nodeServiceProvider)
+        /// <summary>
+        /// Called when a service is changed, added, or removed to allow implementations of <see cref="Node"/> to react or use new services.
+        /// </summary>
+        /// <param name="nodeServiceProvider">The node service provider that contains updated services.</param>
+        protected virtual void ServicesUpdated(NodeServiceProvider nodeServiceProvider)
         {
         }
 
+        /// <summary>
+        /// Called when the mouse enters the node.
+        /// </summary>
         protected virtual void MouseEnteredNode()
         {
         }
 
+        /// <summary>
+        /// Called when the mouse leaves the node.
+        /// </summary>
         protected virtual void MouseLeftNode()
         {
         }
 
+        /// <inheritdoc/>
         protected override void OnPropertyChanged(string propertyName)
         {
             base.OnPropertyChanged(propertyName);
@@ -173,9 +247,16 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
+        private void InitializePluginNodeSettings()
+        {
+            PluginNodeSettings.ForEach(info => _pluginNodeSettingCache.Add(info.Name, info));
+            PluginNodeSettings.ForEach(PersistProperty);
+            PluginNodeSettings.ForEach(info => info.SetValue(this, Model?.GetVariable(info.Name)));
+        }
+
         private void NodeServiceProviderServiceRegistered()
         {
-            UpdateServices(_nodeServiceProvider);
+            ServicesUpdated(_nodeServiceProvider);
         }
 
         private void TerminalsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)

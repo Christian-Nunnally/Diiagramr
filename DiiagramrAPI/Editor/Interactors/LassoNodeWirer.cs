@@ -3,6 +3,10 @@ using System.Linq;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to wire nodes together by dragging a selection box around a group of nodes.
+    /// The <see cref="LassoNodeWirer"/> will try to figure out a logical way to connect the group of nodes together.
+    /// </summary>
     public class LassoNodeWirer : DiagramInteractor
     {
         private double _endX;
@@ -10,10 +14,19 @@ namespace DiiagramrAPI.Editor.Interactors
         private double _startX;
         private double _startY;
 
+        /// <summary>
+        /// Gets whether the selection box label should be visible.
+        /// </summary>
         public bool IsSelectorBigEnoughToDisplayHelpLabel => Height > 20 && Width > 60;
 
+        /// <summary>
+        /// The height of the selection box.
+        /// </summary>
         public double Height { get; set; }
 
+        /// <summary>
+        /// The width of the selection box.
+        /// </summary>
         public double Width { get; set; }
 
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)

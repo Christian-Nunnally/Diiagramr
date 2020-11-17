@@ -10,19 +10,30 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to drag nodes by clicking and dragging thier border.
+    /// </summary>
     public class NodeDragger : DiagramInteractor
     {
         private readonly ITransactor _transactor;
         private IEnumerable<Node> _draggingNodes;
         private IReversableCommand _moveNodesToStartPointCommand;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodeDragger"/>.
+        /// </summary>
+        /// <param name="transactorFactory">A factory that returns a <see cref="ITransactor"/> to tractact the drags through.</param>
         public NodeDragger(Func<ITransactor> transactorFactory)
         {
             _transactor = transactorFactory.Invoke();
         }
 
+        /// <summary>
+        /// The location of the mouse the last time this interaction was processed.
+        /// </summary>
         public Point PreviousMouseLocation { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.MouseMoved)
@@ -33,6 +44,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.ViewModelUnderMouse is Node node
@@ -55,11 +67,13 @@ namespace DiiagramrAPI.Editor.Interactors
             return false;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             _draggingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected).ToArray();
@@ -67,6 +81,7 @@ namespace DiiagramrAPI.Editor.Interactors
             PreviousMouseLocation = interaction.MousePosition;
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             if (!interaction.IsCtrlKeyPressed)

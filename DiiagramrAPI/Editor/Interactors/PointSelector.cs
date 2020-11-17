@@ -3,15 +3,22 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to select things on a diagram by clicking on them.
+    /// </summary>
     public class PointSelector : DiagramInteractor
     {
         private Point _mouseDownPoint;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PointSelector"/>
+        /// </summary>
         public PointSelector()
         {
             Weight = 1;
         }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.LeftMouseDown)
@@ -38,22 +45,26 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
                 || interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
                 || interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
         }

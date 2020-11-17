@@ -60,7 +60,6 @@ namespace DiiagramrAPI.Editor
             for (var i = 0; i < terminalsOnEdge.Length; i++)
             {
                 PlaceTerminalOnEdge(terminalsOnEdge[i], edge, increment * (i + 1.0f));
-                terminalsOnEdge[i].EdgeIndex = i;
             }
         }
     }

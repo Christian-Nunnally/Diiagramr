@@ -14,6 +14,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// A palette that allows users to search for nodes using a text box and then select one to create on the diagram.
+    /// </summary>
     public class SearchPalette : DiagramInteractor
     {
         private const int MaxSearchResults = 10;
@@ -24,10 +27,14 @@ namespace DiiagramrAPI.Editor.Interactors
         private Node _nodeToInsert;
         private int _selectedNodeIndex = -1;
 
-        public SearchPalette(Func<INodeProvider> nodeProvider)
+        /// <summary>
+        /// Creates a new instance of <see cref="SearchPalette"/>.
+        /// </summary>
+        /// <param name="nodeProviderFactory">A factory that returns an instance of <see cref="INodeProvider"/>.</param>
+        public SearchPalette(Func<INodeProvider> nodeProviderFactory)
         {
             Weight = 0;
-            _nodeProvider = nodeProvider();
+            _nodeProvider = nodeProviderFactory();
             if (_nodeProvider is NodeProvider provider)
             {
                 provider.NodeRegistered += ProviderNodeRegistered;
@@ -36,9 +43,19 @@ namespace DiiagramrAPI.Editor.Interactors
             AddResultsToSearchTree();
         }
 
+        /// <summary>
+        /// Gets or sets the search text the user has typed.
+        /// </summary>
         public string SearchPhrase { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets the list of nodes filtered by the <see cref="SearchPhrase"/>.
+        /// </summary>
         public BindableCollection<SearchResult> FilteredNodesList { get; } = new BindableCollection<SearchResult>();
 
+        /// <summary>
+        /// Gets or gets the index of the selected node.
+        /// </summary>
         public int SelectedNodeIndex
         {
             get => _selectedNodeIndex;
@@ -61,12 +78,17 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <summary>
+        /// Gets or sets the node to show a visual preview of.
+        /// </summary>
         public Node NodeToPreview { get; set; }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.KeyDown
@@ -74,6 +96,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 && !interaction.IsModifierKeyPressed;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.RightMouseDown
@@ -81,15 +104,28 @@ namespace DiiagramrAPI.Editor.Interactors
                 || _shouldStopinteraction;
         }
 
+        /// <summary>
+        /// Occurs when the search text box loses keyboard focus.
+        /// </summary>
         public void SearchTextBoxLostFocus()
         {
         }
 
+        /// <summary>
+        /// Occurs when the search box visual is loaded.
+        /// </summary>
+        /// <param name="sender">The search box visual.</param>
+        /// <param name="e">The event arguments.</param>
         public void SearchTextBoxLoaded(object sender, RoutedEventArgs e)
         {
             FocusTextBox(sender as TextBox);
         }
 
+        /// <summary>
+        /// Occurs when the user types a key into the search box.
+        /// </summary>
+        /// <param name="sender">The search box visual.</param>
+        /// <param name="e">The event arguments.</param>
         public void SearchTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down)
@@ -115,6 +151,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             _shouldStopinteraction = false;
@@ -125,6 +162,7 @@ namespace DiiagramrAPI.Editor.Interactors
             SelectedNodeIndex = -1;
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             if (_nodeToInsert != null)
@@ -135,6 +173,11 @@ namespace DiiagramrAPI.Editor.Interactors
             _nodeToInsert = null;
         }
 
+        /// <summary>
+        /// Occurs when then mouse enters a node list item.
+        /// </summary>
+        /// <param name="sender">The node list item that the mouse is over.</param>
+        /// <param name="e">The event arguments.</param>
         public void NodeMouseEnterHandler(object sender, MouseEventArgs e)
         {
             if (!(((Border)sender).DataContext is SearchResult searchResult))
@@ -147,6 +190,9 @@ namespace DiiagramrAPI.Editor.Interactors
             NodeToPreview = searchResult.Node;
         }
 
+        /// <summary>
+        /// Occurs when the user clicks on a node list item.
+        /// </summary>
         public void SelectNode()
         {
             _shouldStopinteraction = true;

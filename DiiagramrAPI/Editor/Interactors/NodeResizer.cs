@@ -9,6 +9,9 @@ using System.Windows.Input;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the user to resize resizeable nodes by dragging near the node border.
+    /// </summary>
     public class NodeResizer : DiagramInteractor
     {
         private const double ResizeBorderMargin = 6;
@@ -17,6 +20,10 @@ namespace DiiagramrAPI.Editor.Interactors
         private MoveNodesToCurrentPositionCommand _undoPositionAdjustmentCommand;
         private ResizeNodesToCurrentSizeCommand _undoResizeCommand;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodeResizer"/>.
+        /// </summary>
+        /// <param name="transactorFactory">A factory that returns the <see cref="ITransactor"/> that should transact the resize action.</param>
         public NodeResizer(Func<ITransactor> transactorFactory)
         {
             _transactor = transactorFactory.Invoke();
@@ -35,10 +42,20 @@ namespace DiiagramrAPI.Editor.Interactors
             BottomLeft,
         }
 
+        /// <summary>
+        /// Gets or sets the position of the mouse to save for the next time this interaction is processed.
+        /// </summary>
         public Point PreviousMouseLocation { get; set; }
 
         private ResizeMode Mode { get; set; }
 
+        /// <summary>
+        /// Computes the distance from a point to a line.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        /// <param name="lineStart">The start point of the line.</param>
+        /// <param name="lineStop">The end point of the line.</param>
+        /// <returns></returns>
         public static double DistanceFromPointToLine(Point point, Point lineStart, Point lineStop)
         {
             var lineHeight = lineStop.X - lineStart.X;
@@ -48,11 +65,18 @@ namespace DiiagramrAPI.Editor.Interactors
             return nominator / denominator;
         }
 
+        /// <summary>
+        /// Computes the distance between two points.
+        /// </summary>
+        /// <param name="point">The first point.</param>
+        /// <param name="otherPoint">The second point.</param>
+        /// <returns></returns>
         public static double DistanceFromPoint(Point point, Point otherPoint)
         {
             return Math.Sqrt(Math.Pow(otherPoint.X - point.X, 2) + Math.Pow(otherPoint.Y - point.Y, 2));
         }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.MouseMoved)
@@ -63,6 +87,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             if ((interaction.Type == InteractionType.LeftMouseDown
@@ -143,11 +168,13 @@ namespace DiiagramrAPI.Editor.Interactors
             return false;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseUp;
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             PreviousMouseLocation = interaction.MousePosition;
@@ -157,6 +184,7 @@ namespace DiiagramrAPI.Editor.Interactors
             interaction.Diagram.ShowSnapGrid = true;
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             if (!interaction.IsCtrlKeyPressed)

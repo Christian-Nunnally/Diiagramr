@@ -9,6 +9,9 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor.Interactors
 {
+    /// <summary>
+    /// Allows the use to wire two terminals together by clicking on the first terminal and then clicking on the second terminal.
+    /// </summary>
     public class TerminalWirer : DiagramInteractor
     {
         private const int GhostWireAlphaValue = 70;
@@ -20,12 +23,22 @@ namespace DiiagramrAPI.Editor.Interactors
         private Wire _previewWire;
         private Terminal _wiringTerminal;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="TerminalWirer"/>.
+        /// </summary>
+        /// <param name="transactorFactory">A factory that returns an instance of <see cref="ITransactor"/>.</param>
         public TerminalWirer(Func<ITransactor> transactorFactory)
         {
             _transactor = transactorFactory?.Invoke() ?? throw new ArgumentNullException(nameof(transactorFactory));
             Weight = 0.75;
         }
 
+        /// <summary>
+        /// Whether or not two terminals are allowed to be wired together.
+        /// </summary>
+        /// <param name="startTerminal">The start terminal.</param>
+        /// <param name="endTerminal">The end terminal.</param>
+        /// <returns>True if the two terminals can be wired together.</returns>
         public static bool CanWireTwoTerminalsOnDiagram(Terminal startTerminal, Terminal endTerminal)
         {
             if (endTerminal?.Model == null)
@@ -48,6 +61,14 @@ namespace DiiagramrAPI.Editor.Interactors
             return sourceTerminal.CanWireToType(sinkTerminal.Type);
         }
 
+        /// <summary>
+        /// Attempts to wire two terminals if thier types are compatiable.
+        /// </summary>
+        /// <param name="diagram">The diagram to perform the wiring on.</param>
+        /// <param name="startTerminal">The terminal to start the wiring from.</param>
+        /// <param name="endTerminal">The terminal to end the wiring at.</param>
+        /// <param name="transactor">The transactor to transact the wire creation with.</param>
+        /// <param name="animateWire">Whether or not to animate the wire if it is created.</param>
         public static void TryWireTwoTerminalsOnDiagram(Diagram diagram, Terminal startTerminal, Terminal endTerminal, ITransactor transactor, bool animateWire)
         {
             if (CanWireTwoTerminalsOnDiagram(startTerminal, endTerminal))
@@ -56,6 +77,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
             var diagram = interaction?.Diagram ?? throw new ArgumentNullException(nameof(interaction));
@@ -71,6 +93,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStartInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.LeftMouseDown
@@ -78,6 +101,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 && !interaction.IsCtrlKeyPressed;
         }
 
+        /// <inheritdoc/>
         public override bool ShouldStopInteraction(DiagramInteractionEventArguments interaction)
         {
             return interaction.Type == InteractionType.RightMouseDown
@@ -87,6 +111,7 @@ namespace DiiagramrAPI.Editor.Interactors
                || (interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelUnderMouse is Wire);
         }
 
+        /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
             if (interaction.Type == InteractionType.LeftMouseDown && interaction.ViewModelUnderMouse is Terminal terminal)
@@ -97,6 +122,7 @@ namespace DiiagramrAPI.Editor.Interactors
             }
         }
 
+        /// <inheritdoc/>
         public override void StopInteraction(DiagramInteractionEventArguments interaction)
         {
             var type = interaction.Type;

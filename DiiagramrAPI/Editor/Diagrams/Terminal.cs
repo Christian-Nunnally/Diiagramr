@@ -11,11 +11,25 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    /// <summary>
+    /// A view model for a terminal.
+    /// </summary>
     public class Terminal : ViewModel<TerminalModel>, IMouseEnterLeaveReaction
     {
+        /// <summary>
+        /// The height of the terminal. This changes how much it protrudes out from the node.
+        /// </summary>
         public const double TerminalHeight = 2 * Diagram.NodeBorderWidth;
+
+        /// <summary>
+        /// The width of the terminal.
+        /// </summary>
         public const double TerminalWidth = TerminalHeight - 10;
 
+        /// <summary>
+        /// Creates a new terminal view model for the given model.
+        /// </summary>
+        /// <param name="terminal">The model to create the terminal view model from.</param>
         public Terminal(TerminalModel terminal)
         {
             Model = terminal ?? throw new ArgumentNullException(nameof(terminal));
@@ -26,14 +40,22 @@ namespace DiiagramrAPI.Editor.Diagrams
             SetTerminalColor();
         }
 
+        /// <summary>
+        /// The radius of the corner of the border or the terminal visual.
+        /// </summary>
         public static CornerRadius TerminalBorderCornerRadius { get; } = new CornerRadius(2);
 
+        /// <summary>
+        /// The radius of the corner of the terminal visual.
+        /// </summary>
         public static CornerRadius TerminalCornerRadius { get; } = new CornerRadius(3);
 
+        /// <summary>
+        /// The data value of the terminal.
+        /// </summary>
         public virtual object Data
         {
             get => Model.Data;
-
             set
             {
                 if (Model.Data != value)
@@ -43,42 +65,74 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        public int EdgeIndex
-        {
-            get => Model.EdgeIndex;
-            set => Model.EdgeIndex = value;
-        }
-
+        /// <summary>
+        /// Gets or sets whether this terminal should be highlighted.
+        /// </summary>
         public virtual bool HighlightVisible { get; set; }
 
+        /// <summary>
+        /// Gets whether this terminal is connected to any wires.
+        /// </summary>
         public bool IsConnected => Model.ConnectedWires?.Any() ?? false;
 
+        /// <summary>
+        /// Gets or sets whether this terminal is selected.
+        /// </summary>
         public virtual bool IsSelected { get; set; }
 
+        /// <summary>
+        /// Gets or sets the user visible name of this terminal.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the background brush of this terminal.
+        /// </summary>
         public SolidColorBrush TerminalBackgroundBrush { get; set; }
 
+        /// <summary>
+        /// Gets or sets what the background brush of this terminal should be when the mouse is hovering over it.
+        /// </summary>
         public SolidColorBrush TerminalBackgroundMouseOverBrush { get; set; }
 
+        /// <summary>
+        /// Gets or sets the about the terminal visual should be rotated based on its direction.
+        /// </summary>
         public float TerminalRotation { get; set; }
 
+        /// <summary>
+        /// Gets or sets the X position of the terminal visual relative to the nodes view.
+        /// </summary>
         public double ViewXPosition => XRelativeToNode - (TerminalWidth / 2);
 
+        /// <summary>
+        /// Gets or sets the Y position of the terminal visual relative to the nodes view.
+        /// </summary>
         public double ViewYPosition => YRelativeToNode - (TerminalHeight / 2);
 
+        /// <summary>
+        /// Gets or sets the X position of the center of the terminal relative to the nodes view.
+        /// </summary>
         public double XRelativeToNode
         {
             get => Model.OffsetX;
             set => Model.OffsetX = value;
         }
 
+        /// <summary>
+        /// Gets or sets the Y position of the center of the terminal relative to the nodes view.
+        /// </summary>
         public double YRelativeToNode
         {
             get => Model.OffsetY;
             set => Model.OffsetY = value;
         }
 
+        /// <summary>
+        /// Factory method to create the correct terminal view model for a given terminal model.
+        /// </summary>
+        /// <param name="terminal"></param>
+        /// <returns></returns>
         public static Terminal CreateTerminalViewModel(TerminalModel terminal)
         {
             return terminal is InputTerminalModel inputTerminalModel
@@ -86,11 +140,13 @@ namespace DiiagramrAPI.Editor.Diagrams
                 : new OutputTerminal((OutputTerminalModel)terminal);
         }
 
+        /// <inheritdoc/>
         public void MouseEntered()
         {
             SetTerminalAdorner(new TerminalToolTipAdorner(View, this));
         }
 
+        /// <inheritdoc/>
         public void MouseLeft()
         {
             if (!(Adorner is DirectEditAdorner))
@@ -99,11 +155,10 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
-        public virtual void SetTerminalDirection(Direction direction)
-        {
-            Model.DefaultSide = direction;
-        }
-
+        /// <summary>
+        /// Shows the highlight on this terminal if the given type is compataible.
+        /// </summary>
+        /// <param name="type">The type to test.</param>
         public virtual void ShowHighlightIfCompatibleType(Type type)
         {
             if (!IsConnected)
@@ -112,6 +167,10 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
         }
 
+        /// <summary>
+        /// Sets an adorner on this terminal.
+        /// </summary>
+        /// <param name="adorner">The adorner to set on the terminal.</param>
         protected void SetTerminalAdorner(Adorner adorner)
         {
             if (adorner is DirectEditTextBoxAdorner)

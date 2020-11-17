@@ -10,6 +10,9 @@ using System.Linq;
 
 namespace DiiagramrAPI.Editor.Diagrams
 {
+    /// <summary>
+    /// A special node that contains an entire diagram. Its inputs and output match the input and output <see cref="IoNode"/>'s on the inner diagram.
+    /// </summary>
     [HideFromNodeSelector]
     [Help("Contains another diagram. Passes data from its input terminal(s) to input nodes on the contained diagram, and from output nodes on the contained diagram to its output terminal(s).")]
     public class DiagramNode : Node
@@ -21,23 +24,32 @@ namespace DiiagramrAPI.Editor.Diagrams
         private Diagram _resolvedDiagram;
         private Action<Diagram> _openDiagramAction;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DiagramNode"/>.
+        /// </summary>
         public DiagramNode()
         {
             Width = 60;
             Height = 60;
         }
 
+        /// <summary>
+        /// The name of the diagram contained by this node.
+        /// </summary>
         [NodeSetting]
         public string DiagramName { get; set; }
 
+        /// <summary>
+        /// Optionally set this to render a diagram on the node.
+        /// </summary>
         public Diagram VisibleDiagram { get; set; }
 
+        /// <summary>
+        /// The inner diagram this node represents.
+        /// </summary>
         private Diagram ResolvedDiagram
         {
-            get
-            {
-                return _resolvedDiagram;
-            }
+            get => _resolvedDiagram;
             set
             {
                 _resolvedDiagram = value;
@@ -60,7 +72,11 @@ namespace DiiagramrAPI.Editor.Diagrams
 
         private bool IsResolved => ResolvedDiagram != null;
 
-        public DiagramNode WhenResolved(Action<Diagram> action)
+        /// <summary>
+        /// Executes the given action when the inner diagram is first resolved.
+        /// </summary>
+        /// <param name="action">The action to run only when the diagram is resolved.</param>
+        public void WhenResolved(Action<Diagram> action)
         {
             if (IsResolved)
             {
@@ -68,17 +84,21 @@ namespace DiiagramrAPI.Editor.Diagrams
             }
             else
             {
+                // TODO: this should be a list.
                 _whenResolvedAction = action;
             }
-            return this;
         }
 
+        /// <summary>
+        /// Opens the inner diagram.
+        /// </summary>
         public void OpenDiagram()
         {
             _openDiagramAction?.Invoke(ResolvedDiagram);
         }
 
-        protected override void UpdateServices(NodeServiceProvider nodeServiceProvider)
+        /// <inheritdoc/>
+        protected override void ServicesUpdated(NodeServiceProvider nodeServiceProvider)
         {
             var projectManager = nodeServiceProvider.GetService<IProjectManager>();
             if (projectManager != null)
