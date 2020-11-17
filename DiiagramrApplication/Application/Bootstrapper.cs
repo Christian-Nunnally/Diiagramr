@@ -12,8 +12,12 @@ using System.Reflection;
 
 namespace DiiagramrApplication.Application
 {
+    /// <summary>
+    /// Application bootstrapper that constructs the composition container.
+    /// </summary>
     public class Bootstrapper : Bootstrapper<Shell>
     {
+        /// <inheritdoc/>
         protected override void ConfigureIoC(IStyletIoCBuilder builder)
         {
             BootstrapperUtilities.BindServices(builder);

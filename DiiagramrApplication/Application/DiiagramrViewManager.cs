@@ -6,15 +6,23 @@ using System.Reflection;
 
 namespace DiiagramrApplication.Application
 {
+    /// <summary>
+    /// Custom <see cref="ViewManager"/> implementation to customize what assembly the application looks for views in.
+    /// </summary>
     public class DiiagramrViewManager : ViewManager
     {
         private readonly Dictionary<Type, Type> _viewModelToViewMapping = new Dictionary<Type, Type>();
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DiiagramrViewManager"/>.
+        /// </summary>
+        /// <param name="config">The configuration of the view manager.</param>
         public DiiagramrViewManager(ViewManagerConfig config) : base(config)
         {
             ViewFactory = Activator.CreateInstance;
         }
 
+        /// <inheritdoc/>
         protected override Type LocateViewForModel(Type modelType)
         {
             if (_viewModelToViewMapping.TryGetValue(modelType, out var viewType))

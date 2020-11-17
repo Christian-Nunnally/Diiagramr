@@ -6,9 +6,13 @@ using System.Windows.Media;
 
 namespace DiiagramrApplication.Editor
 {
+    /// <summary>
+    /// Converts a list of point to a path object.
+    /// </summary>
     [ValueConversion(typeof(Point[]), typeof(Geometry))]
     public class PointsToPathConverter : IValueConverter
     {
+        /// <inheritdoc/>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             var points = (Point[])value;
@@ -34,6 +38,7 @@ namespace DiiagramrApplication.Editor
             return geometry;
         }
 
+        /// <inheritdoc/>
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             throw new NotSupportedException();

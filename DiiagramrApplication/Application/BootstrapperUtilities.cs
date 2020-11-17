@@ -9,8 +9,18 @@ using System.Reflection;
 
 namespace DiiagramrApplication.Application
 {
+    /// <summary>
+    /// Core bootstrapper operations.
+    /// </summary>
     public static class BootstrapperUtilities
     {
+        /// <summary>
+        /// Finds everything that implements the given type and binds it to the interface.
+        /// </summary>
+        /// <param name="interfaceType">The type to find implementations of.</param>
+        /// <param name="builder">The IoC container builder.</param>
+        /// <param name="loadedTypes">All loaded types.</param>
+        /// <param name="typeReplacementMap">A special case map to use if particular types should be replaced.</param>
         public static void BindEverythingThatImplementsInterfaceAsASingleton(Type interfaceType, IStyletIoCBuilder builder, IEnumerable<Type> loadedTypes, Dictionary<Type, Type> typeReplacementMap)
         {
             var serviceImplementations = loadedTypes.Where(t => t.IsClass && t.GetInterface(interfaceType.Name) != null && !t.IsAbstract);
@@ -32,6 +42,10 @@ namespace DiiagramrApplication.Application
             }
         }
 
+        /// <summary>
+        /// Binds all interfaces that implement <see cref="ISingletonService"/> to thier implementations.
+        /// </summary>
+        /// <param name="builder">The IoC container builder.</param>
         public static void BindServices(IStyletIoCBuilder builder)
         {
             IEnumerable<Type> loadedTypes = GetAllLoadedNonTestTypes();
@@ -43,33 +57,9 @@ namespace DiiagramrApplication.Application
             }
         }
 
-        public static void BindTestServices(IStyletIoCBuilder builder)
-        {
-            var allLoadedTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache();
-            var testImplementationTypes = GetAllLoadedNonTestTypes();
-            var loadedServiceInterfaces = testImplementationTypes.Where(t => t.IsInterface && t.GetInterface(nameof(ISingletonService)) != null);
-
-            var fakeTypes = allLoadedTypes.Where(t => t.IsClass && !t.IsAbstract && t.GetInterface("ITestImplementationOf`1") != null);
-            var realToFakeTypeDictionary = new Dictionary<Type, Type>();
-            foreach (var fakeType in fakeTypes)
-            {
-                var realType = fakeType.GetInterface("ITestImplementationOf`1").GetGenericArguments()[0];
-                try
-                {
-                    realToFakeTypeDictionary.Add(realType, fakeType);
-                }
-                catch (ArgumentException e)
-                {
-                    throw new ArgumentException($"There is already a test implementation of {realType.Name}, that has been provided by {realToFakeTypeDictionary[realType].Name}. {fakeType.Name} needs to be removed.", e);
-                }
-            }
-
-            foreach (var loadedService in loadedServiceInterfaces)
-            {
-                BindEverythingThatImplementsInterfaceAsASingleton(loadedService, builder, testImplementationTypes, realToFakeTypeDictionary);
-            }
-        }
-
+        /// <summary>
+        /// Loads all wire type colors from plugins.
+        /// </summary>
         public static void LoadColorInformation()
         {
             var wireableTypes = GetAllLoadedTypesNotInTheGlobalAssemblyCache()
