@@ -11,14 +11,29 @@ using System.Xml;
 
 namespace DiiagramrAPI.Project
 {
+    /// <summary>
+    /// Saves and loads projects from the file system.
+    /// </summary>
     public class ProjectFileService : IProjectFileService
     {
+        /// <summary>
+        /// The extension to save project files with.
+        /// </summary>
         public const string ProjectFileExtension = ".xml";
+
         private readonly IProjectLoadSave _loadSave;
         private readonly SaveProjectDialog _saveProjectDialog;
         private readonly LoadProjectDialog _loadProjectDialog;
         private readonly DialogHostBase _dialogHost;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ProjectFileService"/>.
+        /// </summary>
+        /// <param name="directoryServiceFactory">A factory that returns an <see cref="IDirectoryService"/>.</param>
+        /// <param name="loadSaveFactory">A factory that returns an <see cref="IProjectLoadSave"/>.</param>
+        /// <param name="saveProjectDialogFactory">A factory that returns a <see cref="SaveProjectDialog"/>.</param>
+        /// <param name="loadProjectDialogFactory">A factory that returns a <see cref="LoadProjectDialog"/>.</param>
+        /// <param name="dialogHostFactory">A factory that returns a <see cref="DialogHostBase"/>.</param>
         public ProjectFileService(
             Func<IDirectoryService> directoryServiceFactory,
             Func<IProjectLoadSave> loadSaveFactory,
@@ -40,10 +55,13 @@ namespace DiiagramrAPI.Project
             }
         }
 
+        /// <inheritdoc/>
         public event Action<ProjectModel> ProjectSaved;
 
+        /// <inheritdoc/>
         public string ProjectDirectory { get; set; }
 
+        /// <inheritdoc/>
         public void LoadProject(Action<ProjectModel> continuation)
         {
             _loadProjectDialog.ProjectDirectory = ProjectDirectory;
@@ -51,6 +69,7 @@ namespace DiiagramrAPI.Project
             _dialogHost.OpenDialog(_loadProjectDialog);
         }
 
+        /// <inheritdoc/>
         public ProjectModel LoadProject(string path)
         {
             try
@@ -71,6 +90,7 @@ namespace DiiagramrAPI.Project
             return null;
         }
 
+        /// <inheritdoc/>
         public void SaveProject(ProjectModel project, bool saveAs, Action continuation)
         {
             var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;

@@ -4,10 +4,19 @@ using System;
 
 namespace DiiagramrAPI.Project
 {
+    /// <summary>
+    /// Interface for loading and saving a project to a file system.
+    /// </summary>
     public interface IProjectFileService : ISingletonService
     {
+        /// <summary>
+        /// Occurs when a project is saved.
+        /// </summary>
         event Action<ProjectModel> ProjectSaved;
 
+        /// <summary>
+        /// The directory that the project should be saved in.
+        /// </summary>
         string ProjectDirectory { get; set; }
 
         /// <summary>

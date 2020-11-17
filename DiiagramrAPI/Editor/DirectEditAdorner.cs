@@ -5,11 +5,19 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// An adorner that allows users to directly edit the data on a <see cref="Terminal"/>.
+    /// </summary>
     public abstract class DirectEditAdorner : Adorner
     {
         protected readonly VisualCollection visualChildren;
         protected FrameworkElement _mainUiElement;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectEditAdorner"/>.
+        /// </summary>
+        /// <param name="adornedElement">The UI element the adorner should attach to.</param>
+        /// <param name="adornedTerminal">The terminal the adorner can edit the data of.</param>
         public DirectEditAdorner(UIElement adornedElement, Terminal adornedTerminal)
             : base(adornedElement)
         {
@@ -17,12 +25,20 @@ namespace DiiagramrAPI.Editor
             visualChildren = new VisualCollection(this);
         }
 
+        /// <summary>
+        /// The terminal this adorner can edit the data of.
+        /// </summary>
         public Terminal AdornedTerminal { get; set; }
 
+        /// <summary>
+        /// Whether the type of the adorned terminal is editable with this class.
+        /// </summary>
         public abstract bool IsDirectlyEditableType { get; }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount => visualChildren.Count;
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
             if (_mainUiElement == null)
@@ -39,6 +55,7 @@ namespace DiiagramrAPI.Editor
             return finalSize;
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             return visualChildren[index];

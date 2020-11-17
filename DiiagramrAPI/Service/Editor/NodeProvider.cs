@@ -17,6 +17,10 @@ namespace DiiagramrAPI.Service.Editor
         private readonly IDictionary<string, Type> _nodeNameToViewModelMap;
         private readonly NodeServiceProvider _nodeServiceProvider;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodeProvider"/>.
+        /// </summary>
+        /// <param name="nodeServiceProviderFactory">A factory that returns a <see cref="NodeServiceProvider"/>.</param>
         public NodeProvider(Func<NodeServiceProvider> nodeServiceProviderFactory)
         {
             _nodeServiceProvider = nodeServiceProviderFactory();
@@ -25,10 +29,19 @@ namespace DiiagramrAPI.Service.Editor
             _dependencyMap = new Dictionary<string, NodeLibrary>();
         }
 
+        /// <summary>
+        /// Event that fires when a property changes on this node provider.
+        /// </summary>
+        // TODO: Remove?
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Event that fires when a new node is registered.
+        /// </summary>
+        // TODO: Remove?
         public event Action<Node> NodeRegistered;
 
+        /// <inheritdoc/>
         public Node CreateNodeFromName(string typeFullName)
         {
             if (!_dependencyMap.ContainsKey(typeFullName))
@@ -40,11 +53,13 @@ namespace DiiagramrAPI.Service.Editor
             return CreateNodeFromModel(node);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<Node> GetRegisteredNodes()
         {
             return _availableNodeViewModels.ToArray();
         }
 
+        /// <inheritdoc/>
         public Node CreateNodeFromModel(NodeModel node)
         {
             var fullName = node.Name;
@@ -60,6 +75,7 @@ namespace DiiagramrAPI.Service.Editor
             return newNode;
         }
 
+        /// <inheritdoc/>
         public void RegisterNode(Node node, NodeLibrary dependency)
         {
             _loadedAssemblies.Add(node.GetType().Assembly);

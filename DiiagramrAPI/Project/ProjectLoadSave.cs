@@ -6,12 +6,19 @@ using System.Xml;
 
 namespace DiiagramrAPI.Project
 {
+    /// <summary>
+    /// Serializes and deserializes projects to/from disk.
+    /// </summary>
     public class ProjectLoadSave : IProjectLoadSave
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="ProjectLoadSave"/>.
+        /// </summary>
         public ProjectLoadSave()
         {
         }
 
+        /// <inheritdoc/>
         public ProjectModel Load(string fullPath)
         {
             var serializer = new DataContractSerializer(typeof(ProjectModel), ModelBase.SerializeableTypes);
@@ -19,6 +26,7 @@ namespace DiiagramrAPI.Project
             return (ProjectModel)serializer.ReadObject(stream);
         }
 
+        /// <inheritdoc/>
         public void Save(ProjectModel project, string fullPath)
         {
             foreach (var diagram in project.Diagrams)

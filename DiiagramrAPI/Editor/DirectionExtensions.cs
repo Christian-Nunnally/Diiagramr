@@ -2,27 +2,23 @@
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// Helpful extension methods for <see cref="Direction"/>.
+    /// </summary>
     public static class DirectionExtensions
     {
-        public static Direction Opposite(this Direction direction)
+        /// <summary>
+        /// Gets the <see cref="Direction"/> opposite of this <see cref="Direction"/>.
+        /// </summary>
+        /// <param name="direction">The original direction.</param>
+        /// <returns>the opposite <see cref="Direction"/> </returns>
+        public static Direction Opposite(this Direction direction) => direction switch
         {
-            switch (direction)
-            {
-                case Direction.North:
-                    return Direction.South;
-
-                case Direction.South:
-                    return Direction.North;
-
-                case Direction.East:
-                    return Direction.West;
-
-                case Direction.West:
-                    return Direction.East;
-
-                default:
-                    return Direction.None;
-            }
-        }
+            Direction.North => Direction.South,
+            Direction.South => Direction.North,
+            Direction.East => Direction.West,
+            Direction.West => Direction.East,
+            _ => Direction.None,
+        };
     }
 }

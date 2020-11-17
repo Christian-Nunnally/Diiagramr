@@ -23,6 +23,14 @@ namespace DiiagramrAPI.Project
         private readonly NodeServiceProvider _nodeServiceProvider;
         private ProjectModel _project;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ProjectManager"/>.
+        /// </summary>
+        /// <param name="dialogHostFactory">A factory that returns a <see cref="DialogHostBase"/>.</param>
+        /// <param name="diagramFactoryFactory">A factory that returns an <see cref="DiagramFactory"/>.</param>
+        /// <param name="libraryManagerFactory">A factory that returns an <see cref="ILibraryManager"/>.</param>
+        /// <param name="projectFileServiceFactory">A factory that returns a <see cref="IProjectFileService"/>.</param>
+        /// <param name="nodeServiceProviderFactory">A factory that returns a <see cref="NodeServiceProvider"/>.</param>
         public ProjectManager(
             Func<DialogHostBase> dialogHostFactory,
             Func<DiagramFactory> diagramFactoryFactory,
@@ -38,8 +46,10 @@ namespace DiiagramrAPI.Project
             _nodeServiceProvider.RegisterService<IProjectManager>(this);
         }
 
+        /// <inheritdoc/>
         public IObservableCollection<Diagram> Diagrams { get; set; }
 
+        /// <inheritdoc/>
         public ProjectModel Project
         {
             get => _project;
@@ -53,6 +63,7 @@ namespace DiiagramrAPI.Project
             }
         }
 
+        /// <inheritdoc/>
         public void CloseProject(Action continuation)
         {
             if (Project == null)
@@ -70,6 +81,7 @@ namespace DiiagramrAPI.Project
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
         }
 
+        /// <inheritdoc/>
         public void InsertDiagram(DiagramModel diagram)
         {
             if (Project == null)
@@ -93,16 +105,19 @@ namespace DiiagramrAPI.Project
             Project.AddDiagram(diagram);
         }
 
+        /// <inheritdoc/>
         public void CreateProject(Action continuation)
         {
             CloseProject(CreateProjectAndContinue(continuation));
         }
 
+        /// <inheritdoc/>
         public void RemoveDiagram(DiagramModel diagram)
         {
             Project.RemoveDiagram(diagram);
         }
 
+        /// <inheritdoc/>
         public void SetProject(ProjectModel project, bool autoOpenDiagram = false)
         {
             CloseProject(() => SetProjectInternal(project, autoOpenDiagram));

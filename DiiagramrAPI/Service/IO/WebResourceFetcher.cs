@@ -4,16 +4,21 @@ using System.Threading.Tasks;
 
 namespace DiiagramrAPI.Service.IO
 {
+    /// <summary>
+    /// Downloads web pages and scrapes the text off of them.
+    /// </summary>
     public sealed class WebResourceFetcher : IFetchWebResource, IDisposable
     {
         private readonly WebClient _webClient = new WebClient();
         private bool _currentlyFetching = false;
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             _webClient.Dispose();
         }
 
+        /// <inheritdoc/>
         public async Task DownloadFileAsync(string url, string downloadToPath)
         {
             try
@@ -29,6 +34,7 @@ namespace DiiagramrAPI.Service.IO
             }
         }
 
+        /// <inheritdoc/>
         public async Task<string> DownloadStringAsync(string url)
         {
             if (_currentlyFetching)

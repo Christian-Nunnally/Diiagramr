@@ -6,13 +6,18 @@ using System.Linq;
 
 namespace DiiagramrAPI.Service.IO
 {
+    /// <summary>
+    /// <see cref="IDirectoryService"/> implementation that wraps <see cref="Directory"/> to direct calls to the real file system.
+    /// </summary>
     public class DirectoryService : IDirectoryService
     {
+        /// <inheritdoc/>
         public void CreateDirectory(string path)
         {
             Directory.CreateDirectory(path);
         }
 
+        /// <inheritdoc/>
         public void Delete(string path, bool recursive)
         {
             if (path.Contains('.'))
@@ -25,21 +30,25 @@ namespace DiiagramrAPI.Service.IO
             }
         }
 
+        /// <inheritdoc/>
         public bool Exists(string path)
         {
             return Directory.Exists(path);
         }
 
+        /// <inheritdoc/>
         public void ExtractToDirectory(string from, string to)
         {
             ZipFile.ExtractToDirectory(from, to);
         }
 
+        /// <inheritdoc/>
         public string GetCurrentDirectory()
         {
             return Directory.GetCurrentDirectory();
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetDirectories(string path)
         {
             try
@@ -59,11 +68,13 @@ namespace DiiagramrAPI.Service.IO
             }
         }
 
+        /// <inheritdoc/>
         public string GetDirectoryName(string path)
         {
             return Path.GetDirectoryName(path);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetFiles(string path, string searchPattern, SearchOption searchOption)
         {
             try
@@ -83,6 +94,7 @@ namespace DiiagramrAPI.Service.IO
             }
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetFiles(string path, string searchPattern)
         {
             try
@@ -102,11 +114,13 @@ namespace DiiagramrAPI.Service.IO
             }
         }
 
+        /// <inheritdoc/>
         public void Move(string fromPath, string toPath)
         {
             Directory.Move(fromPath, toPath);
         }
 
+        /// <inheritdoc/>
         public string ReadAllText(string path)
         {
             return File.ReadAllText(path);

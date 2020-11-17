@@ -15,12 +15,20 @@ using System.Xml.Linq;
 
 namespace DiiagramrAPI.Service.Plugins
 {
+    /// <summary>
+    /// Loads plugin dlls and registers the contents with the appropriate systems.
+    /// </summary>
     public class PluginLoader : IPluginLoader
     {
         private readonly IDirectoryService _directoryService;
         private readonly INodeProvider _nodeProvider;
         private readonly string _pluginDirectory;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="PluginLoader"/>.
+        /// </summary>
+        /// <param name="nodeProviderFactory">A factory that returns an instance of <see cref="INodeProvider"/>.</param>
+        /// <param name="directoryServiceFactory">A factory that returns an instance of <see cref="IDirectoryService"/>.</param>
         public PluginLoader(
             Func<INodeProvider> nodeProviderFactory,
             Func<IDirectoryService> directoryServiceFactory)
@@ -38,6 +46,7 @@ namespace DiiagramrAPI.Service.Plugins
             GetInstalledPlugins();
         }
 
+        /// <inheritdoc/>
         public bool AddPluginFromDirectory(string dirPath, NodeLibrary libraryDependency)
         {
             try

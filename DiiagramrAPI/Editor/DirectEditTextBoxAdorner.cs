@@ -7,10 +7,18 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// An adorner that allows users to directly edit numeric and string type data on a <see cref="Terminal"/>.
+    /// </summary>
     public class DirectEditTextBoxAdorner : DirectEditAdorner
     {
         private readonly TextBox textBox;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectEditTextBoxAdorner"/>.
+        /// </summary>
+        /// <param name="adornedElement">The UI element the adorner should attach to.</param>
+        /// <param name="adornedTerminal">The terminal the adorner can edit the data of.</param>
         public DirectEditTextBoxAdorner(UIElement adornedElement, Terminal adornedTerminal)
             : base(adornedElement, adornedTerminal)
         {
@@ -49,23 +57,27 @@ namespace DiiagramrAPI.Editor
             visualChildren.Add(textBox);
         }
 
+        /// <summary>
+        /// Gets or sets the text of the textbox that the user will type in to.
+        /// </summary>
         public string DirectEditTextBoxText
         {
             get => AdornedTerminal.Data?.ToString() ?? string.Empty;
             set => AdornedTerminal.Data = CoerceStringToType(value);
         }
 
-        public bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
-
+        /// <inheritdoc/>
         public override bool IsDirectlyEditableType => IsIntType || IsFloatType || IsStringType || IsCharType;
 
-        public bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
+        private bool IsCharType => AdornedTerminal.Model.Type == typeof(char);
 
-        public bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
+        private bool IsFloatType => AdornedTerminal.Model.Type == typeof(float);
 
-        public bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
+        private bool IsIntType => AdornedTerminal.Model.Type == typeof(int);
 
-        public object CoerceStringToType(string data)
+        private bool IsStringType => AdornedTerminal.Model.Type == typeof(string);
+
+        private object CoerceStringToType(string data)
         {
             if (IsFloatType && float.TryParse(data, out float parsedFloat))
             {

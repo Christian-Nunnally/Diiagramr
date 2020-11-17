@@ -6,6 +6,9 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// Node adorner that shows the name of the node.
+    /// </summary>
     public class NodeNameAdorner : Adorner
     {
         private readonly Border border;
@@ -14,6 +17,11 @@ namespace DiiagramrAPI.Editor
         private readonly double marginFromNode = Diagram.NodeBorderWidth + 6;
         private readonly VisualCollection visualChildren;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="NodeNameAdorner"/>.
+        /// </summary>
+        /// <param name="adornedElement">The UI element to adorn.</param>
+        /// <param name="adornedNode">The node whose name to display.</param>
         public NodeNameAdorner(UIElement adornedElement, Node adornedNode)
             : base(adornedElement)
         {
@@ -56,10 +64,15 @@ namespace DiiagramrAPI.Editor
             visualChildren.Add(border);
         }
 
+        /// <summary>
+        /// The node being adorned.
+        /// </summary>
         public Node AdornedNode { get; set; }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount => visualChildren.Count;
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
             double width = border.Width;
@@ -71,6 +84,7 @@ namespace DiiagramrAPI.Editor
             return finalSize;
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             return visualChildren[index];

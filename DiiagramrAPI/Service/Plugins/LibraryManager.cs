@@ -32,14 +32,19 @@ namespace DiiagramrAPI.Service.Plugins
             UpdateInstalledLibraries();
         }
 
+        /// <inheritdoc/>
         public ObservableCollection<NodeLibrary> AvailableLibraries { get; } = new ObservableCollection<NodeLibrary>();
 
+        /// <inheritdoc/>
         public ObservableCollection<LibraryListItem> AvailableLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
 
+        /// <inheritdoc/>
         public ObservableCollection<LibraryListItem> InstalledLibraryItems { get; } = new ObservableCollection<LibraryListItem>();
 
+        /// <inheritdoc/>
         public ObservableCollection<string> Sources { get; } = new ObservableCollection<string>();
 
+        /// <inheritdoc/>
         public bool AddSource(string sourceUrl)
         {
             if (!sourceUrl.StartsWith("http://"))
@@ -51,6 +56,7 @@ namespace DiiagramrAPI.Service.Plugins
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task<bool> InstallLatestVersionOfLibraryAsync(LibraryListItem libraryListItem)
         {
             if (IsLibraryInstalled(libraryListItem.Library))
@@ -83,6 +89,7 @@ namespace DiiagramrAPI.Service.Plugins
             return true;
         }
 
+        /// <inheritdoc/>
         public async Task LoadSourcesAsync()
         {
             _shouldSourcesBeLoaded = true;
@@ -97,6 +104,7 @@ namespace DiiagramrAPI.Service.Plugins
             }
         }
 
+        /// <inheritdoc/>
         public bool RemoveSource(string sourceUrl)
         {
             if (!Sources.Contains(sourceUrl))
@@ -113,6 +121,7 @@ namespace DiiagramrAPI.Service.Plugins
             return true;
         }
 
+        /// <inheritdoc/>
         public void UninstallLibrary(LibraryListItem libraryListItem)
         {
             if (libraryListItem.Library != null)

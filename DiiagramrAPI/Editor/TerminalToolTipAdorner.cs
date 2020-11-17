@@ -7,6 +7,9 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// An adorner to display the name and value on a terminal.
+    /// </summary>
     public class TerminalToolTipAdorner : Adorner
     {
         private readonly double marginAroundLabel = 3.0;
@@ -14,6 +17,11 @@ namespace DiiagramrAPI.Editor
         private readonly TextBlock textBlock;
         private readonly VisualCollection visualChildren;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="TerminalToolTipAdorner"/>.
+        /// </summary>
+        /// <param name="adornedElement">The UI element to adorn.</param>
+        /// <param name="adornedTerminal">The terminal whose information to display.</param>
         public TerminalToolTipAdorner(UIElement adornedElement, Terminal adornedTerminal)
             : base(adornedElement)
         {
@@ -24,6 +32,8 @@ namespace DiiagramrAPI.Editor
 
             AdornedTerminal = adornedTerminal;
             visualChildren = new VisualCollection(this);
+
+            // TODO: make this update when the terminal data changes.
             string text = GetTerminalText();
 
             textBlock = new TextBlock
@@ -56,10 +66,15 @@ namespace DiiagramrAPI.Editor
             visualChildren.Add(border);
         }
 
+        /// <summary>
+        /// The terminal being adorned.
+        /// </summary>
         public Terminal AdornedTerminal { get; set; }
 
+        /// <inheritdoc/>
         protected override int VisualChildrenCount => visualChildren.Count;
 
+        /// <inheritdoc/>
         protected override Size ArrangeOverride(Size finalSize)
         {
             double width = border.Width;
@@ -71,6 +86,7 @@ namespace DiiagramrAPI.Editor
             return finalSize;
         }
 
+        /// <inheritdoc/>
         protected override Visual GetVisualChild(int index)
         {
             return visualChildren[index];

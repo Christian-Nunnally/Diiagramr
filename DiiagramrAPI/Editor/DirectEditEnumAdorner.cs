@@ -7,11 +7,19 @@ using System.Windows.Media;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// An adorner that allows users to directly edit enum type data on a <see cref="Terminal"/>.
+    /// </summary>
     public class DirectEditEnumAdorner : DirectEditAdorner
     {
         private readonly StackPanel _stackPanel;
         private readonly Border _border;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="DirectEditEnumAdorner"/>.
+        /// </summary>
+        /// <param name="adornedElement">The UI element the adorner should attach to.</param>
+        /// <param name="adornedTerminal">The terminal the adorner can edit the data of.</param>
         public DirectEditEnumAdorner(UIElement adornedElement, Terminal adornedTerminal)
             : base(adornedElement, adornedTerminal)
         {
@@ -67,6 +75,7 @@ namespace DiiagramrAPI.Editor
             visualChildren.Add(_border);
         }
 
+        /// <inheritdoc/>
         public override bool IsDirectlyEditableType => AdornedTerminal?.Model.Type.IsEnum ?? false;
 
         private void OnBorderMouseDown(object sender, MouseButtonEventArgs e)

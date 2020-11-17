@@ -6,35 +6,56 @@ using System.Windows;
 
 namespace DiiagramrAPI.Editor
 {
+    /// <summary>
+    /// Quickly paths a wire from a start point to an end point.
+    /// </summary>
     public class WirePathingAlgorithum
     {
-        private const int MinimimDistanceToCalculateWire = 50;
+        private readonly int _minimimDistanceToCalculateWire = 50;
+
         private bool _uTurned = false;
 
+        private double _downUTurnLengthSink;
+
+        private double _downUTurnLengthSource;
+
+        private double _leftUTurnLengthSink;
+
+        private double _leftUTurnLengthSource;
+
+        private double _rightUTurnLengthSink;
+
+        private double _rightUTurnLengthSource;
+
+        private double _upUTurnLengthSink;
+
+        private double _upUTurnLengthSource;
+
+        /// <summary>
+        /// Gets or sets whether to limit the number of times the wire can take a u turn out of the source terminal.
+        /// </summary>
         public bool EnableUTurnLimitsForSourceTerminal { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets whether to limit the number of times the wire can take a u turn out of the sink terminal.
+        /// </summary>
         public bool EnableUTurnLimitsForSinkTerminal { get; set; } = true;
 
+        /// <summary>
+        /// Gets or sets the distance the wire should travel out of the source terminal before starting to path.
+        /// </summary>
         public float WireDistanceOutOfSourceTerminal { get; set; } = 25.0f;
 
+        /// <summary>
+        /// Gets or sets the distance the wire should travel out of the sink terminal before starting to path.
+        /// </summary>
         public float WireDistanceOutOfSinkTerminal { get; set; } = 25.0f;
 
-        private double DownUTurnLengthSink { get; set; }
-
-        private double DownUTurnLengthSource { get; set; }
-
-        private double LeftUTurnLengthSink { get; set; }
-
-        private double LeftUTurnLengthSource { get; set; }
-
-        private double RightUTurnLengthSink { get; set; }
-
-        private double RightUTurnLengthSource { get; set; }
-
-        private double UpUTurnLengthSink { get; set; }
-
-        private double UpUTurnLengthSource { get; set; }
-
+        /// <summary>
+        /// Generate the wire path points for a given <see cref="Wire"/>.
+        /// </summary>
+        /// <param name="wire">The wire to generate the path of.</param>
+        /// <returns>The path of the wire as an array of points.</returns>
         public Point[] GetWirePoints(Wire wire)
         {
             InitializeUTurnLengths(wire);
@@ -52,7 +73,7 @@ namespace DiiagramrAPI.Editor
                 return new Point[] { sink, sinkStub, sourceStub, source };
             }
 
-            if (ArePointsWithinDistance(sinkStub, sourceStub, MinimimDistanceToCalculateWire))
+            if (ArePointsWithinDistance(sinkStub, sourceStub, _minimimDistanceToCalculateWire))
             {
                 return new Point[] { sink, sinkStub, sourceStub, source };
             }
@@ -87,27 +108,14 @@ namespace DiiagramrAPI.Editor
             return Math.Abs(deltaX) > Math.Abs(deltaY) ? bannedVerticalDirection : bannedHorizontialDirection;
         }
 
-        private static Point TranslatePointInDirection(Point p, Direction direction, double amount)
+        private static Point TranslatePointInDirection(Point p, Direction direction, double amount) => direction switch
         {
-            switch (direction)
-            {
-                case Direction.North:
-                    return new Point(p.X, p.Y - amount);
-
-                case Direction.South:
-                    return new Point(p.X, p.Y + amount);
-
-                case Direction.East:
-                    return new Point(p.X + amount, p.Y);
-
-                case Direction.West:
-                    return new Point(p.X - amount, p.Y);
-
-                case Direction.None:
-                default:
-                    return new Point(p.X, p.Y);
-            }
-        }
+            Direction.North => new Point(p.X, p.Y - amount),
+            Direction.South => new Point(p.X, p.Y + amount),
+            Direction.East => new Point(p.X + amount, p.Y),
+            Direction.West => new Point(p.X - amount, p.Y),
+            _ => new Point(p.X, p.Y),
+        };
 
         private bool IsStubInsideNode(Point sourceStub, Point sinkStub)
         {
@@ -117,16 +125,16 @@ namespace DiiagramrAPI.Editor
 
         private bool IsSourceInsideSinkNode(Point sourceStub, Point sinkStub)
         {
-            var nodePosition = new Point(sinkStub.X - LeftUTurnLengthSink, sinkStub.Y - UpUTurnLengthSink);
-            var nodeSize = new Size(LeftUTurnLengthSink + RightUTurnLengthSink, UpUTurnLengthSink + DownUTurnLengthSink);
+            var nodePosition = new Point(sinkStub.X - _leftUTurnLengthSink, sinkStub.Y - _upUTurnLengthSink);
+            var nodeSize = new Size(_leftUTurnLengthSink + _rightUTurnLengthSink, _upUTurnLengthSink + _downUTurnLengthSink);
             Rect nodeRectangle = new Rect(nodePosition, nodeSize);
             return EnableUTurnLimitsForSinkTerminal && nodeRectangle.Contains(sourceStub);
         }
 
         private bool IsSinkInsideSourceNode(Point sourceStub, Point sinkStub)
         {
-            var nodePosition = new Point(sourceStub.X - LeftUTurnLengthSource, sourceStub.Y - UpUTurnLengthSource);
-            var nodeSize = new Size(LeftUTurnLengthSource + RightUTurnLengthSource, UpUTurnLengthSource + DownUTurnLengthSource);
+            var nodePosition = new Point(sourceStub.X - _leftUTurnLengthSource, sourceStub.Y - _upUTurnLengthSource);
+            var nodeSize = new Size(_leftUTurnLengthSource + _rightUTurnLengthSource, _upUTurnLengthSource + _downUTurnLengthSource);
             Rect nodeRectangle = new Rect(nodePosition, nodeSize);
             return EnableUTurnLimitsForSourceTerminal && nodeRectangle.Contains(sinkStub);
         }
@@ -182,32 +190,32 @@ namespace DiiagramrAPI.Editor
                 if (wire.WireModel.SourceTerminal != null && EnableUTurnLimitsForSourceTerminal)
                 {
                     var UTurnLimits = CalculateUTurnLimitsForTerminal(wire.WireModel.SourceTerminal);
-                    DownUTurnLengthSource = UTurnLimits.DownWireMinimumLength;
-                    LeftUTurnLengthSource = UTurnLimits.LeftWireMinimumLength;
-                    RightUTurnLengthSource = UTurnLimits.RightWireMinimumLength;
-                    UpUTurnLengthSource = UTurnLimits.UpWireMinimumLength;
+                    _downUTurnLengthSource = UTurnLimits.DownWireMinimumLength;
+                    _leftUTurnLengthSource = UTurnLimits.LeftWireMinimumLength;
+                    _rightUTurnLengthSource = UTurnLimits.RightWireMinimumLength;
+                    _upUTurnLengthSource = UTurnLimits.UpWireMinimumLength;
                 }
                 else
                 {
-                    DownUTurnLengthSource = 0;
-                    LeftUTurnLengthSource = 0;
-                    RightUTurnLengthSource = 0;
-                    UpUTurnLengthSource = 0;
+                    _downUTurnLengthSource = 0;
+                    _leftUTurnLengthSource = 0;
+                    _rightUTurnLengthSource = 0;
+                    _upUTurnLengthSource = 0;
                 }
                 if (wire.WireModel.SinkTerminal != null && EnableUTurnLimitsForSinkTerminal)
                 {
                     var UTurnLimits = CalculateUTurnLimitsForTerminal(wire.WireModel.SinkTerminal);
-                    DownUTurnLengthSink = UTurnLimits.DownWireMinimumLength;
-                    LeftUTurnLengthSink = UTurnLimits.LeftWireMinimumLength;
-                    RightUTurnLengthSink = UTurnLimits.RightWireMinimumLength;
-                    UpUTurnLengthSink = UTurnLimits.UpWireMinimumLength;
+                    _downUTurnLengthSink = UTurnLimits.DownWireMinimumLength;
+                    _leftUTurnLengthSink = UTurnLimits.LeftWireMinimumLength;
+                    _rightUTurnLengthSink = UTurnLimits.RightWireMinimumLength;
+                    _upUTurnLengthSink = UTurnLimits.UpWireMinimumLength;
                 }
                 else
                 {
-                    DownUTurnLengthSink = 0;
-                    LeftUTurnLengthSink = 0;
-                    RightUTurnLengthSink = 0;
-                    UpUTurnLengthSink = 0;
+                    _downUTurnLengthSink = 0;
+                    _leftUTurnLengthSink = 0;
+                    _rightUTurnLengthSink = 0;
+                    _upUTurnLengthSink = 0;
                 }
             }
         }
@@ -227,13 +235,13 @@ namespace DiiagramrAPI.Editor
                 var goingEast = start.X < end.X;
                 if (goingEast)
                 {
-                    var length = wireBackwards ? RightUTurnLengthSource : RightUTurnLengthSink;
+                    var length = wireBackwards ? _rightUTurnLengthSource : _rightUTurnLengthSink;
                     newPoint = new Point(start.X + length, start.Y);
                     newBannedDirection = Direction.West;
                 }
                 else
                 {
-                    var length = wireBackwards ? LeftUTurnLengthSource : LeftUTurnLengthSink;
+                    var length = wireBackwards ? _leftUTurnLengthSource : _leftUTurnLengthSink;
                     newPoint = new Point(start.X - length, start.Y);
                     newBannedDirection = Direction.East;
                 }
@@ -243,13 +251,13 @@ namespace DiiagramrAPI.Editor
                 var goingSouth = start.Y < end.Y;
                 if (goingSouth)
                 {
-                    var length = wireBackwards ? DownUTurnLengthSource : DownUTurnLengthSink;
+                    var length = wireBackwards ? _downUTurnLengthSource : _downUTurnLengthSink;
                     newPoint = new Point(start.X, start.Y + length);
                     newBannedDirection = Direction.North;
                 }
                 else
                 {
-                    var length = wireBackwards ? UpUTurnLengthSource : UpUTurnLengthSink;
+                    var length = wireBackwards ? _upUTurnLengthSource : _upUTurnLengthSink;
                     newPoint = new Point(start.X, start.Y - length);
                     newBannedDirection = Direction.South;
                 }
@@ -265,41 +273,19 @@ namespace DiiagramrAPI.Editor
             return WireTwoPoints(newPoint, end, bannedStart, bannedEndDirection, pointsSoFar, wireBackwards);
         }
 
-        private List<Point> WireToEndRespectingEastWestStartPoint(Point start, Point end, List<Point> pointsSoFar, Direction bannedEndDirection, bool wireBackwards, bool isEndAboveStart)
+        private List<Point> WireToEndRespectingEastWestStartPoint(Point start, Point end, List<Point> pointsSoFar, Direction bannedEndDirection, bool wireBackwards, bool isEndAboveStart) => bannedEndDirection switch
         {
-            switch (bannedEndDirection)
-            {
-                case Direction.North:
-                    return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, !isEndAboveStart);
+            Direction.North => WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, !isEndAboveStart),
+            Direction.South => WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndAboveStart),
+            _ => WireHorizontiallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards),
+        };
 
-                case Direction.South:
-                    return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndAboveStart);
-
-                case Direction.East:
-                case Direction.West:
-                case Direction.None:
-                default:
-                    return WireHorizontiallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards);
-            }
-        }
-
-        private List<Point> WireToEndRespectingNorthSouthStartPoint(Point start, Point end, List<Point> pointsSoFar, Direction bannedEndDirection, bool wireBackwards, bool isEndLeftOfStart)
+        private List<Point> WireToEndRespectingNorthSouthStartPoint(Point start, Point end, List<Point> pointsSoFar, Direction bannedEndDirection, bool wireBackwards, bool isEndLeftOfStart) => bannedEndDirection switch
         {
-            switch (bannedEndDirection)
-            {
-                case Direction.East:
-                    return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, !isEndLeftOfStart);
-
-                case Direction.West:
-                    return WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndLeftOfStart);
-
-                case Direction.North:
-                case Direction.South:
-                case Direction.None:
-                default:
-                    return WireVerticallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards);
-            }
-        }
+            Direction.East => WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, !isEndLeftOfStart),
+            Direction.West => WireTowardsEnd(start, end, pointsSoFar, bannedEndDirection, wireBackwards, isEndLeftOfStart),
+            _ => WireVerticallyTowardsEnd(start, end, bannedEndDirection, pointsSoFar, wireBackwards),
+        };
 
         private List<Point> WireTowardsEnd(Point start, Point end, List<Point> pointsSoFar, Direction bannedEndDirection, bool wireBackwards, bool wireVertically)
         {
