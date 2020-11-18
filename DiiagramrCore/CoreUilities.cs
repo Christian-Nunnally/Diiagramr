@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
 
 namespace DiiagramrCore
 {
@@ -65,6 +67,17 @@ namespace DiiagramrCore
                 new[] { typeof(IEnumerable) });
             var generic = method.MakeGenericMethod(targetType);
             return (IList)generic.Invoke(null, new[] { items });
+        }
+
+        /// <summary>
+        /// Converts an enumerable to a list.
+        /// </summary>
+        /// <typeparam name="T">The type to convert to.</typeparam>
+        /// <param name="items">The list to convert.</param>
+        /// <returns>The converted list.</returns>
+        public static List<T> ConvertToList<T>(this IEnumerable items)
+        {
+            return items.Cast<T>().ToList();
         }
 
         /// <summary>
