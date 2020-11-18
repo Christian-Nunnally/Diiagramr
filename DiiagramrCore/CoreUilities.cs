@@ -1,14 +1,21 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 
 namespace DiiagramrCore
 {
+    /// <summary>
+    /// A collection of super reusable functions used across multiple projects.
+    /// </summary>
     public static class CoreUilities
     {
+        /// <summary>
+        /// Rounds the given value to the nearest given multiple.
+        /// </summary>
+        /// <param name="value">The value to round.</param>
+        /// <param name="multiple">The multiple to round to.</param>
+        /// <returns><paramref name="value"/> rounded to the nearest <paramref name="multiple"/>.</returns>
         public static double RoundToNearest(double value, double multiple)
         {
             return value > 0 ?
@@ -16,6 +23,12 @@ namespace DiiagramrCore
                 Math.Round(Math.Abs(value) / multiple) * -multiple;
         }
 
+        /// <summary>
+        /// Adjusts the brightness of the given color by the given precent.
+        /// </summary>
+        /// <param name="color">The color to adjust.</param>
+        /// <param name="correctionFactor">The amount to adjust the brightness by.</param>
+        /// <returns></returns>
         public static Color ChangeColorBrightness(Color color, float correctionFactor)
         {
             float red = color.R / 255.0f;
@@ -39,11 +52,12 @@ namespace DiiagramrCore
             return Color.FromArgb(color.A, (byte)(red * 255.0), (byte)(green * 255.0), (byte)(blue * 255.0));
         }
 
-        public static List<T> ConvertToList<T>(this IEnumerable items)
-        {
-            return items.Cast<T>().ToList();
-        }
-
+        /// <summary>
+        /// Converts an <see cref="IEnumerable"/> to a <see cref="List"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the enumerable.</typeparam>
+        /// <param name="items">The enumerable.</param>
+        /// <returns>The enumerable as a list.</returns>
         public static IList ConvertToList(this IEnumerable items, Type targetType)
         {
             var method = typeof(CoreUilities).GetMethod(

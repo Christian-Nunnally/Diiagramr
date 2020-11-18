@@ -19,7 +19,6 @@ namespace DiiagramrModel
         public Func<object> OnDataGet = () => null;
         private string _typeName;
         private NodeModel _parentNode;
-        private Type type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TerminalModel"/> class.
@@ -89,11 +88,7 @@ namespace DiiagramrModel
         /// Gets or sets the data type of the terminal.
         /// </summary>
         [IgnoreDataMember]
-        public Type Type
-        {
-            get => type;
-            set => type = value;
-        }
+        public Type Type { get; set; }
 
         /// <summary>
         /// Gets the data type of the data currently on the terminal.
@@ -166,24 +161,34 @@ namespace DiiagramrModel
             wire.SourceTerminal = null;
         }
 
+        /// <summary>
+        /// Checks whether a type can be wired to this terminal.
+        /// </summary>
+        /// <param name="type">The type to check.</param>
+        /// <returns>True if an object of type <paramref name="type"/> can be wired to this terminal.</returns>
         public virtual bool CanWireToType(Type type)
         {
             return CanWireDataToType(Data, type);
         }
 
+        /// <summary>
+        /// Checks whether a particular value can be wired to this terminal.
+        /// </summary>
+        /// <param name="data">The value to check.</param>
+        /// <returns>True if an object of type data can be wired to this terminal.</returns>
         public virtual bool CanWireFromData(object data)
         {
             return CanWireDataToType(data, Data?.GetType() ?? Type);
         }
 
+        /// <summary>
+        /// Sets the data on this terminal.
+        /// </summary>
+        /// <param name="data">The data to set on this terminal.</param>
+        /// <param name="wire">The wire that caused the data to change.</param>
         public virtual void SetDataFromWire(object data, WireModel wire)
         {
             Data = data;
-        }
-
-        public void UpdateData()
-        {
-            OnDataSet(OnDataGet());
         }
 
         protected void InvokeDataChanged(object data)

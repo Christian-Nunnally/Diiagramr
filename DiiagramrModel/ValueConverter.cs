@@ -21,8 +21,16 @@ namespace DiiagramrModel
                 || !IsKnownFailedConversion(fromType, toType);
         }
 
+        /// <summary>
+        /// Attempts to coersed the given value to the given type.
+        /// </summary>
+        /// <param name="value">The object to coersed.</param>
+        /// <param name="toType">The type to coersed to.</param>
+        /// <param name="coersedValue">The resulting value.</param>
+        /// <returns>True if the object was able to be coersed.</returns>
         public static bool TryCoerseValue(object value, Type toType, out object coersedValue)
         {
+            // TODO: This whole process needs some work.
             var fromType = value?.GetType();
             if (toType == null)
             {

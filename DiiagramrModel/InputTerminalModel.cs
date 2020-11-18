@@ -3,6 +3,9 @@
     using System;
     using System.Runtime.Serialization;
 
+    /// <summary>
+    /// A model object that represents an input terminal that receives data from a wire.
+    /// </summary>
     [DataContract(IsReference = true)]
     [KnownType(typeof(InputTerminalModel))]
     public class InputTerminalModel : TerminalModel

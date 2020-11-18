@@ -23,6 +23,7 @@
             SerializeableTypes.Add(GetType());
         }
 
+        /// <inheritdoc/>
         [DoNotCheckEquality]
         public override object Data
         {

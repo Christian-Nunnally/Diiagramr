@@ -26,9 +26,15 @@ namespace DiiagramrModel
             PropertyChanged += PropertyChangedHandler;
         }
 
+        /// <summary>
+        /// Gets or sets whether this wire is considered broken.
+        /// </summary>
         [DataMember]
         public bool IsBroken { get; set; }
 
+        /// <summary>
+        /// Disables the ability for this wire to propagate data.
+        /// </summary>
         public bool DisableDataPropagation { get; set; }
 
         /// <summary>
@@ -75,20 +81,16 @@ namespace DiiagramrModel
         [DataMember]
         public virtual double Y2 { get; set; }
 
+        /// <summary>
+        /// Transfers the data on the source terminal to the sink terminal.
+        /// </summary>
         public void PropagateData()
         {
             if (IsBroken || SinkTerminal == null || DisableDataPropagation)
             {
                 return;
             }
-            // TODO: needed? move down 1 line?
-            // NotifyPropertyChanged("Data");
             SinkTerminal.SetDataFromWire(GetCoersedSourceTerminalDataOrBreakWire(), this);
-        }
-
-        [OnDeserialized]
-        public void OnDeserialized(StreamingContext context)
-        {
         }
 
         private object GetCoersedSourceTerminalDataOrBreakWire()
