@@ -1,4 +1,4 @@
-﻿using CSCore.DSP;
+﻿using VisualDrop.AudioProcessing;
 
 namespace VisualDrop
 {

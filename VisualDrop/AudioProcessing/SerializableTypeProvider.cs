@@ -7,6 +7,10 @@ namespace VisualDrop.AudioProcessing
 {
     public class SerializableTypeProvider : ISerializableTypeProvider
     {
-        public IEnumerable<Type> SerializableTypes => new List<Type> { typeof(FftSize), typeof(WindowFunctionType) };
+        public IEnumerable<Type> SerializableTypes => new List<Type>
+        {
+            typeof(FftSize),
+            typeof(WindowFunctionType)
+        };
     }
 }

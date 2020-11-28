@@ -16,8 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\repos\CScore\cscore\CSCore.Windows\CSCore.Windows.csproj" />
-    <ProjectReference Include="..\..\repos\CScore\cscore\CSCore\CSCore.csproj" />
     <ProjectReference Include="..\DiiagramrCore\DiiagramrCore.csproj" />
     <ProjectReference Include="..\DiiagramrModel\DiiagramrModel.csproj" />
   </ItemGroup>
