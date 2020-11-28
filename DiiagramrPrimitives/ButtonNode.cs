@@ -41,7 +41,7 @@ namespace DiiagramrPrimitives
         /// </summary>
         public void ButtonMouseDown()
         {
-            IsPressed = !ToggleMode || !IsPressed;
+            IsPressed = !IsPressed;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace DiiagramrPrimitives
         /// </summary>
         public void ButtonMouseUp()
         {
-            IsPressed = !ToggleMode || IsPressed;
+            if (!ToggleMode) IsPressed = !IsPressed;
         }
     }
 }

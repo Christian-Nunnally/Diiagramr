@@ -10,8 +10,10 @@ namespace DiiagramrFadeCandy.Nodes
     public class GraphicsDeviceContextNode : Node
     {
         private readonly GraphicsDeviceContext _deviceContext;
-        private int _width = 8;
-        private int _height = 8;
+        private int _width = 64;
+        private int _height = 64;
+        private bool _backBufferSet = false;
+        private bool _renderingScene = false;
 
         public GraphicsDeviceContextNode()
         {
@@ -19,6 +21,7 @@ namespace DiiagramrFadeCandy.Nodes
             Width = 90;
             Height = 90;
             Name = "Graphics Device Context";
+            ResizeEnabled = true;
             D3DImage = new D3DImage(96, 96);
             D3DImage.IsFrontBufferAvailableChanged += OnIsFrontBufferAvailableChanged;
 
@@ -51,9 +54,10 @@ namespace DiiagramrFadeCandy.Nodes
 
         private void BeginRenderingScene()
         {
-            if (D3DImage.IsFrontBufferAvailable)
+            if (D3DImage.IsFrontBufferAvailable && !_renderingScene)
             {
                 CompositionTarget.Rendering += OnRendering;
+                _renderingScene = true;
             }
         }
 
@@ -73,6 +77,7 @@ namespace DiiagramrFadeCandy.Nodes
         {
             CompositionTarget.Rendering -= OnRendering;
             _deviceContext.Uninitialize();
+            _renderingScene = false;
         }
 
         private void OnRendering(object sender, EventArgs e)
@@ -85,10 +90,16 @@ namespace DiiagramrFadeCandy.Nodes
             if (D3DImage.IsFrontBufferAvailable && _deviceContext.RenderTarget != null)
             {
                 _deviceContext.Render();
-                D3DImage.Lock();
-                D3DImage.SetBackBuffer(D3DResourceType.IDirect3DSurface9, _deviceContext.RenderTarget.NativePointer);
-                D3DImage.AddDirtyRect(new Int32Rect(0, 0, D3DImage.PixelWidth, D3DImage.PixelHeight));
-                D3DImage.Unlock();
+                if (D3DImage.TryLock(new Duration(TimeSpan.FromMilliseconds(250))))
+                {
+                    if (!_backBufferSet)
+                    {
+                        D3DImage.SetBackBuffer(D3DResourceType.IDirect3DSurface9, _deviceContext.RenderTarget.NativePointer);
+                        _backBufferSet = true;
+                    }
+                    D3DImage.AddDirtyRect(new Int32Rect(0, 0, D3DImage.PixelWidth, D3DImage.PixelHeight));
+                    D3DImage.Unlock();
+                }
             }
         }
     }

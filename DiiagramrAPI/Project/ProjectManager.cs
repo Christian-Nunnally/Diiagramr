@@ -1,8 +1,10 @@
 ﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor.Diagrams;
 using DiiagramrAPI.Service.Editor;
 using DiiagramrAPI.Service.Plugins;
+using DiiagramrCore;
 using DiiagramrModel;
 using Stylet;
 using System;
@@ -72,10 +74,16 @@ namespace DiiagramrAPI.Project
                 return;
             }
 
-            void newContinuation() { Project = null; continuation(); }
-            var saveBeforeCloseMessageBox = new Application.Dialogs.MessageBox.Builder("Close Project", "Save before closing?")
-                .WithChoice("Yes", () => _projectFileService.SaveProject(Project, false, newContinuation))
-                .WithChoice("No", () => newContinuation())
+            void closeProjectAndContinue()
+            {
+                Diagrams.ForEach(d => d.Dispose());
+                Diagrams = null;
+                Project = null;
+                continuation();
+            }
+            var saveBeforeCloseMessageBox = new MessageBox.Builder("Close Project", "Save before closing?")
+                .WithChoice("Yes", () => _projectFileService.SaveProject(Project, false, closeProjectAndContinue))
+                .WithChoice("No", () => closeProjectAndContinue())
                 .WithChoice("Cancel", () => { })
                 .Build();
             _dialogHost.OpenDialog(saveBeforeCloseMessageBox);

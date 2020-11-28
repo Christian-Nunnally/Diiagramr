@@ -18,13 +18,6 @@ namespace DiiagramrFadeCandy
         public GraphicEffect Effect { get; set; } = new KaleidoscopeEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
         [InputTerminal(Direction.North)]
-        public float Rotation
-        {
-            get => KaleidoscopeEffect.Rotation;
-            set => KaleidoscopeEffect.Rotation = value;
-        }
-
-        [InputTerminal(Direction.North)]
         public int Sides
         {
             get => KaleidoscopeEffect.NumberOfSides;

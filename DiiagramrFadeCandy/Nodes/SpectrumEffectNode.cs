@@ -7,16 +7,18 @@ namespace DiiagramrFadeCandy
     {
         public SpectrumEffectNode()
         {
-            Width = 30;
-            Height = 30;
+            Width = 60;
+            Height = 60;
             Name = "Array Visualizer Effect";
         }
 
         public SpectrumEffect SpectrumEffect => Effect as SpectrumEffect;
 
+        [NodeSetting]
         [OutputTerminal(Direction.South)]
         public GraphicEffect Effect { get; set; } = new SpectrumEffect { Color = new Color(255f, 255f, 255f, 255f) };
 
+        [NodeSetting]
         [InputTerminal(Direction.West)]
         public float MaxValueDecayRate
         {
@@ -24,6 +26,7 @@ namespace DiiagramrFadeCandy
             set => SpectrumEffect.MaxValueDecayRate = value;
         }
 
+        [NodeSetting]
         [InputTerminal(Direction.West)]
         public Color Color
         {
@@ -31,6 +34,7 @@ namespace DiiagramrFadeCandy
             set => SpectrumEffect.Color = value;
         }
 
+        [NodeSetting]
         [InputTerminal(Direction.North)]
         public float[] Data
         {
@@ -38,6 +42,7 @@ namespace DiiagramrFadeCandy
             set => SpectrumEffect.SpectrumData = value;
         }
 
+        [NodeSetting]
         [InputTerminal(Direction.East)]
         public float BarWidthScale
         {
@@ -45,6 +50,7 @@ namespace DiiagramrFadeCandy
             set => SpectrumEffect.BarWidthScale = value;
         }
 
+        [NodeSetting]
         [InputTerminal(Direction.East)]
         public float ScaleExponent
         {
@@ -52,6 +58,23 @@ namespace DiiagramrFadeCandy
             set => SpectrumEffect.ScaleExponent = value;
         }
 
+        [NodeSetting]
+        [InputTerminal(Direction.East)]
+        public float BarHeight
+        {
+            get => SpectrumEffect.BarHeight;
+            set => SpectrumEffect.BarHeight = value;
+        }
+
+        [NodeSetting]
+        [InputTerminal(Direction.West)]
+        public int IterationGrowthRate
+        {
+            get => SpectrumEffect.IterationGrowthRate;
+            set => SpectrumEffect.IterationGrowthRate = value;
+        }
+
+        [NodeSetting]
         [InputTerminal(Direction.North)]
         public bool SpectrographMode
         {

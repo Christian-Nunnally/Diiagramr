@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Editor.Diagrams
     /// <summary>
     /// A viewmodel that allows a user to edit a <see cref="Diagram"/>.
     /// </summary>
-    public class Diagram : ViewModel<DiagramModel>, IMouseEnterLeaveReaction
+    public class Diagram : ViewModel<DiagramModel>, IMouseEnterLeaveReaction, IDisposable
     {
         public const double DiagramBorderThickness = 2.0;
         public const double GridSnapInterval = 30.0;
@@ -451,6 +451,11 @@ namespace DiiagramrAPI.Editor.Diagrams
         public void MouseLeft()
         {
             // TODO: Remove this and stop implementing the interface.
+        }
+
+        public void Dispose()
+        {
+            Nodes.ForEach(n => n.Dispose());
         }
 
         private void AddNodeViewModel(Node viewModel)

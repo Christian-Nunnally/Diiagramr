@@ -75,6 +75,10 @@
         /// <inheritdoc/>
         public override void SetDataFromWire(object data, WireModel wire)
         {
+            if (WireToIndexMap == null)
+            {
+                return;
+            }
             if (WireToIndexMap.TryGetValue(wire, out var index))
             {
                 DataList[index] = data;

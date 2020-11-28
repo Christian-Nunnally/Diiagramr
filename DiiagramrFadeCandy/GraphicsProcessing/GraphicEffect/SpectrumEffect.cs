@@ -12,6 +12,7 @@ namespace DiiagramrFadeCandy
         private float _maxValue;
 
         private int _iteration = 0;
+        private int _realIteration = 0;
 
         [DataMember]
         public float[] SpectrumData { get; set; }
@@ -23,10 +24,16 @@ namespace DiiagramrFadeCandy
         public float BarWidthScale { get; set; } = 1f;
 
         [DataMember]
+        public float BarHeight { get; set; } = 1f;
+
+        [DataMember]
         public bool SpectrographMode { get; set; } = true;
 
         [DataMember]
         public float ScaleExponent { get; set; } = 5f;
+
+        [DataMember]
+        public int IterationGrowthRate { get; set; } = 1;
 
         [DataMember]
         public float MaxValueDecayRate { get; set; } = .99999f;
@@ -46,7 +53,7 @@ namespace DiiagramrFadeCandy
 
             if (SpectrographMode)
             {
-                var rowHeight = 1;
+                var rowHeight = BarHeight;
                 var maxRows = (int)Math.Floor(targetHeight / rowHeight);
                 var black = new RawColor4(0, 0, 0, 1);
                 var blackBrush = new SolidColorBrush(target, black);
@@ -99,7 +106,10 @@ namespace DiiagramrFadeCandy
                 //    target.FillRectangle(rectangle2, brush2);
                 //}
 
-                _iteration = (_iteration + 1) % maxRows;
+                if (IterationGrowthRate != 0 && _realIteration++ % IterationGrowthRate == 0)
+                {
+                    _iteration = (_iteration + 1) % maxRows;
+                }
             }
             else
             {

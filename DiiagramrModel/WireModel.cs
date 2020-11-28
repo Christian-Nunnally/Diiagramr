@@ -101,7 +101,7 @@ namespace DiiagramrModel
             {
                 return null;
             }
-            if (ValueConverter.TryCoerseValue(SourceTerminal?.Data, SinkTerminal.Type, out var coersedData))
+            if (ValueConverter.TryCoerseValue(SourceTerminal?.Data, guesedType, out var coersedData))
             {
                 return coersedData;
             }

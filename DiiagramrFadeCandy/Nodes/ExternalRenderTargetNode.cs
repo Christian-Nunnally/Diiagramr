@@ -38,8 +38,8 @@ namespace DiiagramrFadeCandy
 
         public ExternalRenderTargetNode()
         {
-            base.Width = 90;
-            base.Height = 90;
+            base.Width = 60;
+            base.Height = 60;
             Name = "External Render Target";
             ResizeEnabled = true;
 
@@ -48,6 +48,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.North, isCoalescing: true)]
+        [Help("The list of effects to render on the surface.")]
         [NodeSetting]
         public List<GraphicEffect> Effects { get; set; } = new List<GraphicEffect>();
 
@@ -95,12 +96,15 @@ namespace DiiagramrFadeCandy
         public int WicImageHeight => WicBitmap.Size.Height;
 
         [OutputTerminal(Direction.South)]
+        [Help("A reference to the rendered image, to be sent out for display on another device, like an Arduino, FadeCandy, or for additional processing steps.")]
         public RenderedImage RenderedImage { get; set; }
 
         [InputTerminal(Direction.West)]
-        public bool ClearBeforeFrame { get; set; }
+        [Help("Sets whether or not to clear the surface with black before each frame is drawn.")]
+        public bool ClearBeforeFrame { get; set; } = true;
 
         [InputTerminal(Direction.West)]
+        [Help("The width of the render surface, in pixels.")]
         public int ImageWidth
         {
             get => BitmapWidth;
@@ -114,6 +118,7 @@ namespace DiiagramrFadeCandy
         }
 
         [InputTerminal(Direction.West)]
+        [Help("The height of the render surface, in pixels.")]
         public int ImageHeight
         {
             get => BitmapHeight;

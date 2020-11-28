@@ -1,4 +1,5 @@
-﻿using DiiagramrFadeCandy.Nodes;
+﻿using DiiagramrAPI.Editor.Interactors;
+using DiiagramrFadeCandy.Nodes;
 using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 using System;
@@ -9,6 +10,7 @@ using System.Runtime.Serialization;
 namespace DiiagramrFadeCandy
 {
     [Serializable]
+    [HideFromNodeSelector]
     [DataContract(IsReference = true)]
     public class AnimatedShapeEffect : GraphicEffect
     {

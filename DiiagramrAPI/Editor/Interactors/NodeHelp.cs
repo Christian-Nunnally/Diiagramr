@@ -50,11 +50,13 @@ namespace DiiagramrAPI.Editor.Interactors
         /// <inheritdoc/>
         public override void StartInteraction(DiagramInteractionEventArguments interaction)
         {
-            var node = (Node)interaction.ViewModelUnderMouse;
-            var nodeCopy = _nodeProvider.CreateNodeFromName(node.GetType().FullName);
-            node.SetAdorner(null);
-            _helpDialog = new HelpDialog(nodeCopy);
-            _dialogHost.OpenDialog(_helpDialog);
+            if (interaction.ViewModelUnderMouse is Node node)
+            {
+                var nodeCopy = _nodeProvider.CreateNodeFromName(node.GetType().FullName);
+                node.SetAdorner(null);
+                _helpDialog = new HelpDialog(nodeCopy);
+                _dialogHost.OpenDialog(_helpDialog);
+            }
         }
 
         /// <inheritdoc/>

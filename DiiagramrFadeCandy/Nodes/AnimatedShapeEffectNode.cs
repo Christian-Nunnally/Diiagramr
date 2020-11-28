@@ -1,8 +1,10 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
+using DiiagramrAPI.Editor.Interactors;
 using DiiagramrModel;
 
 namespace DiiagramrFadeCandy
 {
+    [HideFromNodeSelector]
     public class AnimatedShapeEffectNode : Node
     {
         public AnimatedShapeEffectNode()

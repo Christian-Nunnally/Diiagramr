@@ -3,114 +3,76 @@ using DiiagramrModel;
 
 namespace DiiagramrFadeCandy
 {
+    [Help("Basic primitive shape effect.")]
     public class ShapeEffectNode : Node
     {
         public ShapeEffectNode()
         {
-            Width = 90;
-            Height = 90;
+            Width = 60;
+            Height = 60;
             Name = "Shape Effect";
             ShapeGraphic.Visible = true;
-            ShapeGraphic.X = 0.5f;
-            ShapeGraphic.Y = 0.5f;
-            ShapeGraphic.Width = 1.0f;
-            ShapeGraphic.Height = 1.0f;
-            ShapeGraphic.Thickness = 1;
+            ShapeGraphic.Thickness = .1f;
             ShapeGraphic.Fill = false;
         }
 
         public ShapeEffect ShapeGraphic => Effect as ShapeEffect;
 
+        [NodeSetting]
         [OutputTerminal(Direction.South)]
+        [Help("Outputs a reference to the effect.")]
         public GraphicEffect Effect { get; set; } = new ShapeEffect();
 
+        [NodeSetting]
         [InputTerminal(Direction.North)]
+        [Help("Shows or hides the shape.")]
         public bool SetVisible
         {
             get => ShapeGraphic.Visible;
             set => ShapeGraphic.Visible = value;
         }
 
-        [InputTerminal(Direction.West)]
-        public float SetY
-        {
-            get => ShapeGraphic.Y;
-            set => ShapeGraphic.Y = value;
-        }
-
-        [InputTerminal(Direction.West)]
-        public float SetX
-        {
-            get => ShapeGraphic.X;
-            set => ShapeGraphic.X = value;
-        }
-
-        [InputTerminal(Direction.West)]
+        [NodeSetting]
+        [InputTerminal(Direction.North)]
+        [Help("Shows or hides the background of the shape.")]
         public bool SetFill
         {
             get => ShapeGraphic.Fill;
             set => ShapeGraphic.Fill = value;
         }
 
-        [InputTerminal(Direction.West)]
-        public float SetRotation
+        [NodeSetting]
+        [InputTerminal(Direction.East)]
+        [Help("Changes the radius of the corners on the shape.")]
+        public float CornerRadius
         {
-            get => ShapeGraphic.Rotation;
-            set => ShapeGraphic.Thickness = value;
+            get => ShapeGraphic.CornerRadius;
+            set => ShapeGraphic.CornerRadius = value;
         }
 
+        [NodeSetting]
         [InputTerminal(Direction.East)]
-        public float SetWidth
-        {
-            get => ShapeGraphic.Width;
-            set => ShapeGraphic.Width = value;
-        }
-
-        [InputTerminal(Direction.East)]
-        public float SetHeight
-        {
-            get => ShapeGraphic.Height;
-            set => ShapeGraphic.Height = value;
-        }
-
-        [InputTerminal(Direction.East)]
+        [Help("Changes the thickness of the shape border.")]
         public float SetThickness
         {
             get => ShapeGraphic.Thickness;
             set => ShapeGraphic.Thickness = value;
         }
 
-        [InputTerminal(Direction.North)]
+        [NodeSetting]
+        [InputTerminal(Direction.West)]
+        [Help("Changes the color of the shape.")]
         public Color SetColor
         {
             get => new Color(ShapeGraphic.R, ShapeGraphic.G, ShapeGraphic.B, ShapeGraphic.A);
             set
             {
-                if (value == null)
-                {
-                    return;
-                }
-
+                if (value == null) return;
                 ShapeGraphic.R = value.R;
                 ShapeGraphic.G = value.G;
                 ShapeGraphic.B = value.B;
                 ShapeGraphic.A = value.A;
             }
-        }
-
-        public void PickRectangle()
-        {
-            ShapeGraphic.Mode = Shape.Rectangle;
-        }
-
-        public void PickRoundedRectangle()
-        {
-            ShapeGraphic.Mode = Shape.RoundedRectangle;
-        }
-
-        public void PickEllipse()
-        {
-            ShapeGraphic.Mode = Shape.Ellipse;
         }
     }
 }

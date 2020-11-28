@@ -15,7 +15,7 @@ using System.Windows.Media;
 namespace DiiagramrAPI.Application
 {
     /// <summary>
-    /// Command that when executed will open the visual drop themed start screen.
+    /// The visual drop themed start screen.
     /// </summary>
     public class VisualDropStartScreen : Screen, IShownInShellReaction
     {

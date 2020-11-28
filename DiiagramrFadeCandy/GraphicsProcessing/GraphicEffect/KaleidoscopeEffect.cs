@@ -1,7 +1,8 @@
 ﻿using SharpDX.Direct2D1;
 using SharpDX.Mathematics.Interop;
 using System;
-using System.Numerics;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Runtime.Serialization;
 
 namespace DiiagramrFadeCandy
@@ -18,8 +19,6 @@ namespace DiiagramrFadeCandy
 
         public GraphicEffect Effect { get; set; }
 
-        public float Rotation { get; set; } = 30;
-
         public int NumberOfSides { get; set; } = 8;
 
         public override void Draw(RenderTarget target)
@@ -28,14 +27,16 @@ namespace DiiagramrFadeCandy
             var targetHeight = target.Size.Height;
 
             var oldMatrix = target.Transform;
-            var centerVector = new Vector2(targetWidth / 2, targetHeight / 2);
+            var newMatrix = new Matrix(oldMatrix.M11, oldMatrix.M12, oldMatrix.M21, oldMatrix.M22, oldMatrix.M31, oldMatrix.M32);
+
+            var centerPoint = new PointF(targetWidth / 2, targetHeight / 2);
+            var degrees = 360f / NumberOfSides;
 
             for (int i = 0; i < NumberOfSides; i++)
             {
-                var radians = (Rotation + (360 / NumberOfSides * i)) * ((float)Math.PI / 180f);
-                var matrix = Matrix3x2.CreateRotation(radians, centerVector);
-                target.Transform = new RawMatrix3x2(matrix.M11, matrix.M12, matrix.M21, matrix.M22, matrix.M31, matrix.M32);
-
+                newMatrix.RotateAt(degrees, centerPoint);
+                var newMatrixElements = newMatrix.Elements;
+                target.Transform = new RawMatrix3x2(newMatrixElements[0], newMatrixElements[1], newMatrixElements[2], newMatrixElements[3], newMatrixElements[4], newMatrixElements[5]);
                 Effect?.Draw(target);
             }
 

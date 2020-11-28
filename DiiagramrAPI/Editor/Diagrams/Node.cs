@@ -16,7 +16,7 @@ namespace DiiagramrAPI.Editor.Diagrams
     /// <summary>
     /// A node on the diagram.
     /// </summary>
-    public abstract class Node : ViewModel<NodeModel>, IMouseEnterLeaveReaction
+    public abstract class Node : ViewModel<NodeModel>, IMouseEnterLeaveReaction, IDisposable
     {
         private readonly IDictionary<string, PropertyInfo> _pluginNodeSettingCache = new Dictionary<string, PropertyInfo>();
         private NodeServiceProvider _nodeServiceProvider;
@@ -93,7 +93,6 @@ namespace DiiagramrAPI.Editor.Diagrams
         /// <summary>
         /// Get or sets the nodes wdith.
         /// </summary>
-        [NodeSetting]
         public virtual double Width
         {
             get => Model?.Width ?? MinimumWidth;
@@ -107,7 +106,6 @@ namespace DiiagramrAPI.Editor.Diagrams
         /// <summary>
         /// Get or sets the nodes height.
         /// </summary>
-        [NodeSetting]
         public virtual double Height
         {
             get => Model?.Height ?? MinimumHeight;
@@ -171,8 +169,8 @@ namespace DiiagramrAPI.Editor.Diagrams
                 Model.Name = GetType().FullName;
                 InitializePluginNodeSettings();
                 new NodeTerminalManager(this);
-                Model.Width = MinimumWidth;
-                Model.Height = MinimumHeight;
+                Model.Width = Model.Width == 0 ? MinimumWidth : Model.Width;
+                Model.Height = Model.Height == 0 ? MinimumHeight : Model.Height;
                 Model.PropertyChanged += ModelPropertyChanged;
             }
         }
@@ -210,6 +208,12 @@ namespace DiiagramrAPI.Editor.Diagrams
             UnhighlightTerminals();
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            DisposeExtraResources();
+        }
+
         /// <summary>
         /// Called when a service is changed, added, or removed to allow implementations of <see cref="Node"/> to react or use new services.
         /// </summary>
@@ -245,6 +249,13 @@ namespace DiiagramrAPI.Editor.Diagrams
                 var value = propertyInfo.GetValue(this);
                 Model?.SetVariable(propertyName, value);
             }
+        }
+
+        /// <summary>
+        /// Implementations of <see cref="Node"/> can override this method to clean up resources when the diagram is deleted or the application is closed.
+        /// </summary>
+        protected virtual void DisposeExtraResources()
+        {
         }
 
         private void InitializePluginNodeSettings()
