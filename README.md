@@ -1,24 +1,16 @@
 
-![alt text](https://christiannunnally.visualstudio.com/_apis/public/build/definitions/dc817913-1f75-417f-b386-e5f6fb3c347f/3/badge)
- 
-# Installation
-- Installation process
-1. Download setup.exe from: **https://diiagramr.blob.core.windows.net/diiagramrinstall/setup.exe**.
-2. run setup.exe to run click once installer.
-3. Diiagramr should be installed on your machine!
+# Diiagramr/Visual Drop
+## Introduction 
+Diiagramr is a basic diagram editor that allows you to create a diagram, add nodes to it, and connect nodes together using wires. Wires will transmit data between nodes. 
 
-# Introduction 
-Diiagramr is an automation type Visual Programming Language (VPL) where wires transmit data changes between nodes. Originally designed for automating real time data processing in a highly configurable way to make experimentation easy, and to provide nodes with rich visual space to interact directly with the user.
+Visual Drop is the name I made up for the combination of Diiagramr and a few node libraries that together allow anyone to play with sound responsive graphic design. The libraries provide nodes that interface with the sound card, graphics card, and serial (USB), leaving exactly how all of these components get connected together up to the user.
+
+tl;dr: Math is hard, music and lights are cool. This lets you do music and lights experimentially.
+
+# Installation
+- I'm currently not hosting a built version of this app, so you'll have to clone the repo and build the souce with Visual Studio if you want to mess around with it.
 
 # Getting Started
-
-- Downloading Libraries
-1. Run Diiagramr.
-2. Click on 'Tools > Libraries'.
-3. Wait for repository to be downloaded.
-4. Select a library on the left and click install to download and install it.
-5. Click outside the Library Manager to close it.
-
 - Making Your First Diagram
 1. Run Diiagramr.
 2. Click on 'New' to create a new project.
@@ -31,12 +23,12 @@ Diiagramr is an automation type Visual Programming Language (VPL) where wires tr
 
 # Build and Test
 To build the project:
-1. Open Diiagramr.sln with Visual Studio 2017 Community Edition (https://www.visualstudio.com/downloads/).
+1. Open Diiagramr.sln with Visual Studio 2019 Community Edition (https://www.visualstudio.com/downloads/).
 2. Set 'Diiagramr' as the start up project.
 3. Build or start debugging.
 
 To test the project:
-1. Open Diiagramr.sln with Visual Studio 2017 Community Edition (https://www.visualstudio.com/downloads/).
+1. Open Diiagramr.sln with Visual Studio 2019 Community Edition (https://www.visualstudio.com/downloads/).
 2. Build 'DiiagramrIntegrationTest' and 'DiiagramrUnitTest'.
 3. Run all tests with your favorite test runner.
 
