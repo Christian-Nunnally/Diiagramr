@@ -1,13 +1,9 @@
 using DiiagramrAPI.Application.ShellCommands.FileCommands;
-using DiiagramrAPI.Project;
 using DiiagramrAPI.Service.Application;
-using DiiagramrAPI2.Application.Dialogs;
-using DiiagramrModel;
 using Stylet;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Media;
@@ -22,26 +18,20 @@ namespace DiiagramrAPI.Application
         private const int _dripEffectDelay = 30;
         private const int _frames = 100;
         private const int _quadrents = 1;
-        private const int _recentProjectMaxCharacterLength = 10;
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
-        private readonly IProjectFileService _projectFileService;
         private readonly OpenProjectCommand _openProjectCommand;
         private readonly NewProjectCommand _newProjectCommand;
 
         /// <summary>
         /// Creates a new instance of <see cref="VisualDropStartScreen"/>.
         /// </summary>
-        /// <param name="projectFileServiceFactory">A factory that provides an instance of <see cref="IProjectFileService"/> for opening projects.</param>
         /// <param name="openProjectCommandFactory">A factory that provides an instance of <see cref="OpenProjectCommand"/>.</param>
         /// <param name="newProjectCommandFactory">A factory that provides an instance of <see cref="NewProjectCommand"/>.</param>
         public VisualDropStartScreen(
-            Func<IProjectFileService> projectFileServiceFactory,
             Func<OpenProjectCommand> openProjectCommandFactory,
             Func<NewProjectCommand> newProjectCommandFactory)
         {
-            _projectFileService = projectFileServiceFactory();
-            _projectFileService.ProjectSaved += ProjectSavedHandler;
             _openProjectCommand = openProjectCommandFactory();
             _newProjectCommand = newProjectCommandFactory();
             PopulateTargetSpectrumValues();
@@ -52,17 +42,6 @@ namespace DiiagramrAPI.Application
             }
 
             GenerateAnimationFrames();
-
-            var possibleProjects = Directory.GetFiles(_projectFileService.ProjectDirectory).Select(LoadProjectOption.Create);
-            RecentProject1 = possibleProjects.Count() > 0 ? possibleProjects.ElementAt(0).Name : string.Empty;
-            RecentProject2 = possibleProjects.Count() > 1 ? possibleProjects.ElementAt(1).Name : string.Empty;
-            RecentProject3 = possibleProjects.Count() > 2 ? possibleProjects.ElementAt(2).Name : string.Empty;
-            RecentProject1 = string.IsNullOrWhiteSpace(RecentProject1) ? "Recent #1" : RecentProject1;
-            RecentProject2 = string.IsNullOrWhiteSpace(RecentProject2) ? "Recent #2" : RecentProject2;
-            RecentProject3 = string.IsNullOrWhiteSpace(RecentProject3) ? "Recent #3" : RecentProject3;
-            NotifyOfPropertyChange(nameof(RecentProject1DisplayString));
-            NotifyOfPropertyChange(nameof(RecentProject2DisplayString));
-            NotifyOfPropertyChange(nameof(RecentProject3DisplayString));
         }
 
         /// <summary>
@@ -76,42 +55,6 @@ namespace DiiagramrAPI.Application
         public bool OpenProjectLabelVisible => !OpenProjectButtonsVisible;
 
         /// <summary>
-        /// Gets the name of the most recent project.
-        /// </summary>
-        public string RecentProject1 { get; set; }
-
-        /// <summary>
-        /// Gets the name of the most recent project.
-        /// </summary>
-        public string RecentProject1DisplayString => RecentProject1.Length > _recentProjectMaxCharacterLength
-            ? RecentProject1.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject1;
-
-        /// <summary>
-        /// Gets the name of the second most recent project.
-        /// </summary>
-        public string RecentProject2 { get; set; }
-
-        /// <summary>
-        /// Gets the name of the second most recent project.
-        /// </summary>
-        public string RecentProject2DisplayString => RecentProject2.Length > _recentProjectMaxCharacterLength
-            ? RecentProject2.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject2;
-
-        /// <summary>
-        /// Gets the name of the third most recent project.
-        /// </summary>
-        public string RecentProject3 { get; set; }
-
-        /// <summary>
-        /// Gets the name of the third most recent project.
-        /// </summary>
-        public string RecentProject3DisplayString => RecentProject3.Length > _recentProjectMaxCharacterLength
-            ? RecentProject3.Substring(0, _recentProjectMaxCharacterLength).Trim() + "..."
-            : RecentProject3;
-
-        /// <summary>
         /// A list of values and colors for the drippy rainbow in the 'O' of the "Visual Drop' logo on the start screen.
         /// </summary>
         public ObservableCollection<Tuple<float, SolidColorBrush>> SpectrumLogoValues { get; } = new ObservableCollection<Tuple<float, SolidColorBrush>>();
@@ -120,6 +63,14 @@ namespace DiiagramrAPI.Application
         /// Occurs when the browse projects button is pressed.
         /// </summary>
         public void BrowseButtonPressed()
+        {
+            _openProjectCommand.Execute();
+        }
+
+        /// <summary>
+        /// Occurs when the browse projects button is pressed.
+        /// </summary>
+        public void TemplateButtonPressed()
         {
             _openProjectCommand.Execute();
         }
@@ -148,51 +99,6 @@ namespace DiiagramrAPI.Application
             OpenProjectButtonsVisible = true;
         }
 
-        /// <summary>
-        /// Occurs when the most open recent project button is pressed.
-        /// </summary>
-        public void RecentProject1Pressed()
-        {
-            if (RecentProject1 == "Recent #1")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject1);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the most open second recent project button is pressed.
-        /// </summary>
-        public void RecentProject2Pressed()
-        {
-            if (RecentProject2 == "Recent #2")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject2);
-            }
-        }
-
-        /// <summary>
-        /// Occurs when the most open third recent project button is pressed.
-        /// </summary>
-        public void RecentProject3Pressed()
-        {
-            if (RecentProject3 == "Recent #3")
-            {
-                BrowseButtonPressed();
-            }
-            else
-            {
-                _openProjectCommand.Execute(_projectFileService.ProjectDirectory + "\\" + RecentProject3);
-            }
-        }
-
         /// <inheritdoc/>
         public void ShownInShell()
         {
@@ -205,11 +111,10 @@ namespace DiiagramrAPI.Application
             AnimateLogo();
         }
 
-        private void UpdateRecentProjects(string name)
+        private static float CalculateFrameAmplitude(int frameNumber, float targetAmplitute)
         {
-            RecentProject1 = RecentProject2;
-            RecentProject2 = RecentProject3;
-            RecentProject3 = name;
+            var frameRadians = _quadrents * (Math.PI / 2.0 / _frames) * frameNumber;
+            return (float)(targetAmplitute * Math.Sin(frameRadians));
         }
 
         private void AnimateLogo()
@@ -236,22 +141,6 @@ namespace DiiagramrAPI.Application
         private void GenerateAnimationFrames()
         {
             _logoAnimationFrames.Clear();
-            var tempAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
-            for (int frame = 0; frame < _frames; frame++)
-            {
-                var currentFrame = new List<Tuple<float, SolidColorBrush>>();
-                for (int j = 0; j < _targetSpectrumLogoValues.Count; j++)
-                {
-                    var targetAmplitute = _targetSpectrumLogoValues[j].Item1;
-                    var targetColor = _targetSpectrumLogoValues[j].Item2;
-                    var d = _quadrents * ((Math.PI / 2.0) / _frames) * frame;
-                    var frameAmplitutde = (float)(targetAmplitute * Math.Sin(d));
-
-                    currentFrame.Add(new Tuple<float, SolidColorBrush>(frameAmplitutde, targetColor));
-                }
-
-                tempAnimationFrames.Add(currentFrame);
-            }
 
             var random = new Random();
             var offsets = new List<int>();
@@ -260,24 +149,35 @@ namespace DiiagramrAPI.Application
                 offsets.Add(random.Next(_dripEffectDelay - 2));
             }
 
+            var basicAnimationFrames = GenerateBasicAnimationForLogoSpectrum();
             for (int frame = 0; frame < _frames + _dripEffectDelay; frame++)
             {
                 var currentFrame = new List<Tuple<float, SolidColorBrush>>();
                 for (int i = 0; i < _targetSpectrumLogoValues.Count; i++)
                 {
-                    var dripEffectIndex = frame > offsets[i]
-                        ? frame - offsets[i]
-                        : 0;
-                    dripEffectIndex = dripEffectIndex >= tempAnimationFrames.Count
-                        ? tempAnimationFrames.Count - 1
-                        : dripEffectIndex;
-                    var frameAplitute = tempAnimationFrames[dripEffectIndex][i].Item1;
-                    var frameColor = tempAnimationFrames[dripEffectIndex][i].Item2;
+                    var offsetFrameIndex = frame - offsets[i];
+                    offsetFrameIndex = Math.Min(basicAnimationFrames.Count - 1, Math.Max(0, offsetFrameIndex));
+                    var frameAplitute = basicAnimationFrames[offsetFrameIndex][i].Item1;
+                    var frameColor = basicAnimationFrames[offsetFrameIndex][i].Item2;
                     currentFrame.Add(new Tuple<float, SolidColorBrush>(frameAplitute, frameColor));
                 }
 
                 _logoAnimationFrames.Add(currentFrame);
             }
+        }
+
+        private List<List<Tuple<float, SolidColorBrush>>> GenerateBasicAnimationForLogoSpectrum()
+            => Enumerable.Range(0, _frames).Select(GenerateSingleFrameOfAnimationForLogoSpectrum).ToList();
+
+        private List<Tuple<float, SolidColorBrush>> GenerateSingleFrameOfAnimationForLogoSpectrum(int frameNumber)
+            => Enumerable.Range(0, _targetSpectrumLogoValues.Count).Select(i => GenerateSpectrumValueColorPairForFrame(frameNumber, i)).ToList();
+
+        private Tuple<float, SolidColorBrush> GenerateSpectrumValueColorPairForFrame(int frameNumber, int spectrumIndex)
+        {
+            var targetAmplitute = _targetSpectrumLogoValues[spectrumIndex].Item1;
+            var targetColor = _targetSpectrumLogoValues[spectrumIndex].Item2;
+            var frameAmplitutde = CalculateFrameAmplitude(frameNumber, targetAmplitute);
+            return new Tuple<float, SolidColorBrush>(frameAmplitutde, targetColor);
         }
 
         private void PopulateTargetSpectrumValues()
@@ -288,11 +188,6 @@ namespace DiiagramrAPI.Application
             _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(53 / 2, new SolidColorBrush(Color.FromRgb(166, 185, 151))));
             _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(38, new SolidColorBrush(Color.FromRgb(98, 147, 104))));
             _targetSpectrumLogoValues.Add(new Tuple<float, SolidColorBrush>(27 / 2, new SolidColorBrush(Color.FromRgb(66, 80, 116))));
-        }
-
-        private void ProjectSavedHandler(ProjectModel project)
-        {
-            UpdateRecentProjects(project.Name);
         }
     }
 }

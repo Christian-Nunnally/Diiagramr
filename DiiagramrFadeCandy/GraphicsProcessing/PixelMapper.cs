@@ -1,7 +1,25 @@
 ﻿namespace DiiagramrFadeCandy.GraphicsProcessing
 {
+    /// <summary>
+    /// Maps an array of pixels to another array of pixels respecting that first array
+    /// contains a 2d image and the resulting array should contain the same 2d image
+    /// correctly flipped or rotated for display on a device that supports OPC (Open Pixel Control).
+    /// </summary>
+    /// <remarks>
+    /// The code in the class is quite complex, there are some unit tests that validate its correctness: PixelMapperTests.
+    /// </remarks>
     public static class PixelMapper
     {
+        /// <summary>
+        /// Maps the pixels from one image to another accounting for the given flip/rotate/stride parameters.
+        /// </summary>
+        /// <param name="width">The width of the area to copy.</param>
+        /// <param name="height">The height of the area to copy.</param>
+        /// <param name="zeroPixelCorner">The direction the first pixel of the image should be copied to. Generally the position of led #0.</param>
+        /// <param name="vertical">Whether the pixels should be mapped horozontially across the output array or vertically. This changes depending on whether your LED's are phsysically wired so that led #1 is to the left/right or up/down from led #0.</param>
+        /// <param name="alternateStride">Whether the direction rows are layed out in the resulting array should alternate. If your leds are wired so that the eletricity flows in alternate directions each row of pixels, you want to enable this.</param>
+        /// <param name="fromBuffer">The pixel data buffer to copy from. Each pixel is three elements in the buffer (r,g,b).</param>
+        /// <param name="toBuffer">The pixel data buffer to copy to. Each pixel is three elements in the buffer (r,g,b).</param>
         public static void MapPixels(int width, int height, Corner zeroPixelCorner, bool vertical, bool alternateStride, byte[] fromBuffer, byte[] toBuffer)
         {
             if (fromBuffer.Length != toBuffer.Length)

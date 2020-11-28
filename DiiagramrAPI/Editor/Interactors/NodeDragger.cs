@@ -41,6 +41,7 @@ namespace DiiagramrAPI.Editor.Interactors
                 var diagram = interaction.Diagram;
                 var mousePosition = interaction.MousePosition;
                 ProcessMouseMoved(diagram, mousePosition);
+                diagram.ShowSnapGrid = !interaction.IsCtrlKeyPressed;
             }
         }
 
@@ -112,6 +113,8 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void ProcessMouseMoved(Diagram diagram, Point mousePosition)
         {
+            X = 5;
+            Y = diagram.ViewHeight - 28;
             var deltaX = mousePosition.X - PreviousMouseLocation.X;
             var deltaY = mousePosition.Y - PreviousMouseLocation.Y;
             foreach (var otherNode in diagram.Nodes.Where(n => n.IsSelected))
@@ -122,7 +125,6 @@ namespace DiiagramrAPI.Editor.Interactors
 
             PreviousMouseLocation = mousePosition;
             diagram.UpdateDiagramBoundingBox();
-            diagram.ShowSnapGrid = true;
         }
     }
 }

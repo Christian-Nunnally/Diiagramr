@@ -4,10 +4,11 @@ namespace DiiagramrFadeCandy
 {
     internal interface ILedDataProvider
     {
-        void CopyPixels(RawBox box, int[] intBuffer);
-
         int WicImageWidth { get; }
+
         int WicImageHeight { get; }
+
+        void CopyPixels(RawBox box, int[] intBuffer);
 
         bool HasData();
     }

@@ -120,6 +120,9 @@
     <Page Update="Editor\Interactors\LassoDiagramNodeCreatorView.xaml">
       <SubType>Designer</SubType>
     </Page>
+    <Page Update="Editor\Interactors\NodeDraggerView.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Editor\Interactors\SearchPaletteView.xaml">
       <SubType>Designer</SubType>
     </Page>

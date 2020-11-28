@@ -41,11 +41,11 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource DiagramBackgroundBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="80" />
-            <RowDefinition Height="20" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="20" />
+            <RowDefinition Height="6*" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="70" />
+            <RowDefinition Height="6*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -54,22 +54,6 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
-
-        <Border
-            Grid.Row="3"
-            Grid.Column="1"
-            MaxHeight="120"
-            MouseDown="{s:Action NewButtonPressed}"
-            Style="{StaticResource StartPageButtonBorderStyle}">
-            <Label
-                Grid.Row="1"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Center"
-                Content="NEW"
-                FontFamily="{StaticResource AldrichRegular}"
-                FontSize="16"
-                Foreground="{StaticResource DialogTitleForegroundBrush}" />
-        </Border>
 
         <Grid
             Grid.Row="1"
@@ -107,10 +91,27 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center"
                 Content="VISUAL DROP"
+                Padding="0"
                 FontFamily="{StaticResource AldrichRegular}"
                 FontSize="90"
                 Foreground="{StaticResource GrayedForegroundBrush}" />
         </Grid>
+
+        <Border
+            Grid.Row="3"
+            Grid.Column="1"
+            MaxHeight="120"
+            MouseDown="{s:Action NewButtonPressed}"
+            Style="{StaticResource StartPageButtonBorderStyle}">
+            <Label
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Content="NEW"
+                FontFamily="{StaticResource AldrichRegular}"
+                FontSize="16"
+                Foreground="{StaticResource DialogTitleForegroundBrush}" />
+        </Border>
 
         <Border
             Grid.Row="3"
@@ -140,37 +141,20 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="3*" />
                     <RowDefinition Height="3*" />
-                    <RowDefinition Height="3*" />
-                    <RowDefinition Height="2*" />
-                    <RowDefinition Height="3*" />
                 </Grid.RowDefinitions>
                 <Border
-                    Name="RecentProject1Button"
+                    Name="TemplateButton"
                     Grid.Row="0"
-                    MouseDown="{s:Action RecentProject1Pressed}"
+                    MouseDown="{s:Action TemplateButtonPressed}"
                     Style="{StaticResource StartPageButtonBorderStyle}">
-                    <Label Content="{Binding RecentProject1DisplayString}" Style="{StaticResource StartScreenLabelStyle}" />
-                </Border>
-                <Border
-                    Name="RecentProject2Button"
-                    Grid.Row="1"
-                    MouseDown="{s:Action RecentProject2Pressed}"
-                    Style="{StaticResource StartPageButtonBorderStyle}">
-                    <Label Content="{Binding RecentProject2DisplayString}" Style="{StaticResource StartScreenLabelStyle}" />
-                </Border>
-                <Border
-                    Name="RecentProject3Button"
-                    Grid.Row="2"
-                    MouseDown="{s:Action RecentProject3Pressed}"
-                    Style="{StaticResource StartPageButtonBorderStyle}">
-                    <Label Content="{Binding RecentProject3DisplayString}" Style="{StaticResource StartScreenLabelStyle}" />
+                    <Label Content="TEMPLATE..." FontSize="14" Style="{StaticResource StartScreenLabelStyle}" />
                 </Border>
                 <Border
                     Name="BrowseButton"
-                    Grid.Row="4"
+                    Grid.Row="1"
                     MouseDown="{s:Action BrowseButtonPressed}"
                     Style="{StaticResource StartPageButtonBorderStyle}">
-                    <Label Content="BROWSE" Style="{StaticResource StartScreenLabelStyle}" />
+                    <Label Content="BROWSE..." FontSize="14" Style="{StaticResource StartScreenLabelStyle}" />
                 </Border>
             </Grid>
         </Border>

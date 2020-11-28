@@ -1,0 +1,45 @@
+﻿<UserControl
+    xmlns:s="https://github.com/canton7/Stylet"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    x:Class="DiiagramrApplication.Editor.Interactors.NodeDraggerView"
+    xmlns:interactor="clr-namespace:DiiagramrAPI.Editor.Interactors;assembly=DiiagramrAPI"
+    xmlns:editor="clr-namespace:DiiagramrApplication.Editor"
+    HorizontalAlignment="Stretch"
+    VerticalAlignment="Stretch">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="..\..\Themes\DarkTheme.xaml" />
+                <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
+                <ResourceDictionary Source="..\NodeStyle.xaml" />
+                <ResourceDictionary>
+                    <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                                <Setter Property="Border.Background" Value="{StaticResource MenuItemMouseOverBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="LibrarySelectionBorderStyle" TargetType="Border">
+                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsLibraryMenuExpanded}" Value="True">
+                                <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style x:Key="LabelStyle" TargetType="Label">
+                        <Setter Property="FontSize" Value="14" />
+                        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
+                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                    </Style>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Label VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="{StaticResource GrayedForegroundBrush}">'Ctrl' to disable snap grid.</Label>
+</UserControl>
