@@ -21,10 +21,14 @@ namespace DiiagramrAPI.Project
         /// </summary>
         public const string ProjectFileExtension = ".xml";
 
+        public static string ProjectsSaveDirectoryPath;
+        public static string TemplatesSaveDirectoryPath;
+        private readonly IDirectoryService _directoryService;
         private readonly IProjectLoadSave _loadSave;
         private readonly SaveProjectDialog _saveProjectDialog;
         private readonly LoadProjectDialog _loadProjectDialog;
         private readonly DialogHostBase _dialogHost;
+        private string directoryToService;
 
         /// <summary>
         /// Creates a new instance of <see cref="ProjectFileService"/>.
@@ -41,30 +45,37 @@ namespace DiiagramrAPI.Project
             Func<LoadProjectDialog> loadProjectDialogFactory,
             Func<DialogHostBase> dialogHostFactory)
         {
-            var directoryService = directoryServiceFactory();
+            _directoryService = directoryServiceFactory();
             _loadSave = loadSaveFactory();
             _saveProjectDialog = saveProjectDialogFactory();
             _loadProjectDialog = loadProjectDialogFactory();
             _dialogHost = dialogHostFactory();
 
-            ProjectDirectory = directoryService.GetCurrentDirectory() + "\\" + "Projects";
+            // TODO: Get rid of all three of these lines.
+            ProjectsSaveDirectoryPath = _directoryService.GetCurrentDirectory() + "\\" + "Projects";
+            TemplatesSaveDirectoryPath = _directoryService.GetCurrentDirectory() + "\\" + "Templates";
+            DirectoryToService = ProjectsSaveDirectoryPath; // Default to the project directory. Probably want to remove this.
+        }
 
-            if (!directoryService.Exists(ProjectDirectory))
+        /// <inheritdoc/>
+        public string DirectoryToService
+        {
+            get => directoryToService;
+            set
             {
-                directoryService.CreateDirectory(ProjectDirectory);
+                directoryToService = value;
+                if (!_directoryService.Exists(directoryToService))
+                {
+                    _directoryService.CreateDirectory(directoryToService);
+                }
             }
         }
 
         /// <inheritdoc/>
-        public event Action<ProjectModel> ProjectSaved;
-
-        /// <inheritdoc/>
-        public string ProjectDirectory { get; set; }
-
-        /// <inheritdoc/>
         public void LoadProject(Action<ProjectModel> continuation)
         {
-            _loadProjectDialog.ProjectDirectory = ProjectDirectory;
+            _loadProjectDialog.TitlePrefix = DirectoryToService.EndsWith("Projects") ? "Load" : "Create";
+            _loadProjectDialog.ProjectDirectory = DirectoryToService;
             _loadProjectDialog.LoadAction = s => { _dialogHost.CloseDialog(); continuation(LoadProject(s)); };
             _dialogHost.OpenDialog(_loadProjectDialog);
         }
@@ -93,7 +104,9 @@ namespace DiiagramrAPI.Project
         /// <inheritdoc/>
         public void SaveProject(ProjectModel project, bool saveAs, Action continuation)
         {
-            var fileName = ProjectDirectory + "\\" + project.Name + ProjectFileExtension;
+            var projectName = project.Name;
+            projectName += project.Name.EndsWith(ProjectFileExtension) ? "" : ProjectFileExtension;
+            var fileName = DirectoryToService + "\\" + projectName;
             if (saveAs)
             {
                 SaveAsProject(project, continuation);
@@ -110,7 +123,7 @@ namespace DiiagramrAPI.Project
 
         private void SaveAsProject(ProjectModel project, Action continuation)
         {
-            _saveProjectDialog.InitialDirectory = ProjectDirectory;
+            _saveProjectDialog.InitialDirectory = DirectoryToService;
             _saveProjectDialog.ProjectName = project.Name;
             _saveProjectDialog.SaveAction = fileName => SaveProjectAndPromptIfOverwriting(project, fileName, saveAs: true, continuation);
             _dialogHost.OpenDialog(_saveProjectDialog);
@@ -147,7 +160,6 @@ namespace DiiagramrAPI.Project
         {
             SetProjectNameFromPath(project, fileName);
             _loadSave.Save(project, fileName);
-            ProjectSaved(project);
         }
 
         private void SetProjectNameFromPath(ProjectModel project, string path)
@@ -158,7 +170,9 @@ namespace DiiagramrAPI.Project
                 return;
             }
 
-            ProjectDirectory = path.Substring(0, lastBackslashIndex);
+            ProjectsSaveDirectoryPath = path.Substring(0, lastBackslashIndex);
+            var name = path.Substring(lastBackslashIndex + 1, path.Length - lastBackslashIndex - 1);
+            while (name.EndsWith($".{ProjectFileExtension}.{ProjectFileExtension}")) name = name.Remove(name.Length - 5);
             project.Name = path.Substring(lastBackslashIndex + 1, path.Length - lastBackslashIndex - 1);
         }
 

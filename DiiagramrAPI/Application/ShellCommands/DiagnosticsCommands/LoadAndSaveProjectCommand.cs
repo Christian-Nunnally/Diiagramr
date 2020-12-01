@@ -39,7 +39,7 @@ namespace DiiagramrAPI.Application.ShellCommands.DiagnosticsCommands
                 _projectManager.CloseProject(() =>
                 {
                     projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
-                    var projectPath = Path.Combine(_projectFileService.ProjectDirectory, projectName).Replace(@"\\", @"\");
+                    var projectPath = Path.Combine(ProjectFileService.ProjectsSaveDirectoryPath, projectName).Replace(@"\\", @"\");
                     var project = _projectFileService.LoadProject(projectPath);
                     _projectManager.SetProject(project, true);
                 });

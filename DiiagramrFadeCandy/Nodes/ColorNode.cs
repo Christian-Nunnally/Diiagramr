@@ -13,6 +13,7 @@ namespace DiiagramrFadeCandy
     public class ColorNode : Node
     {
         private bool _isMouseButtonDown;
+        private Random _random = new Random();
 
         public ColorNode()
         {
@@ -133,15 +134,14 @@ namespace DiiagramrFadeCandy
 
         private void RandomizeTerminalColor()
         {
-            var random = new Random();
             var randomBytes = new byte[3];
-            random.NextBytes(randomBytes);
+            _random.NextBytes(randomBytes);
             float floatR;
             float floatG;
             float floatB;
-            if (random.Next(2) > 0)
+            if (_random.Next(2) > 0)
             {
-                if (random.Next(2) > 0)
+                if (_random.Next(2) > 0)
                 {
                     floatR = 1.0f / 255.0f * randomBytes[0];
                     floatG = 0.3f / 255.0f * randomBytes[1];
@@ -156,7 +156,7 @@ namespace DiiagramrFadeCandy
             }
             else
             {
-                if (random.Next(2) > 0)
+                if (_random.Next(2) > 0)
                 {
                     floatR = 0.3f / 255.0f * randomBytes[0];
                     floatG = 1.0f / 255.0f * randomBytes[1];

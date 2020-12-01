@@ -14,32 +14,33 @@
                 <ResourceDictionary Source="..\..\Themes\CoreResources.xaml" />
                 <ResourceDictionary Source="..\NodeStyle.xaml" />
                 <ResourceDictionary>
-                    <Style x:Key="NodeSelectionBorderStyle" TargetType="Border">
-                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
+                    <Style x:Key="FadeInLabel" TargetType="Label" BasedOn="{StaticResource RegularLabelStyle}">
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                <Setter Property="Border.Background" Value="{StaticResource MenuItemMouseOverBrush}" />
+                            <DataTrigger Binding="{Binding IsDragging}" Value="True">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation To="#FF555555"
+                                                Storyboard.TargetProperty="(Label.Foreground).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation To="#00000000"
+                                                Storyboard.TargetProperty="(Label.Foreground).(SolidColorBrush.Color)"
+                                                Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
                             </DataTrigger>
                         </Style.Triggers>
-                    </Style>
-
-                    <Style x:Key="LibrarySelectionBorderStyle" TargetType="Border">
-                        <Setter Property="Background" Value="{StaticResource ToolbarBackgroundBrush}" />
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding IsLibraryMenuExpanded}" Value="True">
-                                <Setter Property="Background" Value="{StaticResource MenuItemMouseOverBrush}" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-
-                    <Style x:Key="LabelStyle" TargetType="Label">
-                        <Setter Property="FontSize" Value="14" />
-                        <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}" />
-                        <Setter Property="VerticalContentAlignment" Value="Center" />
                     </Style>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Label VerticalAlignment="Bottom" HorizontalAlignment="Left" Foreground="{StaticResource GrayedForegroundBrush}">'Ctrl' to disable snap grid.</Label>
+    <Label VerticalAlignment="Bottom" HorizontalAlignment="Left" Style="{StaticResource FadeInLabel}" Foreground="#00000000">'Ctrl' to disable snap grid.</Label>
 </UserControl>

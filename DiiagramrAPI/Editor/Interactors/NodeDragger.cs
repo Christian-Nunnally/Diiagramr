@@ -33,6 +33,11 @@ namespace DiiagramrAPI.Editor.Interactors
         /// </summary>
         public Point PreviousMouseLocation { get; set; }
 
+        /// <summary>
+        /// Gets whether a node is being dragged.
+        /// </summary>
+        public bool IsDragging { get; private set; }
+
         /// <inheritdoc/>
         public override void ProcessInteraction(DiagramInteractionEventArguments interaction)
         {
@@ -80,6 +85,7 @@ namespace DiiagramrAPI.Editor.Interactors
             _draggingNodes = interaction.Diagram.Nodes.Where(n => n.IsSelected).ToArray();
             _moveNodesToStartPointCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             PreviousMouseLocation = interaction.MousePosition;
+            IsDragging = true;
         }
 
         /// <inheritdoc/>
@@ -97,6 +103,7 @@ namespace DiiagramrAPI.Editor.Interactors
             interaction.Diagram.ShowSnapGrid = false;
             var doCommand = new MoveNodesToCurrentPositionCommand(_draggingNodes);
             _transactor.Transact(doCommand, _moveNodesToStartPointCommand, _draggingNodes);
+            IsDragging = false;
         }
 
         private static bool IsMouseOverNodeBorder(Node node, double mouseX, double mouseY, Diagram diagram)

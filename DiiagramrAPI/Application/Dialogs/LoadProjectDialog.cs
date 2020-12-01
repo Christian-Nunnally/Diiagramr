@@ -18,14 +18,6 @@ namespace DiiagramrAPI2.Application.Dialogs
         private FileSystemWatcher _watcher;
 
         /// <summary>
-        /// Creates a new instance of <see cref="LoadProjectDialog"/>
-        /// </summary>
-        public LoadProjectDialog()
-        {
-            CommandBarCommands.Add(new DialogCommandBarCommand("Open Projects Directory", OpenProjectsDirectory));
-        }
-
-        /// <summary>
         /// The list of recent project options present to the user in the dialog.
         /// </summary>
         public ObservableCollection<LoadProjectOption> LoadProjectOptions { get; set; } = new ObservableCollection<LoadProjectOption>();
@@ -37,7 +29,9 @@ namespace DiiagramrAPI2.Application.Dialogs
         public override int MaxWidth => 290;
 
         /// <inheritdoc/>
-        public override string Title { get; set; } = "Load Project";
+        public override string Title { get; set; }
+
+        public string TitlePrefix { get; set; } = "Load";
 
         /// <summary>
         /// Gets or sets the directory to look for recent projects in.
@@ -48,7 +42,10 @@ namespace DiiagramrAPI2.Application.Dialogs
             internal set
             {
                 projectDirectory = value;
-
+                var directoryName = ProjectDirectory.Split("\\").LastOrDefault();
+                Title = $"{TitlePrefix} from {directoryName}";
+                CommandBarCommands.Clear();
+                CommandBarCommands.Add(new DialogCommandBarCommand($"Open {directoryName} Directory", OpenProjectsDirectory));
                 LoadProjectOptions.Clear();
                 UpdateProjectsList();
 
@@ -100,7 +97,7 @@ namespace DiiagramrAPI2.Application.Dialogs
 
         private void OpenProjectsDirectory()
         {
-            System.Diagnostics.Process.Start("explorer.exe", "Projects");
+            System.Diagnostics.Process.Start("explorer.exe", ProjectDirectory);
         }
 
         private void OnChanged(object sender, FileSystemEventArgs e)

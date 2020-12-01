@@ -21,6 +21,7 @@ namespace DiiagramrAPI.Application
         private readonly List<List<Tuple<float, SolidColorBrush>>> _logoAnimationFrames = new List<List<Tuple<float, SolidColorBrush>>>();
         private readonly List<Tuple<float, SolidColorBrush>> _targetSpectrumLogoValues = new List<Tuple<float, SolidColorBrush>>();
         private readonly OpenProjectCommand _openProjectCommand;
+        private readonly OpenTemplateCommand _openTemplateCommand;
         private readonly NewProjectCommand _newProjectCommand;
 
         /// <summary>
@@ -30,9 +31,11 @@ namespace DiiagramrAPI.Application
         /// <param name="newProjectCommandFactory">A factory that provides an instance of <see cref="NewProjectCommand"/>.</param>
         public VisualDropStartScreen(
             Func<OpenProjectCommand> openProjectCommandFactory,
+            Func<OpenTemplateCommand> openTemplateCommandFactory,
             Func<NewProjectCommand> newProjectCommandFactory)
         {
             _openProjectCommand = openProjectCommandFactory();
+            _openTemplateCommand = openTemplateCommandFactory();
             _newProjectCommand = newProjectCommandFactory();
             PopulateTargetSpectrumValues();
 
@@ -72,7 +75,7 @@ namespace DiiagramrAPI.Application
         /// </summary>
         public void TemplateButtonPressed()
         {
-            _openProjectCommand.Execute();
+            _openTemplateCommand.Execute();
         }
 
         /// <summary>

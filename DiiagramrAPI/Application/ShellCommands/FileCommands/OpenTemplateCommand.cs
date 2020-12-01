@@ -11,7 +11,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
     /// Opens an existing project.
     /// </summary>
     public class
-        OpenProjectCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
+        OpenTemplateCommand : ShellCommandBase, IToolbarCommand, IHotkeyCommand
     {
         private readonly IProjectFileService _projectFileService;
         private readonly IProjectManager _projectManager;
@@ -25,29 +25,30 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
         /// <param name="projectManagerFactory">Factory to get an instance of an <see cref="IProjectManager"/>.</param>
         /// <param name="projectScreenFactory">Factory to get an instance of an <see cref="ProjectScreen"/>.</param>
         /// <param name="screenHostFactory">Factory to get an instance of an <see cref="ScreenHostBase"/>.</param>
-        public OpenProjectCommand(
+        public OpenTemplateCommand(
             Func<IProjectFileService> projectFileServiceFactory,
             Func<IProjectManager> projectManagerFactory,
             Func<ProjectScreen> projectScreenFactory,
             Func<ScreenHostBase> screenHostFactory)
         {
             _projectFileService = projectFileServiceFactory();
+            _projectFileService.DirectoryToService = ProjectFileService.TemplatesSaveDirectoryPath;
             _projectManager = projectManagerFactory();
             _projectScreen = projectScreenFactory();
             _screenHost = screenHostFactory();
         }
 
         /// <inheritdoc/>
-        public override string Name => "Open";
+        public override string Name => "Open template";
 
         /// <inheritdoc/>
         public string ParentName => "Project";
 
         /// <inheritdoc/>
-        public float Weight => .1f;
+        public float Weight => .11f;
 
         /// <inheritdoc/>
-        public Key Hotkey => Key.O;
+        public Key Hotkey => Key.T;
 
         /// <inheritdoc/>
         public bool RequiresCtrlModifierKey => true;
@@ -70,7 +71,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
             if (parameter is string projectName)
             {
                 projectName += projectName.EndsWith(ProjectFileService.ProjectFileExtension) ? string.Empty : ProjectFileService.ProjectFileExtension;
-                var projectPath = Path.Combine(ProjectFileService.ProjectsSaveDirectoryPath, projectName).Replace(@"\\", @"\");
+                var projectPath = Path.Combine(ProjectFileService.TemplatesSaveDirectoryPath, projectName).Replace(@"\\", @"\");
                 var project = _projectFileService.LoadProject(projectPath);
                 if (project is object) ProjectLoaded(project);
             }
@@ -82,6 +83,7 @@ namespace DiiagramrAPI.Application.ShellCommands.FileCommands
 
         private void ProjectLoaded(ProjectModel project)
         {
+            project.Name += "Copy";
             _projectManager.SetProject(project);
             _projectScreen.OpenDiagram(_projectManager.Diagrams?.FirstOrDefault());
             _screenHost.ShowScreen(_projectScreen);
