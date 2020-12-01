@@ -5,7 +5,11 @@ Diiagramr is a basic diagram editor that allows you to create a diagram, add nod
 
 Visual Drop is the name I made up for the combination of Diiagramr and a few node libraries that together allow anyone to play with sound responsive graphic design. The libraries provide nodes that interface with the sound card, graphics card, and serial (USB), leaving exactly how all of these components get connected together up to the user.
 
-tl;dr: Math is hard, music and lights are cool. This lets you do music and lights experimentially.
+tl;dr: Math is hard, music and lights are cool. This lets you do music and lights relatively easily and flexibly.
+
+## Screenshots
+![Start screen](/Images/visual-drop-start-screen.png) 
+![A simple project with a spectrograph](/Images/visual-drop-spectrograph.png) 
 
 # Installation
 - I'm currently not hosting a built version of this app, so you'll have to clone the repo and build the souce with Visual Studio if you want to mess around with it.

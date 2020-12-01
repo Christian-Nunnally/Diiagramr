@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DiiagramrAPI\DiiagramrAPI.csproj" />
+    <ProjectReference Include="..\..\Diiagramr\DiiagramrAPI\DiiagramrAPI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
