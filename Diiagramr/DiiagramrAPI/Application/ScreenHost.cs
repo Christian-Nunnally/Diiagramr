@@ -12,6 +12,7 @@ namespace DiiagramrAPI.Application
         /// <inheritdoc/>
         public override void ShowScreen(IScreen screen)
         {
+            if (screen == ActiveItem) return;
             InteractivelyCloseAllScreens(() => ActivateScreen(screen));
         }
 

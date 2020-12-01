@@ -34,6 +34,7 @@ namespace DiiagramrApplication.Application
             builder.Bind<IKeyboard>().To<DiiagramrKeyboard>().InSingletonScope();
             builder.Bind<NodeServiceProvider>().To<NodeServiceProvider>().InSingletonScope();
             builder.Bind<DiagramWell>().To<DiagramWell>().InSingletonScope();
+            builder.Bind<ProjectScreen>().To<ProjectScreen>().InSingletonScope();
             builder.Bind<IProjectFileService>().To<ProjectFileService>();
             builder.Bind<IShellCommand>().To<VisualDropStartScreenCommand>().WithKey("startCommand");
         }

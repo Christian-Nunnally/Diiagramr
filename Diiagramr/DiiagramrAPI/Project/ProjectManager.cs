@@ -1,4 +1,5 @@
 ﻿using DiiagramrAPI.Application;
+using DiiagramrAPI.Application.Commands.Transacting;
 using DiiagramrAPI.Application.Dialogs;
 using DiiagramrAPI.Application.Tools;
 using DiiagramrAPI.Editor.Diagrams;
@@ -22,6 +23,7 @@ namespace DiiagramrAPI.Project
         private readonly DialogHostBase _dialogHost;
         private readonly ILibraryManager _libraryManager;
         private readonly IProjectFileService _projectFileService;
+        private readonly ITransactor _transactor;
         private readonly NodeServiceProvider _nodeServiceProvider;
         private ProjectModel _project;
 
@@ -38,14 +40,17 @@ namespace DiiagramrAPI.Project
             Func<DiagramFactory> diagramFactoryFactory,
             Func<ILibraryManager> libraryManagerFactory,
             Func<IProjectFileService> projectFileServiceFactory,
+            Func<ITransactor> transactorFactory,
             Func<NodeServiceProvider> nodeServiceProviderFactory)
         {
             _dialogHost = dialogHostFactory();
             _libraryManager = libraryManagerFactory();
             _projectFileService = projectFileServiceFactory();
+            _transactor = transactorFactory();
             _diagramFactory = diagramFactoryFactory();
             _nodeServiceProvider = nodeServiceProviderFactory();
             _nodeServiceProvider.RegisterService<IProjectManager>(this);
+            _transactor.Transacted += DirtyProject;
         }
 
         /// <inheritdoc/>
@@ -81,12 +86,20 @@ namespace DiiagramrAPI.Project
                 Project = null;
                 continuation();
             }
-            var saveBeforeCloseMessageBox = new MessageBox.Builder("Close Project", "Save before closing?")
-                .WithChoice("Yes", () => _projectFileService.SaveProject(Project, false, closeProjectAndContinue))
-                .WithChoice("No", () => closeProjectAndContinue())
-                .WithChoice("Cancel", () => { })
-                .Build();
-            _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
+
+            if (Project.IsDirty)
+            {
+                var saveBeforeCloseMessageBox = new MessageBox.Builder("Close Project", "Save before closing?")
+                    .WithChoice("Yes", () => _projectFileService.SaveProject(Project, false, closeProjectAndContinue))
+                    .WithChoice("No", () => closeProjectAndContinue())
+                    .WithChoice("Cancel", () => { })
+                    .Build();
+                _dialogHost.OpenDialog(saveBeforeCloseMessageBox);
+            }
+            else
+            {
+                closeProjectAndContinue();
+            }
         }
 
         /// <inheritdoc/>
@@ -129,6 +142,11 @@ namespace DiiagramrAPI.Project
         public void SetProject(ProjectModel project, bool autoOpenDiagram = false)
         {
             CloseProject(() => SetProjectInternal(project, autoOpenDiagram));
+        }
+
+        private void DirtyProject()
+        {
+            if (Project is object) Project.IsDirty = true;
         }
 
         private Action CreateProjectAndContinue(Action continuation) => () =>

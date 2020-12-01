@@ -1,10 +1,17 @@
-﻿namespace DiiagramrAPI.Application.Commands.Transacting
+﻿using System;
+
+namespace DiiagramrAPI.Application.Commands.Transacting
 {
     /// <summary>
     /// Represents an object that can undo and redo <see cref="IReversableCommand"/>s.
     /// </summary>
     public interface ITransactor
     {
+        /// <summary>
+        /// Occurs when a command has been transacted, undone, or redone.
+        /// </summary>
+        event Action Transacted;
+
         /// <summary>
         /// Transact this command. This can do different additional work depending on the implementation but ultimately this executes the command.
         /// </summary>

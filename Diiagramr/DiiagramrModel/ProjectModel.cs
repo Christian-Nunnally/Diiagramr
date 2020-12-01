@@ -42,15 +42,6 @@ namespace DiiagramrModel
             }
 
             Diagrams.Add(diagram);
-            ProjectChanged();
-        }
-
-        /// <summary>
-        /// Notify this project that it has changed.
-        /// </summary>
-        public void ProjectChanged()
-        {
-            IsDirty = true;
         }
 
         /// <summary>
@@ -65,17 +56,6 @@ namespace DiiagramrModel
             }
 
             Diagrams.Remove(diagram);
-            ProjectChanged();
-        }
-
-        /// <inheritdoc/>
-        protected override void NotifyPropertyChanged(string propertyName = null)
-        {
-            base.NotifyPropertyChanged(propertyName);
-            if (propertyName.Equals(nameof(Name)))
-            {
-                ProjectChanged();
-            }
         }
     }
 }

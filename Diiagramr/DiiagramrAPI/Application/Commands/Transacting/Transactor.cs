@@ -7,10 +7,13 @@ namespace DiiagramrAPI.Application.Commands.Transacting
     /// Executes <see cref="IReversableCommand"/>s and allows for undoing the commands in the order applied.
     /// </summary>
     /// <remarks>
-    /// It might be a good idea to a smarter implementation because some command's do not play nicely with this basic undo/redo.
+    /// It might be a good idea to make a smarter implementation because some command's do not play nicely with this basic undo/redo.
     /// </remarks>
     public class Transactor : ITransactor
     {
+        /// <inheritdoc/>
+        public event Action Transacted;
+
         /// <summary>
         /// The stack of items that have been undone amd could be redone.
         /// </summary>
@@ -28,6 +31,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
             Action undo = command.Execute(parameter);
             Action redo() => command.Execute(parameter);
             UndoStack.Push(new UndoRedo(undo, redo));
+            Transacted?.Invoke();
         }
 
         /// <inheritdoc/>
@@ -38,6 +42,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
                 var undoRedo = UndoStack.Pop();
                 undoRedo.Undo();
                 RedoStack.Push(undoRedo);
+                Transacted?.Invoke();
             }
         }
 
@@ -50,6 +55,7 @@ namespace DiiagramrAPI.Application.Commands.Transacting
                 var newUndo = undoRedo.Redo();
                 undoRedo.Undo = newUndo;
                 UndoStack.Push(undoRedo);
+                Transacted?.Invoke();
             }
         }
 

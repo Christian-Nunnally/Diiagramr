@@ -29,6 +29,7 @@ namespace DiiagramrAPI.Project
         /// <inheritdoc/>
         public void Save(ProjectModel project, string fullPath)
         {
+            project.IsDirty = false;
             foreach (var diagram in project.Diagrams)
             {
                 foreach (var node in diagram.Nodes)

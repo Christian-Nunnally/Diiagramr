@@ -44,6 +44,11 @@
                     ReactionMouseIsCurrentlyIn.MouseEntered();
                 }
             }
+            else
+            {
+                ReactionMouseIsCurrentlyIn?.MouseLeft();
+                ReactionMouseIsCurrentlyIn = null;
+            }
         }
 
         /// <inheritdoc/>
