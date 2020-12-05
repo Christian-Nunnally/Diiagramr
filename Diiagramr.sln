@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrApplication", "Diiagramr\DiiagramrApplication\DiiagramrApplication.csproj", "{A5D32352-078E-4E67-B333-A4B40B6599A6}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiiagramrRepositoryServer", "DiiagramrRepositoryServer\DiiagramrRepositoryServer.csproj", "{D2793823-C598-4521-8AC7-098DF83717B0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Diiagramr", "Diiagramr", "{4D99516D-E19B-44A1-AB08-5528E56183F2}"
@@ -16,8 +18,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrAPI", "Diiagramr\DiiagramrAPI\DiiagramrAPI.csproj", "{6FB2C305-040E-4A21-9077-057F5B458014}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrCore", "Diiagramr\DiiagramrCore\DiiagramrCore.csproj", "{C1B4FD6D-82FA-4E00-A316-F407B2155774}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrApplication", "Diiagramr\DiiagramrApplication\DiiagramrApplication.csproj", "{A5D32352-078E-4E67-B333-A4B40B6599A6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiiagramrFadeCandy", "Libraries\DiiagramrFadeCandy\DiiagramrFadeCandy.csproj", "{28194151-FCD6-41BF-AF71-121D7E29D114}"
 EndProject

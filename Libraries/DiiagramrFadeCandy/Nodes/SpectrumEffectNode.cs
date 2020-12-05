@@ -9,7 +9,7 @@ namespace DiiagramrFadeCandy
         {
             Width = 60;
             Height = 60;
-            Name = "Array Visualizer Effect";
+            Name = "Spectrum Visualizer Effect";
         }
 
         public SpectrumEffect SpectrumEffect => Effect as SpectrumEffect;
@@ -79,7 +79,10 @@ namespace DiiagramrFadeCandy
         public bool SpectrographMode
         {
             get => SpectrumEffect.SpectrographMode;
-            set => SpectrumEffect.SpectrographMode = value;
+            set
+            {
+                SpectrumEffect.SpectrographMode = value;
+            }
         }
     }
 }

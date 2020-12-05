@@ -19,6 +19,7 @@ namespace DiiagramrFadeCandy
     public class RenderTargetNode : Node, ILedDataProvider
     {
         public static readonly SharpDX.Direct2D1.Factory d2dFactory = new SharpDX.Direct2D1.Factory();
+        private const int StartingBitmapSize = 512;
         private const int FrameDelay = 33;
         private static readonly ImagingFactory wicFactory = new ImagingFactory();
         private static readonly PixelFormat pixelFormat = new PixelFormat(Format.B8G8R8A8_UNorm_SRgb, AlphaMode.Unknown);
@@ -27,17 +28,17 @@ namespace DiiagramrFadeCandy
         private readonly object _bitmapLock = new object();
         private readonly BackgroundTask _backgroundRefreshTask;
         private bool _cleared;
-        private int _bitmapWidth = 8;
-        private int _bitmapHeight = 8;
-        private System.Drawing.Size _bitmapSize = new System.Drawing.Size(8, 8);
+        private int _bitmapWidth = StartingBitmapSize;
+        private int _bitmapHeight = StartingBitmapSize;
+        private System.Drawing.Size _bitmapSize = new System.Drawing.Size(StartingBitmapSize, StartingBitmapSize);
         private WicBitmap _cachedBitmap;
         private WicRenderTarget _cachedRenderTarget;
         private int _lastRenderedFrame;
 
         public RenderTargetNode()
         {
-            base.Width = 90;
-            base.Height = 90;
+            base.Width = 180;
+            base.Height = 180;
             Name = "Render Target";
             ResizeEnabled = true;
 
@@ -92,7 +93,7 @@ namespace DiiagramrFadeCandy
 
         [InputTerminal(Direction.West)]
         [Help("Sets whether or not to clear the surface with black before each frame is drawn.")]
-        public bool ClearBeforeFrame { get; set; }
+        public bool ClearBeforeFrame { get; set; } = true;
 
         [InputTerminal(Direction.North, isCoalescing: true)]
         [Help("The list of effects to render on the surface.")]
@@ -186,11 +187,7 @@ namespace DiiagramrFadeCandy
             }
         }
 
-        private WicRenderTarget CreateAndCacheRenderTarget()
-        {
-            _cachedRenderTarget = new WicRenderTarget(d2dFactory, WicBitmap, renderTargetProperties);
-            return _cachedRenderTarget;
-        }
+        private WicRenderTarget CreateAndCacheRenderTarget() => _cachedRenderTarget = new WicRenderTarget(d2dFactory, WicBitmap, renderTargetProperties);
 
         private void RenderFrame(int frameNumber)
         {

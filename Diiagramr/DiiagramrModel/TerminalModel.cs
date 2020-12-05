@@ -204,7 +204,7 @@ namespace DiiagramrModel
             }
         }
 
-        private bool CanWireDataToType(object data, Type to)
+        protected virtual bool CanWireDataToType(object data, Type to)
         {
             if (data == null)
             {

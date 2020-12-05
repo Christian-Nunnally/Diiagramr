@@ -53,8 +53,7 @@ namespace DiiagramrAPI.Editor.Diagrams
             return new InputTerminalModel(property.Name, terminalType, inputTerminalAttribute.DefaultDirection);
         }
 
-        private void CreateTerminals() =>
-                                    _node
+        private void CreateTerminals() => _node
             .GetType()
             .GetProperties()
             .Where(x => Attribute.IsDefined(x, typeof(TerminalAttribute)))

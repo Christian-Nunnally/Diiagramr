@@ -44,7 +44,7 @@
                     ReactionMouseIsCurrentlyIn.MouseEntered();
                 }
             }
-            else
+            else if (interaction.ViewModelUnderMouse is object)
             {
                 ReactionMouseIsCurrentlyIn?.MouseLeft();
                 ReactionMouseIsCurrentlyIn = null;

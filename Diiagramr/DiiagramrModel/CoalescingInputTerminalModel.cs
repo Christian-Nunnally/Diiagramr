@@ -3,6 +3,7 @@
     using DiiagramrCore;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Runtime.Serialization;
 
     /// <summary>
@@ -89,6 +90,13 @@
                 WireToIndexMap.Add(wire, WireToIndexMap.Count);
             }
             InvokeDataChanged(Data);
+        }
+
+        /// <inheritdoc/>
+        public override bool CanWireFromData(object data)
+        {
+            var type = DataList.Any() ? DataList.First().GetType() : Type;
+            return CanWireDataToType(data, type);
         }
     }
 }

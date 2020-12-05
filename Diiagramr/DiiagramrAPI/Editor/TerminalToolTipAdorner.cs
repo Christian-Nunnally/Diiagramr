@@ -1,5 +1,6 @@
 ﻿using DiiagramrAPI.Editor.Diagrams;
 using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -16,6 +17,7 @@ namespace DiiagramrAPI.Editor
         private readonly Border border;
         private readonly TextBlock textBlock;
         private readonly VisualCollection visualChildren;
+        private bool _continueLiveUpdates = true;
 
         /// <summary>
         /// Creates a new instance of <see cref="TerminalToolTipAdorner"/>.
@@ -64,6 +66,16 @@ namespace DiiagramrAPI.Editor
                 Height = textBlock.DesiredSize.Height + marginAroundLabel * 2,
             };
             visualChildren.Add(border);
+            AdornedTerminal.PropertyChanged += OnAdornedTerminalPropertyChanged;
+
+            new Thread(() =>
+            {
+                while (_continueLiveUpdates)
+                {
+                    Thread.Sleep(33);
+                    textBlock.Dispatcher.Invoke(() => textBlock.Text = GetTerminalText());
+                }
+            }).Start();
         }
 
         /// <summary>
@@ -87,9 +99,17 @@ namespace DiiagramrAPI.Editor
         }
 
         /// <inheritdoc/>
-        protected override Visual GetVisualChild(int index)
+        protected override Visual GetVisualChild(int index) => visualChildren[index];
+
+        private void OnAdornedTerminalPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            return visualChildren[index];
+            if (e.PropertyName == nameof(Terminal.Adorner))
+            {
+                if (AdornedTerminal.Adorner != this)
+                {
+                    _continueLiveUpdates = false;
+                }
+            }
         }
 
         private string GetTerminalText()
@@ -102,14 +122,33 @@ namespace DiiagramrAPI.Editor
             {
                 var dataArray = AdornedTerminal.Data as Array;
                 var arrayText = "";
-                for (int i = 0; i < Math.Min(3, dataArray.Length); i++)
+                var maxArrayValues = 8;
+                for (int i = 0; i < Math.Min(maxArrayValues, dataArray.Length); i++)
                 {
-                    arrayText += $"{dataArray.GetValue(i)}{((dataArray.Length - 1 != i) ? ", " : "")}";
+                    var data = dataArray.GetValue(i);
+                    if (data != null)
+                    {
+                        var lineEnd = dataArray.Length - 1 != i ? ", " : "";
+                        if (data is float floatData)
+                        {
+                            arrayText += $"\n{floatData.ToString("0.000000")}{lineEnd}";
+                        }
+                        else
+                        {
+                            arrayText += $"\n{data}{lineEnd}";
+                        }
+                    }
                 }
-                return $"{AdornedTerminal.Name} = [{arrayText}{((dataArray.Length > 3) ? " ... " : "")}] Length = {dataArray.Length}";
+                var lengthText = dataArray.Length == 0 ? "Empty" : $"x{dataArray.Length}";
+                var ellipses = dataArray.Length > maxArrayValues ? "\n ... " : "";
+                return $"{AdornedTerminal.Name}:{arrayText}{ellipses}\n{lengthText}";
+            }
+            else if (AdornedTerminal.Data is float floatData)
+            {
+                return AdornedTerminal.Name + ": " + floatData.ToString("0.000000");
             }
 
-            return AdornedTerminal.Name + " = " + AdornedTerminal.Data.ToString();
+            return AdornedTerminal.Name + ": " + AdornedTerminal.Data.ToString();
         }
 
         private double GetRelativeXBasedOnTerminalDirection(double width)

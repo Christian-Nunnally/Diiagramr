@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -212,7 +213,16 @@ namespace DiiagramrAPI.Editor.Interactors
         public void ShowCategory(NodePaletteCategory category)
         {
             VisibleNodesList.Clear();
-            VisibleNodesList.AddRange(category.Nodes.Where(_filter).OrderBy(n => n.Weight));
+
+            new Thread(() =>
+            {
+                foreach (var node in category.Nodes.Where(_filter).OrderBy(n => n.Weight))
+                {
+                    _diagram.View?.Dispatcher.Invoke(() => VisibleNodesList.Add(node));
+                    Thread.Sleep(10);
+                }
+            }).Start();
+
             VisibleCategoriesList.ForEach(l => l.UnselectCategoryItem());
             category.SelectCategoryItem();
             MousedOverNode = null;
@@ -253,9 +263,7 @@ namespace DiiagramrAPI.Editor.Interactors
 
         private void AddNode(Node node)
         {
-            NodeModel nodeModel = new NodeModel(string.Empty);
-
-            // Required to get the terminal data. Ideally this should not be required in case nodes initialize a lot when they are initialized with a model.
+            var nodeModel = new NodeModel(node.Name);
             node.AttachToModel(nodeModel);
             var category = GetOrCreateCategory(node);
             category.Nodes.Add(node);
@@ -306,8 +314,29 @@ namespace DiiagramrAPI.Editor.Interactors
         private void Show(Func<Node, bool> filter)
         {
             _filter = filter;
+            var firstCategoryAdded = false;
             VisibleCategoriesList.Clear();
-            VisibleCategoriesList.AddRange(CategoriesList.Where(l => l.Nodes.Where(filter).Any()));
+            var loadingCategory = new NodePaletteCategory("...");
+            VisibleCategoriesList.Add(loadingCategory);
+
+            new Thread(() =>
+            {
+                foreach (var category in CategoriesList)
+                {
+                    foreach (var node in category.Nodes)
+                    {
+                        if (filter(node))
+                        {
+                            _diagram.View?.Dispatcher.Invoke(() => VisibleCategoriesList.Add(category));
+                            if (!firstCategoryAdded) _diagram.View?.Dispatcher.Invoke(() => VisibleCategoriesList.Remove(loadingCategory));
+                            firstCategoryAdded = true;
+                            Thread.Sleep(10);
+                            break;
+                        }
+                    }
+                }
+                if (!firstCategoryAdded) _diagram.View?.Dispatcher.Invoke(() => VisibleCategoriesList.Remove(loadingCategory));
+            }).Start();
         }
 
         private void ShowWithContextFilter(Screen mousedOverViewModel)

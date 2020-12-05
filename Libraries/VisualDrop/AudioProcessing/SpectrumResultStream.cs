@@ -7,11 +7,10 @@ namespace VisualDrop
     /// </summary>
     public class SpectrumResultStream : IArrayProducer, IArrayConsumer
     {
-        private int _spectrumBinCount = 64;
+        private int _spectrumBinCount = 256;
 
         public SpectrumResultStream()
         {
-            SpectrumBinCount = 64;
             Gamma = 2f;
         }
 
