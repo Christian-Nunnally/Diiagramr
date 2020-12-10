@@ -25,10 +25,6 @@ tl;dr: Math is hard, music and lights are cool. This lets you do music and light
 1. Click on a terminal to select it (compatible terminals will highlight)
 1. Click on a compatible terminal to wire the two terminals together
 
-## Screenshots
-![Start screen](/Images/visual-drop-start-screen.png) 
-![A simple project with a spectrograph](/Images/visual-drop-spectrograph.png) 
-
 ## Tips
 - Press 'Space' to open the node menu with a search bar to quickly add nodes
 - Right click on a specific terminal to filter the node menu to only nodes that have compatible terminals
@@ -37,6 +33,29 @@ tl;dr: Math is hard, music and lights are cool. This lets you do music and light
 - Hold 'Ctrl' + 'Shift' and click and drag around nodes to create a new diagram containing those nodes, and place the diagram inside the current diagram.
 - Hold 'Ctrl' + click and drag around nodes to select multiple nodes.
 - Hold 'Ctrl' to prevent nodes from snapping to the grid when resized or moved.
+
+# Screenshots
+![Start screen](/Images/visual-drop-start-screen.png) 
+![A simple project with a spectrograph](/Images/visual-drop-spectrograph.png) 
+
+# Dependencies by project
+Everything is built using .NET Core 3.0
+
+## DiiagramrCore
+
+## DiiagramrModel (This is the model layer in MVVM)
+- DiiagramrCore
+
+## DiiagramrAPI (This is the view model layer in MVVM)
+- DiiagramrCore
+- DiiagramrModel
+- Fody Property Changed (Could be removed it would just add boilerplate code)
+- [Stylet](https://github.com/canton7/Stylet)
+
+## DiiagramrApplication (This is the view layer in MVVM)
+- DiiagramrAPI
+- WPF
+- [Stylet](https://github.com/canton7/Stylet)
 
 # Contribute
 If you would like to contribute to this project, please feel free to reach out to me and ask about any of the technologies used in the project or tell me about your idea.
