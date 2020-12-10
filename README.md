@@ -7,34 +7,36 @@ Visual Drop is the name I made up for the combination of Diiagramr and a few nod
 
 tl;dr: Math is hard, music and lights are cool. This lets you do music and lights relatively easily and flexibly.
 
+# Instructions
+## 1. Opening the application ([video demonstration](https://www.youtube.com/watch?v=LhFYTrgOpNY))
+1. Clone this repo
+2. Open [Diiagramr.sln](https://github.com/Christian-Nunnally/Diiagramr/blob/master/Diiagramr.sln) in [Visual Studio](https://visualstudio.microsoft.com/downloads/)
+3. Click run (F5)
+
+## 2. Making a project
+1. Click on 'New' to create a new project
+
+## 3. Creating a node
+1. Right click anywhere on the empty diagram to open the node menu
+1. Select a node from the menu to create it
+1. Click on the diagram to place the node
+
+## 4. Wiring two nodes
+1. Click on a terminal to select it (compatible terminals will highlight)
+1. Click on a compatible terminal to wire the two terminals together
+
 ## Screenshots
 ![Start screen](/Images/visual-drop-start-screen.png) 
 ![A simple project with a spectrograph](/Images/visual-drop-spectrograph.png) 
 
-# Installation
-- I'm currently not hosting a built version of this app, so you'll have to clone the repo and build the souce with Visual Studio if you want to mess around with it.
-
-# Getting Started
-- Making Your First Diagram
-1. Run Diiagramr.
-2. Click on 'New' to create a new project.
-3. Right click to see list of libraries.
-4. Mouse over library title to see nodes in that library.
-5. Click on node title to add a new instance of that type of node to the diagram.
-6. Click on the diagram to place the new node under the mouse cursur.
-7. Click on a terminal to select it (compatible terminals will also highlight).
-8. Click on a compatible terminal to wire the two terminals together.
-
-# Build and Test
-To build the project:
-1. Open Diiagramr.sln with Visual Studio 2019 Community Edition (https://www.visualstudio.com/downloads/).
-2. Set 'Diiagramr' as the start up project.
-3. Build or start debugging.
-
-To test the project:
-1. Open Diiagramr.sln with Visual Studio 2019 Community Edition (https://www.visualstudio.com/downloads/).
-2. Build 'DiiagramrIntegrationTest' and 'DiiagramrUnitTest'.
-3. Run all tests with your favorite test runner.
+## Tips
+- Press 'Space' to open the node menu with a search bar to quickly add nodes
+- Right click on a specific terminal to filter the node menu to only nodes that have compatible terminals
+- Hold 'Alt' and drag a box around compatible nodes to automatically wire them from top to bottom
+- Hold 'Shift' and click and drag to create space on the diagram
+- Hold 'Ctrl' + 'Shift' and click and drag around nodes to create a new diagram containing those nodes, and place the diagram inside the current diagram.
+- Hold 'Ctrl' + click and drag around nodes to select multiple nodes.
+- Hold 'Ctrl' to prevent nodes from snapping to the grid when resized or moved.
 
 # Contribute
 If you would like to contribute to this project, please feel free to reach out to me and ask about any of the technologies used in the project or tell me about your idea.
